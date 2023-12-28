@@ -4,20 +4,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-        body {font-family: Arial, sans-serif; margin: 20px;}
-        .list-group-item {border: none; padding: 10px; }
-        .list-group-item a {text-decoration: none; color: #007BFF; }
+	h2 {text-align: center; background-color: #666666; color: #EEEEEE;
+	margin-top: 25px; padding-top: 15px; padding-bottom: 15px;}
+	.list-group { position: absolute;width: 90%; left: 50%;transform: translate(-50%)}
+        body {font-family: Arial, sans-serif; background-color: #000000}
+        .list-group-item {
+	border: none; background-color: #333333;
+	padding-left: 45px; padding-right: 35px}
+        .list-group-item a {text-decoration: none; }
         .list-group-item a:hover {text-decoration: underline;}
         .dir-icon {color: #007BFF; margin-right: 10px;}
-    </style>
-</head><body>
-    <h2>Index of {{ folder_path }}</h2><br>
-    <div class="list-group">
+</style></head><body>
+    <div class="list-group"> <h2>Index of {{ folder_path }}</h2>
     {% if not is_root %}
-	<a href="{{ url_for('index', path=parent_directory) }}" class="list-group-item">
-	<i class="fas fa-level-up-alt dir-icon"></i> Parent Directory</a>
-    {% endif %}
-        {% for item in folder_content %}
+    <a href="{{ url_for('index', path=parent_directory) }}" class="list-group-item">
+    <i class="fas fa-level-up-alt dir-icon"></i> Parent Directory</a>{% endif %}
+       {% for item in folder_content %}
             {% if item['description'] == 'Directory' %}
 	       <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
                <i class="fas fa-folder dir-icon"></i> {{ item['name'] }}/ </a>
@@ -36,12 +38,8 @@
 	    {% else %}
 		<a href="{{ url_for('file_page', file_name=item['path']) }}"  target="_blank" class="list-group-item">
     		<i class="fas fa-file"></i> {{ item['name'] }} </a>
-            {% endif %}
-            
-        {% endfor %}
-    </div> <script>
+{% endif %}{% endfor %}</div> <script>
         // Manage link "Parent Directory"
         document.getElementById('parentDirectoryLink').addEventListener('click', function(event) {
             if ("{{ folder_path }}" === "{{ parent_directory }}") { event.preventDefault();}}); 
-    </script>
-</body></html>
+</script></body></html>
