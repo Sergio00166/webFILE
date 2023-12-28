@@ -98,6 +98,7 @@ def index():
         else: is_root=False
         return render_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
     except FileNotFoundError: return render_template('404.html'), 404
+    except PermissionError: return render_template('403.html'), 403
 
 
 if __name__ == '__main__':
