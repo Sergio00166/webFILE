@@ -38,7 +38,7 @@
 	    {% else %}
 		<a href="{{ url_for('file_page', file_name=item['path']) }}"  target="_blank" class="list-group-item">
     		<i class="fas fa-file"></i> {{ item['name'] }} </a>
-{% endif %}{% endfor %}</div> <script>
+{% endif %}{% endfor %}<br><br></div> <script>
         // Manage link "Parent Directory"
         document.getElementById('parentDirectoryLink').addEventListener('click', function(event) {
             if ("{{ folder_path }}" === "{{ parent_directory }}") { event.preventDefault();}}); 
