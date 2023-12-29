@@ -23,6 +23,24 @@ import os
 app = Flask(__name__, static_folder="D:\\")
 bootstrap = Bootstrap(app)
 
+def init():
+    file = open("config.cfg","r"); dic={}
+    for x in file:
+        x=x.rstrip().lstrip()
+        if not len(x)==0 and not "#" in x:
+            key=x[:x.find(":")]
+            value=x[x.find(":")+1:]
+            value=value.rstrip().lstrip()
+            key=key.rstrip().lstrip()
+            dic[key]=value
+
+    if not "port" in dic: dic["port"]="5000"
+    if not "listen" in dic: dic["listen"]="172.0.0.1"
+    if not "folder" in dic:
+        print(" ERROR: a folder is needed")
+        exit()
+    else: return dic["port"], dic["listen"], dic["folder"]
+
 def is_subdirectory(parent, child): return os.path.commonpath([parent]) == os.path.commonpath([parent, child])
 
 def get_folder_content(folder_path):
@@ -80,5 +98,7 @@ def index():
 
 
 if __name__ == '__main__':
-    root=" ".join(argv[1:])
-    app.run(host='0.0.0.0', debug=True)
+    try:
+        port, listen, root = init()
+        app.run(host=listen, port=int(port), debug=True)
+    except: print(" BAD CONFIG FILE")
