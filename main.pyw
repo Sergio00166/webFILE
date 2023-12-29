@@ -18,11 +18,7 @@ CAPABILITIES:
 def server():
     from flask import Flask, render_template, request, make_response, send_file
     from flask_bootstrap import Bootstrap
-    from sys import stdout, stderr
-    import logging
     import os
-
-    log_file="server.log"
 
     def init():
         file = open("config.cfg","r"); dic={}
