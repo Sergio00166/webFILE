@@ -1,5 +1,7 @@
 #Code by Sergio 1260
 
+
+
 """
 
 BASIC FTP via WEB with a basic interface
@@ -7,6 +9,7 @@ Allows you to share a folder across the LAN
 (READ-ONLY mode)
 
 CAPABILITIES:
+
  - Can play videos
  - Can play music
  - Can read pdf
@@ -15,8 +18,9 @@ CAPABILITIES:
 
 """
 
+
 def server():
-    from flask import Flask, render_template, request, make_response, send_file
+    from flask import Flask, render_template, request, make_response, send_from_directory
     from flask_bootstrap import Bootstrap
     import os
 
@@ -58,69 +62,79 @@ def server():
                 elif item_path.endswith((".png", ".jpg", ".webp")): description = 'IMG'
                 elif item_path.endswith(".pdf"): description = 'PDF'
                 else: description = 'File'
+
+            item_path= os.path.relpath(item_path, start=root)
+            item_path = item_path.replace(os.sep,chr(92))
             content.append({'name': item,'path': item_path,'description': description})
         return content
 
-    @app.route('/file/<file_name>')
-    def file_page(file_name):
-        try:
-            response = send_file(file_name)
-            response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0"
-            response.headers["Pragma"] = "no-cache"
-            response.headers["Expires"] = "0"
-            return response
-        except FileNotFoundError: return render_template('404.html'), 404
-
     @app.route('/file/<file_path>')
-    def send_File(file_path):
-        raw = file_path.split(os.sep); raw.pop()
-        root_folder = os.sep.join(raw)
-        response = send_from_directory(root_folder, file_path)
-        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "0"
-        return response
-
-    @app.route('/video/<video_name>')
-    def video_page(video_name):
-        try: return send_file(video_name, mimetype='video/mp4')
+    def file_page(file_path):
+        try:
+            file_path=file_path.split(chr(92))
+            if len(file_path)==1:
+                file=file_path[0]
+                directory=root
+            else: 
+                file=file_path[-1]
+                file_path.pop()
+                fix=os.sep.join(file_path)
+                directory=root+os.sep+fix
+            return send_from_directory(directory,file)
         except FileNotFoundError: return render_template('404.html'), 404
 
     @app.route('/video/<video_path>')
-    def send_video(video_path):
-        raw=video_path.split(os.sep); raw.pop()
-        root_folder=os.sep.join(raw)
-        return send_from_directory(root_folder,video_path)
-
-    @app.route('/audio/<audio_name>')
-    def audio_page(audio_name):
-        try: return send_file(audio_name, mimetype='audio/mp3')
+    def video_page(video_path):
+        try:
+            video_path=video_path.split(chr(92))
+            if len(video_path)==1:
+                video=video_path[0]
+                directory=root
+            else: 
+                video=video_path[-1]
+                video_path.pop()
+                fix=os.sep.join(video_path)
+                directory=root+os.sep+fix
+            return send_from_directory(directory,video,mimetype='video/mp4')
         except FileNotFoundError: return render_template('404.html'), 404
 
     @app.route('/audio/<audio_path>')
-    def send_audio(audio_path):
-        raw=audio_path.split(os.sep); raw.pop()
-        root_folder=os.sep.join(raw)
-        return send_from_directory(root_folder,audio_path)
-
+    def audio_page(audio_path):
+        try:
+            audio_path=audio_path.split(chr(92))
+            if len(audio_path)==1:
+                audio=audio_path[0]
+                directory=root
+            else: 
+                audio=audio_path[-1]
+                audio_path.pop()
+                fix=os.sep.join(audio_path)
+                directory=root+os.sep+fix
+            return send_from_directory(directory,audio, mimetype='audio/mp3')
+        except FileNotFoundError: return render_template('404.html'), 404
+    
     @app.route('/')
     def index():
         try:
-            folder_path = root if 'path' not in request.args else request.args['path']
+            is_root=False
+            if 'path' not in request.args:
+                folder_path=root; is_root=True
+            else:
+                folder_path=request.args['path']
+                if folder_path=="": is_root=True
+                folder_path=folder_path.replace(chr(92),os.sep)
+                folder_path=root+os.sep+folder_path
             # Deny access if not inside root
             if not is_subdirectory(root, folder_path): return render_template('403.html'), 403
             folder_content = get_folder_content(folder_path)
             parent_directory = os.path.abspath(os.path.join(folder_path, os.pardir))
-            # Hide the "parent directory" button if on root
-            if os.path.abspath(parent_directory) < os.path.abspath(root): parent_directory = root
-            if os.path.abspath(folder_path) == os.path.abspath(parent_directory): is_root=True
-            else: is_root=False
+            if parent_directory==root: parent_directory=""
+            else: parent_directory= os.path.relpath(parent_directory, start=root)         
             return render_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
         except FileNotFoundError: return render_template('404.html'), 404
         except PermissionError: return render_template('403.html'), 403
 
     app.run(host=listen, port=int(port), debug=True)
-
 
 if __name__=="__main__":
     # Move terminal output to a file
