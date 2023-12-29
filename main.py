@@ -42,28 +42,6 @@ def get_folder_content(folder_path):
         content.append({'name': item,'path': item_path,'description': description})
     return content
 
-@app.route('/video/<path:video_name>')
-def video_page(video_name):
-    try: return send_file(video_name, mimetype='video/mp4')
-    except FileNotFoundError: return render_template('404.html'), 404
-
-@app.route('/static/videos/<video_path>')
-def send_video(video_path):
-    raw=video_path.split(os.sep); raw.pop()
-    root_folder=os.sep.join(raw)
-    return send_from_directory(root_folder,video_path)
-
-@app.route('/audio/<path:audio_name>')
-def audio_page(audio_name):
-    try: return send_file(audio_name, mimetype='audio/mp3')
-    except FileNotFoundError: return render_template('404.html'), 404
-
-@app.route('/static/audios/<audio_path>')
-def send_audio(audio_path):
-    raw=audio_path.split(os.sep); raw.pop()
-    root_folder=os.sep.join(raw)
-    return send_from_directory(root_folder,audio_path)
-
 @app.route('/file/<file_name>')
 def file_page(file_name):
     try:
