@@ -24,10 +24,10 @@
 	       <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
                <i class="fas fa-folder dir-icon"></i> {{ item['name'] }}/ </a>
             {% elif item['description'] == 'Video' %}
-		<a href="{{ url_for('file_page', file_name=item['path']) }}"  target="_blank" class="list-group-item">
+		<a href="{{ url_for('video_page', video_name=item['path']) }}"  target="_blank" class="list-group-item">
     		<i class="fas fa-file-video"></i> {{ item['name'] }} </a>
 	    {% elif item['description'] == 'Audio' %}
-		<a href="{{ url_for('file_page', file_name=item['path']) }}"  target="_blank" class="list-group-item">
+		<a href="{{ url_for('audio_page', audio_name=item['path']) }}"  target="_blank" class="list-group-item">
     		<i class="fas fa-file-audio"></i> {{ item['name'] }} </a>
 	    {% elif item['description'] == 'PDF' %}
 		<a href="{{ url_for('file_page', file_name=item['path']) }}"  target="_blank" class="list-group-item">
