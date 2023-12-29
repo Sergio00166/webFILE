@@ -124,6 +124,7 @@ def server():
                 if folder_path=="": is_root=True
                 folder_path=folder_path.replace(chr(92),os.sep)
                 folder_path=root+os.sep+folder_path
+            if os.sep==chr(92): folder_path=folder_path.replace("\\\\","\\")
             # Deny access if not inside root
             if not is_subdirectory(root, folder_path): return render_template('403.html'), 403
             folder_content = get_folder_content(folder_path)
