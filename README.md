@@ -11,5 +11,5 @@ Dependencys:
  flask_bootstrap
 
 Usage:
-  python3 main.py folder
-  where folder is the folder you want to share
+  edit first the config.cfg file
+  python3 main.py
