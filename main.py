@@ -118,7 +118,7 @@ def index():
         else: parent_directory= relpath(parent_directory, start=root)
         folder_path = relpath(folder_path, start=root)
         if folder_path==".": folder_path=""
-        folder_path="/"+folder_path
+        folder_path="/"+folder_path.replace(sep,"/")
         return render_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
     except FileNotFoundError: return render_template('404.html'), 404
     except PermissionError: return render_template('403.html'), 403
