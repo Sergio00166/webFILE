@@ -25,7 +25,7 @@ def init():
     file = open("config.cfg","r"); dic={}
     for x in file:
         x=x.rstrip().lstrip()
-        if not len(x)==0 and not "#" in x:
+        if not len(x)==0 and not x.startswith("#"):
             key=x[:x.find(":")]
             value=x[x.find(":")+1:]
             value=value.rstrip().lstrip()
@@ -115,7 +115,10 @@ def index():
         folder_content = get_folder_content(folder_path)
         parent_directory = abspath(join(folder_path, pardir))
         if parent_directory==root: parent_directory=""
-        else: parent_directory= relpath(parent_directory, start=root)         
+        else: parent_directory= relpath(parent_directory, start=root)
+        folder_path = relpath(folder_path, start=root)
+        if folder_path==".": folder_path=""
+        folder_path="/"+folder_path
         return render_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
     except FileNotFoundError: return render_template('404.html'), 404
     except PermissionError: return render_template('403.html'), 403
