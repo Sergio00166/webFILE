@@ -59,7 +59,6 @@ def get_folder_content(folder_path):
         elif item_path.endswith((".png", ".jpg", ".webp")): description = 'IMG'
         elif item_path.endswith(".pdf"): description = 'PDF'
         else: description = 'File'
-
         item_path= relpath(item_path, start=root)
         item_path = item_path.replace(sep,chr(92))
         content.append({'name': item,'path': item_path,'description': description})
@@ -75,27 +74,32 @@ def fix_Addr(file_path):
         file_path.pop()
         fix=sep.join(file_path)
         directory=root+sep+fix
-    return directory, file
+    if not is_subdirectory(root, abspath(directory)):
+        return None, None
+    else: return directory, file
 
 @app.route('/file/<file_path>')
 def file_page(file_path):
     try:
         directory, file = fix_Addr(file_path)
-        return send_from_directory(directory, file)
+        if directory==None: return render_template('403.html'), 403
+        else: return send_from_directory(directory, file)
     except FileNotFoundError: return render_template('404.html'), 404
 
 @app.route('/video/<video_path>')
 def video_page(video_path):
     try:
         directory, file = fix_Addr(video_path)
-        return send_from_directory(directory,file,mimetype='video/mp4')
+        if directory==None: return render_template('403.html'), 403
+        else: return send_from_directory(directory,file,mimetype='video/mp4')
     except FileNotFoundError: return render_template('404.html'), 404
 
 @app.route('/audio/<audio_path>')
 def audio_page(audio_path):
     try:
         directory, file = fix_Addr(audio_path)
-        return send_from_directory(directory,file,mimetype='audio/mp3')
+        if directory==None: return render_template('403.html'), 403
+        else: return send_from_directory(directory,file,mimetype='audio/mp3')
     except FileNotFoundError: return render_template('404.html'), 404
 
 @app.route('/')
@@ -111,7 +115,8 @@ def index():
             folder_path=root+sep+folder_path
         if sep==chr(92): folder_path=folder_path.replace("\\\\","\\")
         # Deny access if not inside root
-        if not is_subdirectory(root, folder_path): return render_template('403.html'), 403
+        if not is_subdirectory(root, abspath(folder_path)):
+            return render_template('403.html'), 403
         folder_content = get_folder_content(folder_path)
         parent_directory = abspath(join(folder_path, pardir))
         if parent_directory==root: parent_directory=""
