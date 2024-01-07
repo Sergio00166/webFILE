@@ -20,9 +20,12 @@ from flask import Flask, render_template, request, send_from_directory
 from flask_bootstrap import Bootstrap
 from os.path import commonpath, join, isdir, relpath, abspath
 from os import listdir, pardir, sep
+from sys import argv
 
 def init():
-    file = open("config.cfg","r"); dic={}
+    if len(argv)==1: file="config.cfg"
+    else: file=argv[1]
+    file = open(file,"r"); dic={}
     for x in file:
         x=x.rstrip().lstrip()
         if not len(x)==0 and not x.startswith("#"):
@@ -129,4 +132,3 @@ def index():
     except PermissionError: return render_template('403.html'), 403
 
 if __name__=="__main__": app.run(host=listen, port=int(port), debug=True)
-
