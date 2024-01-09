@@ -1,45 +1,62 @@
 <!DOCTYPE html>
-<html><head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webFILE server</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
-	h2 {text-align: center; background-color: #666666; color: #EEEEEE;
-	margin-top: 25px; padding-top: 15px; padding-bottom: 15px;}
-	.list-group { position: absolute;width: 90%; left: 50%;transform: translate(-50%)}
-        body {font-family: Arial, sans-serif; background-color: #000000}
-        .list-group-item {
-	border: none; background-color: #333333;
-	padding-left: 45px; padding-right: 35px}
-        .list-group-item a {text-decoration: none; }
-        .list-group-item a:hover {text-decoration: underline;}
-        .dir-icon {color: #007BFF; margin-right: 10px;}
-</style></head><body>
-    <div class="list-group"> <h2>Index of {{ folder_path }}</h2>
-    {% if not is_root %}
-    <a href="{{ url_for('index', path=parent_directory) }}" class="list-group-item">
-    <i class="fas fa-level-up-alt dir-icon"></i> Parent Directory</a>{% endif %}
-       {% for item in folder_content %}
-            {% if item['description'] == 'Directory' %}
-	       <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
-               <i class="fas fa-folder dir-icon"></i> {{ item['name'] }}/ </a>
-            {% elif item['description'] == 'Video' %}
-		<a href="{{ url_for('video_page', video_path=item['path']) }}"  target="_blank" class="list-group-item">
-    		<i class="fas fa-file-video"></i> {{ item['name'] }} </a>
-	    {% elif item['description'] == 'Audio' %}
-		<a href="{{ url_for('audio_page', audio_path=item['path']) }}"  target="_blank" class="list-group-item">
-    		<i class="fas fa-file-audio"></i> {{ item['name'] }} </a>
-	    {% elif item['description'] == 'PDF' %}
-		<a href="{{ url_for('file_page', file_path=item['path']) }}"  target="_blank" class="list-group-item">
-    		<i class="fas fa-file-pdf"></i> {{ item['name'] }} </a>
-	    {% elif item['description'] == 'IMG' %}
-		<a href="{{ url_for('file_page', file_path=item['path']) }}"  target="_blank" class="list-group-item">
-    		<i class="fas fa-image"></i> {{ item['name'] }} </a>
-	    {% else %}
-		<a href="{{ url_for('file_page', file_path=item['path']) }}"  target="_blank" class="list-group-item">
-    		<i class="fas fa-file"></i> {{ item['name'] }} </a>
-{% endif %}{% endfor %}<br><br></div> <script>
-        // Manage link "Parent Directory"
-        document.getElementById('parentDirectoryLink').addEventListener('click', function(event) {
-            if ("{{ folder_path }}" === "{{ parent_directory }}") { event.preventDefault();}}); 
-</script></body></html>
+        body { font-family: Arial, sans-serif; background-color: #000000; }
+        h2 { text-align: center; background-color: #666666; color: #EEEEEE; margin-top: 25px; padding-top: 15px; padding-bottom: 15px; }
+        .list-group { position: absolute; width: 90%; left: 50%; transform: translate(-50%); }
+        .list-group-item { border: none; background-color: #333333; padding-left: 45px; padding-right: 35px; }
+        .list-group-item a { text-decoration: none; }
+        .list-group-item a:hover { text-decoration: underline; }
+        .dir-icon { color: #007BFF; margin-right: 10px; }
+    </style>
+</head><body>
+    <div class="list-group">
+        <h2>Index of {{ folder_path }}</h2>
+        {% if not is_root %}
+            <a href="{{ url_for('index', path=parent_directory) }}" class="list-group-item">
+            <i class="fas fa-reply">&nbsp;</i> Parent Directory</a>
+        {% endif %}
+        {% for item in folder_content %}
+                {% if item['description'] == 'DIR' %}
+		    <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
+                    <i class="fas fa-folder">&nbsp;</i>
+		{% else %} 
+		    <a href="{{ url_for('file_page', file_path=item['path']) }}" target="_blank" class="list-group-item">
+                    {% if item['description'] == 'Video' %}
+                        <i class="fas fa-film">&nbsp;</i>
+                    {% elif item['description'] == 'Audio' %}
+                        <i class="fas fa-file-audio">&nbsp;</i>
+                    {% elif item['description'] == 'PDF' %}
+                        <i class="fas fa-file-pdf">&nbsp;</i>
+                    {% elif item['description'] == 'IMG' %}
+                        <i class="fas fa-image">&nbsp;</i>
+                    {% elif item['description'] == 'DOC' %}
+                        <i class="fas fa-file-word">&nbsp;</i>
+                    {% elif item['description'] == 'DB' %}
+                        <i class="fas fa-database">&nbsp;</i>
+                    {% elif item['description'] == 'PP' %}
+                        <i class="fas fa-file-powerpoint">&nbsp;</i>
+                    {% elif item['description'] == 'HdImg' %}
+                        <i class="fas fa-floppy-disk">&nbsp;</i>
+                    {% elif item['description'] == 'SRC' %}
+                        <i class="fas fa-file-code">&nbsp;</i>
+                    {% elif item['description'] == 'Text' %}
+                        <i class="fas fa-file-lines">&nbsp;</i>
+                    {% elif item['description'] == 'Compress' %}
+                        <i class="fa-solid fa-file-zipper">&nbsp;</i>
+                    {% else %}
+                        <i class="fa-solid fa-file">&nbsp;</i>
+                    {% endif %}
+                {% endif %} {{ item['name'] }}
+            </a>
+        {% endfor %}
+    </div>
+</body></html>
+
+

@@ -20,7 +20,35 @@ from flask import Flask, render_template, request, send_from_directory
 from flask_bootstrap import Bootstrap
 from os.path import commonpath, join, isdir, relpath, abspath
 from os import listdir, pardir, sep
+from pathlib import Path
 from sys import argv
+
+
+file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml",
+".json",".bat", ".cmd", ".sh", ".md", ".xmls", ".yml", ".yaml", ".ini" ".asm", ".cfg", ".sql", ".htm"],
+"IMG": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".tiff", ".ico", ".webp"],
+"Audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma"], "DOC": [".doc", ".docx", ".odt", ".rtf"],
+"DB": [".xls", ".xlsx", ".ods", ".csv", ".tsv", ".db", ".odb"], "PP": [".ppt", ".pptx", ".odp"],
+"Video": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm"],"PDF": [".pdf"], "Text": [".txt"],
+"HdImg": [".iso", ".img", ".bin", ".vdi", ".vmdk", ".vhd"], "Compress": [".zip", ".7z", ".rar", ".tar", ".gzip"]}
+
+
+def sort_results(paths,folder_path):
+    dirs=[]; files=[]
+    for x in paths:
+        fix = join(folder_path, x)
+        if isdir(fix): dirs.append(x)
+        else: files.append(x)
+    dirs.sort(); files.sort()
+    return dirs+files
+
+def get_file_type(path):
+    if isdir(path): return "DIR"
+    else:
+        file_extension=Path(path).suffix
+        for types, extensions in file_types.items():
+            if file_extension in extensions: return types
+        return "File"
 
 def init():
     if len(argv)==1: file="config.cfg"
@@ -34,7 +62,6 @@ def init():
             value=value.rstrip().lstrip()
             key=key.rstrip().lstrip()
             dic[key]=value
-
     if not "port" in dic: dic["port"]="5000"
     if not "listen" in dic: dic["listen"]="172.0.0.1"
     if not "folder" in dic:
@@ -51,22 +78,18 @@ def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([p
 
 def get_folder_content(folder_path):
     items = listdir(folder_path)
-    items.sort(reverse=True) #Sort by time
+    items=sort_results(items,folder_path)
     content = []
     for item in items:
         item_path = join(folder_path, item)
-        description = ''
-        if isdir(item_path): description = 'Directory'
-        elif item_path.endswith((".mp4", ".avi", ".mkv", ".mov")): description = 'Video'
-        elif item_path.endswith((".mp3", ".m4a", ".wav", ".flac")): description = 'Audio'
-        elif item_path.endswith((".png", ".jpg", ".webp")): description = 'IMG'
-        elif item_path.endswith(".pdf"): description = 'PDF'
-        else: description = 'File'
+        description = get_file_type(item_path)
         item_path= relpath(item_path, start=root)
+        # Ilegal fix to make it work under Linux
         item_path = item_path.replace(sep,chr(92))
         content.append({'name': item,'path': item_path,'description': description})
     return content
 
+# Ilegal fix to make it work under Linux
 def fix_Addr(file_path):
     file_path=file_path.split(chr(92))
     if len(file_path)==1:
@@ -81,6 +104,7 @@ def fix_Addr(file_path):
         return None, None
     else: return directory, file
 
+# Default file page
 @app.route('/file/<file_path>')
 def file_page(file_path):
     try:
@@ -89,6 +113,7 @@ def file_page(file_path):
         else: return send_from_directory(directory, file)
     except FileNotFoundError: return render_template('404.html'), 404
 
+# Force web explorer to handle the file as we want
 @app.route('/video/<video_path>')
 def video_page(video_path):
     try:
@@ -97,6 +122,7 @@ def video_page(video_path):
         else: return send_from_directory(directory,file,mimetype='video/mp4')
     except FileNotFoundError: return render_template('404.html'), 404
 
+# Force web explorer to handle the file as we want
 @app.route('/audio/<audio_path>')
 def audio_page(audio_path):
     try:
