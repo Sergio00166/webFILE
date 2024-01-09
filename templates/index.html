@@ -24,14 +24,14 @@
         {% endif %}
         {% for item in folder_content %}
                 {% if item['description'] == 'DIR' %}
-		    <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
+                    <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
                     <i class="fas fa-folder">&nbsp;</i>
-		{% else %} 
-		    <a href="{{ url_for('file_page', file_path=item['path']) }}" target="_blank" class="list-group-item">
+                {% else %}
+                    <a href="{{ url_for('file_page', file_path=item['path']) }}" target="_blank" class="list-group-item">
                     {% if item['description'] == 'Video' %}
                         <i class="fas fa-film">&nbsp;</i>
                     {% elif item['description'] == 'Audio' %}
-                        <i class="fas fa-file-audio">&nbsp;</i>
+                        <i class="fas fa-music">&nbsp;</i>
                     {% elif item['description'] == 'PDF' %}
                         <i class="fas fa-file-pdf">&nbsp;</i>
                     {% elif item['description'] == 'IMG' %}
@@ -58,5 +58,3 @@
         {% endfor %}
     </div>
 </body></html>
-
-
