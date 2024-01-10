@@ -123,6 +123,15 @@ def video_page(video_path):
     except FileNotFoundError: return render_template('404.html'), 404
 
 # Force web explorer to handle the file as we want
+@app.route('/text/<text_path>')
+def text_page(text_path):
+    try:
+        directory, file = fix_Addr(text_path)
+        if directory==None: return render_template('403.html'), 403
+        else: return send_from_directory(directory,file,mimetype='text/txt')
+    except FileNotFoundError: return render_template('404.html'), 404
+
+# Force web explorer to handle the file as we want
 @app.route('/audio/<audio_path>')
 def audio_page(audio_path):
     try:
