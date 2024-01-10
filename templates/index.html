@@ -36,6 +36,7 @@
                 {% elif item['description'] == 'HdImg' %} <img src="/static/svg/hard-drive-solid.svg"; class="defaults">&nbsp;</img>
                 {% elif item['description'] == 'Text' %} <img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
                 {% elif item['description'] == 'Compress' %} <img src="/static/svg/file-zipper-solid.svg"; class="folder">&nbsp;</img>
+				{% elif item['description'] == 'BIN' %} <img src="/static/svg/file-binary.svg">&nbsp;</img>
                 {% else %} <img src="/static/svg/file-solid.svg"; class="files">&nbsp;</img>
             {% endif %}{% endif %} {{ item['name'] }} </a> 
 	{% endfor %}
