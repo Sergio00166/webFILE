@@ -29,10 +29,13 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 "IMG": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".tiff", ".ico", ".webp"],
 "Audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma"], "DOC": [".doc", ".docx", ".odt", ".rtf"],
 "DB": [".xls", ".xlsx", ".ods", ".csv", ".tsv", ".db", ".odb"], "PP": [".ppt", ".pptx", ".odp"],
-"Video": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm"],"PDF": [".pdf"], "Text": [".txt", ".log"],
+"Video": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm"],"PDF": [".pdf"],
 "HdImg": [".iso", ".img", ".vdi", ".vmdk", ".vhd"], "Compress": [".zip", ".7z", ".rar", ".tar", ".gzip"],
 "BIN": [".exe", ".dll", ".bin", ".sys", ".so"]}
 
+
+textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
+is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
 def sort_results(paths,folder_path):
     dirs=[]; files=[]
@@ -49,7 +52,9 @@ def get_file_type(path):
         file_extension=Path(path).suffix
         for types, extensions in file_types.items():
             if file_extension in extensions: return types
-        return "File"
+        if not is_binary_string(open(path, mode="rb").read(1024)):
+            return "Text"
+        else: return "File"
 
 def init():
     if len(argv)==1: file="config.cfg"
