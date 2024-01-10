@@ -15,7 +15,7 @@
         {% endif %}
         {% for item in folder_content %}
             {% if item['description'] == 'DIR' %}
-                <a href="{{ url_for('index', path=item['path']) }}" target="_blank" class="list-group-item">
+                <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
                 <img src="/static/svg/folder-solid.svg"; class="folder">&nbsp;</img>
             {% elif item['description'] == 'SRC' %}
                 <a href="{{ url_for('text_page', text_path=item['path']) }}" target="_blank" class="list-group-item">
