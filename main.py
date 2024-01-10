@@ -72,7 +72,7 @@ def init():
 
 if __name__=="__main__":
     port, listen, root = init()
-    app = Flask(__name__, static_folder=root)
+    app = Flask(__name__)
     bootstrap = Bootstrap(app)
 
 def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([parent, child])
