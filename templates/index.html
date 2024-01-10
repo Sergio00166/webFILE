@@ -4,57 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webFILE server</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #000000; }
-        h2 { text-align: center; background-color: #666666; color: #EEEEEE; margin-top: 25px; padding-top: 15px; padding-bottom: 15px; }
-        .list-group { position: absolute; width: 90%; left: 50%; transform: translate(-50%); }
-        .list-group-item { border: none; background-color: #333333; padding-left: 45px; padding-right: 35px; }
-        .list-group-item a { text-decoration: none; }
-        .list-group-item a:hover { text-decoration: underline; }
-        .dir-icon { color: #007BFF; margin-right: 10px; }
-    </style>
+    <link rel="stylesheet" href="/static/bootstrap.css">
+	<link rel="stylesheet" href="/static/styles.css">
 </head><body>
     <div class="list-group">
         <h2>Index of {{ folder_path }}</h2>
         {% if not is_root %}
             <a href="{{ url_for('index', path=parent_directory) }}" class="list-group-item">
-            <i class="fas fa-reply">&nbsp;</i> Parent Directory</a>
+            <img src="/static/svg/reply-solid.svg"; class="goback">&nbsp;</img> Parent Directory</a>
         {% endif %}
         {% for item in folder_content %}
                 {% if item['description'] == 'DIR' %}
                     <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
-                    <i class="fas fa-folder">&nbsp;</i>
+                    <img src="/static/svg/folder-solid.svg"; class="folder">&nbsp;</img>
                 {% else %}
                     <a href="{{ url_for('file_page', file_path=item['path']) }}" target="_blank" class="list-group-item">
                     {% if item['description'] == 'Video' %}
-                        <i class="fas fa-film">&nbsp;</i>
+                        <img src="/static/svg/film-solid.svg"; class="default">&nbsp;</img>
                     {% elif item['description'] == 'Audio' %}
-                        <i class="fas fa-music">&nbsp;</i>
+						<img src="/static/svg/music-solid.svg"; class="default">&nbsp;</img>
                     {% elif item['description'] == 'PDF' %}
-                        <i class="fas fa-file-pdf">&nbsp;</i>
+						<img src="/static/svg/file-pdf-solid.svg"; class="pdf">&nbsp;</img>
                     {% elif item['description'] == 'IMG' %}
-                        <i class="fas fa-image">&nbsp;</i>
+						<img src="/static/svg/image-solid.svg"; class="default">&nbsp;</img>
                     {% elif item['description'] == 'DOC' %}
-                        <i class="fas fa-file-word">&nbsp;</i>
+						<img src="/static/svg/file-word-solid.svg"; class="doc">&nbsp;</img>
                     {% elif item['description'] == 'DB' %}
-                        <i class="fas fa-database">&nbsp;</i>
+						<img src="/static/svg/database-solid.svg"; class="default">&nbsp;</img>
                     {% elif item['description'] == 'PP' %}
-                        <i class="fas fa-file-powerpoint">&nbsp;</i>
+						<img src="/static/svg/file-powerpoint-solid.svg"; class="pp">&nbsp;</img>
                     {% elif item['description'] == 'HdImg' %}
-                        <i class="fas fa-floppy-disk">&nbsp;</i>
+						<img src="/static/svg/hard-drive-solid.svg"; class="defaults">&nbsp;</img>
                     {% elif item['description'] == 'SRC' %}
-                        <i class="fas fa-file-code">&nbsp;</i>
+						<img src="/static/svg/file-code-solid.svg"; class="src">&nbsp;</img>
                     {% elif item['description'] == 'Text' %}
-                        <i class="fas fa-file-lines">&nbsp;</i>
+						<img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
                     {% elif item['description'] == 'Compress' %}
-                        <i class="fa-solid fa-file-zipper">&nbsp;</i>
+                        <img src="/static/svg/file-zipper-solid.svg"; class="folder">&nbsp;</img>
                     {% else %}
-                        <i class="fa-solid fa-file">&nbsp;</i>
+                        <img src="/static/svg/file-solid.svg"; class="files">&nbsp;</img>
                     {% endif %}
                 {% endif %} {{ item['name'] }}
             </a>
         {% endfor %}
-    </div>
+    <br><br></div>
 </body></html>
