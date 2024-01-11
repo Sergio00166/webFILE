@@ -19,6 +19,8 @@ CAPABILITIES:
 from flask import Flask, render_template, request, send_from_directory
 from flask_bootstrap import Bootstrap
 from os.path import commonpath, join, isdir, relpath, abspath
+from os.path import getmtime, getsize
+from datetime import datetime as dt
 from os import listdir, pardir, sep
 from pathlib import Path
 from sys import argv
@@ -45,6 +47,13 @@ def sort_results(paths,folder_path):
         else: files.append(x)
     dirs.sort(); files.sort()
     return dirs+files
+
+def readable(num, suffix="B"):
+    for unit in ["", "Ki", "Mi", "Gi", "Ti"]:
+        if abs(num) < 1024.0:
+            return f"{num:3.1f}{unit}{suffix}"
+        num /= 1024.0
+    return f"{num:.1f}Yi{suffix}"
 
 def get_file_type(path):
     if isdir(path): return "DIR"
@@ -89,10 +98,16 @@ def get_folder_content(folder_path):
     for item in items:
         item_path = join(folder_path, item)
         description = get_file_type(item_path)
+        if not description=="DIR":
+            size=readable(getsize(item_path))
+        else: size=""
+        try:
+           mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
+        except: mtime=""
         item_path= relpath(item_path, start=root)
         # Ilegal fix to make it work under Linux
         item_path = item_path.replace(sep,chr(92))
-        content.append({'name': item,'path': item_path,'description': description})
+        content.append({'name': item,'path': item_path,'description': description,"size": size, "mtime": mtime})
     return content
 
 # Ilegal fix to make it work under Linux
