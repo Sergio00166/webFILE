@@ -21,7 +21,7 @@ from flask_bootstrap import Bootstrap
 from os.path import commonpath, join, isdir, relpath, abspath
 from os.path import getmtime, getsize
 from datetime import datetime as dt
-from os import listdir, pardir, sep
+from os import listdir, pardir, sep, scandir
 from pathlib import Path
 from sys import argv
 
@@ -91,6 +91,18 @@ if __name__=="__main__":
 
 def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([parent, child])
 
+def get_directory_size(directory):
+    total = 0
+    try:
+        for entry in scandir(directory):
+            if entry.is_file():
+                total += entry.stat().st_size
+            elif entry.is_dir():
+                total += get_directory_size(entry.path)
+    except NotADirectoryError: return path.getsize(directory)
+    except PermissionError: return 0
+    return total
+    
 def get_folder_content(folder_path):
     items = listdir(folder_path)
     items=sort_results(items,folder_path)
@@ -100,10 +112,10 @@ def get_folder_content(folder_path):
         description = get_file_type(item_path)
         if not description=="DIR":
             size=readable(getsize(item_path))
-        else: size=""
+        else: size=readable(get_directory_size(item_path))
         try:
            mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
-        except: mtime=""
+        except: mtime="##-##-#### ##:##:##"
         item_path= relpath(item_path, start=root)
         # Ilegal fix to make it work under Linux
         item_path = item_path.replace(sep,chr(92))
