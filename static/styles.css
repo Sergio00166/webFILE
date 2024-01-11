@@ -3,8 +3,8 @@ h2 { text-align: center; background-color: #666666; color: #EEEEEE; margin-top: 
 a:hover { text-decoration: None }
 .container {border: none; background-color: #333333; padding-left: 45px; padding-right: 35px;}
 .list-group { position: absolute; width: 90%; left: 50%; transform: translate(-50%); }
-a { text-decoration: none; color: #4444FF; }
-a:hover { color: #8888FF; }
+a { text-decoration: none; color: #DDDDFF; }
+a:hover { color: #FFFFFF; }
 .dir-icon { color: #007BFF; margin-right: 10px; }
 .folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) brightness(100%) contrast(100%) }
 .files { filter: brightness(0) invert(1) }
