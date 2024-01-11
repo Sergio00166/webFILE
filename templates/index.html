@@ -4,33 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webFILE server</title>
-    <link rel="stylesheet" href="/static/bootstrap.css">
     <link rel="stylesheet" href="/static/styles.css">
 </head><body>
     <div class="list-group">
         <h2>Index of {{ folder_path }}</h2>
+		<div class="container"> <br>
         {% if not is_root %}
-            <a href="{{ url_for('index', path=parent_directory) }}" class="list-group-item">
-            <img src="/static/svg/reply-solid.svg"; class="goback">&nbsp;</img> Parent Directory</a>
+			<br><a href="{{ url_for('index', path=parent_directory) }}">
+            <img src="/static/svg/reply-solid.svg"; class="goback">&nbsp;</img> Parent Directory</a><br>
         {% endif %}
-        {% for item in folder_content %}
+        {% for item in folder_content %} <p>
             {% if item['description'] == 'DIR' %}
-                <a href="{{ url_for('index', path=item['path']) }}" class="list-group-item">
+                <a href="{{ url_for('index', path=item['path']) }}">
                 <img src="/static/svg/folder-solid.svg"; class="folder">&nbsp;</img>
             {% elif item['description'] == 'SRC' %}
-                <a href="{{ url_for('text_page', text_path=item['path']) }}" target="_blank" class="list-group-item">
+                <a href="{{ url_for('text_page', text_path=item['path']) }}" target="_blank">
                 <img src="/static/svg/file-code-solid.svg"; class="src">&nbsp;</img>
             {% elif item['description'] == 'Video' %}
-                <a href="{{ url_for('video_page', video_path=item['path']) }}" target="_blank" class="list-group-item">
+                <a href="{{ url_for('video_page', video_path=item['path']) }}" target="_blank">
                 <img src="/static/svg/film-solid.svg"; class="default">&nbsp;</img>
             {% elif item['description'] == 'Audio' %}
-                <a href="{{ url_for('audio_page', audio_path=item['path']) }}" target="_blank" class="list-group-item">
+                <a href="{{ url_for('audio_page', audio_path=item['path']) }}" target="_blank">
                 <img src="/static/svg/music-solid.svg"; class="default">&nbsp;</img>
             {% elif item['description'] == 'Text' %} 
-		<a href="{{ url_for('text_page', text_path=item['path']) }}" target="_blank" class="list-group-item">
-		<img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
+				<a href="{{ url_for('text_page', text_path=item['path']) }}" target="_blank">
+				<img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
             {% else %}
-                <a href="{{ url_for('file_page', file_path=item['path']) }}" target="_blank" class="list-group-item">
+                <a href="{{ url_for('file_page', file_path=item['path']) }}" target="_blank">
                 {% if item['description'] == 'PDF' %} <img src="/static/svg/file-pdf-solid.svg"; class="pdf">&nbsp;</img>
                 {% elif item['description'] == 'IMG' %} <img src="/static/svg/image-solid.svg"; class="default">&nbsp;</img>
                 {% elif item['description'] == 'DOC' %} <img src="/static/svg/file-word-solid.svg"; class="doc">&nbsp;</img>
@@ -40,7 +40,7 @@
                 {% elif item['description'] == 'Compress' %} <img src="/static/svg/file-zipper-solid.svg"; class="zip">&nbsp;</img>
                 {% elif item['description'] == 'BIN' %} <img src="/static/svg/file-binary.svg">&nbsp;</img>
                 {% else %} <img src="/static/svg/file-solid.svg"; class="files">&nbsp;</img>
-            {% endif %}{% endif %} {{ item['name'] }} </a>
-        {% endfor %}
+            {% endif %}{% endif %} {{ item['name'] }} </a></p>
+        {% endfor %} <br></div>
     <br><br></div>
 </body></html>
