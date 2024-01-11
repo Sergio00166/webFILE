@@ -8,9 +8,9 @@
 </head><body>
     <div class="list-group">
         <h2>Index of {{ folder_path }}</h2>
-		<div class="container"> <br>
+	<div class="container"> <br>
         {% if not is_root %}
-			<br><a href="{{ url_for('index', path=parent_directory) }}">
+	    <br><a href="{{ url_for('index', path=parent_directory) }}">
             <img src="/static/svg/reply-solid.svg"; class="goback">&nbsp;</img> Parent Directory</a><br>
         {% endif %}
         {% for item in folder_content %} <p>
@@ -27,8 +27,8 @@
                 <a href="{{ url_for('audio_page', audio_path=item['path']) }}" target="_blank">
                 <img src="/static/svg/music-solid.svg"; class="default">&nbsp;</img>
             {% elif item['description'] == 'Text' %} 
-				<a href="{{ url_for('text_page', text_path=item['path']) }}" target="_blank">
-				<img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
+		<a href="{{ url_for('text_page', text_path=item['path']) }}" target="_blank">
+		<img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
             {% else %}
                 <a href="{{ url_for('file_page', file_path=item['path']) }}" target="_blank">
                 {% if item['description'] == 'PDF' %} <img src="/static/svg/file-pdf-solid.svg"; class="pdf">&nbsp;</img>
