@@ -43,8 +43,10 @@
             {% endif %}{% endif %} {{ item['name'] }} </span>
 	<span class="no_overflow">
 	{{ item['size'] }}
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	{{ item['mtime'] }}</span> 
+        &nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;
+        {{ item['size'] }}
+        &nbsp;&nbsp;
         </a>{% endfor %} <br></div>
     <br><br></div>
 </body></html>
