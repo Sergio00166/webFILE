@@ -1,5 +1,21 @@
 #Code by Sergio 1260
 
+"""
+
+BASIC FTP via WEB with a basic interface
+Allows you to share a folder across the LAN
+(READ-ONLY mode)
+
+CAPABILITIES:
+
+ - Can play videos
+ - Can play music
+ - Can read pdf
+ - Can read plain text
+ - If nothing of above it downloads it
+
+"""
+
 from functions import *
 
 if __name__=="__main__":
@@ -45,16 +61,18 @@ def audio_page(audio_path):
         else: return send_from_directory(directory,file,mimetype='audio/mp3')
     except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500
-    
+
 @app.route('/')
 def index():
     try:
-        if 'path' not in request.args: folder_path=root; is_root=True
+        is_root=False
+        if 'path' not in request.args:
+            folder_path=root; is_root=True
         else:
             folder_path=request.args['path']
+            if folder_path=="." or folder_path=="": is_root=True
             folder_path=folder_path.replace(chr(92),sep)
             folder_path=root+sep+folder_path
-            is_root=(abspath(folder_path)==root)
         if sep==chr(92): folder_path=folder_path.replace("\\\\","\\")
         # Deny access if not inside root
         if not is_subdirectory(root, abspath(folder_path)): raise PermissionError
@@ -65,9 +83,9 @@ def index():
         folder_path = relpath(folder_path, start=root)
         if folder_path==".": folder_path=""
         folder_path="/"+folder_path.replace(sep,"/")
-        return render_template('index.html', folder_content=folder_content,
-        folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
+        return render_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
     except FileNotFoundError: return render_template('404.html'), 404
+    except OSError: return render_template('404.html'), 404
     except PermissionError: return render_template('403.html'), 403
     except: return render_template('500.html'), 500
 

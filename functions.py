@@ -22,7 +22,6 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
-
 def init():
     global root, folder_size
     if len(argv)==1: file="config.cfg"
@@ -74,7 +73,7 @@ def get_file_type(path):
         if not is_binary_string(open(path, mode="rb").read(1024)):
             return "Text"
         else: return "File"
-        
+
 def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([parent, child])
 
 def get_directory_size(directory):
@@ -86,7 +85,7 @@ def get_directory_size(directory):
     except NotADirectoryError: return path.getsize(directory)
     except PermissionError: return 0
     return total
-    
+
 def get_folder_content(folder_path):
     global root, folder_size
     items = listdir(folder_path)
@@ -116,7 +115,7 @@ def fix_Addr(file_path):
     if len(file_path)==1:
         file=file_path[0]
         directory=root
-    else: 
+    else:
         file=file_path[-1]
         file_path.pop()
         fix=sep.join(file_path)
@@ -124,4 +123,3 @@ def fix_Addr(file_path):
     if not is_subdirectory(root, abspath(directory)):
         return None, None
     else: return directory, file
-    
