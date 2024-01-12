@@ -90,18 +90,6 @@ if __name__=="__main__":
     bootstrap = Bootstrap(app)
 
 def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([parent, child])
-
-def get_directory_size(directory):
-    total = 0
-    try:
-        for entry in scandir(directory):
-            if entry.is_file():
-                total += entry.stat().st_size
-            elif entry.is_dir():
-                total += get_directory_size(entry.path)
-    except NotADirectoryError: return path.getsize(directory)
-    except PermissionError: return 0
-    return total
     
 def get_folder_content(folder_path):
     items = listdir(folder_path)
@@ -112,7 +100,7 @@ def get_folder_content(folder_path):
         description = get_file_type(item_path)
         if not description=="DIR":
             size=readable(getsize(item_path))
-        else: size=readable(get_directory_size(item_path))
+        else: size=""
         try:
            mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
         except: mtime="##-##-#### ##:##:##"
@@ -181,7 +169,7 @@ def index():
             folder_path=root; is_root=True
         else:
             folder_path=request.args['path']
-            if folder_path=="": is_root=True
+            if folder_path=="." or folder_path=="": is_root=True
             folder_path=folder_path.replace(chr(92),sep)
             folder_path=root+sep+folder_path
         if sep==chr(92): folder_path=folder_path.replace("\\\\","\\")
