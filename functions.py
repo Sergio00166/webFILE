@@ -1,7 +1,6 @@
 #Code by Sergio 1260
 
 from flask import Flask, render_template, request, send_from_directory
-from flask_bootstrap import Bootstrap
 from os.path import commonpath, join, isdir, relpath, abspath
 from os.path import getmtime, getsize
 from datetime import datetime as dt
@@ -25,7 +24,7 @@ is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
 
 def init():
-    global root
+    global root, folder_size
     if len(argv)==1: file="config.cfg"
     else: file=argv[1]
     file = open(file,"r"); dic={}
@@ -39,12 +38,15 @@ def init():
             dic[key]=value
     if not "port" in dic: dic["port"]="5000"
     if not "listen" in dic: dic["listen"]="172.0.0.1"
-    if not "folder" in dic:
-        print(" ERROR: a folder is needed")
-        exit()
-    else:
-        root=dic["folder"]
-        return dic["port"], dic["listen"], root
+    if not "show.folder.size" in dic: folder_size="false"
+    if not "folder" in dic: print(" ERROR: a folder is needed");exit()
+    root=dic["folder"]; folder_size=dic["show.folder.size"].lower()
+    if not "debug" in dic:
+        debug=dic["debug"].lower
+        if debug=="false": debug=False
+        else: debug==True
+    else: debug=False
+    return dic["port"], dic["listen"], root, debug
 
 def sort_results(paths,folder_path):
     dirs=[]; files=[]
@@ -71,10 +73,21 @@ def get_file_type(path):
         if not is_binary_string(open(path, mode="rb").read(1024)):
             return "Text"
         else: return "File"
+        
 def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([parent, child])
+
+def get_directory_size(directory):
+    total = 0
+    try:
+        for entry in scandir(directory):
+            if entry.is_file(): total += entry.stat().st_size
+            elif entry.is_dir(): total += get_directory_size(entry.path)
+    except NotADirectoryError: return path.getsize(directory)
+    except PermissionError: return 0
+    return total
     
 def get_folder_content(folder_path):
-    global root
+    global root, folder_size
     items = listdir(folder_path)
     items=sort_results(items,folder_path)
     content = []
@@ -83,6 +96,8 @@ def get_folder_content(folder_path):
         description = get_file_type(item_path)
         if not description=="DIR":
             size=readable(getsize(item_path))
+        elif folder_size=="true":
+            size=readable(get_directory_size(item_path))
         else: size=""
         try:
            mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")

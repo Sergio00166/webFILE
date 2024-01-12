@@ -19,9 +19,8 @@ CAPABILITIES:
 from functions import *
 
 if __name__=="__main__":
-    port, listen, root = init()
+    port, listen, root, debug = init()
     app = Flask(__name__)
-    bootstrap = Bootstrap(app)
 
 # Default file page
 @app.route('/file/<file_path>')
@@ -85,4 +84,4 @@ def index():
     except FileNotFoundError: return render_template('404.html'), 404
     except PermissionError: return render_template('403.html'), 403
 
-if __name__=="__main__": app.run(host=listen, port=int(port), debug=True)
+if __name__=="__main__": app.run(host=listen, port=int(port), debug=debug)
