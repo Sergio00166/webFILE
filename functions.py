@@ -39,8 +39,9 @@ def init():
     if not "port" in dic: dic["port"]="5000"
     if not "listen" in dic: dic["listen"]="172.0.0.1"
     if not "show.folder.size" in dic: folder_size="false"
+    else: folder_size=dic["show.folder.size"].lower()
     if not "folder" in dic: print(" ERROR: a folder is needed");exit()
-    root=dic["folder"]; folder_size=dic["show.folder.size"].lower()
+    root=dic["folder"]
     if not "debug" in dic:
         debug=dic["debug"].lower
         if debug=="false": debug=False
