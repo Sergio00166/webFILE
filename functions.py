@@ -1,12 +1,13 @@
 #Code by Sergio 1260
 
+from flask import Flask, render_template, request, send_from_directory
+from os.path import commonpath, join, isdir, relpath, abspath
+from os.path import getmtime, getsize
+from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir
 from pathlib import Path
-from os.path import commonpath, join, isdir, relpath, abspath
-from os.path import getmtime, getsize, exists, isdir
-from datetime import datetime as dt
-from flask import Flask, render_template, request, send_from_directory
 from sys import argv
+
 
 file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml", ".ini",
 ".json",".bat", ".cmd", ".sh", ".md", ".xmls", ".yml", ".yaml", ".ini" ".asm", ".cfg", ".sql", ".htm", ".config"],
@@ -17,10 +18,13 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 "HdImg": [".iso", ".img", ".vdi", ".vmdk", ".vhd"], "Compress": [".zip", ".7z", ".rar", ".tar", ".gzip"],
 "BIN": [".exe", ".dll", ".bin", ".sys", ".so"]}
 
+
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
+
 def init():
+    global root, folder_size
     if len(argv)==1: file="config.cfg"
     else: file=argv[1]
     file = open(file,"r"); dic={}
@@ -36,27 +40,14 @@ def init():
     if not "listen" in dic: dic["listen"]="172.0.0.1"
     if not "show.folder.size" in dic: folder_size="false"
     else: folder_size=dic["show.folder.size"].lower()
-    if not "folder" in dic:
-        print("[CFG_FILE]: A FOLDER PATH IS NEEDED"); exit()
+    if not "folder" in dic: print(" ERROR: a folder is needed");exit()
     root=dic["folder"]
-    if not (exists(root) and isdir(root)):
-        print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
     if not "debug" in dic:
         debug=dic["debug"].lower
         if debug=="false": debug=False
         else: debug==True
     else: debug=False
-    return dic["port"], dic["listen"], root, debug, folder_size
-
-def get_file_type(path):
-    if isdir(path): return "DIR"
-    else:
-        file_extension=Path(path).suffix
-        for types, extensions in file_types.items():
-            if file_extension in extensions: return types
-        if not is_binary_string(open(path, mode="rb").read(1024)):
-            return "Text"
-        else: return "File"
+    return dic["port"], dic["listen"], root, debug
 
 def sort_results(paths,folder_path):
     dirs=[]; files=[]
@@ -73,7 +64,17 @@ def readable(num, suffix="B"):
             return f"{num:3.1f}{unit}{suffix}"
         num /= 1024.0
     return f"{num:.1f}Yi{suffix}"
-      
+
+def get_file_type(path):
+    if isdir(path): return "DIR"
+    else:
+        file_extension=Path(path).suffix
+        for types, extensions in file_types.items():
+            if file_extension in extensions: return types
+        if not is_binary_string(open(path, mode="rb").read(1024)):
+            return "Text"
+        else: return "File"
+        
 def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([parent, child])
 
 def get_directory_size(directory):
@@ -86,7 +87,8 @@ def get_directory_size(directory):
     except PermissionError: return 0
     return total
     
-def get_folder_content(folder_path, folder_size, root):
+def get_folder_content(folder_path):
+    global root, folder_size
     items = listdir(folder_path)
     items=sort_results(items,folder_path)
     content = []
@@ -108,7 +110,8 @@ def get_folder_content(folder_path, folder_size, root):
     return content
 
 # Ilegal fix to make it work under Linux
-def fix_Addr(file_path, root):
+def fix_Addr(file_path):
+    global root
     file_path=file_path.split(chr(92))
     if len(file_path)==1:
         file=file_path[0]
@@ -121,21 +124,4 @@ def fix_Addr(file_path, root):
     if not is_subdirectory(root, abspath(directory)):
         return None, None
     else: return directory, file
-
-def ls_dir_main(folder_path, root, folder_size):
-    is_root=False
-    if folder_path=="." or folder_path=="": is_root=True
-    folder_path=folder_path.replace(chr(92),sep)
-    folder_path=root+sep+folder_path
-    if sep==chr(92): folder_path=folder_path.replace("\\\\","\\")
-    # Deny access if not inside root
-    if not is_subdirectory(root, abspath(folder_path)): raise PermissionError
-    folder_content = get_folder_content(folder_path,folder_size,root)
-    parent_directory = abspath(join(folder_path, pardir))
-    if parent_directory==root: parent_directory=""
-    else: parent_directory= relpath(parent_directory, start=root)
-    folder_path = relpath(folder_path, start=root)
-    if folder_path==".": folder_path=""
-    folder_path="/"+folder_path.replace(sep,"/")
-    return [folder_content,folder_path,parent_directory,is_root]
     
