@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request, send_from_directory
 from os.path import commonpath, join, isdir, relpath, abspath
-from os.path import getmtime, getsize
+from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir
 from pathlib import Path
@@ -39,8 +39,11 @@ def init():
     if not "listen" in dic: dic["listen"]="172.0.0.1"
     if not "show.folder.size" in dic: folder_size="false"
     else: folder_size=dic["show.folder.size"].lower()
-    if not "folder" in dic: print(" ERROR: a folder is needed");exit()
+    if not "folder" in dic:
+        print("[CFG_FILE]: A FOLDER PATH IS NEEDED"); exit()
     root=dic["folder"]
+    if not (exists(root) and isdir(root)):
+        print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
     if not "debug" in dic:
         debug=dic["debug"].lower
         if debug=="false": debug=False
