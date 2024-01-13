@@ -4,7 +4,7 @@ from flask import Flask, render_template, request, send_from_directory
 from os.path import commonpath, join, isdir, relpath, abspath
 from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
-from os import listdir, pardir, sep, scandir
+from os import listdir, pardir, sep, scandir, access, R_OK
 from pathlib import Path
 from sys import argv
 
@@ -107,14 +107,13 @@ def get_folder_content(folder_path):
         except: mtime="##-##-#### ##:##:##"
         item_path= relpath(item_path, start=root)
         # Ilegal fix to make it work under Linux
-        item_path = item_path.replace(sep,chr(92))
         content.append({'name': item,'path': item_path,'description': description,"size": size, "mtime": mtime})
     return content
 
 # Ilegal fix to make it work under Linux
 def fix_Addr(file_path):
     global root
-    file_path=file_path.split(chr(92))
+    file_path=file_path.split(sep)
     if len(file_path)==1:
         file=file_path[0]
         directory=root

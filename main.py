@@ -23,43 +23,48 @@ if __name__=="__main__":
     app = Flask(__name__)
 
 # Default file page
-@app.route('/file/<file_path>')
-def file_page(file_path):
+@app.route('/file/')
+def file_page():
     try:
-        directory, file = fix_Addr(file_path)
+        path=request.args['path']
+        directory, file=fix_Addr(path)
         if directory==None: return render_template('403.html'), 403
+        elif not exists(directory+sep+file):
+            return render_template('404.html'), 404
         else: return send_from_directory(directory, file)
-    except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500
 
 # Force web explorer to handle the file as we want
-@app.route('/video/<video_path>')
-def video_page(video_path):
+@app.route('/video/')
+def video_page():
     try:
-        directory, file = fix_Addr(video_path)
-        if directory==None: return render_template('403.html'), 403
-        else: return send_from_directory(directory,file,mimetype='video/mp4')
-    except FileNotFoundError: return render_template('404.html'), 404
+        path=request.args['path']
+        name=path.split(sep)[-1]
+        if not exists(root+sep+path): return render_template('404.html'), 404
+        if not access(root+sep+path, R_OK): return render_template('403.html'), 403
+        return render_template('video.html', path=path, name=name)
     except: return render_template('500.html'), 500
 
 # Force web explorer to handle the file as we want
-@app.route('/text/<text_path>')
-def text_page(text_path):
+@app.route('/audio/')
+def audio_page():
     try:
-        directory, file = fix_Addr(text_path)
-        if directory==None: return render_template('403.html'), 403
-        else: return send_from_directory(directory,file,mimetype='text/txt')
-    except FileNotFoundError: return render_template('404.html'), 404
+        path=request.args['path']
+        name=path.split(sep)[-1]
+        if not exists(root+sep+path): return render_template('404.html'), 404
+        if not access(root+sep+path, R_OK): return render_template('403.html'), 403
+        return render_template('audio.html', path=path, name=name)
     except: return render_template('500.html'), 500
 
 # Force web explorer to handle the file as we want
-@app.route('/audio/<audio_path>')
-def audio_page(audio_path):
+@app.route('/text/')
+def text_page():
     try:
-        directory, file = fix_Addr(audio_path)
-        if directory==None: return render_template('403.html'), 403
-        else: return send_from_directory(directory,file,mimetype='audio/mp3')
-    except FileNotFoundError: return render_template('404.html'), 404
+        path=request.args['path']
+        directory, file=fix_Addr(path)
+        if not exists(root+sep+path): return render_template('404.html'), 404
+        if not access(root+sep+path, R_OK): return render_template('403.html'), 403
+        return send_from_directory(directory,file,mimetype='text')
     except: return render_template('500.html'), 500
 
 @app.route('/')
@@ -71,9 +76,9 @@ def index():
         else:
             folder_path=request.args['path']
             if folder_path=="." or folder_path=="": is_root=True
-            folder_path=folder_path.replace(chr(92),sep)
             folder_path=root+sep+folder_path
-        if sep==chr(92): folder_path=folder_path.replace("\\\\","\\")
+        if not exists(folder_path): return render_template('404.html'), 404
+        if not access(folder_path, R_OK): return render_template('403.html'), 403
         # Deny access if not inside root
         if not is_subdirectory(root, abspath(folder_path)): raise PermissionError
         folder_content = get_folder_content(folder_path)
@@ -84,8 +89,6 @@ def index():
         if folder_path==".": folder_path=""
         folder_path="/"+folder_path.replace(sep,"/")
         return render_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
-    except FileNotFoundError: return render_template('404.html'), 404
-    except OSError: return render_template('404.html'), 404
     except PermissionError: return render_template('403.html'), 403
     except: return render_template('500.html'), 500
 
