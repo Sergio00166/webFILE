@@ -15,7 +15,7 @@
             <span class="wrap"> Parent Directory</span></a><br>
         {% endif %}
         {% for item in folder_content %}
-                <div class="filename">
+          <div class="filename">
             {% if item['description'] == 'DIR' %}
                 <a href="{{ url_for('index', path=item['path']) }}"> <span>
                 <img src="/static/svg/folder-solid.svg"; class="folder">&nbsp;</img>

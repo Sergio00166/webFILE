@@ -106,8 +106,8 @@ def get_folder_content(folder_path):
            mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
         except: mtime="##-##-#### ##:##:##"
         item_path= relpath(item_path, start=root)
-        # Ilegal fix to make it work under Linux
-        content.append({'name': item,'path': item_path,'description': description,"size": size, "mtime": mtime})
+        
+        content.append({'name': item,'path': item_path,'description': description, "size": size,"mtime": mtime})
     return content
 
 # Ilegal fix to make it work under Linux

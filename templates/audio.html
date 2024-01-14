@@ -1,6 +1,57 @@
-<!DOCTYPE html><html lang="es"><head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>{{ name }}</title>
-<style>body {display: flex;justify-content: center;align-items: center;height: 100vh;background-color: #222;}</style>
-</head><body><audio controls autoplay id="audio"><source src={{ url_for('file_page', path=path) }} type="audio/mp3"></audio>
-<button id="loopButton" onclick="toggleLoop()">1</button></body><script>var audio = document.getElementById("audio");
-function toggleLoop() {audio.loop = !audio.loop;loopButton.textContent = audio.loop ? "↻" : "1";}</script></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ name }}</title>
+    <style>
+        body {display: flex;justify-content: center;
+            align-items: center; height: 100vh;
+            background-color: #222; flex-direction: column;}
+        #audio-container { margin-bottom: 10px;}
+        .flex {display: flex;justify-content: center; }
+    </style>
+</head>
+<body>
+    <div id="audio-container">
+        <audio controls autoplay id="audio" onended="handleAudioEnded()">
+            <source src="{{ url_for('file_page', path=path) }}" type="audio/mp3">
+        </audio>
+    </div>
+    <div class="flex">
+        <button onclick="prev()">Prev</button> &nbsp;&nbsp;&nbsp;
+        <button id="loopButton" onclick="toggleLoop()">1</button>
+        &nbsp;&nbsp;&nbsp;<button onclick="next()">Next</button>
+    </div>
+    <script>
+        var audio = document.getElementById("audio");
+        var loopButton = document.getElementById("loopButton");
+
+        var storedVolume = localStorage.getItem("audioVolume");
+        if (storedVolume !== null) {
+            audio.volume = parseFloat(storedVolume);
+        }
+        function next() {
+            localStorage.setItem("audioVolume", audio.volume);
+            window.location.href='{{ url_for('audio_page', path=nxt) }}'
+        }
+        function prev() {
+            localStorage.setItem("audioVolume", audio.volume);
+            window.location.href='{{ url_for('audio_page', path=prev) }}'
+        }
+
+        function toggleLoop() {
+            audio.loop = !audio.loop;
+            loopButton.textContent = audio.loop ? "↻" : "1";
+        }
+
+        function handleAudioEnded() {
+            if (!audio.loop) {
+                localStorage.setItem("audioVolume", audio.volume);
+                window.location.href = '{{ url_for('audio_page', path=nxt) }}';
+            }
+        }
+    </script>
+</body>
+</html>
+

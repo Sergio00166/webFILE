@@ -39,7 +39,7 @@ def file_page():
 def video_page():
     try:
         path=request.args['path']
-        name=path.split(sep)[-1]
+        name=path.split(sep)[-1]      
         if not exists(root+sep+path): return render_template('404.html'), 404
         if not access(root+sep+path, R_OK): return render_template('403.html'), 403
         return render_template('video.html', path=path, name=name)
@@ -50,10 +50,24 @@ def video_page():
 def audio_page():
     try:
         path=request.args['path']
-        name=path.split(sep)[-1]
+        folder=sep.join(path.split(sep)[:-1])
+        name=path.split(sep)[-1]; lst=[]
+        out=get_folder_content(root+sep+folder)
+        
+        for x in out:
+            if x["description"]=="Audio": lst.append(x["path"])
+
+        # Get previous song
+        try: nxt=lst[lst.index(path)+1]
+        except: nxt=lst[0]
+
+        # Get next song
+        if lst.index(path)==0: prev=lst[-1]
+        else: prev=lst[lst.index(path)-1]
+        
         if not exists(root+sep+path): return render_template('404.html'), 404
         if not access(root+sep+path, R_OK): return render_template('403.html'), 403
-        return render_template('audio.html', path=path, name=name)
+        return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt )
     except: return render_template('500.html'), 500
 
 # Force web explorer to handle the file as we want
