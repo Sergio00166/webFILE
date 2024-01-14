@@ -6,13 +6,13 @@
     <title>{{ name }}</title>
     <style>
         body {display: flex;justify-content: center;
-            align-items: center; height: 100vh;
+            align-items: center; height: 90vh;
             background-color: #222; flex-direction: column;}
-        #audio-container { margin-bottom: 10px;}
         .flex {display: flex;justify-content: center; }
     </style>
 </head>
 <body>
+    <h2>{{ name }}</h2><br>
     <div id="audio-container">
         <audio controls autoplay id="audio" onended="handleAudioEnded()">
             <source src="{{ url_for('file_page', path=path) }}" type="audio/mp3">
@@ -22,7 +22,7 @@
         <button onclick="prev()">Prev</button> &nbsp;&nbsp;&nbsp;
         <button id="loopButton" onclick="toggleLoop()">1</button>
         &nbsp;&nbsp;&nbsp;<button onclick="next()">Next</button>
-    </div>
+    </div><br><br><br>
     <script>
         var audio = document.getElementById("audio");
         var loopButton = document.getElementById("loopButton");
@@ -54,4 +54,3 @@
     </script>
 </body>
 </html>
-
