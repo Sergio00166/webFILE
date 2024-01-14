@@ -2,7 +2,7 @@ This is a basic web interface to share files and can play music and videos, read
 
 Same as python3 -m http.server but more customizable (you can make it look better editting the index.html located on the templates directory)
 
-Some browsers cannot play some video formats, and others can because this project will not use transcoding to convert in realtime the media
+Some browsers cannot play some video formats, and others can because this project is not using transcoding (and will not) to convert in realtime the media
 
 To change the options you can edit the config.cfg
 
