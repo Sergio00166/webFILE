@@ -2,14 +2,18 @@ This is a basic web interface to share files and can play music and videos, read
 
 Same as python3 -m http.server but more customizable (you can make it look better editting the index.html located on the templates directory)
 
+Some browsers cannot play some video formats, and others can because this project is not using transcoding (and will not) to convert in realtime the media
+
+TODO: create a separate html for images, and add to the audio image and video html the options to go to a previous and next file (with the same file type)
+
+To change the options you can edit the config.cfg
+
 Requirements:
  Python3 (tested under python 3.12)
  Windows/Linux
 
 Dependencys:
  flask
- flask_bootstrap
 
 Usage:
-  edit first the config.cfg file
-  python3 main.py
+  python3 main.py [config.file]
