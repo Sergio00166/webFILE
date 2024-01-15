@@ -126,18 +126,3 @@ def fix_Addr(file_path):
         return None, None
     else: return directory, file
 
-# Ilegal fix to make it work under Linux
-def fix_Addr(file_path):
-    global root
-    file_path=file_path.split(sep)
-    if len(file_path)==1:
-        file=file_path[0]
-        directory=root
-    else:
-        file=file_path[-1]
-        file_path.pop()
-        fix=sep.join(file_path)
-        directory=root+sep+fix
-    if not is_subdirectory(root, abspath(directory)):
-        return None, None
-    else: return directory, file
