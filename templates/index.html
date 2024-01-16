@@ -24,7 +24,7 @@
                 <span><img src="/static/svg/file-code-solid.svg"; class="src">&nbsp;</img>
             {% elif item['description'] == 'Video' %}
                 <a href="{{ url_for('video_page', path=item['path']) }}"  target="_blank">
-                <span><img src="/static/svg/film-solid.svg"; class="default">&nbsp;&nbsp;</img>
+                <span><img src="/static/svg/film-solid.svg"; class="default">&nbsp;</img>
             {% elif item['description'] == 'Audio' %}
                 <a href="{{ url_for('audio_page', path=item['path']) }}" target="_blank">
                 <span><img src="/static/svg/music-solid.svg"; class="default">&nbsp;&nbsp;</img>
