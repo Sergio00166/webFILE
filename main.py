@@ -50,10 +50,10 @@ def video_page():
 def audio_page():
     try:
         path=request.args['path']
+        print(path)
         folder=sep.join(path.split(sep)[:-1])
         name=path.split(sep)[-1]; lst=[]
         out=get_folder_content(root+sep+folder)
-        
         for x in out:
             if x["description"]=="Audio": lst.append(x["path"])
 
@@ -64,6 +64,12 @@ def audio_page():
         # Get next song
         if lst.index(path)==0: prev=lst[-1]
         else: prev=lst[lst.index(path)-1]
+        
+        # The {{ url_for('audio_page', path=nxt} inside the html does
+        # a weird thing with the ' char, fixed with this code
+        filepg="/audio/?path="
+        nxt=filepg+nxt.replace("'","%27")
+        prev=filepg+prev.replace("'","%27")
         
         if not exists(root+sep+path): return render_template('404.html'), 404
         if not access(root+sep+path, R_OK): return render_template('403.html'), 403

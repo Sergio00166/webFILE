@@ -33,11 +33,11 @@
         }
         function next() {
             localStorage.setItem("audioVolume", audio.volume);
-            window.location.href='{{ url_for('audio_page', path=nxt) }}'
+            window.location.href='{{ nxt }}'
         }
         function prev() {
             localStorage.setItem("audioVolume", audio.volume);
-            window.location.href='{{ url_for('audio_page', path=prev) }}'
+            window.location.href='{{ prev }}'
         }
 
         function toggleLoop() {
@@ -48,7 +48,7 @@
         function handleAudioEnded() {
             if (!audio.loop) {
                 localStorage.setItem("audioVolume", audio.volume);
-                window.location.href = '{{ url_for('audio_page', path=nxt) }}';
+                window.location.href = '{{ nxt }}';
             }
         }
     </script>
