@@ -24,17 +24,17 @@
                 <span><img src="/static/svg/file-code-solid.svg"; class="src">&nbsp;</img>
             {% elif item['description'] == 'Video' %}
                 <a href="{{ url_for('video_page', path=item['path']) }}"  target="_blank">
-                <span><img src="/static/svg/film-solid.svg"; class="default">&nbsp;</img>
+                <span><img src="/static/svg/film-solid.svg"; class="default">&nbsp;&nbsp;</img>
             {% elif item['description'] == 'Audio' %}
                 <a href="{{ url_for('audio_page', path=item['path']) }}" target="_blank">
-                <span><img src="/static/svg/music-solid.svg"; class="default">&nbsp;</img>
+                <span><img src="/static/svg/music-solid.svg"; class="default">&nbsp;&nbsp;</img>
             {% elif item['description'] == 'Text' %}
                 <a href="{{ url_for('text_page', path=item['path']) }}" target="_blank">
                 <span><img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
             {% else %}
                 <a href="{{ url_for('file_page', path=item['path']) }}" target="_blank"><span>
                 {% if item['description'] == 'PDF' %} <img src="/static/svg/file-pdf-solid.svg"; class="pdf">&nbsp;</img>
-                {% elif item['description'] == 'IMG' %} <img src="/static/svg/image-solid.svg"; class="default">&nbsp;</img>
+                {% elif item['description'] == 'IMG' %} <img src="/static/svg/image-solid.svg"; class="default">&nbsp;&nbsp;</img>
                 {% elif item['description'] == 'DOC' %} <img src="/static/svg/file-word-solid.svg"; class="doc">&nbsp;</img>
                 {% elif item['description'] == 'DB' %} <img src="/static/svg/database-solid.svg"; class="default">&nbsp;</img>
                 {% elif item['description'] == 'PP' %} <img src="/static/svg/file-powerpoint-solid.svg"; class="pp">&nbsp;</img>
@@ -42,8 +42,10 @@
                 {% elif item['description'] == 'Compress' %} <img src="/static/svg/file-zipper-solid.svg"; class="zip">&nbsp;</img>
                 {% elif item['description'] == 'BIN' %} <img src="/static/svg/file-binary.svg">&nbsp;</img>
                 {% else %} <img src="/static/svg/file-solid.svg"; class="files">&nbsp;</img>
-            {% endif %}{% endif %}  </span><span class="wrap">{{ item['name'] }}</span>
-        <span class="no_overflow">
+            {% endif %}{% endif %}
+        </span><span class="wrap">
+             {{ item['name'] }}
+        </span><span class="no_overflow">
           <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;
           &nbsp;&nbsp; {{ item['size'] }} </t>
           <t class="notime">&nbsp;&nbsp; {{ item['mtime'] }}</t>
