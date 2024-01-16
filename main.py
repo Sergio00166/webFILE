@@ -68,8 +68,8 @@ def audio_page():
         # The {{ url_for('audio_page', path=nxt} inside the html does
         # a weird thing with the ' char, fixed with this code
         filepg="/audio/?path="
-        nxt=filepg+nxt.replace("'","%27")
-        prev=filepg+prev.replace("'","%27")
+        nxt=filepg+nxt.replace("'","%27").replace("&","%26")
+        prev=filepg+prev.replace("'","%27").replace("&","%26")
         
         if not exists(root+sep+path): return render_template('404.html'), 404
         if not access(root+sep+path, R_OK): return render_template('403.html'), 403
