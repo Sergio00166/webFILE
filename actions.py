@@ -30,16 +30,16 @@ def init():
     return dic["port"], dic["listen"], root, folder_size
 
 def isornot(path,root):
-    directory, file=fix_Addr(path,root)    
+    directory, file=fix_Addr(path,root)
     if not exists(root+sep+path): raise FileNotFoundError
     if not access(root+sep+path, R_OK): raise PermissionError
     return directory, file
 
-def audio(path,root):
+def audio_func(path,root):
     if not exists(root+sep+path): raise FileNotFoundError
     if not access(root+sep+path, R_OK): raise PermissionError
-    folder=sep.join(path.split(sep)[:-1])
-    name=path.split(sep)[-1]; lst=[]
+    folder=sep.join(path.split("/")[:-1])
+    name=path.split("/")[-1]; lst=[]
     out=get_folder_content(root+sep+folder,root,False)
     for x in out:
         if x["description"]=="Audio": lst.append(x["path"])
@@ -49,19 +49,19 @@ def audio(path,root):
     # Get next song
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
-    
     # The {{ url_for('audio_page', path=nxt} inside the html does
     # a weird thing with the ' char, fixed with this code
     nxt=nxt.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
     prev=prev.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
-    return prev, nxt, name, path 
+    nxt="/audio/"+nxt; prev="/audio/"+prev; path="/raw/"+path
+    return prev, nxt, name, path
 
 def index_func(folder_path,root,folder_size):
     is_root=False
     if folder_path=="": folder_path=root; is_root=True
     elif folder_path==root: is_root=True
     else: folder_path=root+sep+folder_path
-    if not exists(folder_path): raise FileNotFoundError
+    #if not exists(folder_path): raise FileNotFoundError
     if not access(folder_path, R_OK): raise PermissionError
     # Deny access if not inside root
     if not is_subdirectory(root, abspath(folder_path)): raise PermissionError
