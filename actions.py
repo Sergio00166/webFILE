@@ -2,7 +2,7 @@
 
 from os.path import join, isdir, relpath
 from os.path import exists, pardir, abspath
-from functions import get_folder_content, is_subdirectory, fix_Addr
+from functions import get_folder_content, is_subdirectory, fix_Addr, fix_pth_url
 from os import access, R_OK, sep
 from sys import argv
 
