@@ -27,12 +27,7 @@ def init():
     root=dic["folder"]
     if not (exists(root) and isdir(root)):
         print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
-    if "debug" in dic:
-        debug=dic["debug"].lower
-        if debug=="false": debug=False
-        else: debug==True
-    else: debug=False
-    return dic["port"], dic["listen"], root, debug, folder_size
+    return dic["port"], dic["listen"], root, folder_size
 
 def isornot(path,root):
     directory, file=fix_Addr(path,root)    

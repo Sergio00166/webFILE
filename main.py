@@ -9,7 +9,7 @@ from actions import *
 from flask import Flask, render_template, request, send_from_directory
 
 if __name__=="__main__":
-    port, listen, root, debug, folder_size = init()
+    port, listen, root, folder_size = init()
     app = Flask(__name__)
 
 @app.route('/<path:path>')
@@ -43,4 +43,4 @@ def home():
     except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500
 
-if __name__=="__main__": app.run(host=listen, port=int(port), debug=debug)
+if __name__=="__main__": app.run(host=listen, port=int(port), debug=False)
