@@ -17,24 +17,17 @@
         {% endif %}
         {% for item in folder_content %}
           <div class="filename">
-            {% if item['description'] == 'DIR' %}
+              
+            {% if item['description'] == 'DIR' %} 
                 <a href="{{ url_for('index', path=item['path']) }}"> <span>
                 <img src="/static/svg/folder-solid.svg"; class="folder">&nbsp;</img>
-            {% elif item['description'] == 'SRC' %}
-                <a href="{{ url_for('text_page', path=item['path']) }}" target="_blank">
-                <span><img src="/static/svg/file-code-solid.svg"; class="src">&nbsp;</img>
-            {% elif item['description'] == 'Video' %}
-                <a href="{{ url_for('video_page', path=item['path']) }}"  target="_blank">
-                <span><img src="/static/svg/film-solid.svg"; class="default">&nbsp;</img>
-            {% elif item['description'] == 'Audio' %}
-                <a href="{{ url_for('audio_page', path=item['path']) }}" target="_blank">
-                <span><img src="/static/svg/music-solid.svg"; class="default">&nbsp;</img>
-            {% elif item['description'] == 'Text' %}
-                <a href="{{ url_for('text_page', path=item['path']) }}" target="_blank">
-                <span><img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
             {% else %}
-                <a href="{{ url_for('raw_page', path=item['path']) }}" target="_blank"><span>
-                {% if item['description'] == 'PDF' %} <img src="/static/svg/file-pdf-solid.svg"; class="pdf">&nbsp;</img>
+                <a href="{{ url_for('index', path=item['path']) }}" target="_blank"> <span>
+                {% if item['description'] == 'SRC' %} <img src="/static/svg/file-code-solid.svg"; class="src">&nbsp;</img>
+                {% elif item['description'] == 'Video' %} <img src="/static/svg/film-solid.svg"; class="default">&nbsp;</img>
+                {% elif item['description'] == 'Audio' %} <img src="/static/svg/music-solid.svg"; class="default">&nbsp;</img>
+                {% elif item['description'] == 'Text' %} <img src="/static/svg/file-lines-solid.svg"; class="files">&nbsp;</img>
+                {% elif item['description'] == 'PDF' %} <img src="/static/svg/file-pdf-solid.svg"; class="pdf">&nbsp;</img>
                 {% elif item['description'] == 'IMG' %} <img src="/static/svg/image-solid.svg"; class="default">&nbsp;&nbsp;</img>
                 {% elif item['description'] == 'DOC' %} <img src="/static/svg/file-word-solid.svg"; class="doc">&nbsp;</img>
                 {% elif item['description'] == 'DB' %} <img src="/static/svg/database-solid.svg"; class="default">&nbsp;</img>

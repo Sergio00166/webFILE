@@ -53,7 +53,7 @@ def audio_func(path,root):
     # a weird thing with the ' char, fixed with this code
     nxt=nxt.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
     prev=prev.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
-    nxt="/audio/"+nxt; prev="/audio/"+prev; path="/raw/"+path
+    nxt="/"+nxt; prev="/"+prev; path="/?raw="+path
     return prev, nxt, name, path
 
 def index_func(folder_path,root,folder_size):
