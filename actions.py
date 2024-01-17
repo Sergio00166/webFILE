@@ -27,7 +27,7 @@ def init():
     root=dic["folder"]
     if not (exists(root) and isdir(root)):
         print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
-    if not "debug" in dic:
+    if "debug" in dic:
         debug=dic["debug"].lower
         if debug=="false": debug=False
         else: debug==True
@@ -63,7 +63,6 @@ def audio(path,root):
 
 def index_func(folder_path,root,folder_size):
     is_root=False
-    print(":"+folder_path+":")
     if folder_path=="": folder_path=root; is_root=True
     elif folder_path==root: is_root=True
     else: folder_path=root+sep+folder_path
@@ -71,7 +70,6 @@ def index_func(folder_path,root,folder_size):
     if not access(folder_path, R_OK): raise PermissionError
     # Deny access if not inside root
     if not is_subdirectory(root, abspath(folder_path)): raise PermissionError
-    print(folder_path)
     folder_content = get_folder_content(folder_path,root,folder_size)
     parent_directory = abspath(join(folder_path, pardir))
     if parent_directory==root: parent_directory=""
