@@ -9,13 +9,14 @@
             align-items: center; height: 90vh;
             background-color: #222; flex-direction: column;}
         .flex {display: flex;justify-content: center; }
+		h2 { text-align: center; }
     </style>
 </head>
 <body>
     <h2>{{ name }}</h2><br>
     <div id="audio-container">
         <audio controls autoplay id="audio" onended="handleAudioEnded()">
-            <source src="{{ url_for('file_page', path=path) }}" type="audio/mp3">
+            <source src="{{ path }}" type="audio/mp3">
         </audio>
     </div>
     <div class="flex">

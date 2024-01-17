@@ -2,7 +2,7 @@
 
 from os.path import join, isdir, relpath
 from os.path import exists, pardir, abspath
-from functions import get_folder_content, is_subdirectory
+from functions import get_folder_content, is_subdirectory, fix_Addr
 from os import access, R_OK, sep
 from sys import argv
 
@@ -34,37 +34,39 @@ def init():
     else: debug=False
     return dic["port"], dic["listen"], root, debug, folder_size
 
+def isornot(path,root):
+    directory, file=fix_Addr(path,root)    
+    if not exists(root+sep+path): raise FileNotFoundError
+    if not access(root+sep+path, R_OK): raise PermissionError
+    return directory, file
+
 def audio(path,root):
+    if not exists(root+sep+path): raise FileNotFoundError
+    if not access(root+sep+path, R_OK): raise PermissionError
     folder=sep.join(path.split(sep)[:-1])
     name=path.split(sep)[-1]; lst=[]
     out=get_folder_content(root+sep+folder,root,False)
     for x in out:
         if x["description"]=="Audio": lst.append(x["path"])
-
     # Get previous song
     try: nxt=lst[lst.index(path)+1]
     except: nxt=lst[0]
-
     # Get next song
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
     
     # The {{ url_for('audio_page', path=nxt} inside the html does
     # a weird thing with the ' char, fixed with this code
-    filepg="/audio/?path="
-    nxt=filepg+nxt.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
-    prev=filepg+prev.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
-
+    nxt=nxt.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
+    prev=prev.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
     return prev, nxt, name, path 
 
-def index_func(args,root,folder_size):
+def index_func(folder_path,root,folder_size):
     is_root=False
-    if 'path' not in args:
-        folder_path=root; is_root=True
-    else:
-        folder_path=args['path']
-        if folder_path=="." or folder_path=="": is_root=True
-        folder_path=root+sep+folder_path
+    print(":"+folder_path+":")
+    if folder_path=="": folder_path=root; is_root=True
+    elif folder_path==root: is_root=True
+    else: folder_path=root+sep+folder_path
     if not exists(folder_path): raise FileNotFoundError
     if not access(folder_path, R_OK): raise PermissionError
     # Deny access if not inside root
@@ -77,4 +79,5 @@ def index_func(args,root,folder_size):
     folder_path = relpath(folder_path, start=root)
     if folder_path==".": folder_path=""
     folder_path="/"+folder_path.replace(sep,"/")
+    parent_directory=parent_directory.replace(sep,"/")
     return folder_content,folder_path,parent_directory,is_root

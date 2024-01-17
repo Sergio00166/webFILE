@@ -1,13 +1,10 @@
 #Code by Sergio 1260
 
-from flask import Flask, render_template, request, send_from_directory
 from os.path import commonpath, join, isdir, relpath, abspath
 from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir, access, R_OK
 from pathlib import Path
-from sys import argv
-
 
 file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml", ".ini",
 ".json",".bat", ".cmd", ".sh", ".md", ".xmls", ".yml", ".yaml", ".ini" ".asm", ".cfg", ".sql", ".htm", ".config"],
@@ -18,38 +15,8 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 "HdImg": [".iso", ".img", ".vdi", ".vmdk", ".vhd"], "Compress": [".zip", ".7z", ".rar", ".tar", ".gzip"],
 "BIN": [".exe", ".dll", ".bin", ".sys", ".so"]}
 
-
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
-
-def init():
-    global root, folder_size
-    if len(argv)==1: file="config.cfg"
-    else: file=argv[1]
-    file = open(file,"r"); dic={}
-    for x in file:
-        x=x.rstrip().lstrip()
-        if not len(x)==0 and not x.startswith("#"):
-            key=x[:x.find(":")]
-            value=x[x.find(":")+1:]
-            value=value.rstrip().lstrip()
-            key=key.rstrip().lstrip()
-            dic[key]=value
-    if not "port" in dic: dic["port"]="5000"
-    if not "listen" in dic: dic["listen"]="172.0.0.1"
-    if not "show.folder.size" in dic: folder_size="false"
-    else: folder_size=dic["show.folder.size"].lower()
-    if not "folder" in dic:
-        print("[CFG_FILE]: A FOLDER PATH IS NEEDED"); exit()
-    root=dic["folder"]
-    if not (exists(root) and isdir(root)):
-        print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
-    if not "debug" in dic:
-        debug=dic["debug"].lower
-        if debug=="false": debug=False
-        else: debug==True
-    else: debug=False
-    return dic["port"], dic["listen"], root, debug
 
 def sort_results(paths,folder_path):
     dirs=[]; files=[]
@@ -77,7 +44,8 @@ def get_file_type(path):
             return "Text"
         else: return "File"
 
-def is_subdirectory(parent, child): return commonpath([parent]) == commonpath([parent, child])
+def is_subdirectory(parent, child):
+    return commonpath([parent]) == commonpath([parent, child])
 
 def get_directory_size(directory):
     total = 0
@@ -89,8 +57,7 @@ def get_directory_size(directory):
     except PermissionError: return 0
     return total
 
-def get_folder_content(folder_path):
-    global root, folder_size
+def get_folder_content(folder_path, root, folder_size):
     items = listdir(folder_path)
     items=sort_results(items,folder_path)
     content = []
@@ -103,7 +70,7 @@ def get_folder_content(folder_path):
             else: size=""
             try: mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
             except: mtime="##-##-#### ##:##:##"
-            item_path= relpath(item_path, start=root)
+            item_path= relpath(item_path, start=root).replace(sep,"/")
             content.append({'name': item,'path': item_path,
             'description': description, "size": size,"mtime": mtime})
         except: pass
@@ -111,8 +78,7 @@ def get_folder_content(folder_path):
 
 # This returns the directory and the name of 
 # the file if it is inside the root directory
-def fix_Addr(file_path):
-    global root
+def fix_Addr(file_path, root):
     file_path=file_path.split(sep)
     if len(file_path)==1:
         file=file_path[0]
