@@ -18,6 +18,9 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
+def fix_pth_url(path):
+    return path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
+
 def sort_results(paths,folder_path):
     dirs=[]; files=[]
     for x in paths:

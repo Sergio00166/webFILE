@@ -51,9 +51,7 @@ def audio_func(path,root):
     else: prev=lst[lst.index(path)-1]
     # The {{ url_for('audio_page', path=nxt} inside the html does
     # a weird thing with the ' char, fixed with this code
-    nxt=nxt.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
-    prev=prev.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
-    path=path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
+    nxt = fix_pth_url(nxt); prev=fix_pth_url(prev); path=fix_pth_url(path)
     nxt="/"+nxt; prev="/"+prev; path="/?raw="+path
     return prev, nxt, name, path
 
