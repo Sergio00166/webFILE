@@ -51,7 +51,6 @@ def index():
             path=path+request.args["static"].replace("/",sep)
             path=path.split(sep); file=path[-1]
             directory=sep.join(path[:-1])
-            print(directory, file)
             return send_from_directory(directory, file)
         else:
             folder_content = get_folder_content(root, root, folder_size)
