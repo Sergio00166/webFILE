@@ -7,13 +7,14 @@
 from functions import *
 from actions import *
 from flask import Flask, render_template, request, send_from_directory
+from sys import path as pypath
 
 if __name__=="__main__":
     port, listen, root, folder_size = init()
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder=None)
 
 @app.route('/<path:path>')
-def index(path):
+def explorer(path):
     try:
         file_type = get_file_type(root+sep+path)
         if file_type=="DIR":
@@ -21,7 +22,7 @@ def index(path):
             par_root=(parent_directory=="")
             return render_template('index.html', folder_content=folder_content,folder_path=folder_path,
                                     parent_directory=parent_directory,is_root=is_root, par_root=par_root)
-        elif file_type=="Text":
+        elif file_type=="Text" or file_type=="SRC":
             directory, file = isornot(path,root)
             return send_from_directory(directory,file,mimetype='text')
         elif file_type=="Video":
@@ -39,16 +40,23 @@ def index(path):
     except: return render_template('500.html'), 500
 
 @app.route('/')
-def home():
+def index():
     try:
-        if not "raw" in request.args:
-            folder_content = get_folder_content(root, root, folder_size)
-            return render_template('index.html', folder_content=folder_content,folder_path=root,
-                                   parent_directory=root,is_root=True)
-        else:
+        if "raw" in request.args:
             path=request.args["raw"]
             directory, file = isornot(path,root)
             return send_from_directory(directory, file)
+        elif "static" in request.args:
+            path=pypath[0]+sep+"static"+sep
+            path=path+request.args["static"].replace("/",sep)
+            path=path.split(sep); file=path[-1]
+            directory=sep.join(path[:-1])
+            print(directory, file)
+            return send_from_directory(directory, file)
+        else:
+            folder_content = get_folder_content(root, root, folder_size)
+            return render_template('index.html', folder_content=folder_content,folder_path=root,
+                                   parent_directory=root,is_root=True)
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500

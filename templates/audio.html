@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ name }}</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('index', static="audio.ico") }}">
     <style>
         body {display: flex;justify-content: center;
             align-items: center; height: 90vh;
@@ -16,7 +17,7 @@
     <h2>{{ name }}</h2><br>
     <div id="audio-container">
         <audio controls autoplay id="audio" onended="handleAudioEnded()">
-            <source src="{{ path }}" type="audio/mp3">
+            <source src="{{ url_for('index', raw=path) }}" type="audio/mp3">
         </audio>
     </div>
     <div class="flex">
