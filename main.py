@@ -26,7 +26,7 @@ def explorer(path):
             directory, file = isornot(path,root)
             return send_from_directory(directory,file,mimetype='text')
         elif file_type=="Video":
-            directory, file = isornot(path,root); path=fix_pth_url(path)
+            directory, file = isornot(path,root)
             return render_template('video.html', path="/?raw="+path, name=file)
         elif file_type=="Audio":
             prev, nxt, name, path = audio_func(path,root)

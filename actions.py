@@ -51,8 +51,8 @@ def audio_func(path,root):
     else: prev=lst[lst.index(path)-1]
     # The {{ url_for('audio_page', path=nxt} inside the html does
     # a weird thing with the ' char, fixed with this code
-    nxt = fix_pth_url(nxt); prev=fix_pth_url(prev); path=fix_pth_url(path)
-    nxt="/"+nxt; prev="/"+prev
+    nxt = fix_pth_url(nxt); prev=fix_pth_url(prev)
+    nxt="/"+nxt; prev="/"+prev; path="/?raw="+path
     return prev, nxt, name, path
 
 def index_func(folder_path,root,folder_size):
