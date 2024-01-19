@@ -26,15 +26,14 @@ def explorer(path):
             directory, file = isornot(path,root)
             return send_from_directory(directory,file,mimetype='text')
         elif file_type=="Video":
-            directory, file = isornot(path,root)
-            return render_template('video.html', path="/?raw="+path, name=file)
+            prev, nxt, name, path = filepage_func(path,root,file_type)
+            return render_template('video.html', path=path, name=name,prev=prev, nxt=nxt)
         elif file_type=="Audio":
-            prev, nxt, name, path = audio_func(path,root)
+            prev, nxt, name, path = filepage_func(path,root,file_type)
             return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt)
         else:
             directory, file = isornot(path,root)
             return send_from_directory(directory, file)
-
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500

@@ -35,14 +35,14 @@ def isornot(path,root):
     if not access(root+sep+path, R_OK): raise PermissionError
     return directory, file
 
-def audio_func(path,root):
+def filepage_func(path,root,filetype):
     if not exists(root+sep+path): raise FileNotFoundError
     if not access(root+sep+path, R_OK): raise PermissionError
     folder=sep.join(path.split("/")[:-1])
     name=path.split("/")[-1]; lst=[]
     out=get_folder_content(root+sep+folder,root,False)
     for x in out:
-        if x["description"]=="Audio": lst.append(x["path"])
+        if x["description"]==filetype: lst.append(x["path"])
     # Get previous song
     try: nxt=lst[lst.index(path)+1]
     except: nxt=lst[0]
@@ -52,7 +52,7 @@ def audio_func(path,root):
     # The {{ url_for('audio_page', path=nxt} inside the html does
     # a weird thing with the ' char, fixed with this code
     nxt = fix_pth_url(nxt); prev=fix_pth_url(prev)
-    nxt="/"+nxt; prev="/"+prev; path="/?raw="+path
+    nxt="/"+nxt; prev="/"+prev
     return prev, nxt, name, path
 
 def index_func(folder_path,root,folder_size):

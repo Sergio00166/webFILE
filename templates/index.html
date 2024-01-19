@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<!DOCTYPE html><html><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webFILE server</title>
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('index', static="favicon.ico") }}">
     <link rel="stylesheet" href="{{ url_for('index', static="styles.css") }}">
 </head><body>
     <div class="list-group">
@@ -24,8 +22,8 @@
             {% else %}
                 <a href="{{ url_for('explorer', path=item['path']) }}" target="_blank"> <span>
                 {% if item['description'] == 'SRC' %} <img src="{{ url_for('index', static="svg/file-code-solid.svg") }}"; class="src">&nbsp;</img>
-                {% elif item['description'] == 'Video' %} <img src="{{ url_for('index', static="svg/file-pdf-solid.svg") }}"; class="default">&nbsp;</img>
-                {% elif item['description'] == 'Audio' %} <img src="{{ url_for('index', static="svg/film-solid.svg") }}"; class="default">&nbsp;</img>
+                {% elif item['description'] == 'Video' %} <img src="{{ url_for('index', static="svg/film-solid.svg") }}"; class="default">&nbsp;</img>
+                {% elif item['description'] == 'Audio' %} <img src="{{ url_for('index', static="svg/music-solid.svg") }}"; class="default">&nbsp;</img>
                 {% elif item['description'] == 'Text' %} <img src="{{ url_for('index', static="svg/file-lines-solid.svg") }}"; class="files">&nbsp;</img>
                 {% elif item['description'] == 'PDF' %} <img src="{{ url_for('index', static="svg/file-pdf-solid.svg") }}"; class="pdf">&nbsp;</img>
                 {% elif item['description'] == 'IMG' %} <img src="{{ url_for('index', static="svg/image-solid.svg") }}"; class="default">&nbsp;&nbsp;</img>
