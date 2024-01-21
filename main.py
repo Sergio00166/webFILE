@@ -1,109 +1,62 @@
 #Code by Sergio 1260
 
-"""
-
-BASIC FTP via WEB with a basic interface
-Allows you to share a folder across the LAN
-(READ-ONLY mode)
-
-CAPABILITIES:
-
- - Can play videos
- - Can play music
- - Can read pdf
- - Can read plain text
- - If nothing of above it downloads it
-
-"""
+# BASIC FTP via WEB with a basic interface
+# Allows you to share a folder across the LAN
+# (READ-ONLY mode)
 
 from functions import *
+from actions import *
+from flask import Flask, render_template, request, send_from_directory
+from sys import path as pypath
 
 if __name__=="__main__":
-    port, listen, root, debug = init()
-    app = Flask(__name__)
+    port, listen, root, folder_size = init()
+    app = Flask(__name__, static_folder=None)
 
-# Default file page
-@app.route('/file/')
-def file_page():
+@app.route('/<path:path>')
+def explorer(path):
     try:
-        path=request.args['path']
-        directory, file=fix_Addr(path)
-        if directory==None: return render_template('403.html'), 403
-        elif not exists(directory+sep+file):
-            return render_template('404.html'), 404
-        else: return send_from_directory(directory, file)
-    except: return render_template('500.html'), 500
-
-# Force web explorer to handle the file as we want
-@app.route('/video/')
-def video_page():
-    try:
-        path=request.args['path']
-        name=path.split(sep)[-1]      
-        if not exists(root+sep+path): return render_template('404.html'), 404
-        if not access(root+sep+path, R_OK): return render_template('403.html'), 403
-        return render_template('video.html', path=path, name=name)
-    except: return render_template('500.html'), 500
-
-# Force web explorer to handle the file as we want
-@app.route('/audio/')
-def audio_page():
-    try:
-        path=request.args['path']
-        folder=sep.join(path.split(sep)[:-1])
-        name=path.split(sep)[-1]; lst=[]
-        out=get_folder_content(root+sep+folder)
-        
-        for x in out:
-            if x["description"]=="Audio": lst.append(x["path"])
-
-        # Get previous song
-        try: nxt=lst[lst.index(path)+1]
-        except: nxt=lst[0]
-
-        # Get next song
-        if lst.index(path)==0: prev=lst[-1]
-        else: prev=lst[lst.index(path)-1]
-        
-        if not exists(root+sep+path): return render_template('404.html'), 404
-        if not access(root+sep+path, R_OK): return render_template('403.html'), 403
-        return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt )
-    except: return render_template('500.html'), 500
-
-# Force web explorer to handle the file as we want
-@app.route('/text/')
-def text_page():
-    try:
-        path=request.args['path']
-        directory, file=fix_Addr(path)
-        if not exists(root+sep+path): return render_template('404.html'), 404
-        if not access(root+sep+path, R_OK): return render_template('403.html'), 403
-        return send_from_directory(directory,file,mimetype='text')
+        file_type = get_file_type(root+sep+path)
+        if file_type=="DIR":
+            folder_content,folder_path,parent_directory,is_root=index_func(path,root,folder_size)
+            par_root=(parent_directory=="")
+            return render_template('index.html', folder_content=folder_content,folder_path=folder_path,
+                                    parent_directory=parent_directory,is_root=is_root, par_root=par_root)
+        elif file_type=="Text" or file_type=="SRC":
+            directory, file = isornot(path,root)
+            return send_from_directory(directory,file,mimetype='text')
+        elif file_type=="Video":
+            prev, nxt, name, path = filepage_func(path,root,file_type)
+            return render_template('video.html', path=path, name=name,prev=prev, nxt=nxt)
+        elif file_type=="Audio":
+            prev, nxt, name, path = filepage_func(path,root,file_type)
+            return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt)
+        else:
+            directory, file = isornot(path,root)
+            return send_from_directory(directory, file)
+    except PermissionError: return render_template('403.html'), 403
+    except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500
 
 @app.route('/')
 def index():
     try:
-        is_root=False
-        if 'path' not in request.args:
-            folder_path=root; is_root=True
+        if "raw" in request.args:
+            path=request.args["raw"]
+            directory, file = isornot(path,root)
+            return send_from_directory(directory, file)
+        elif "static" in request.args:
+            path=pypath[0]+sep+"static"+sep
+            path=path+request.args["static"].replace("/",sep)
+            path=path.split(sep); file=path[-1]
+            directory=sep.join(path[:-1])
+            return send_from_directory(directory, file)
         else:
-            folder_path=request.args['path']
-            if folder_path=="." or folder_path=="": is_root=True
-            folder_path=root+sep+folder_path
-        if not exists(folder_path): return render_template('404.html'), 404
-        if not access(folder_path, R_OK): return render_template('403.html'), 403
-        # Deny access if not inside root
-        if not is_subdirectory(root, abspath(folder_path)): raise PermissionError
-        folder_content = get_folder_content(folder_path)
-        parent_directory = abspath(join(folder_path, pardir))
-        if parent_directory==root: parent_directory=""
-        else: parent_directory= relpath(parent_directory, start=root)
-        folder_path = relpath(folder_path, start=root)
-        if folder_path==".": folder_path=""
-        folder_path="/"+folder_path.replace(sep,"/")
-        return render_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root)
+            folder_content = get_folder_content(root, root, folder_size)
+            return render_template('index.html', folder_content=folder_content,folder_path=root,
+                                   parent_directory=root,is_root=True)
     except PermissionError: return render_template('403.html'), 403
+    except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500
 
-if __name__=="__main__": app.run(host=listen, port=int(port), debug=debug)
+if __name__=="__main__": app.run(host=listen, port=int(port), debug=False)
