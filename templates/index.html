@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('index', static="styles.css") }}">
 </head><body>
     <div class="list-group">
-       <h2>Index of {{ folder_path }}</h2>
+       <h2>Index of &nbsp;<i>{{ folder_path }}</i></h2>
         <div class="container"> <br>
         {% if not is_root %}
            {% if not par_root %} <a href="{{ url_for('explorer', path=parent_directory) }}">
