@@ -53,7 +53,7 @@ def index():
             return send_from_directory(directory, file)
         else:
             folder_content = get_folder_content(root, root, folder_size)
-            return render_template('index.html', folder_content=folder_content,folder_path=root,
+            return render_template('index.html', folder_content=folder_content,folder_path="/",
                                    parent_directory=root,is_root=True)
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
