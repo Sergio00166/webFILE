@@ -72,7 +72,7 @@ def get_folder_content(folder_path, root, folder_size):
             elif folder_size=="true": size=readable(get_directory_size(item_path))
             else: size=""
             try: mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
-            except: mtime=""
+            except: mtime="##-##-#### ##:##:##"
             item_path= relpath(item_path, start=root).replace(sep,"/")
             content.append({'name': item,'path': item_path,
             'description': description, "size": size,"mtime": mtime})
