@@ -48,11 +48,9 @@ def index():
             return send_from_directory(directory, file)
         elif "static" in request.args:
             sroot=pypath[0]+sep+"static"+sep
-            path=sroot+request.args["static"].replace("/",sep)
+            path=request.args["static"].replace("/",sep)
             # Check if it is valid
             directory, file = isornot(path,sroot)
-            path=path.split(sep); file=path[-1]
-            directory=sep.join(path[:-1])
             return send_from_directory(directory, file)
         else:
             folder_content = get_folder_content(root, root, folder_size)

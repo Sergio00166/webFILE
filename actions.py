@@ -33,6 +33,7 @@ def isornot(path,root):
     directory, file=fix_Addr(path,root)
     if not exists(root+sep+path): raise FileNotFoundError
     if not access(root+sep+path, R_OK): raise PermissionError
+    if directory==None or file==None: raise PermissionError
     return directory, file
 
 def filepage_func(path,root,filetype):
