@@ -27,7 +27,9 @@ def sort_contents(folder_content,sort):
 def init():
     if len(argv)==1: file="config.cfg"
     else: file=argv[1]
-    file = open(file,"r"); dic={}
+    try: file = open(file,"r")
+    except: print("ERROR: config file not valid or not exists"); exit()
+    dic={}
     for x in file:
         x=x.rstrip().lstrip()
         if not len(x)==0 and not x.startswith("#"):
