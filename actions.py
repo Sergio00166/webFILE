@@ -2,14 +2,34 @@
 
 from os.path import join, isdir, relpath
 from os.path import exists, pardir, abspath
-from functions import get_folder_content, is_subdirectory, fix_Addr, fix_pth_url
+from functions import get_folder_content, is_subdirectory, fix_Addr, fix_pth_url, unreadable, unreadable_date
 from os import access, R_OK, sep
 from sys import argv
+
+
+def sort_contents(folder_content,sort):
+    if sort=="nd":
+        dirs = []; files = []
+        for d in folder_content:
+            if d['description']=='DIR': dirs.append(d)
+            else: files.append(d)
+        return files[::-1]+dirs[::-1]
+    elif sort=="sp" or sort=="sd":
+        out=sorted(folder_content,key=lambda x:unreadable(x['size']))
+        if sort=="sp": return out[::-1]
+        else: return out
+    elif sort=="dp" or sort=="dd":
+        out=sorted(folder_content,key=lambda x:unreadable_date(x['mtime']))
+        if sort=="dp": return out[::-1]
+        else: return out
+    else: return folder_content
 
 def init():
     if len(argv)==1: file="config.cfg"
     else: file=argv[1]
-    file = open(file,"r"); dic={}
+    try: file = open(file,"r")
+    except: print("ERROR: config file not valid or not exists"); exit()
+    dic={}
     for x in file:
         x=x.rstrip().lstrip()
         if not len(x)==0 and not x.startswith("#"):
@@ -33,6 +53,7 @@ def isornot(path,root):
     directory, file=fix_Addr(path,root)
     if not exists(root+sep+path): raise FileNotFoundError
     if not access(root+sep+path, R_OK): raise PermissionError
+    if directory==None or file==None: raise PermissionError
     return directory, file
 
 def filepage_func(path,root,filetype):

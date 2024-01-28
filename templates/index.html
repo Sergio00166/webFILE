@@ -4,16 +4,24 @@
     <title>webFILE server</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('index', static="favicon.ico") }}">
     <link rel="stylesheet" href="{{ url_for('index', static="styles.css") }}">
+    <script src="{{ url_for('index', static="sort.js") }}"></script>
 </head><body>
     <div class="list-group">
-       <h2>Index of {{ folder_path }}</h2>
-        <div class="container"> <br>
+       <h2>Index of &nbsp;<i>{{ folder_path }}</i></h2>
+       <div class="container"> <br>
         {% if not is_root %}
            {% if not par_root %} <a href="{{ url_for('explorer', path=parent_directory) }}">
            {% else %} <a href="{{ url_for('index') }}"> {% endif %}
            <img src="{{ url_for('index', static="svg/reply-solid.svg") }}"; class="goback">&nbsp;</img>
-           <span class="wrap"> Parent Directory</span></a><br>
+           <span class="wrap"> Parent Directory</span></a>
         {% endif %}
+        <div class="sort"> <div class="sort1">&nbsp;
+           <a href="" onclick="sortNameBT()";>Name&nbsp;</a></div><div class="sort1">
+           <a href=""; class="sortsz"; onclick="sortSizeBT()";>Size&nbsp;</a> &nbsp;&nbsp;&nbsp;
+           <t class="sorttm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</t>
+           <a href=""; class="sorttm"; onclick="sortDateBT()";>Modified&nbsp;</a>
+           <t class="sorttm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</t>
+        </div></div>
         {% for item in folder_content %}
           <div class="filename">
             {% if item['description'] == 'DIR' %} 
@@ -35,13 +43,10 @@
                 {% elif item['description'] == 'BIN' %} <img src="{{ url_for('index', static="svg/file-binary.svg") }}">&nbsp;</img>
                 {% else %} <img src="{{ url_for('index', static="svg/file-solid.svg") }}"; class="files">&nbsp;</img>
             {% endif %}{% endif %}
-        </span><span class="wrap">
-             {{ item['name'] }}
+        </span><span class="wrap">{{ item['name'] }}
         </span><span class="no_overflow">
           <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;
           &nbsp;&nbsp; {{ item['size'] }} </t>
           <t class="notime">&nbsp;&nbsp; {{ item['mtime'] }}</t>
-        </span>
-    </a></div>{% endfor %} <br></div>
-    <br><br></div>
+       </span></a></div>{% endfor %} <br></div><br><br></div>
 </body></html>

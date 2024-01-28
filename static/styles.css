@@ -27,7 +27,12 @@ a:hover { background-color: #111111; }
 inline-size: 150px; overflow-wrap: break-word; }
 
 @media (max-width: 650px) {
+.sortsz { display: none; }
 .nosize { display: none; } }
 
 @media (max-width: 1080px) {
+.sorttm { display: none; }
 .notime { display: none; } }
+
+.sort { display: flex; justify-content: space-between; }
+.sort1 { display: flex; }
