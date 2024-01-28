@@ -16,12 +16,17 @@ if __name__=="__main__":
 @app.route('/<path:path>')
 def explorer(path):
     try:
+        if "sort" in request.args:
+            sort=request.args["sort"]
+        else: sort=""
         file_type = get_file_type(root+sep+path)
         if file_type=="DIR":
-            folder_content,folder_path,parent_directory,is_root=index_func(path,root,folder_size)
-            par_root=(parent_directory=="")
+            folder_content,folder_path,parent_directory,is_root=\
+            index_func(path,root,folder_size)
+            par_root = (parent_directory=="")
+            folder_content = sort_contents(folder_content,sort)
             return render_template('index.html', folder_content=folder_content,folder_path=folder_path,
-                                    parent_directory=parent_directory,is_root=is_root, par_root=par_root)
+                                   parent_directory=parent_directory,is_root=is_root, par_root=par_root)
         elif file_type=="Text" or file_type=="SRC":
             directory, file = isornot(path,root)
             return send_from_directory(directory,file,mimetype='text')
@@ -53,7 +58,10 @@ def index():
             directory, file = isornot(path,sroot)
             return send_from_directory(directory, file)
         else:
+            if "sort" in request.args: sort=request.args["sort"]
+            else: sort=""
             folder_content = get_folder_content(root, root, folder_size)
+            folder_content = sort_contents(folder_content,sort)
             return render_template('index.html', folder_content=folder_content,folder_path="/",
                                    parent_directory=root,is_root=True)
     except PermissionError: return render_template('403.html'), 403

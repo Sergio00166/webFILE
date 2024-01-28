@@ -33,9 +33,20 @@ def sort_results(paths,folder_path):
 def readable(num, suffix="B"):
     for unit in ["", "Ki", "Mi", "Gi", "Ti"]:
         if abs(num) < 1024.0:
-            return f"{num:3.1f}{unit}{suffix}"
+            return f"{num:3.1f} {unit}{suffix}"
         num /= 1024.0
-    return f"{num:.1f}Yi{suffix}"
+    return f"{num:.1f} Yi{suffix}"
+
+def unreadable(size_str):
+    if not size_str=="0":
+        size, unit = size_str.split(" "); size = float(size)
+        units={'B':1,'KiB':1024,'MiB':1024**2,'GiB':1024**3,'TiB':1024**4}
+        return int(size * units.get(unit, 1))
+    else: return 0
+
+def unreadable_date(date_str):
+    if date_str == '##-##-#### ##:##:##': return float(0)
+    return dt.strptime(date_str, '%d-%m-%Y %H:%M:%S').timestamp()
 
 def get_file_type(path):
     if isdir(path): return "DIR"
@@ -70,9 +81,9 @@ def get_folder_content(folder_path, root, folder_size):
             description = get_file_type(item_path)
             if not description=="DIR": size=readable(getsize(item_path))
             elif folder_size=="true": size=readable(get_directory_size(item_path))
-            else: size=""
+            else: size="0"
             try: mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
-            except: mtime="##-##-#### ##:##:##"
+            except: mtime="##-##-#### ##:##:##"          
             item_path= relpath(item_path, start=root).replace(sep,"/")
             content.append({'name': item,'path': item_path,
             'description': description, "size": size,"mtime": mtime})
