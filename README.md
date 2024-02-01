@@ -4,8 +4,6 @@ Same as python3 -m http.server but more customizable (you can make it look bette
 
 Some browsers cannot play some video formats, and others can because this project is not using transcoding (and will not) to convert in realtime the media
 
-TODO: create a separate html for images, and add to the audio image and video html the options to go to a previous and next file (with the same file type)
-
 To change the options you can edit the config.cfg
 
 Requirements:

@@ -7,7 +7,7 @@
     <script src="{{ url_for('index', static="sort.js") }}"></script>
 </head><body>
     <div class="list-group">
-       <h2>Index of &nbsp;<i>{{ folder_path }}</i></h2>
+       <h2>Index of <i>{{ folder_path }}</i></h2>
        <div class="container"> <br>
         {% if not is_root %}
            {% if not par_root %} <a href="{{ url_for('explorer', path=parent_directory) }}">
