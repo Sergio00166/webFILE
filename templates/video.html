@@ -7,36 +7,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('index', static="ico/audio.ico") }}">
     <link rel="stylesheet" href="{{ url_for('index', static='css/video.css') }}" />
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
-    ></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   </head>
   <body>
     <div class="video-container">
       <video
         id="video"
+		onended="handleVideoEnded()"
         disableRemotePlayback
         src="{{ url_for('index', raw=path) }}"
       ></video>
       <span class="custom-loader"></span>
       <div class="player-state">
         <span class="state-btn state-backward">
-          <ion-icon name="play-back-outline"></ion-icon>
-          <span class="backward-duration">5</span>
+		  <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
         </span>
         <span class="main-state state-btn">
-          <ion-icon name="play-outline"></ion-icon>
+		  <img class="fullimg"; src="{{ url_for('index', static="svg/videoplayer/play-outline.svg") }}";></img>
         </span>
         <span class="state-btn state-forward">
-          <span class="forward-duration">5</span>
-          <ion-icon name="play-forward-outline"></ion-icon>
+		  <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
         </span>
       </div>
       <div class="controls">
@@ -50,11 +39,11 @@
         <div class="btn-controls">
           <div class="btn-con">
             <span class="play-pause control-btn">
-              <ion-icon name="play-outline"></ion-icon>
+			  <img src="{{ url_for('index', static="svg/videoplayer/play-outline.svg") }}";></img>
             </span>
             <span class="volume">
               <span class="mute-unmute control-btn">
-                <ion-icon name="volume-high-outline"></ion-icon>
+				<img src="{{ url_for('index', static="svg/videoplayer/volume-high-outline.svg") }}";></img>
               </span>
               <div class="max-vol">
                 <div class="current-vol"></div>
@@ -67,18 +56,16 @@
             </span>
           </div>
           <div class="right-controls">
-            <span class="backward control-btn" title="5 backward">
-              <ion-icon name="play-back-outline"></ion-icon>
+            <span class="backward control-btn">
+			  <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
             </span>
-            <span class="forward control-btn" title="5 forward">
-              <ion-icon name="play-forward-outline"></ion-icon>
+            <span class="forward control-btn">
+			  <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
             </span>
-            <span class="mini-player control-btn">
-              <ion-icon name="albums-outline"></ion-icon>
-            </span>
+            <span class="mini-player control-btn" id="mdbttn">1</span>
             <span class="settings control-btn">
               <span class="setting-btn">
-                <ion-icon name="options-outline"></ion-icon>
+				<img src="{{ url_for('index', static="svg/videoplayer/settings-outline.svg") }}";></img>
               </span>
               <ul class="setting-menu">
                 <li data-value="0.25">0.25x</li>
@@ -91,27 +78,26 @@
                 <li data-value="2">2x</li>
               </ul>
             </span>
-            <span class="theater-btn control-btn">
-              <span class="theater-default">
-                <ion-icon name="tablet-landscape-outline"></ion-icon>
-              </span>
-              <span class="theater-active">
-                <ion-icon name="tv-outline"></ion-icon>
-              </span>
+            <span class="download-btn control-btn">
+				<img src="{{ url_for('index', static="svg/videoplayer/download-outline.svg") }}";></img>
             </span>
             <span class="fullscreen-btn control-btn" title="fullscreen">
               <span class="full">
-                <ion-icon name="scan-outline"></ion-icon>
+				<img src="{{ url_for('index', static="svg/videoplayer/scan-outline.svg") }}";></img>
               </span>
               <span class="contract">
-                <ion-icon name="contract-outline"></ion-icon>
+				<img src="{{ url_for('index', static="svg/videoplayer/contract-outline.svg") }}";></img>
               </span>
             </span>
           </div>
         </div>
       </div>
     </div>
-<script defer src="{{ url_for('index', static='js/video.js') }}"></script> <script>
-function handleForward() { window.location.href = '{{ nxt }}'; }
-function handleBackward() { window.location.href = '{{ prev }}' }
+<script defer src="{{ url_for('index', static='js/video.js') }}"></script><script>
+const pause_ico = "{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}";
+const play_ico = "{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}";
+const mute_ico = "{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}";
+const unmute_ico = "{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}";
+const prev = '{{ prev }}'; const next = '{{ nxt }}';
+const urlVideo = '{{ url_for('index', raw=path) }}';
 </script></body></html>
