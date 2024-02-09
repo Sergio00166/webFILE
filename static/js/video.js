@@ -85,8 +85,8 @@ function download() {
     })
 }
 
-
-let isPlaying = false,
+video.play();
+let isPlaying = true,
   mouseDownProgress = false,
   mouseDownVol = false,
   isCursorOnControls = false,
