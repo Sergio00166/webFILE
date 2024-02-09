@@ -12,20 +12,20 @@
     <div class="video-container">
       <video
         id="video"
-		onended="handleVideoEnded()"
+        onended="handleVideoEnded()"
         disableRemotePlayback
         src="{{ url_for('index', raw=path) }}"
       ></video>
       <span class="custom-loader"></span>
       <div class="player-state">
         <span class="state-btn state-backward">
-		  <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
+            <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
         </span>
         <span class="main-state state-btn">
-		  <img class="fullimg"; src="{{ url_for('index', static="svg/videoplayer/play-outline.svg") }}";></img>
+            <img class="fullimg"; src="{{ url_for('index', static="svg/videoplayer/play-outline.svg") }}";></img>
         </span>
         <span class="state-btn state-forward">
-		  <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
+        <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
         </span>
       </div>
       <div class="controls">
@@ -39,11 +39,11 @@
         <div class="btn-controls">
           <div class="btn-con">
             <span class="play-pause control-btn">
-			  <img src="{{ url_for('index', static="svg/videoplayer/play-outline.svg") }}";></img>
+                <img src="{{ url_for('index', static="svg/videoplayer/play-outline.svg") }}";></img>
             </span>
             <span class="volume">
               <span class="mute-unmute control-btn">
-				<img src="{{ url_for('index', static="svg/videoplayer/volume-high-outline.svg") }}";></img>
+                 <img src="{{ url_for('index', static="svg/videoplayer/volume-high-outline.svg") }}";></img>
               </span>
               <div class="max-vol">
                 <div class="current-vol"></div>
@@ -54,18 +54,19 @@
               <span>/</span>
               <span class="total-duration">0:00</span>
             </span>
+            <span>&nbsp;&nbsp;&nbsp;</span>
           </div>
           <div class="right-controls">
             <span class="backward control-btn">
-			  <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
+               <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
             </span>
             <span class="forward control-btn">
-			  <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
+               <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
             </span>
             <span class="mini-player control-btn" id="mdbttn">1</span>
             <span class="settings control-btn">
               <span class="setting-btn">
-				<img src="{{ url_for('index', static="svg/videoplayer/settings-outline.svg") }}";></img>
+                 <img src="{{ url_for('index', static="svg/videoplayer/settings-outline.svg") }}";></img>
               </span>
               <ul class="setting-menu">
                 <li data-value="0.25">0.25x</li>
@@ -79,14 +80,14 @@
               </ul>
             </span>
             <span class="download-btn control-btn">
-				<img src="{{ url_for('index', static="svg/videoplayer/download-outline.svg") }}";></img>
+                <img src="{{ url_for('index', static="svg/videoplayer/download-outline.svg") }}";></img>
             </span>
             <span class="fullscreen-btn control-btn" title="fullscreen">
               <span class="full">
-				<img src="{{ url_for('index', static="svg/videoplayer/scan-outline.svg") }}";></img>
+                 <img src="{{ url_for('index', static="svg/videoplayer/scan-outline.svg") }}";></img>
               </span>
               <span class="contract">
-				<img src="{{ url_for('index', static="svg/videoplayer/contract-outline.svg") }}";></img>
+                  <img src="{{ url_for('index', static="svg/videoplayer/contract-outline.svg") }}";></img>
               </span>
             </span>
           </div>
