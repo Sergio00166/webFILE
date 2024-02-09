@@ -12,11 +12,11 @@ function updateModeButton() {
 function next() {
 	localStorage.setItem("audioMode", audio.getAttribute("data-mode"));
 	localStorage.setItem("audioVolume", audio.volume.toString());
-	window.location.href = next; }
+	window.location.href = nextUrl; }
 function prev() {
 	localStorage.setItem("audioMode", audio.getAttribute("data-mode"));
 	localStorage.setItem("audioVolume", audio.volume.toString());
-	window.location.href = prev; }
+	window.location.href = prevUrl; }
 function chMode() {
 	var currentMode = parseInt(audio.getAttribute("data-mode"));
 	if (currentMode === 0) { audio.setAttribute("data-mode", 1); mode.textContent = "»"; }
@@ -27,6 +27,6 @@ function handleAudioEnded() {
 	if (currentMode === 1) {
 		localStorage.setItem("audioMode", audio.getAttribute("data-mode"));
 		localStorage.setItem("audioVolume", audio.volume.toString());
-		window.location.href = next; }
+		window.location.href = nextUrl; }
 	else if (currentMode === 2) { audio.currentTime = 0; audio.play(); } }
 function saveVolume() { localStorage.setItem("audioVolume", audio.volume.toString()); }
