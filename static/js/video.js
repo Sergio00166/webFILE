@@ -46,7 +46,6 @@ function changeMode() {
     if (currentMode === 2) { currentMode = 0 ; spanElement.innerHTML = "1";  }
     else if (currentMode === 0) { currentMode = 1 ; spanElement.innerHTML = "»";  }
     else if (currentMode === 1) { currentMode = 2 ; spanElement.innerHTML = "↻";  }
-	localStorage.setItem("videoMode", currentMode);
 } 
 function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
 
