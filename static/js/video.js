@@ -66,17 +66,15 @@ function handleVideoEnded() {
     else if (currentMode === 2) { play(); } 
 }
 function download() {
-    fetch(urlVideo)
-    .then(blob => {
-        const downloadLink = document.createElement('a');
-        downloadLink.style.display = 'none';
-        downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: 'video/mp4' }));
-        downloadLink.download = fileName;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    })
+    const downloadLink = document.createElement('a');
+    downloadLink.style.display = 'none';
+    downloadLink.href = urlVideo;
+    downloadLink.download = fileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
 }
+
 
 video.play();
 let isPlaying = true,
