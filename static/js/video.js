@@ -378,7 +378,7 @@ function handleMainStateIcon(icon) {
 function handleMainSateAnimationEnd() {
   mainState.classList.remove("animate-state");
   if (!isPlaying) {
-    mainState.innerHTML = `<img class="fullimg"; src="`+pause_ico+`"></img>`;
+    mainState.innerHTML = `<img class="fullimg"; src="`+play_ico+`"></img>`;
   }
 }
 
