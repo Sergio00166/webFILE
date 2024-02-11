@@ -423,9 +423,9 @@ function handleShorthand(e) {
     case " ":
       if (tagName === "button") return;
       if (isPlaying) {
-        video.pause();
+        pause();
       } else {
-        video.play();
+        play();
       }
       break;
     case "f":
