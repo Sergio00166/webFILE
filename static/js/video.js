@@ -67,12 +67,7 @@ function handleVideoEnded() {
     else if (currentMode === 2) { play(); } 
 }
 function download() {
-	var fileName = urlVideo.substring(urlVideo.indexOf('/?raw=') + 6);
-    var fileName = fileName.substring(fileName.lastIndexOf('/')+1);
-	console.log(urlVideo);
-	console.log(fileName);
     fetch(urlVideo)
-    .then(response => response.blob())
     .then(blob => {
         const downloadLink = document.createElement('a');
         downloadLink.style.display = 'none';
