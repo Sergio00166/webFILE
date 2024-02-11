@@ -453,12 +453,21 @@ function handleShorthand(e) {
       toggleMuteUnmute();
       break;
     case "+":
-      handlePlaybackRateKey("increase");
-      break;
+	 if (volumeVal < 1) {
+		volumeVal=volumeVal+0.05;
+		if (volumeVal > 1)
+		{ volumeVal=1; }
+	    video.volume = volumeVal;
+	    currentVol.style.width = volumeVal * 100 +"%";
+	 } break;
     case "-":
-      handlePlaybackRateKey();
-      break;
-
+	 if (volumeVal != 0) {
+		volumeVal=volumeVal-0.05;
+		if (volumeVal < 0)
+		{ volumeVal=0; }
+	    video.volume = volumeVal;
+	    currentVol.style.width = volumeVal * 100 +"%";
+	 } break;
     default:
       break;
   }
