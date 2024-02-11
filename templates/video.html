@@ -18,14 +18,8 @@
       ></video>
       <span class="custom-loader"></span>
       <div class="player-state">
-        <span class="state-btn state-backward">
-            <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
-        </span>
         <span class="main-state state-btn">
             <img class="fullimg"; src="{{ url_for('index', static="svg/videoplayer/play-outline.svg") }}";></img>
-        </span>
-        <span class="state-btn state-forward">
-        <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
         </span>
       </div>
       <div class="controls">
@@ -58,12 +52,12 @@
           </div>
           <div class="right-controls">
             <span class="backward control-btn">
-               <img src="{{ url_for('index', static="svg/videoplayer/play-back-outline.svg") }}";></img>
+               <img src="{{ url_for('index', static="svg/videoplayer/play-skip-back-outline.svg") }}";></img>
             </span>
             <span class="forward control-btn">
-               <img src="{{ url_for('index', static="svg/videoplayer/play-forward-outline.svg") }}";></img>
+               <img src="{{ url_for('index', static="svg/videoplayer/play-skip-forward-outline.svg") }}";></img>
             </span>
-            <span class="mini-player control-btn" id="mdbttn">1</span>
+            <span class="mode-btn control-btn" id="mdbttn">1</span>
             <span class="settings control-btn">
               <span class="setting-btn">
                  <img src="{{ url_for('index', static="svg/videoplayer/settings-outline.svg") }}";></img>

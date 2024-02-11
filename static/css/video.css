@@ -78,18 +78,6 @@ body {
   transform: scale(0);
 }
 
-.state-forward,
-.state-backward {
-  font-size: 1.5rem;
-}
-
-.state-forward .forward-duration {
-  margin-right: 0.5rem;
-}
-.state-backward .backward-duration {
-  margin-left: 0.5rem;
-}
-
 .animate-state {
   animation: playPause 0.5s forwards;
 }

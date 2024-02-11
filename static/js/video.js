@@ -17,24 +17,23 @@ const forward = document.querySelector(".forward");
 const backward = document.querySelector(".backward");
 const hoverTime = document.querySelector(".hover-time");
 const hoverDuration = document.querySelector(".hover-duration");
-const miniPlayer = document.querySelector(".mini-player");
 const settingsBtn = document.querySelector(".setting-btn");
 const settingMenu = document.querySelector(".setting-menu");
 const downloadBtn = document.querySelector(".download-btn");
 const speedButtons = document.querySelectorAll(".setting-menu li");
-const backwardSate = document.querySelector(".state-backward");
-const forwardSate = document.querySelector(".state-forward");
 const loader = document.querySelector(".custom-loader");
+const modeBtn = document.querySelector(".mode-btn");
 
-
-var spanElement = document.getElementById("mdbttn");
+var modeTxtBtn = document.getElementById("mdbttn");
 var currentMode = localStorage.getItem("videoMode");
+
+modeBtn.addEventListener("click", changeMode);
 
 if (currentMode != null) { 
 	currentMode=parseInt(currentMode);
-	if (currentMode === 0) { spanElement.innerHTML = "1"; } 
-	else if (currentMode === 1) { spanElement.innerHTML = "»"; } 
-	else if (currentMode === 2) { spanElement.innerHTML = "↻"; } 
+	if (currentMode === 0) { modeTxtBtn.innerHTML = "1"; } 
+	else if (currentMode === 1) { modeTxtBtn.innerHTML = "»"; } 
+	else if (currentMode === 2) { modeTxtBtn.innerHTML = "↻"; } 
  } else { currentMode = 0; }
 
 var volumeVal = localStorage.getItem("videoVolume");
@@ -43,9 +42,9 @@ if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
 else { volumeVal = 1; }
 
 function changeMode() {
-    if (currentMode === 2) { currentMode = 0 ; spanElement.innerHTML = "1";  }
-    else if (currentMode === 0) { currentMode = 1 ; spanElement.innerHTML = "»";  }
-    else if (currentMode === 1) { currentMode = 2 ; spanElement.innerHTML = "↻";  }
+    if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
+    else if (currentMode === 0) { currentMode = 1 ; modeTxtBtn.innerHTML = "»";  }
+    else if (currentMode === 1) { currentMode = 2 ; modeTxtBtn.innerHTML = "↻";  }
 } 
 function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
 
@@ -140,7 +139,6 @@ duration.addEventListener("mouseleave", (e) => {
   hoverDuration.innerHTML = "";
 });
 
-videoContainer.addEventListener("click", toggleMainState);
 videoContainer.addEventListener("fullscreenchange", () => {
   videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
 });
@@ -174,8 +172,10 @@ controls.addEventListener("mouseleave", (e) => {
 });
 
 mainState.addEventListener("click", toggleMainState);
-
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
+
+video.addEventListener("click", toggleMainState);
+video.addEventListener("animationend", handleMainSateAnimationEnd);
 
 muteUnmute.addEventListener("click", toggleMuteUnmute);
 
@@ -196,8 +196,6 @@ muteUnmute.addEventListener("mouseleave", (e) => {
 forward.addEventListener("click", handleForward);
 
 backward.addEventListener("click", handleBackward);
-
-miniPlayer.addEventListener("click", changeMode);
 
 downloadBtn.addEventListener("click", download);
 
@@ -222,16 +220,7 @@ function play() {
   isPlaying = true;
   playPause.innerHTML = `<img src="`+pause_ico+`"></img>`;
   mainState.classList.remove("show-state");
-  handleMainStateIcon(`<img class="fullimg"; src="`+pause_ico+`"></img>`);
-  // watchProgress();
 }
-
-// function watchProgress() {
-//   if (isPlaying) {
-//     requestAnimationFrame(watchProgress);
-//     handleProgressBar();
-//   }
-// }
 
 video.ontimeupdate = handleProgressBar;
 
@@ -246,7 +235,6 @@ function pause() {
   playPause.innerHTML = `<img src="`+play_ico+`"></img>`;
   controls.classList.add("show-controls");
   mainState.classList.add("show-state");
-  handleMainStateIcon(`<img class="fullimg"; src="`+play_ico+`"></img>`);
   if (video.ended) {
     currentTime.style.width = 100 + "%";
   }
@@ -328,14 +316,11 @@ function hideControls() {
   }, 1000);
 }
 
-function toggleMainState(e) {
-  e.stopPropagation();
-  if (!e.path.includes(controls)) {
+function toggleMainState() {
     if (!isPlaying) {
       play();
     } else {
       pause();
-    }
   }
 }
 
@@ -446,14 +431,20 @@ function handleShorthand(e) {
     case "f":
       toggleFullscreen();
       break;
+	  
     case "arrowright":
+      video.currentTime += 5;
+      handleProgressBar();
+	  break;
+    case "arrowleft":
+      video.currentTime -= 5;
+      handleProgressBar();
+	  break;	  
+	case "arrowup":
       handleForward();
       break;
-    case "arrowleft":
+    case "arrowdown":
       handleBackward();
-      break;
-    case "t":
-      toggleTheater();
       break;
     case "i":
       changeMode();
