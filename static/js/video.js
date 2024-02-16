@@ -45,6 +45,7 @@ function changeMode() {
     if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
     else if (currentMode === 0) { currentMode = 1 ; modeTxtBtn.innerHTML = "»";  }
     else if (currentMode === 1) { currentMode = 2 ; modeTxtBtn.innerHTML = "↻";  }
+    localStorage.setItem("videoMode", currentMode);
 } 
 function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
 
@@ -347,12 +348,10 @@ function toggleFullscreen() {
   if (!document.fullscreenElement) {
     videoContainer.requestFullscreen();
 	video.style.width = '100vw';
-    video.style.height = '100vh';
     video.style.objectFit = 'cover';
   } else {
     document.exitFullscreen();
 	video.style.width = '';
-    video.style.height = '';
     video.style.objectFit = '';
   }
 }

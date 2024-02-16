@@ -21,7 +21,8 @@ function chMode() {
 	var currentMode = parseInt(audio.getAttribute("data-mode"));
 	if (currentMode === 0) { audio.setAttribute("data-mode", 1); mode.textContent = "»"; }
 	else if (currentMode === 1) { audio.setAttribute("data-mode", 2); mode.textContent = "↻"; }
-	else if (currentMode === 2) { audio.setAttribute("data-mode", 0); mode.textContent = "1"; } }  
+	else if (currentMode === 2) { audio.setAttribute("data-mode", 0); mode.textContent = "1"; }
+	localStorage.setItem("audioMode", audio.getAttribute("data-mode")); }
 function handleAudioEnded() {
 	var currentMode = parseInt(audio.getAttribute("data-mode"));
 	if (currentMode === 1) {
