@@ -27,6 +27,8 @@ const modeBtn = document.querySelector(".mode-btn");
 var modeTxtBtn = document.getElementById("mdbttn");
 var currentMode = localStorage.getItem("videoMode");
 
+totalVol.classList.add("show")
+
 modeBtn.addEventListener("click", changeMode);
 
 if (currentMode != null) { 
@@ -178,19 +180,6 @@ video.addEventListener("animationend", handleMainSateAnimationEnd);
 
 muteUnmute.addEventListener("click", toggleMuteUnmute);
 
-muteUnmute.addEventListener("mouseenter", (e) => {
-  if (!muted) {
-    totalVol.classList.add("show");
-  } else {
-    totalVol.classList.remove("show");
-  }
-});
-
-muteUnmute.addEventListener("mouseleave", (e) => {
-  if (e.relatedTarget != volume) {
-    totalVol.classList.remove("show");
-  }
-});
 
 forward.addEventListener("click", handleForward);
 
@@ -293,11 +282,9 @@ function toggleMuteUnmute() {
     muted = true;
     muteUnmute.innerHTML = `<img src="`+mute_ico+`"></img>`;
     handleMainStateIcon(`<img class="fullimg"; src="`+mute_ico+`"></img>`);
-    totalVol.classList.remove("show");
   } else {
     video.volume = volumeVal;
     muted = false;
-    totalVol.classList.add("show");
     handleMainStateIcon(`<img class="fullimg"; src="`+unmute_ico+`"></img>`);
     muteUnmute.innerHTML = `<img src="`+unmute_ico+`"></img>`;
   }
