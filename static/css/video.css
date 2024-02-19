@@ -420,12 +420,15 @@ body {
   }
 }
 
-@media only screen and (max-width: 460px) {
-.volume { display: none; }
-body { height: 85vh; } }
+.mobile { display: none; }
 
-@media only screen and (max-width: 400px) {
-.settings { display: none; }}
-
-@media only screen and (max-width: 360px) {
-.download-btn { display: none; }}
+@media only screen and (max-width: 512px) {
+.btn-controls { 
+  padding-top: 1rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.mobile { display: block; }
+body { height: 90vh; } }
