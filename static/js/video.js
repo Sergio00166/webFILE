@@ -175,7 +175,7 @@ controls.addEventListener("mouseleave", (e) => {
 mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 
-videoContainer.addEventListener("click", toggleMainState);
+video.addEventListener("click", toggleMainState);
 video.addEventListener("animationend", handleMainSateAnimationEnd);
 
 muteUnmute.addEventListener("click", toggleMuteUnmute);
