@@ -40,7 +40,6 @@ body {
 
 .custom-loader {
   position: absolute;
-  width: 50px;
   height: 50px;
   border-radius: 50%;
   border-top: 5px solid transparent;
@@ -51,13 +50,6 @@ body {
   animation: rotation 2s infinite ease;
   -webkit-animation: rotation 2s infinite ease;
   display: none;
-}
-
-.player-state {
-  display: flex;
-  position: absolute;
-  width: 100%;
-  justify-content: space-around;
 }
 
 .state-btn {
@@ -76,6 +68,9 @@ body {
   opacity: 0;
   user-select: none;
   transform: scale(0);
+  display: flex;
+  position: absolute;
+  justify-content: center;
 }
 
 .animate-state {
@@ -97,7 +92,7 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  padding: 5rem 1rem 0.5rem 1rem;
+  padding: 2rem 1rem 0.5rem 1rem;
   width: 100%;
   background: linear-gradient(to top, #000000b8 -100%, transparent);
   box-sizing: border-box;
@@ -420,12 +415,15 @@ body {
   }
 }
 
-@media only screen and (max-width: 460px) {
-.volume { display: none; }
-body { height: 85vh; } }
+.mobile { display: none; }
 
-@media only screen and (max-width: 400px) {
-.settings { display: none; }}
-
-@media only screen and (max-width: 360px) {
-.download-btn { display: none; }}
+@media only screen and (max-width: 512px) {
+.btn-controls { 
+  padding-top: 1rem;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.mobile { display: block; }
+body { height: 90vh; } }
