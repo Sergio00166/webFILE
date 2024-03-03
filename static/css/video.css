@@ -40,12 +40,13 @@ body {
 
 .custom-loader {
   position: absolute;
-  height: 50px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
-  border-top: 5px solid transparent;
-  border-right: 5px solid #ffffff;
-  border-left: 5px solid #ffffff;
-  border-bottom: 5px solid #ffffff;
+  border-top: 10px solid transparent;
+  border-right: 10px solid #ffffff;
+  border-left: 10px solid #ffffff;
+  border-bottom: 10px solid #ffffff;
   z-index: 9999;
   animation: rotation 2s infinite ease;
   -webkit-animation: rotation 2s infinite ease;

@@ -223,6 +223,7 @@ function pause() {
   playPause.innerHTML = `<img src="`+play_ico+`"></img>`;
   controls.classList.add("show-controls");
   mainState.classList.add("show-state");
+  mainState.innerHTML = `<img class="fullimg"; src="`+play_ico+`"></img>`;
   if (video.ended) {
     currentTime.style.width = 100 + "%";
   }
@@ -252,7 +253,7 @@ function handleTouchNavigate(e) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
     const value = Math.min(
-      Math.max(0, touchPastDurationWidth + (clientX - touchClientX) * 0.2),
+      Math.max(0, touchPastDurationWidth + (clientX - touchClientX) * 1.5),
       durationRect.width
     );
     currentTime.style.width = value + "px";
@@ -324,11 +325,20 @@ function handleVolume(e) {
 }
 
 function handleProgress() {
-  if (!video.buffered || !video.buffered.length) {
-    return;
-  }
-  const width = (video.buffered.end(0) / video.duration) * 100 + "%";
-  buffer.style.width = width;
+    var currentTime = video.currentTime;
+    var buffLen = video.buffered.length;
+    var i;
+
+    for (i = 0; i < buffLen; i++) {
+        if (video.buffered.start(i) <= currentTime && currentTime < video.buffered.end(i)) {
+            var currentBufferLength = video.buffered.end(i);
+            break;
+        }
+    }
+    // Calculate buffer width
+    var width = (currentBufferLength/video.duration)*100;
+    buffer.style.width = width+"%";
+
 }
 
 function toggleFullscreen() {

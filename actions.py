@@ -54,7 +54,7 @@ def isornot(path,root):
     if not exists(root+sep+path): raise FileNotFoundError
     if not access(root+sep+path, R_OK): raise PermissionError
     if directory==None or file==None: raise PermissionError
-    return directory, file
+    return directory+sep+file
 
 def filepage_func(path,root,filetype):
     if not exists(root+sep+path): raise FileNotFoundError
