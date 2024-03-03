@@ -1,9 +1,7 @@
 #Code by Sergio 1260
 
-# BASIC FTP via WEB with a basic interface
-# Allows you to share a folder across the LAN
-# (READ-ONLY mode)
-
+# BASIC WEB-file-sharing-server with a basic interface
+# Allows you to share a folder across the LAN (READ-ONLY mode)
 
 from functions import *
 from actions import *
