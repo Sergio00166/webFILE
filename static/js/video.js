@@ -324,24 +324,21 @@ function handleVolume(e) {
   video.volume = volumeVal;
 }
 
-var bufferUpdateInterval = null;
-var progressInterval = setInterval(handleProgress, 100);
-
 function handleProgress() {
-    var buffLen = video.buffered.length - 1;
-    if (buffLen < 0) {  buffLen = 0;  }
-  
-    var currentBufferLength = video.buffered.end(buffLen);
+    var currentTime = video.currentTime;
+    var buffLen = video.buffered.length;
+    var i;
+
+    for (i = 0; i < buffLen; i++) {
+        if (video.buffered.start(i) <= currentTime && currentTime < video.buffered.end(i)) {
+            var currentBufferLength = video.buffered.end(i);
+            break;
+        }
+    }
     // Calculate buffer width
-    var width = (currentBufferLength / video.duration) * 101;
-	if ( width > 100 ) { var width = 100; }
+    var width = (currentBufferLength/video.duration)*100;
     buffer.style.width = width+"%";
 
-    // Reset buffer after 5 seconds of no increase
-    clearTimeout(bufferUpdateInterval);
-    bufferUpdateInterval = setTimeout(function() {
-        buffer.style.width = "0%";
-    }, 5000); // Adjust timeout duration as needed
 }
 
 function toggleFullscreen() {

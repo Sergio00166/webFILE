@@ -7,7 +7,7 @@
 
 from functions import *
 from actions import *
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, stream_template, request, send_file
 from sys import path as pypath
 
 
@@ -27,11 +27,11 @@ def explorer(path):
             index_func(path,root,folder_size)
             par_root = (parent_directory=="")
             folder_content = sort_contents(folder_content,sort)
-            return render_template('index.html', folder_content=folder_content,folder_path=folder_path,
+            return stream_template('index.html', folder_content=folder_content,folder_path=folder_path,
                                    parent_directory=parent_directory,is_root=is_root, par_root=par_root)
         elif file_type=="Text" or file_type=="SRC":
-            directory, file = isornot(path,root)
-            return send_from_directory(directory,file,mimetype='text')
+            file = isornot(path,root)
+            return send_file(file,mimetype='text')
         elif file_type=="Video":
             prev, nxt, name, path = filepage_func(path,root,file_type)
             return render_template('video.html', path=path, name=name,prev=prev, nxt=nxt)
@@ -39,8 +39,8 @@ def explorer(path):
             prev, nxt, name, path = filepage_func(path,root,file_type)
             return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt)
         else:
-            directory, file = isornot(path,root)
-            return send_from_directory(directory, file)
+            file = isornot(path,root)
+            return send_file(file)
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
     except: return render_template('500.html'), 500
@@ -50,21 +50,20 @@ def index():
     try:
         if "raw" in request.args:
             path=request.args["raw"]
-            # Check if it is valid
-            directory, file = isornot(path,root)
-            return send_from_directory(directory, file)
+            file = isornot(path,root)
+            return send_file(file)
+        
         elif "static" in request.args:
             sroot=pypath[0]+sep+"static"+sep
             path=request.args["static"].replace("/",sep)
-            # Check if it is valid
-            directory, file = isornot(path,sroot)
-            return send_from_directory(directory, file)
+            file = isornot(path,sroot)
+            return send_file(file)
         else:
             if "sort" in request.args: sort=request.args["sort"]
             else: sort=""
             folder_content = get_folder_content(root, root, folder_size)
             folder_content = sort_contents(folder_content,sort)
-            return render_template('index.html', folder_content=folder_content,folder_path="/",
+            return stream_template('index.html', folder_content=folder_content,folder_path="/",
                                    parent_directory=root,is_root=True)
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
@@ -72,8 +71,4 @@ def index():
 
 if __name__=="__main__":
     app.run(host=listen, port=int(port), debug=False)
-
-
-
-    
 
