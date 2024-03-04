@@ -97,7 +97,8 @@ currentVol.style.width = volumeVal * 100 + "%";
 video.addEventListener("loadedmetadata", canPlayInit);
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
-video.addEventListener("progress", handleProgress);
+// Disable the video buffered representation due to weird bugs
+//video.addEventListener("progress", handleProgress);
 video.addEventListener("waiting", handleWaiting);
 video.addEventListener("playing", handlePlaying);
 
