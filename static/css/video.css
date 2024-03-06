@@ -27,7 +27,6 @@ body {
   height: calc((9 / 16) * 1024px);
   color: #fff;
   overflow: hidden;
-  background: rgb(25, 25, 25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -403,7 +402,8 @@ body {
 .play-pause { display: none; }
 .current-vol { display: none; }
 .max-vol { display: none; }
-body { height: 90vh; }
+body { height: 95vh; }
+.hover-time { display: none; }
 }
 @media only screen and (max-width: 400px) {
 .btn-controls { 
@@ -414,8 +414,5 @@ body { height: 90vh; }
   flex-direction: column;
 }
 .volume { display: none; }
-.settings { display: none; }
 .mobile { display: block; }
-.play-pause { display: none; }
-body { height: 90vh; }
 }

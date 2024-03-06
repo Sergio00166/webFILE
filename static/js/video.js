@@ -49,6 +49,15 @@ function changeMode() {
 } 
 function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
 
+function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
+
+function handleViewportChange() {
+	// set the volume to 100 if the device is mobile
+    if ( isMobileDevice() ) { volumeVal = 1; }
+	video.volume = volumeVal;
+	currentVol.style.width = volumeVal*100+"%";
+}
+
 function handleForward() { 
     localStorage.setItem("videoMode", currentMode);
     localStorage.setItem("videoVolume", video.volume.toString());
@@ -76,7 +85,6 @@ function download() {
     document.body.removeChild(downloadLink);
 }
 
-
 video.play();
 let isPlaying = true,
   mouseDownProgress = false,
@@ -88,8 +96,8 @@ let isPlaying = true,
   touchClientX = 0,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
-
-currentVol.style.width = volumeVal * 100 + "%";
+	
+handleViewportChange();
 
 // Video Event Listeners
 video.addEventListener("loadedmetadata", canPlayInit);
@@ -294,16 +302,15 @@ function formatter(number) {
 }
 
 function toggleMuteUnmute() {
+  totalVol.classList.remove("show");
   if (!muted) {
     video.volume = 0;
     muted = true;
     muteUnmute.innerHTML = `<img src="`+mute_ico+`"></img>`;
     handleMainStateIcon(`<img class="fullimg"; src="`+mute_ico+`"></img>`);
-    totalVol.classList.remove("show");
   } else {
     video.volume = volumeVal;
     muted = false;
-    totalVol.classList.add("show");
     handleMainStateIcon(`<img class="fullimg"; src="`+unmute_ico+`"></img>`);
     muteUnmute.innerHTML = `<img src="`+unmute_ico+`"></img>`;
   }
