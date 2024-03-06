@@ -331,13 +331,8 @@ function toggleMainState() {
 
 function handleVolume(e) {
   const totalVolRect = totalVol.getBoundingClientRect();
-  currentVol.style.width =
-    Math.min(Math.max(0, e.clientX - totalVolRect.x), totalVolRect.width) +
-    "px";
-  volumeVal = Math.min(
-    Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width),
-    1
-  );
+  volumeVal = Math.min(Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width),1);
+  currentVol.style.width = volumeVal * 100 +"%";
   saveVolume()
   video.volume = volumeVal;
 }
