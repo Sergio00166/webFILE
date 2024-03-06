@@ -27,8 +27,6 @@ const modeBtn = document.querySelector(".mode-btn");
 var modeTxtBtn = document.getElementById("mdbttn");
 var currentMode = localStorage.getItem("videoMode");
 
-totalVol.classList.add("show")
-
 modeBtn.addEventListener("click", changeMode);
 
 if (currentMode != null) { 
@@ -135,20 +133,24 @@ document.addEventListener("mousemove", handleMousemove);
 duration.addEventListener("mouseenter", (e) => {
   mouseOverDuration = true;
 });
+
 duration.addEventListener("mouseleave", (e) => {
   mouseOverDuration = false;
   hoverTime.style.width = 0;
   hoverDuration.innerHTML = "";
 });
 
+
 videoContainer.addEventListener("fullscreenchange", () => {
   videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
 });
+
 videoContainer.addEventListener("mouseleave", hideControls);
 videoContainer.addEventListener("mousemove", (e) => {
   controls.classList.add("show-controls");
   hideControls();
 });
+
 videoContainer.addEventListener("touchstart", (e) => {
   controls.classList.add("show-controls");
   touchClientX = e.changedTouches[0].clientX;
@@ -156,12 +158,14 @@ videoContainer.addEventListener("touchstart", (e) => {
   touchPastDurationWidth = currentTimeRect.width;
   touchStartTime = e.timeStamp;
 });
+
 videoContainer.addEventListener("touchend", () => {
   hideControls();
   touchClientX = 0;
   touchPastDurationWidth = 0;
   touchStartTime = 0;
 });
+
 videoContainer.addEventListener("touchmove", handleTouchNavigate);
 
 controls.addEventListener("mouseenter", (e) => {
@@ -181,6 +185,17 @@ video.addEventListener("animationend", handleMainSateAnimationEnd);
 
 muteUnmute.addEventListener("click", toggleMuteUnmute);
 
+muteUnmute.addEventListener("mouseenter", (e) => {
+  if (!muted) {
+    totalVol.classList.add("show");
+  } else {
+    totalVol.classList.remove("show");
+  }
+});
+
+volume.addEventListener("mouseleave", (e) => {
+	totalVol.classList.remove("show");
+});
 
 forward.addEventListener("click", handleForward);
 
@@ -284,9 +299,11 @@ function toggleMuteUnmute() {
     muted = true;
     muteUnmute.innerHTML = `<img src="`+mute_ico+`"></img>`;
     handleMainStateIcon(`<img class="fullimg"; src="`+mute_ico+`"></img>`);
+    totalVol.classList.remove("show");
   } else {
     video.volume = volumeVal;
     muted = false;
+    totalVol.classList.add("show");
     handleMainStateIcon(`<img class="fullimg"; src="`+unmute_ico+`"></img>`);
     muteUnmute.innerHTML = `<img src="`+unmute_ico+`"></img>`;
   }

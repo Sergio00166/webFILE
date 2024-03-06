@@ -418,7 +418,13 @@ body {
 
 .mobile { display: none; }
 
-@media only screen and (max-width: 512px) {
+@media only screen and (max-width: 560px) {
+.max-vol { display: none; }
+.settings { display: none; }
+
+body { height: 90vh; }
+}
+@media only screen and (max-width: 400px) {
 .btn-controls { 
   padding-top: 1rem;
   font-size: 1.2rem;
@@ -426,5 +432,8 @@ body {
   align-items: center;
   flex-direction: column;
 }
+.max-vol { display: none; }
+.settings { display: none; }
 .mobile { display: block; }
-body { height: 90vh; } }
+body { height: 90vh; }
+}
