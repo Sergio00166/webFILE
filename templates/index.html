@@ -24,7 +24,7 @@
         </div></div>
         {% for item in folder_content %}
           <div class="filename">
-            {% if item['description'] == 'DIR' %} 
+            {% if item['description'] == 'DIR' %}
                 <a href="{{ url_for('explorer', path=item['path']) }}"> <span>
                 <img src="{{ url_for('index', static="svg/index/folder-solid.svg") }}"; class="folder">&nbsp;</img>
             {% else %}
