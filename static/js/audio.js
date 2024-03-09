@@ -116,6 +116,7 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
+  hoverTime.style.width = 0;
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
