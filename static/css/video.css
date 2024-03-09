@@ -99,6 +99,8 @@ body {
   transform: translateY(40px);
   visibility: hidden;
   z-index: 99;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -192,16 +194,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.btn-con {
-  display: flex;
-  align-items: center;
-}
-
-.btn-con,
-.btn-controls > span {
-  cursor: pointer;
 }
 
 .control-btn {
@@ -355,12 +347,12 @@ body {
   align-items: center !important;
 }
 
-.right-controls {
+.side-controls {
   display: flex;
   align-items: center;
 }
 
-.right-controls span {
+.side-controls span {
   cursor: pointer;
 }
 
@@ -395,7 +387,7 @@ body {
 .play-pause { display: none; }
 .current-vol { display: none; }
 .max-vol { display: none; }
-body { height: 80vh; }
+body { height: 85vh; }
 .hover-time { display: none; }
 }
 @media only screen and (max-width: 400px) {

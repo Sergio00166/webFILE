@@ -50,6 +50,8 @@ var volumeVal = localStorage.getItem("videoVolume");
 if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
 else { volumeVal = 1; }
 
+video.volume = volumeVal;
+
 function changeMode() {
     if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
     else if (currentMode === 0) { currentMode = 1 ; modeTxtBtn.innerHTML = "»";  }
@@ -66,6 +68,8 @@ function handleViewportChange() {
     video.volume = volumeVal;
     currentVol.style.width = volumeVal*100+"%";
 }
+
+setTimeout(function(){ totalDuration.innerHTML = showDuration(video.duration);}, 250);
 
 function handleForward() {
     localStorage.setItem("videoMode", currentMode);
@@ -182,7 +186,7 @@ videoContainer.addEventListener("touchend", () => {
   touchStartTime = 0;
 });
 
-videoContainer.addEventListener("touchmove", handleTouchNavigate);
+duration.addEventListener("touchmove", handleTouchNavigate);
 
 controls.addEventListener("mouseenter", (e) => {
   controls.classList.add("show-controls");
@@ -227,8 +231,6 @@ speedButtons.forEach((btn) => {
 });
 
 function canPlayInit() {
-  totalDuration.innerHTML = showDuration(video.duration);
-  video.volume = volumeVal;
   muted = video.muted;
   if (video.paused) {
     controls.classList.add("show-controls");
@@ -291,17 +293,19 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  hideControls();
+  mouseOverDuration = false;
+  hoverTime.style.width = 0;
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
+    const offsetX = clientX - durationRect.left; // Calcula la posición relativa dentro del elemento "duration"
     const value = Math.min(
-      Math.max(0, touchPastDurationWidth + (clientX - touchClientX) * 1.5),
+      Math.max(0, offsetX),
       durationRect.width
     );
     currentTime.style.width = value + "px";
     video.currentTime = (value / durationRect.width) * video.duration;
-    currentDuration.innerHTML = showDuration(video.currentTime);
+    currentDuration.innerHTML = showDuration(audio.currentTime);
   }
 }
 
