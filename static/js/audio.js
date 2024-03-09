@@ -16,6 +16,14 @@ const speedButtons = document.querySelectorAll(".setting-menu li");
 var audio = document.getElementById("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
+var currentMode = localStorage.getItem("audioMode");
+
+if (currentMode != null) {
+    currentMode=parseInt(currentMode);
+    if (currentMode === 0) { mode.innerHTML = "1"; }
+    else if (currentMode === 1) { mode.innerHTML = "»"; }
+    else if (currentMode === 2) { mode.innerHTML = "↻"; }
+ } else { currentMode = 0; }
 
 if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
 else { volumeVal = 1; }
@@ -25,7 +33,7 @@ currentVol.style.width = volumeVal * 100 +"%";
 
 handleViewportChange();
 
-setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 250);
+setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 500);
 
 function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
 
@@ -50,11 +58,8 @@ let mouseDownProgress = false,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
 
-
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
-var currentMode = localStorage.getItem("audioMode");
-
 
 function canPlayInit() {
   muted = audio.muted;
@@ -66,14 +71,6 @@ function canPlayInit() {
     sh_pause.classList.remove("sh_pause");
   }
 }
-
-if (currentMode != null) {
-    currentMode=parseInt(currentMode);
-    if (currentMode === 0) { mode.innerHTML = "1"; }
-    else if (currentMode === 1) { mode.innerHTML = "»"; }
-    else if (currentMode === 2) { mode.innerHTML = "↻"; }
- } else { currentMode = 0; }
-
 
 function play() {
   audio.play();
@@ -132,7 +129,6 @@ function handleTouchNavigate(e) {
     currentDuration.innerHTML = showDuration(audio.currentTime);
   }
 }
-
 
 function showDuration(time) {
   const hours = Math.floor(time / 60 ** 2);
@@ -278,36 +274,28 @@ speedButtons.forEach((btn) => {
   btn.addEventListener("click", handlePlaybackRate);
 });
 
-function updateModeButton() {
-    var currentMode = parseInt(audio.getAttribute("data-mode"));
-    if (currentMode === 0) { mode.textContent = "1"; }
-    else if (currentMode === 1) { mode.textContent = "»"; }
-    else if (currentMode === 2) { mode.textContent = "↻"; } }
-    
 function next() {
-    localStorage.setItem("audioMode", audio.getAttribute("data-mode"));
+    localStorage.setItem("audioMode", currentMode);
     localStorage.setItem("audioVolume", audio.volume.toString());
     window.location.href = nextUrl; }
-    
+
 function prev() {
-    localStorage.setItem("audioMode", audio.getAttribute("data-mode"));
+    localStorage.setItem("audioMode", currentMode);
     localStorage.setItem("audioVolume", audio.volume.toString());
     window.location.href = prevUrl; }
-    
+
 function chMode() {
-    var currentMode = parseInt(audio.getAttribute("data-mode"));
-    if (currentMode === 0) { audio.setAttribute("data-mode", 1); mode.textContent = "»"; }
-    else if (currentMode === 1) { audio.setAttribute("data-mode", 2); mode.textContent = "↻"; }
-    else if (currentMode === 2) { audio.setAttribute("data-mode", 0); mode.textContent = "1"; }
-    localStorage.setItem("audioMode", audio.getAttribute("data-mode")); }
-    
+    if (currentMode === 0) { currentMode=1; mode.textContent = "»"; }
+    else if (currentMode === 1) { currentMode=2; mode.textContent = "↻"; }
+    else if (currentMode === 2) { currentMode=0; mode.textContent = "1"; }
+    localStorage.setItem("audioMode", currentMode); }
+
 function handleAudioEnded() {
-    var currentMode = parseInt(audio.getAttribute("data-mode"));
     if (currentMode === 1) {
-        localStorage.setItem("audioMode", audio.getAttribute("data-mode"));
+        localStorage.setItem("audioMode", currentMode);
         localStorage.setItem("audioVolume", audio.volume.toString());
         window.location.href = nextUrl; }
-    else if (currentMode === 2) { audio.currentTime = 0; audio.play(); } 
+    else if (currentMode === 2) { audio.currentTime = 0; audio.play(); }
     else { pause(); }}
 function saveVolume() { localStorage.setItem("audioVolume", audio.volume.toString()); }
 

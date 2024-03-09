@@ -69,7 +69,7 @@ function handleViewportChange() {
     currentVol.style.width = volumeVal*100+"%";
 }
 
-setTimeout(function(){ totalDuration.innerHTML = showDuration(video.duration);}, 250);
+setTimeout(function(){ totalDuration.innerHTML = showDuration(video.duration);}, 500);
 
 function handleForward() {
     localStorage.setItem("videoMode", currentMode);
