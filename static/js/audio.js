@@ -1,6 +1,3 @@
-
-var audio = document.getElementById("audio");
-var mode = document.getElementById("mode");
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const currentDuration = document.querySelector(".current-duration");
@@ -16,7 +13,8 @@ const sh_unmute = document.querySelector(".sh_unmute");
 const muteUnmute = document.querySelector(".muteUnmute");
 const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
-
+var audio = document.getElementById("audio");
+var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
 
 if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
