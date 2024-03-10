@@ -50,7 +50,30 @@ var volumeVal = localStorage.getItem("videoVolume");
 if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
 else { volumeVal = 1; }
 
-video.volume = volumeVal;
+totalDuration.innerHTML = "00:00";
+
+video.play();
+let mouseDownProgress = false,
+  mouseDownVol = false,
+  isCursorOnControls = false,
+  muted = false,
+  timeout,
+  mouseOverDuration = false,
+  touchClientX = 0,
+  touchPastDurationWidth = 0,
+  touchStartTime = 0;
+
+hoverDuration.style.display = "none";
+
+handleViewportChange();
+
+// because slower devices struggles to get the video duration
+function setVideoTime() {
+  if (!(isNaN(video.duration) || video.duration === 0)) {
+    totalDuration.innerHTML = showDuration(video.duration);
+  } else { setTimeout(setVideoTime, 500); }
+} setVideoTime();
+
 
 function changeMode() {
     if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
@@ -68,8 +91,6 @@ function handleViewportChange() {
     video.volume = volumeVal;
     currentVol.style.width = volumeVal*100+"%";
 }
-
-setTimeout(function(){ totalDuration.innerHTML = showDuration(video.duration);}, 500);
 
 function handleForward() {
     localStorage.setItem("videoMode", currentMode);
@@ -97,19 +118,6 @@ function download() {
     downloadLink.click();
     document.body.removeChild(downloadLink);
 }
-
-video.play();
-let mouseDownProgress = false,
-  mouseDownVol = false,
-  isCursorOnControls = false,
-  muted = false,
-  timeout,
-  mouseOverDuration = false,
-  touchClientX = 0,
-  touchPastDurationWidth = 0,
-  touchStartTime = 0;
-
-handleViewportChange();
 
 // Video Event Listeners
 video.addEventListener("loadedmetadata", canPlayInit);
@@ -293,7 +301,7 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  mouseOverDuration = false;
+  hoverDuration.style.display = "none";
   hoverTime.style.width = 0;
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
@@ -305,7 +313,7 @@ function handleTouchNavigate(e) {
     );
     currentTime.style.width = value + "px";
     video.currentTime = (value / durationRect.width) * video.duration;
-    currentDuration.innerHTML = showDuration(audio.currentTime);
+    currentDuration.innerHTML = showDuration(video.currentTime);
   }
 }
 
@@ -424,11 +432,14 @@ function handleMousemove(e) {
     handleVolume(e);
   }
   if (mouseOverDuration) {
-    const rect = duration.getBoundingClientRect();
-    const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
-    const percent = (width / rect.width) * 100;
-    hoverTime.style.width = width + "px";
-    hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
+	  const rect = duration.getBoundingClientRect();
+      const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
+      const percent = (width / rect.width) * 100;
+	  hoverTime.style.width = width + "px";
+      hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
+	if (!isMobileDevice()) {
+      hoverDuration.style.display = "block";
+	} else { hoverDuration.style.display = "none"; }
   }
 }
 

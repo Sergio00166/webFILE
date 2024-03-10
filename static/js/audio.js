@@ -33,7 +33,11 @@ currentVol.style.width = volumeVal * 100 +"%";
 
 handleViewportChange();
 
-setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 500);
+// Beacuse some devices can not load it properly
+setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 250);
+setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 400);
+setTimeout(function(){ if (isNaN(audio.duration) || audio.duration === 0) {totalDuration.innerHTML = "00:00";}}, 500);
+
 
 function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
 
@@ -57,6 +61,8 @@ let mouseDownProgress = false,
   touchClientX = 0,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
+  
+hoverDuration.style.display = "none";
 
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
@@ -116,7 +122,7 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  hoverTime.style.width = 0;
+  hoverTime.style.width = "0px";
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
@@ -159,11 +165,14 @@ function handleMousemove(e) {
     handleVolume(e);
   }
   if (mouseOverDuration) {
-    const rect = duration.getBoundingClientRect();
-    const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
-    const percent = (width / rect.width) * 100;
-    hoverTime.style.width = width + "px";
-    hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
+	  const rect = duration.getBoundingClientRect();
+      const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
+      const percent = (width / rect.width) * 100;
+	  hoverTime.style.width = width + "px";
+      hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
+	if (!isMobileDevice()) {
+      hoverDuration.style.display = "block";
+	} else { hoverDuration.style.display = "none"; }
   }
 }
 
@@ -171,7 +180,6 @@ duration.addEventListener("mousedown", (e) => {
   mouseDownProgress = true;
   navigate(e);
 });
-
 
 document.addEventListener("mouseup", (e) => {
   mouseDownProgress = false;
