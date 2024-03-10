@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta charset="UTF-8"><title>{{ name }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/audio.ico') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/video.ico') }}">
     <link rel="stylesheet" href="{{ url_for('index', static='css/video.css') }}" />
   </head>
   <body>
@@ -18,7 +18,9 @@
       ></video>
       <span class="custom-loader"></span>
         <span class="main-state state-btn">
-            <img class="fullimg"; src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}";></img>
+            <img class="fullimg sh_play_st"; src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}";></img>
+            <img class="fullimg sh_mute_st" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}"></img>
+            <img class="fullimg sh_unmute_st" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}"></img>
         </span>
       <div class="controls">
         <div class="duration">
@@ -29,35 +31,36 @@
           <div class="buffer"></div>
         </div>
         <div class="btn-controls">
-          <div class="btn-con">
+		<div class="side-controls">
             <span class="play-pause control-btn">
-                <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}";></img>
-            </span>
+                <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}"></img>
+                <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}"></img>
+            </span> <t class="mobile">&nbsp;</t>
             <span class="volume">
               <span class="mute-unmute control-btn">
-                 <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}";></img>
+                 <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}"></img>
+                 <img class="sh_unmute" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}"></img>
               </span>
               <div class="max-vol"> 
                 <div class="current-vol"></div>
               </div>
-			  <t class="mobile">&nbsp;&nbsp;</t>
             </span>
             <span class="time-container">
               <span class="current-duration">0:00</span>
               <span>/</span>
               <span class="total-duration">0:00</span>
             </span>
-            <span>&nbsp;&nbsp;</span>
-          </div>
-          <div class="right-controls">
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+			</div>
+          <div class="side-controls">
             <span class="backward control-btn">
                <img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}";></img>
             </span>
             <span class="forward control-btn">
                <img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}";></img>
             </span>
-			<span class="mode-btn control-btn" id="mdbttn">1</span>
-			<span class="download-btn control-btn">
+            <span class="mode-btn control-btn" id="mdbttn">1</span>
+            <span class="download-btn control-btn">
                 <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}";></img>
             </span>
             <span class="settings control-btn">
@@ -76,12 +79,8 @@
               </ul>
             </span>
             <span class="fullscreen-btn control-btn">
-              <span class="full">
-                 <img src="{{ url_for('index', static='svg/videoplayer/scan-outline.svg') }}";></img>
-              </span>
-              <span class="contract">
-                  <img src="{{ url_for('index', static='svg/videoplayer/contract-outline.svg') }}";></img>
-              </span>
+                <img class="full" src="{{ url_for('index', static='svg/videoplayer/scan-outline.svg') }}";></img>
+                <img class="contract" src="{{ url_for('index', static='svg/videoplayer/contract-outline.svg') }}";></img>
             </span>
           </div>
         </div>

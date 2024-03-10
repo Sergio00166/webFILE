@@ -23,19 +23,26 @@ const downloadBtn = document.querySelector(".download-btn");
 const speedButtons = document.querySelectorAll(".setting-menu li");
 const loader = document.querySelector(".custom-loader");
 const modeBtn = document.querySelector(".mode-btn");
+const sh_mute = document.querySelector(".sh_mute");
+const sh_unmute = document.querySelector(".sh_unmute");
+const sh_pause = document.querySelector(".sh_pause");
+const sh_play = document.querySelector(".sh_play");
+const sh_play_st = document.querySelector(".sh_play_st");
+const sh_mute_st = document.querySelector(".sh_mute_st");
+const sh_unmute_st = document.querySelector(".sh_unmute_st");
 
 var modeTxtBtn = document.getElementById("mdbttn");
 var currentMode = localStorage.getItem("videoMode");
 
-totalVol.classList.add("show")
+sh_unmute.classList.remove("sh_unmute");
 
 modeBtn.addEventListener("click", changeMode);
 
-if (currentMode != null) { 
-	currentMode=parseInt(currentMode);
-	if (currentMode === 0) { modeTxtBtn.innerHTML = "1"; } 
-	else if (currentMode === 1) { modeTxtBtn.innerHTML = "»"; } 
-	else if (currentMode === 2) { modeTxtBtn.innerHTML = "↻"; } 
+if (currentMode != null) {
+    currentMode=parseInt(currentMode);
+    if (currentMode === 0) { modeTxtBtn.innerHTML = "1"; }
+    else if (currentMode === 1) { modeTxtBtn.innerHTML = "»"; }
+    else if (currentMode === 2) { modeTxtBtn.innerHTML = "↻"; }
  } else { currentMode = 0; }
 
 var volumeVal = localStorage.getItem("videoVolume");
@@ -43,30 +50,64 @@ var volumeVal = localStorage.getItem("videoVolume");
 if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
 else { volumeVal = 1; }
 
+totalDuration.innerHTML = "00:00";
+
+video.play();
+let mouseDownProgress = false,
+  mouseDownVol = false,
+  isCursorOnControls = false,
+  muted = false,
+  timeout,
+  mouseOverDuration = false,
+  touchClientX = 0,
+  touchPastDurationWidth = 0,
+  touchStartTime = 0;
+
+hoverDuration.style.display = "none";
+
+handleViewportChange();
+
+// because slower devices struggles to get the video duration
+function setVideoTime() {
+  if (!(isNaN(video.duration) || video.duration === 0)) {
+    totalDuration.innerHTML = showDuration(video.duration);
+  } else { setTimeout(setVideoTime, 500); }
+} setVideoTime();
+
+
 function changeMode() {
     if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
     else if (currentMode === 0) { currentMode = 1 ; modeTxtBtn.innerHTML = "»";  }
     else if (currentMode === 1) { currentMode = 2 ; modeTxtBtn.innerHTML = "↻";  }
     localStorage.setItem("videoMode", currentMode);
-} 
+}
 function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
 
-function handleForward() { 
-    localStorage.setItem("videoMode", currentMode);
-    localStorage.setItem("videoVolume", video.volume.toString());
-	window.location.href = next; 
+function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
+
+function handleViewportChange() {
+    // set the volume to 100 if the device is mobile
+    if ( isMobileDevice() ) { volumeVal = 1; }
+    video.volume = volumeVal;
+    currentVol.style.width = volumeVal*100+"%";
 }
-function handleBackward() { 
+
+function handleForward() {
     localStorage.setItem("videoMode", currentMode);
     localStorage.setItem("videoVolume", video.volume.toString());
-	window.location.href =  prev;
+    window.location.href = next;
+}
+function handleBackward() {
+    localStorage.setItem("videoMode", currentMode);
+    localStorage.setItem("videoVolume", video.volume.toString());
+    window.location.href =  prev;
 }
 function handleVideoEnded() {
     if (currentMode === 1) {
         localStorage.setItem("videoMode", currentMode);
         localStorage.setItem("videoVolume", volumeVal.toString());
         window.location.href = next; }
-    else if (currentMode === 2) { play(); } 
+    else if (currentMode === 2) { play(); }
 }
 function download() {
     const downloadLink = document.createElement('a');
@@ -78,26 +119,12 @@ function download() {
     document.body.removeChild(downloadLink);
 }
 
-
-video.play();
-let isPlaying = true,
-  mouseDownProgress = false,
-  mouseDownVol = false,
-  isCursorOnControls = false,
-  muted = false,
-  timeout,
-  mouseOverDuration = false,
-  touchClientX = 0,
-  touchPastDurationWidth = 0,
-  touchStartTime = 0;
-
-currentVol.style.width = volumeVal * 100 + "%";
-
 // Video Event Listeners
 video.addEventListener("loadedmetadata", canPlayInit);
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
-video.addEventListener("progress", handleProgress);
+// Disable the video buffered representation due to weird bugs
+//video.addEventListener("progress", handleProgress);
 video.addEventListener("waiting", handleWaiting);
 video.addEventListener("playing", handlePlaying);
 
@@ -134,20 +161,24 @@ document.addEventListener("mousemove", handleMousemove);
 duration.addEventListener("mouseenter", (e) => {
   mouseOverDuration = true;
 });
+
 duration.addEventListener("mouseleave", (e) => {
   mouseOverDuration = false;
   hoverTime.style.width = 0;
   hoverDuration.innerHTML = "";
 });
 
+
 videoContainer.addEventListener("fullscreenchange", () => {
   videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
 });
+
 videoContainer.addEventListener("mouseleave", hideControls);
 videoContainer.addEventListener("mousemove", (e) => {
   controls.classList.add("show-controls");
   hideControls();
 });
+
 videoContainer.addEventListener("touchstart", (e) => {
   controls.classList.add("show-controls");
   touchClientX = e.changedTouches[0].clientX;
@@ -155,13 +186,15 @@ videoContainer.addEventListener("touchstart", (e) => {
   touchPastDurationWidth = currentTimeRect.width;
   touchStartTime = e.timeStamp;
 });
+
 videoContainer.addEventListener("touchend", () => {
   hideControls();
   touchClientX = 0;
   touchPastDurationWidth = 0;
   touchStartTime = 0;
 });
-videoContainer.addEventListener("touchmove", handleTouchNavigate);
+
+duration.addEventListener("touchmove", handleTouchNavigate);
 
 controls.addEventListener("mouseenter", (e) => {
   controls.classList.add("show-controls");
@@ -176,10 +209,22 @@ mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 
 video.addEventListener("click", toggleMainState);
+
 video.addEventListener("animationend", handleMainSateAnimationEnd);
 
 muteUnmute.addEventListener("click", toggleMuteUnmute);
 
+muteUnmute.addEventListener("mouseenter", (e) => {
+  if (!muted) {
+    totalVol.classList.add("show");
+  } else {
+    totalVol.classList.remove("show");
+  }
+});
+
+volume.addEventListener("mouseleave", (e) => {
+    totalVol.classList.remove("show");
+});
 
 forward.addEventListener("click", handleForward);
 
@@ -194,19 +239,24 @@ speedButtons.forEach((btn) => {
 });
 
 function canPlayInit() {
-  totalDuration.innerHTML = showDuration(video.duration);
-  video.volume = volumeVal;
   muted = video.muted;
   if (video.paused) {
     controls.classList.add("show-controls");
     mainState.classList.add("show-state");
+    sh_play_st.classList.remove("sh_play_st");
+    sh_play.classList.remove("sh_play");
+    isPlaying = false;
+  } else {
+    isPlaying = true;
+    sh_pause.classList.remove("sh_pause");
   }
 }
 
 function play() {
   video.play();
   isPlaying = true;
-  playPause.innerHTML = `<img src="`+pause_ico+`"></img>`;
+  sh_pause.classList.remove("sh_pause");
+  sh_play.classList.add("sh_play");
   mainState.classList.remove("show-state");
 }
 
@@ -220,10 +270,13 @@ function handleProgressBar() {
 function pause() {
   video.pause();
   isPlaying = false;
-  playPause.innerHTML = `<img src="`+play_ico+`"></img>`;
   controls.classList.add("show-controls");
   mainState.classList.add("show-state");
-  mainState.innerHTML = `<img class="fullimg"; src="`+play_ico+`"></img>`;
+  sh_play_st.classList.remove("sh_play_st");
+  sh_mute_st.classList.add("sh_mute_st");
+  sh_unmute_st.classList.add("sh_unmute_st");
+  sh_pause.classList.add("sh_pause");
+  sh_play.classList.remove("sh_play");
   if (video.ended) {
     currentTime.style.width = 100 + "%";
   }
@@ -248,12 +301,14 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  hideControls();
+  hoverDuration.style.display = "none";
+  hoverTime.style.width = 0;
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
+    const offsetX = clientX - durationRect.left; // Calcula la posición relativa dentro del elemento "duration"
     const value = Math.min(
-      Math.max(0, touchPastDurationWidth + (clientX - touchClientX) * 1.5),
+      Math.max(0, offsetX),
       durationRect.width
     );
     currentTime.style.width = value + "px";
@@ -278,16 +333,25 @@ function formatter(number) {
 }
 
 function toggleMuteUnmute() {
+  totalVol.classList.remove("show");
   if (!muted) {
     video.volume = 0;
     muted = true;
-    muteUnmute.innerHTML = `<img src="`+mute_ico+`"></img>`;
-    handleMainStateIcon(`<img class="fullimg"; src="`+mute_ico+`"></img>`);
+    mainState.classList.add("animate-state");
+    sh_play_st.classList.add("sh_play_st");
+    sh_mute_st.classList.remove("sh_mute_st");
+    sh_unmute_st.classList.add("sh_unmute_st");
+    sh_mute.classList.remove("sh_mute");
+    sh_unmute.classList.add("sh_unmute");
   } else {
     video.volume = volumeVal;
     muted = false;
-    handleMainStateIcon(`<img class="fullimg"; src="`+unmute_ico+`"></img>`);
-    muteUnmute.innerHTML = `<img src="`+unmute_ico+`"></img>`;
+    mainState.classList.add("animate-state");
+    sh_play_st.classList.add("sh_play_st");
+    sh_mute_st.classList.add("sh_mute_st");
+    sh_unmute_st.classList.remove("sh_unmute_st");
+    sh_mute.classList.add("sh_mute");
+    sh_unmute.classList.remove("sh_unmute");
   }
 }
 
@@ -313,15 +377,21 @@ function toggleMainState() {
 
 function handleVolume(e) {
   const totalVolRect = totalVol.getBoundingClientRect();
-  currentVol.style.width =
-    Math.min(Math.max(0, e.clientX - totalVolRect.x), totalVolRect.width) +
-    "px";
-  volumeVal = Math.min(
-    Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width),
-    1
-  );
+  volumeVal = Math.min(Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width),1);
+  currentVol.style.width = volumeVal * 100 +"%";
   saveVolume()
   video.volume = volumeVal;
+  sh_mute.classList.add("sh_mute");
+  sh_unmute.classList.remove("sh_unmute");
+  if (volumeVal==0) {
+     sh_mute.classList.remove("sh_mute");
+     sh_unmute.classList.add("sh_unmute");
+  }
+  else {
+     sh_mute.classList.add("sh_mute");
+     sh_unmute.classList.remove("sh_unmute");
+  }
+
 }
 
 function handleProgress() {
@@ -344,11 +414,11 @@ function handleProgress() {
 function toggleFullscreen() {
   if (!document.fullscreenElement) {
     videoContainer.requestFullscreen();
-	video.style.width = '100vw';
+    video.style.width = '100vw';
     video.style.objectFit = 'cover';
   } else {
     document.exitFullscreen();
-	video.style.width = '';
+    video.style.width = '';
     video.style.objectFit = '';
   }
 }
@@ -362,23 +432,23 @@ function handleMousemove(e) {
     handleVolume(e);
   }
   if (mouseOverDuration) {
-    const rect = duration.getBoundingClientRect();
-    const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
-    const percent = (width / rect.width) * 100;
-    hoverTime.style.width = width + "px";
-    hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
+	  const rect = duration.getBoundingClientRect();
+      const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
+      const percent = (width / rect.width) * 100;
+	  hoverTime.style.width = width + "px";
+      hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
+	if (!isMobileDevice()) {
+      hoverDuration.style.display = "block";
+	} else { hoverDuration.style.display = "none"; }
   }
-}
-
-function handleMainStateIcon(icon) {
-  mainState.classList.add("animate-state");
-  mainState.innerHTML = icon;
 }
 
 function handleMainSateAnimationEnd() {
   mainState.classList.remove("animate-state");
   if (!isPlaying) {
-    mainState.innerHTML = `<img class="fullimg"; src="`+play_ico+`"></img>`;
+    sh_play_st.classList.remove("sh_play_st");
+    sh_mute_st.classList.add("sh_mute_st");
+    sh_unmute_st.classList.add("sh_unmute_st");
   }
 }
 
@@ -401,9 +471,6 @@ function handlePlaybackRateKey(type = "") {
   } else if (video.playbackRate > 0.25 && type !== "increase") {
     video.playbackRate -= 0.25;
   }
-  handleMainStateIcon(
-    `<span style="font-size: 1.4rem">${video.playbackRate}x</span>`
-  );
   speedButtons.forEach((btn) => {
     btn.classList.remove("speed-active");
     if (btn.dataset.value == video.playbackRate) {
@@ -431,43 +498,43 @@ function handleShorthand(e) {
     case "f":
       toggleFullscreen();
       break;
-	  
+
     case "arrowright":
       video.currentTime += 5;
       handleProgressBar();
-	  break;
+      break;
     case "arrowleft":
       video.currentTime -= 5;
       handleProgressBar();
-	  break;	  
-	case "arrowup":
+      break;
+    case "arrowup":
       handleForward();
       break;
     case "arrowdown":
       handleBackward();
       break;
-    case "i":
+    case "r":
       changeMode();
       break;
-    case "m":
+    case "s":
       toggleMuteUnmute();
       break;
     case "+":
-	 if (volumeVal < 1) {
-		volumeVal=volumeVal+0.05;
-		if (volumeVal > 1)
-		{ volumeVal=1; }
-	    video.volume = volumeVal;
-	    currentVol.style.width = volumeVal * 100 +"%";
-	 } break;
+     if (volumeVal < 1) {
+        volumeVal=volumeVal+0.05;
+        if (volumeVal > 1)
+        { volumeVal=1; }
+        video.volume = volumeVal;
+        currentVol.style.width = volumeVal * 100 +"%";
+     } break;
     case "-":
-	 if (volumeVal != 0) {
-		volumeVal=volumeVal-0.05;
-		if (volumeVal < 0)
-		{ volumeVal=0; }
-	    video.volume = volumeVal;
-	    currentVol.style.width = volumeVal * 100 +"%";
-	 } break;
+     if (volumeVal != 0) {
+        volumeVal=volumeVal-0.05;
+        if (volumeVal < 0)
+        { volumeVal=0; }
+        video.volume = volumeVal;
+        currentVol.style.width = volumeVal * 100 +"%";
+     } break;
     default:
       break;
   }
