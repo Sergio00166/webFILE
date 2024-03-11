@@ -16,7 +16,7 @@
         disableRemotePlayback
         src="{{ url_for('index', raw=path) }}"
       ></video>
-      <span class="custom-loader"></span>
+	  	  <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></img></span>
         <span class="main-state state-btn">
             <img class="fullimg sh_play_st"; src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}";></img>
             <img class="fullimg sh_mute_st" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}"></img>
