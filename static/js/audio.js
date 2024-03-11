@@ -33,11 +33,7 @@ currentVol.style.width = volumeVal * 100 +"%";
 
 handleViewportChange();
 
-// Beacuse some devices can not load it properly
-setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 250);
-setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 400);
-setTimeout(function(){ if (isNaN(audio.duration) || audio.duration === 0) {totalDuration.innerHTML = "00:00";}}, 500);
-
+audio.addEventListener('loadedmetadata', canPlayInit);
 
 function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
 
@@ -76,6 +72,9 @@ function canPlayInit() {
     isPlaying = true;
     sh_pause.classList.remove("sh_pause");
   }
+  totalDuration.innerHTML = showDuration(audio.duration);
+  setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 250);
+  setTimeout(function(){ if (isNaN(audio.duration) || audio.duration === 0) {totalDuration.innerHTML = "00:00";}}, 400);
 }
 
 function play() {

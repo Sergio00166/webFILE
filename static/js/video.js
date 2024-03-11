@@ -67,14 +67,6 @@ hoverDuration.style.display = "none";
 
 handleViewportChange();
 
-// because slower devices struggles to get the video duration
-function setVideoTime() {
-  if (!(isNaN(video.duration) || video.duration === 0)) {
-    totalDuration.innerHTML = showDuration(video.duration);
-  } else { setTimeout(setVideoTime, 500); }
-} setVideoTime();
-
-
 function changeMode() {
     if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
     else if (currentMode === 0) { currentMode = 1 ; modeTxtBtn.innerHTML = "»";  }
@@ -250,6 +242,11 @@ function canPlayInit() {
     isPlaying = true;
     sh_pause.classList.remove("sh_pause");
   }
+  function setVideoTime() {
+    if (!(isNaN(video.duration) || video.duration === 0)) {
+      totalDuration.innerHTML = showDuration(video.duration);
+    } else { setTimeout(setVideoTime, 500); }
+  } setVideoTime()
 }
 
 function play() {
