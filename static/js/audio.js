@@ -73,10 +73,13 @@ function canPlayInit() {
     isPlaying = true;
     sh_pause.classList.remove("sh_pause");
   }
-  totalDuration.innerHTML = showDuration(audio.duration);
-  setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 200);
-  setTimeout(function(){ if (isNaN(audio.duration) || audio.duration === 0) {totalDuration.innerHTML = "00:00";}}, 205);
+  function setAudioTime() {
+    if (!(isNaN(audio.duration) || audio.duration === 0)) {
+      totalDuration.innerHTML = showDuration(audio.duration); 
+    } else { setTimeout(setAudioTime, 500); }
+  } setAudioTime()
 }
+
 
 function play() {
   audio.play();
@@ -267,14 +270,14 @@ function handlePlaybackRate(e) {
 }
 
 function handlePlaybackRateKey(type = "") {
-  if (type === "increase" && video.playbackRate < 2) {
+  if (type === "increase" && audio.playbackRate < 2) {
     audio.playbackRate += 0.25;
   } else if (audio.playbackRate > 0.25 && type !== "increase") {
     audio.playbackRate -= 0.25;
   }
   speedButtons.forEach((btn) => {
     btn.classList.remove("speed-active");
-    if (btn.dataset.value == video.playbackRate) {
+    if (btn.dataset.value == audio.playbackRate) {
       btn.classList.add("speed-active");
     }
   });

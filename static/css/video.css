@@ -37,20 +37,24 @@ body {
   max-height: 100%;
 }
 
-.custom-loader {
-  position: absolute;
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
-  border-top: 10px solid transparent;
-  border-right: 10px solid #ffffff;
-  border-left: 10px solid #ffffff;
-  border-bottom: 10px solid #ffffff;
-  z-index: 9999;
+.loader {
+  width: 108px;
+  height: 108px;
+}
 
-  -webkit-animation: rotation 2s infinite ease;
-  animation: rotation 2s infinite ease;
-  display: none;
+.custom-loader {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  transform: scale(0);
+  display: flex;
+  position: absolute;
+  justify-content: center;
 }
 
 .state-btn {
