@@ -33,8 +33,6 @@ currentVol.style.width = volumeVal * 100 +"%";
 
 handleViewportChange();
 
-audio.addEventListener('loadedmetadata', canPlayInit);
-
 function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
 
 function handleViewportChange() {
@@ -43,9 +41,6 @@ function handleViewportChange() {
     audio.volume = volumeVal;
     currentVol.style.width = volumeVal*100+"%";
 }
-
-sh_unmute.classList.remove("sh_unmute");
-sh_pause.classList.remove("sh_pause");
 
 let mouseDownProgress = false,
   isPlaying = false,
@@ -58,13 +53,19 @@ let mouseDownProgress = false,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
   
+canPlayInit()
+ 
 hoverDuration.style.display = "none";
-
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
 
 function canPlayInit() {
   muted = audio.muted;
+  if (volumeVal==0) {
+	sh_mute.classList.remove("sh_mute");
+  } else {
+	sh_unmute.classList.remove("sh_unmute");
+  }
   if (audio.paused) {
     sh_play.classList.remove("sh_play");
     isPlaying = false;
@@ -73,8 +74,8 @@ function canPlayInit() {
     sh_pause.classList.remove("sh_pause");
   }
   totalDuration.innerHTML = showDuration(audio.duration);
-  setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 250);
-  setTimeout(function(){ if (isNaN(audio.duration) || audio.duration === 0) {totalDuration.innerHTML = "00:00";}}, 400);
+  setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 200);
+  setTimeout(function(){ if (isNaN(audio.duration) || audio.duration === 0) {totalDuration.innerHTML = "00:00";}}, 205);
 }
 
 function play() {
@@ -303,8 +304,10 @@ function handleAudioEnded() {
         localStorage.setItem("audioMode", currentMode);
         localStorage.setItem("audioVolume", audio.volume.toString());
         window.location.href = nextUrl; }
-    else if (currentMode === 2) { audio.currentTime = 0; audio.play(); }
-    else { pause(); }}
+    else if (currentMode === 2) { audio.play(); }
+    else { pause(); }
+}
+
 function saveVolume() { localStorage.setItem("audioVolume", audio.volume.toString()); }
 
 function download() {

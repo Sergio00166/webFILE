@@ -34,8 +34,6 @@ const sh_unmute_st = document.querySelector(".sh_unmute_st");
 var modeTxtBtn = document.getElementById("mdbttn");
 var currentMode = localStorage.getItem("videoMode");
 
-sh_unmute.classList.remove("sh_unmute");
-
 modeBtn.addEventListener("click", changeMode);
 
 if (currentMode != null) {
@@ -52,7 +50,6 @@ else { volumeVal = 1; }
 
 totalDuration.innerHTML = "00:00";
 
-video.play();
 let mouseDownProgress = false,
   mouseDownVol = false,
   isCursorOnControls = false,
@@ -64,8 +61,8 @@ let mouseDownProgress = false,
   touchStartTime = 0;
 
 hoverDuration.style.display = "none";
-
 handleViewportChange();
+canPlayInit();
 
 function changeMode() {
     if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
@@ -82,6 +79,30 @@ function handleViewportChange() {
     if ( isMobileDevice() ) { volumeVal = 1; }
     video.volume = volumeVal;
     currentVol.style.width = volumeVal*100+"%";
+}
+
+function canPlayInit() {
+  muted = video.muted;
+  video.play();
+  if (volumeVal==0) {
+	sh_mute.classList.remove("sh_mute");
+  } else {
+	sh_unmute.classList.remove("sh_unmute");
+  }
+  if (video.paused) {
+    controls.classList.add("show-controls");
+    sh_play_st.classList.remove("sh_play_st");
+    sh_play.classList.remove("sh_play");
+    isPlaying = false;
+  } else {
+    isPlaying = true;
+    sh_pause.classList.remove("sh_pause");
+  }
+  function setVideoTime() {
+    if (!(isNaN(video.duration) || video.duration === 0)) {
+      totalDuration.innerHTML = showDuration(video.duration); 
+    } else { setTimeout(setVideoTime, 500); }
+  } setVideoTime()
 }
 
 function handleForward() {
@@ -112,7 +133,6 @@ function download() {
 }
 
 // Video Event Listeners
-video.addEventListener("loadedmetadata", canPlayInit);
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
 // Disable the video buffered representation due to weird bugs
@@ -230,25 +250,6 @@ speedButtons.forEach((btn) => {
   btn.addEventListener("click", handlePlaybackRate);
 });
 
-function canPlayInit() {
-  muted = video.muted;
-  if (video.paused) {
-    controls.classList.add("show-controls");
-    mainState.classList.add("show-state");
-    sh_play_st.classList.remove("sh_play_st");
-    sh_play.classList.remove("sh_play");
-    isPlaying = false;
-  } else {
-    isPlaying = true;
-    sh_pause.classList.remove("sh_pause");
-  }
-  function setVideoTime() {
-    if (!(isNaN(video.duration) || video.duration === 0)) {
-      totalDuration.innerHTML = showDuration(video.duration);
-    } else { setTimeout(setVideoTime, 500); }
-  } setVideoTime()
-}
-
 function play() {
   video.play();
   isPlaying = true;
@@ -279,13 +280,9 @@ function pause() {
   }
 }
 
-function handleWaiting() {
-  loader.style.display = "unset";
-}
+function handleWaiting() { loader.classList.add("show-state"); }
 
-function handlePlaying() {
-  loader.style.display = "none";
-}
+function handlePlaying() { loader.classList.remove("show-state"); }
 
 function navigate(e) {
   const totalDurationRect = duration.getBoundingClientRect();
@@ -495,7 +492,6 @@ function handleShorthand(e) {
     case "f":
       toggleFullscreen();
       break;
-
     case "arrowright":
       video.currentTime += 5;
       handleProgressBar();
