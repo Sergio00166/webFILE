@@ -357,7 +357,7 @@ function handleShorthand(e) {
       next();
       break;
     case "r":
-      changeMode();
+      chMode();
       break;
     case "s":
       toggleMuteUnmute();
