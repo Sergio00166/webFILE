@@ -18,6 +18,8 @@ var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
 var currentMode = localStorage.getItem("audioMode");
 
+document.addEventListener("keydown", handleShorthand);
+
 if (currentMode != null) {
     currentMode=parseInt(currentMode);
     if (currentMode === 0) { mode.innerHTML = "1"; }
@@ -321,4 +323,62 @@ function download() {
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
+}
+
+
+function handleShorthand(e) {
+  const tagName = document.activeElement.tagName.toLowerCase();
+  if (tagName === "input") return;
+  if (e.key.match(/[0-9]/gi)) {
+    audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
+    currentTime.style.width = parseInt(e.key) * 10 + "%";
+  }
+  switch (e.key.toLowerCase()) {
+    case " ":
+      if (tagName === "button") return;
+      if (isPlaying) {
+        pause();
+      } else {
+        play();
+      }
+      break;
+    case "arrowright":
+      audio.currentTime += 2;
+      handleProgressBar();
+      break;
+    case "arrowleft":
+      audio.currentTime -= 2;
+      handleProgressBar();
+      break;
+    case "arrowup":
+      prev();
+      break;
+    case "arrowdown":
+      next();
+      break;
+    case "r":
+      changeMode();
+      break;
+    case "s":
+      toggleMuteUnmute();
+      break;
+    case "+":
+     if (volumeVal < 1) {
+        volumeVal=volumeVal+0.05;
+        if (volumeVal > 1)
+        { volumeVal=1; }
+        audio.volume = volumeVal;
+        currentVol.style.width = volumeVal * 100 +"%";
+     } break;
+    case "-":
+     if (volumeVal != 0) {
+        volumeVal=volumeVal-0.05;
+        if (volumeVal < 0)
+        { volumeVal=0; }
+        audio.volume = volumeVal;
+        currentVol.style.width = volumeVal * 100 +"%";
+     } break;
+    default:
+      break;
+  }
 }
