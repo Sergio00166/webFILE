@@ -93,6 +93,7 @@ def get_folder_content(folder_path, root, folder_size):
 # This returns the directory and the name of
 # the file if it is inside the root directory
 def fix_Addr(file_path, root):
+    file_path=file_path.replace("/",sep)
     file_path=file_path.split(sep)
     if len(file_path)==1:
         file=file_path[0]
