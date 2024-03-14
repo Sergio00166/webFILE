@@ -256,6 +256,8 @@ function play() {
   sh_pause.classList.remove("sh_pause");
   sh_play.classList.add("sh_play");
   mainState.classList.remove("show-state");
+  sh_mute_st.classList.add("sh_mute_st");
+  sh_unmute_st.classList.add("sh_unmute_st");
 }
 
 video.ontimeupdate = handleProgressBar;
@@ -271,6 +273,8 @@ function pause() {
   controls.classList.add("show-controls");
   mainState.classList.add("show-state");
   sh_play_st.classList.remove("sh_play_st");
+  sh_mute_st.classList.add("sh_mute_st");
+  sh_unmute_st.classList.add("sh_unmute_st");
   handleAudioIcon();
   sh_pause.classList.add("sh_pause");
   sh_play.classList.remove("sh_play");
