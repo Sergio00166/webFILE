@@ -1,51 +1,56 @@
-why windows defender detects this a a troyan
-
-<!DOCTYPE html><html><head>
-    <meta charset="UTF-8"><title>{{ name }}</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ name }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href='{{ url_for("index", static="ico/audio.ico") }}'>
-    <link rel="stylesheet" href='{{ url_for("index", static="css/audio.css") }}' />
-     </head><body>
-        <h2>{{ name }}</h2><br>
-            <audio autoplay id="audio" data-mode="0" onended="handleAudioEnded()" onvolumechange="saveVolume()">
-                <source src="{{ url_for('index', raw=path) }}" type="audio/mp3">
-        </audio>
-        <div class="duration">
-          <div class="current-time"></div>
-          <div class="hover-time">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/audio.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}" />
+</head>
+<body>
+    <h2>{{ name }}</h2><br>
+    <audio autoplay id="audio" data-mode="0" onended="handleAudioEnded()" onvolumechange="saveVolume()">
+        <source src="{{ url_for('index', raw=path) }}" type="audio/mp3">
+    </audio>
+    <div class="duration">
+        <div class="current-time"></div>
+        <div class="hover-time">
             <span class="hover-duration"></span>
-          </div>
-          <div class="buffer"></div>
-		</div>
-			<span class="time-container">
-             <span class="current-duration">0:00</span>
-              <span>/</span>
-              <span class="total-duration">0:00</span>
-			  <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-			 </span>
-        <div class="flex">
-            <button class="round-button" onclick="toggleMainState()">
-                <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}"></img>
-                <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}"></img>
+        </div>
+        <div class="buffer"></div>
+    </div>
+    <span class="time-container">
+        <span class="current-duration">0:00</span>
+        <span>/</span>
+        <span class="total-duration">0:00</span>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    </span>
+    <div class="flex">
+        <button class="round-button" onclick="toggleMainState()">
+            <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+            <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
+        </button>
+        <span class="volume muteUnmute">
+            <button class="round-button" onclick="toggleMuteUnmute()">
+                <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
+                <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
+                <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
+                <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
+                <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
             </button>
-		   <span class="volume muteUnmute">
-           <button class="round-button" onclick="toggleMuteUnmute()">
-                 <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}"></img>
-                 <img class="sh_unmute" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}"></img>
-			</button>
-              <div class="max-vol"> 
+            <div class="max-vol"> 
                 <div class="current-vol"></div>
-              </div>
-            </span>
-            <button class="round-button" onclick="prev()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></img></button>
-            <button class="round-button" onclick="next()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}";></img></button>
-			<button class="round-button" id="mode" onclick="chMode()">1</button> 
-            <button class="round-button" onclick="download()"><img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></img></button>
-		    <span class="settings">
-              <button class="round-button" onclick="handleSettingMenu()">
-                 <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}";></img>
-              </button>
-              <ul class="setting-menu">
+            </div>
+        </span>
+        <button class="round-button" onclick="prev()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
+        <button class="round-button" onclick="next()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
+        <button class="round-button" id="mode" onclick="chMode()">1</button> 
+        <button class="round-button" onclick="download()"><img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
+        <span class="settings">
+            <button class="round-button" onclick="handleSettingMenu()">
+                <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}">
+            </button>
+            <ul class="setting-menu">
                 <li data-value="0.25">0.25x</li>
                 <li data-value="0.5">0.5x</li>
                 <li data-value="0.75">0.75x</li>
@@ -54,14 +59,15 @@ why windows defender detects this a a troyan
                 <li data-value="1.5">1.5x</li>
                 <li data-value="1.75">1.75x</li>
                 <li data-value="2">2x</li>
-              </ul>
-            </span>
-        </div><br><br><br> 
-        <script defer src="{{ url_for('index', static='js/audio.js') }}">
-        </script><script>
-            const nextUrl = '{{ nxt }}'; const prevUrl = '{{ prev }}';
-            const urlaudio = '{{ url_for('index', raw=path) }}'
-            const fileName = '{{ name }}';
-    </script></body>
+            </ul>
+        </span>
+    </div><br><br><br> 
+    <script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
+    <script>
+        const nextUrl = '{{ nxt }}'; 
+        const prevUrl = '{{ prev }}';
+        const urlaudio = '{{ url_for('index', raw=path) }}'
+        const fileName = '{{ name }}';
+    </script>
+</body>
 </html>
-

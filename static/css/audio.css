@@ -21,6 +21,7 @@ img {
   vertical-align: middle;
 }
 .round-button {
+  user-select: none;
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;
@@ -193,7 +194,10 @@ img {
 .sh_pause { display: none; }
 .sh_play { display: none; }
 .sh_mute { display: none; }
-.sh_unmute { display: none; }
+.sh_fulla { display: none; }
+.sh_meda { display: none; }
+.sh_lowa { display: none; }
+.sh_noa { display: none; }
 
 @media only screen and (max-width: 1200px) {
 .duration { width: 50%; }

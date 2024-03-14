@@ -9,7 +9,10 @@ const totalDuration = document.querySelector(".total-duration");
 const currentVol = document.querySelector(".current-vol");
 const totalVol = document.querySelector(".max-vol");
 const sh_mute = document.querySelector(".sh_mute");
-const sh_unmute = document.querySelector(".sh_unmute");
+const sh_fulla = document.querySelector(".sh_fulla");
+const sh_lowa = document.querySelector(".sh_lowa");
+const sh_meda = document.querySelector(".sh_meda");
+const sh_noa = document.querySelector(".sh_noa");
 const muteUnmute = document.querySelector(".muteUnmute");
 const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
@@ -63,11 +66,7 @@ audio.addEventListener("pause", pause);
 
 function canPlayInit() {
   muted = audio.muted;
-  if (volumeVal==0) {
-	sh_mute.classList.remove("sh_mute");
-  } else {
-	sh_unmute.classList.remove("sh_unmute");
-  }
+  handleAudioIcon();
   if (audio.paused) {
     sh_play.classList.remove("sh_play");
     isPlaying = false;
@@ -213,17 +212,7 @@ function handleVolume(e) {
   currentVol.style.width = volumeVal * 100 +"%";
   saveVolume()
   audio.volume = volumeVal;
-  sh_mute.classList.add("sh_mute");
-  sh_unmute.classList.remove("sh_unmute");
-  if (volumeVal==0) {
-     sh_mute.classList.remove("sh_mute");
-     sh_unmute.classList.add("sh_unmute");
-  }
-  else {
-     sh_mute.classList.add("sh_mute");
-     sh_unmute.classList.remove("sh_unmute");
-  }
-
+  handleAudioIcon();
 }
 
 muteUnmute.addEventListener("mouseenter", (e) => {
@@ -239,13 +228,11 @@ function toggleMuteUnmute() {
   if (!muted) {
     audio.volume = 0;
     muted = true;
-    sh_mute.classList.remove("sh_mute");
-    sh_unmute.classList.add("sh_unmute");
+    handleAudioIcon();
   } else {
     audio.volume = volumeVal;
     muted = false;
-    sh_mute.classList.add("sh_mute");
-    sh_unmute.classList.remove("sh_unmute");
+    handleAudioIcon();
   }
 }
 
@@ -308,8 +295,8 @@ function handleAudioEnded() {
     if (currentMode === 1) {
         localStorage.setItem("audioMode", currentMode);
         localStorage.setItem("audioVolume", audio.volume.toString());
-        window.location.href = nextUrl; }
-    else if (currentMode === 2) { audio.play(); }
+        window.location.href = nextUrl; 
+	} else if (currentMode === 2) { audio.play(); }
     else { pause(); }
 }
 
@@ -325,6 +312,42 @@ function download() {
     document.body.removeChild(downloadLink);
 }
 
+
+function handleAudioIcon(){
+	if (!muted) {
+		if (volumeVal==0.0){
+		   sh_mute.classList.add("sh_mute");
+		   sh_fulla.classList.add("sh_fulla");
+		   sh_meda.classList.add("sh_meda");
+		   sh_lowa.classList.add("sh_lowa");
+		   sh_noa.classList.remove("sh_noa");
+		} else if (volumeVal>0.67){
+		   sh_mute.classList.add("sh_mute");
+		   sh_fulla.classList.remove("sh_fulla");
+		   sh_meda.classList.add("sh_meda");
+		   sh_lowa.classList.add("sh_lowa");
+		   sh_noa.classList.add("sh_noa");
+		} else if (volumeVal>0.33){
+		   sh_mute.classList.add("sh_mute");
+		   sh_fulla.classList.add("sh_fulla");
+		   sh_meda.classList.remove("sh_meda");
+		   sh_lowa.classList.add("sh_lowa");
+		   sh_noa.classList.add("sh_noa");
+		} else if (volumeVal>0){
+		   sh_mute.classList.add("sh_mute");
+		   sh_fulla.classList.add("sh_fulla");
+		   sh_meda.classList.add("sh_meda");
+		   sh_lowa.classList.remove("sh_lowa");
+		   sh_noa.classList.add("sh_noa");
+		}
+	} else {
+		sh_mute.classList.remove("sh_mute");
+		sh_fulla.classList.add("sh_fulla");
+		sh_meda.classList.add("sh_meda");
+		sh_lowa.classList.add("sh_lowa");
+		sh_noa.classList.add("sh_noa");
+	}
+}
 
 function handleShorthand(e) {
   const tagName = document.activeElement.tagName.toLowerCase();
@@ -369,15 +392,17 @@ function handleShorthand(e) {
         { volumeVal=1; }
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
+		handleAudioIcon();
      } break;
     case "-":
      if (volumeVal != 0) {
         volumeVal=volumeVal-0.05;
         if (volumeVal < 0)
         { volumeVal=0; }
+		handleAudioIcon();
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
-     } break;
+	 } break;
     default:
       break;
   }

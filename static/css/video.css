@@ -412,4 +412,7 @@ body { height: 85vh; }
 .sh_play { display: none; }
 .sh_play_st { display: none; }
 .sh_mute_st { display: none; }
-.sh_unmute_st { display: none; }
+.sh_fulla { display: none; }
+.sh_meda { display: none; }
+.sh_lowa { display: none; }
+.sh_noa { display: none; }
