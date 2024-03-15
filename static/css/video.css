@@ -386,15 +386,12 @@ body {
 
 .mobile { display: none; }
 
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 520px) {
 .settings { display: none; }
 .play-pause { display: none; }
-.current-vol { display: none; }
-.max-vol { display: none; }
 body { height: 85vh; }
-.hover-time { display: none; }
 }
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 450px) {
 .btn-controls {
   padding-top: 1rem;
   font-size: 1.2rem;

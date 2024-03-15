@@ -37,17 +37,6 @@ else { volumeVal = 1; }
 audio.volume = volumeVal;
 currentVol.style.width = volumeVal * 100 +"%";
 
-handleViewportChange();
-
-function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-
-function handleViewportChange() {
-    // set the volume to 100 if the device is mobile
-    if ( isMobileDevice() ) { volumeVal = 1; }
-    audio.volume = volumeVal;
-    currentVol.style.width = volumeVal*100+"%";
-}
-
 let mouseDownProgress = false,
   isPlaying = false,
   mouseDownVol = false,
@@ -61,7 +50,6 @@ let mouseDownProgress = false,
   
 canPlayInit()
  
-hoverDuration.style.display = "none";
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
 
@@ -127,18 +115,20 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  hoverTime.style.width = "0px";
+  hoverDuration.style.display = 'block';
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
-    const offsetX = clientX - durationRect.left; // Calcula la posición relativa dentro del elemento "duration"
+    const offsetX = clientX - durationRect.left;
     const value = Math.min(
       Math.max(0, offsetX),
       durationRect.width
     );
     currentTime.style.width = value + "px";
+    hoverTime.style.width = value + "px";
     audio.currentTime = (value / durationRect.width) * audio.duration;
     currentDuration.innerHTML = showDuration(audio.currentTime);
+	hoverDuration.innerHTML = showDuration(audio.currentTime);
   }
 }
 
@@ -170,14 +160,12 @@ function handleMousemove(e) {
     handleVolume(e);
   }
   if (mouseOverDuration) {
+	  hoverDuration.style.display = 'block';
 	  const rect = duration.getBoundingClientRect();
       const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
       const percent = (width / rect.width) * 100;
 	  hoverTime.style.width = width + "px";
       hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
-	if (!isMobileDevice()) {
-      hoverDuration.style.display = "block";
-	} else { hoverDuration.style.display = "none"; }
   }
 }
 
@@ -200,7 +188,17 @@ duration.addEventListener("mouseenter", (e) => {
 duration.addEventListener("mouseleave", (e) => {
   mouseOverDuration = false;
   hoverTime.style.width = 0;
-  hoverDuration.innerHTML = "";
+  hoverDuration.style.display = 'none';
+});
+
+duration.addEventListener("touchend", () => {
+  touchClientX = 0;
+  touchPastDurationWidth = 0;
+  touchStartTime = 0;
+  setTimeout(function() {
+    hoverTime.style.width = 0;
+	hoverDuration.style.display = 'none';
+  }, 1000);
 });
 
 function formatter(number) {

@@ -51,6 +51,8 @@ var volumeVal = localStorage.getItem("videoVolume");
 
 if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
 else { volumeVal = 1; }
+video.volume = volumeVal;
+currentVol.style.width = volumeVal*100+"%";
 
 totalDuration.innerHTML = "00:00";
 
@@ -64,8 +66,6 @@ let mouseDownProgress = false,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
 
-hoverDuration.style.display = "none";
-handleViewportChange();
 canPlayInit();
 
 function changeMode() {
@@ -76,14 +76,6 @@ function changeMode() {
 }
 function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
 
-function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-
-function handleViewportChange() {
-    // set the volume to 100 if the device is mobile
-    if ( isMobileDevice() ) { volumeVal = 1; }
-    video.volume = volumeVal;
-    currentVol.style.width = volumeVal*100+"%";
-}
 
 function canPlayInit() {
   muted = video.muted;
@@ -177,7 +169,7 @@ duration.addEventListener("mouseenter", (e) => {
 duration.addEventListener("mouseleave", (e) => {
   mouseOverDuration = false;
   hoverTime.style.width = 0;
-  hoverDuration.innerHTML = "";
+  hoverDuration.style.display = 'none';
 });
 
 
@@ -186,10 +178,6 @@ videoContainer.addEventListener("fullscreenchange", () => {
 });
 
 videoContainer.addEventListener("mouseleave", hideControls);
-videoContainer.addEventListener("mousemove", (e) => {
-  controls.classList.add("show-controls");
-  hideControls();
-});
 
 videoContainer.addEventListener("touchstart", (e) => {
   controls.classList.add("show-controls");
@@ -204,6 +192,10 @@ videoContainer.addEventListener("touchend", () => {
   touchClientX = 0;
   touchPastDurationWidth = 0;
   touchStartTime = 0;
+  setTimeout(function() {
+    hoverTime.style.width = 0;
+	hoverDuration.style.display = 'none';
+  }, 1000);
 });
 
 duration.addEventListener("touchmove", handleTouchNavigate);
@@ -298,19 +290,20 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  hoverDuration.style.display = "none";
-  hoverTime.style.width = 0;
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
-    const offsetX = clientX - durationRect.left; // Calcula la posición relativa dentro del elemento "duration"
+    const offsetX = clientX - durationRect.left;
     const value = Math.min(
       Math.max(0, offsetX),
       durationRect.width
     );
+	hoverDuration.style.display = 'block';
     currentTime.style.width = value + "px";
+    hoverTime.style.width = value + "px";
     video.currentTime = (value / durationRect.width) * video.duration;
     currentDuration.innerHTML = showDuration(video.currentTime);
+	hoverDuration.innerHTML = showDuration(video.currentTime);
   }
 }
 
@@ -417,14 +410,12 @@ function handleMousemove(e) {
     handleVolume(e);
   }
   if (mouseOverDuration) {
+	  hoverDuration.style.display = 'block';
 	  const rect = duration.getBoundingClientRect();
       const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
       const percent = (width / rect.width) * 100;
 	  hoverTime.style.width = width + "px";
       hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
-	if (!isMobileDevice()) {
-      hoverDuration.style.display = "block";
-	} else { hoverDuration.style.display = "none"; }
   }
 }
 
