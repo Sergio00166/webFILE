@@ -150,11 +150,6 @@ duration.addEventListener("mousedown", (e) => {
   navigate(e);
 });
 
-totalVol.addEventListener("mousedown", (e) => {
-  mouseDownVol = true;
-  handleVolume(e);
-});
-
 document.addEventListener("mouseup", (e) => {
   mouseDownProgress = false;
   mouseDownVol = false;
@@ -172,41 +167,22 @@ duration.addEventListener("mouseleave", (e) => {
   hoverDuration.style.display = 'none';
 });
 
-
-videoContainer.addEventListener("fullscreenchange", () => {
-  videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
+duration.addEventListener("touchend", () => {
+   hoverTime.style.width = 0;
+   hoverDuration.style.display = 'none';
+   mouseOverDuration = false;
+   setTimeout(function() {
+	  hoverTime.style.width = 0;
+      hoverDuration.style.display = 'none';
+      mouseOverDuration = false;
+    }, 2);
 });
 
-videoContainer.addEventListener("mouseleave", hideControls);
-
-videoContainer.addEventListener("touchstart", (e) => {
-  controls.classList.add("show-controls");
-  touchClientX = e.changedTouches[0].clientX;
-  const currentTimeRect = currentTime.getBoundingClientRect();
-  touchPastDurationWidth = currentTimeRect.width;
-  touchStartTime = e.timeStamp;
-});
-
-videoContainer.addEventListener("touchend", () => {
-  hideControls();
-  touchClientX = 0;
-  touchPastDurationWidth = 0;
-  touchStartTime = 0;
-  setTimeout(function() {
-    hoverTime.style.width = 0;
-	hoverDuration.style.display = 'none';
-  }, 1000);
-});
 
 duration.addEventListener("touchmove", handleTouchNavigate);
 
-controls.addEventListener("mouseenter", (e) => {
-  controls.classList.add("show-controls");
-  isCursorOnControls = true;
-});
-
-controls.addEventListener("mouseleave", (e) => {
-  isCursorOnControls = false;
+videoContainer.addEventListener("fullscreenchange", () => {
+  videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
 });
 
 mainState.addEventListener("click", toggleMainState);
@@ -298,12 +274,9 @@ function handleTouchNavigate(e) {
       Math.max(0, offsetX),
       durationRect.width
     );
-	hoverDuration.style.display = 'block';
     currentTime.style.width = value + "px";
-    hoverTime.style.width = value + "px";
     video.currentTime = (value / durationRect.width) * video.duration;
     currentDuration.innerHTML = showDuration(video.currentTime);
-	hoverDuration.innerHTML = showDuration(video.currentTime);
   }
 }
 
@@ -401,22 +374,23 @@ function toggleFullscreen() {
   }
 }
 
+
 function handleMousemove(e) {
   if (mouseDownProgress) {
+	hoverTime.style.width = 0;
+	hoverDuration.style.display = 'none';
     e.preventDefault();
     navigate(e);
-  }
-  if (mouseDownVol) {
+  } else if (mouseDownVol) {
     handleVolume(e);
-  }
-  if (mouseOverDuration) {
+  } else if (mouseOverDuration) {
 	  hoverDuration.style.display = 'block';
 	  const rect = duration.getBoundingClientRect();
       const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
       const percent = (width / rect.width) * 100;
 	  hoverTime.style.width = width + "px";
       hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
-  }
+  } if (!isPlaying) { pause(); } else { play(); }
 }
 
 function handleMainSateAnimationEnd() {
@@ -552,3 +526,4 @@ function handleShorthand(e) {
       break;
   }
 }
+

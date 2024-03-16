@@ -115,7 +115,6 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  hoverDuration.style.display = 'block';
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
@@ -125,10 +124,8 @@ function handleTouchNavigate(e) {
       durationRect.width
     );
     currentTime.style.width = value + "px";
-    hoverTime.style.width = value + "px";
     audio.currentTime = (value / durationRect.width) * audio.duration;
     currentDuration.innerHTML = showDuration(audio.currentTime);
-	hoverDuration.innerHTML = showDuration(audio.currentTime);
   }
 }
 
@@ -153,13 +150,13 @@ duration.addEventListener("mousedown", (e) => {
 
 function handleMousemove(e) {
   if (mouseDownProgress) {
+	hoverTime.style.width = 0;
+	hoverDuration.style.display = 'none';
     e.preventDefault();
     navigate(e);
-  }
-  if (mouseDownVol) {
+  } else if (mouseDownVol) {
     handleVolume(e);
-  }
-  if (mouseOverDuration) {
+  } else if (mouseOverDuration) {
 	  hoverDuration.style.display = 'block';
 	  const rect = duration.getBoundingClientRect();
       const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
@@ -192,13 +189,14 @@ duration.addEventListener("mouseleave", (e) => {
 });
 
 duration.addEventListener("touchend", () => {
-  touchClientX = 0;
-  touchPastDurationWidth = 0;
-  touchStartTime = 0;
-  setTimeout(function() {
-    hoverTime.style.width = 0;
-	hoverDuration.style.display = 'none';
-  }, 1000);
+   hoverTime.style.width = 0;
+   hoverDuration.style.display = 'none';
+   mouseOverDuration = false;
+   setTimeout(function() {
+      hoverTime.style.width = 0;
+      hoverDuration.style.display = 'none';
+      mouseOverDuration = false;
+    }, 2);
 });
 
 function formatter(number) {
@@ -406,3 +404,4 @@ function handleShorthand(e) {
       break;
   }
 }
+
