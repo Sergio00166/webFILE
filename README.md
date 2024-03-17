@@ -1,5 +1,7 @@
 This is a basic web interface to share files and can play music and videos, read pdfs and read plain text, and if it cannot do that it would download the file
 
+I don't like web development, I started this project to watch anime stored on my home server in my smart TV
+
 It is intended for a home usage
 
 Same as python3 -m http.server but with better appareance (custom video and audio player and a custom file page made entirely with native html5 css and js)
