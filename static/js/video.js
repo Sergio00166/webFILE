@@ -172,13 +172,13 @@ duration.addEventListener("touchend", () => {
    hoverDuration.style.display = 'none';
    mouseOverDuration = false;
    setTimeout(function() {
-	  hoverTime.style.width = 0;
+      hoverTime.style.width = 0;
       hoverDuration.style.display = 'none';
       mouseOverDuration = false;
     }, 2);
 });
 
-videoContainer.addEventListener("mousemove", (e) => {
+controls.addEventListener("mouseover", (e) => {
   controls.classList.add("show-controls");
   hideControls();
 });
@@ -309,19 +309,19 @@ function toggleMuteUnmute() {
   if (!muted) {
     video.volume = 0;
     muted = true;
-    mainState.classList.add("animate-state");
     sh_play_st.classList.add("sh_play_st");
     sh_mute_st.classList.remove("sh_mute_st");
     sh_unmute_st.classList.add("sh_unmute_st");
     handleAudioIcon();
+    mainState.classList.add("animate-state");
   } else {
     video.volume = volumeVal;
     muted = false;
-    mainState.classList.add("animate-state");
     sh_play_st.classList.add("sh_play_st");
     sh_mute_st.classList.add("sh_mute_st");
     sh_unmute_st.classList.remove("sh_unmute_st");
     handleAudioIcon();
+    mainState.classList.add("animate-state");
   }
 }
 
@@ -386,18 +386,18 @@ function toggleFullscreen() {
 
 function handleMousemove(e) {
   if (mouseDownProgress) {
-	hoverTime.style.width = 0;
-	hoverDuration.style.display = 'none';
+    hoverTime.style.width = 0;
+    hoverDuration.style.display = 'none';
     e.preventDefault();
     navigate(e);
   } else if (mouseDownVol) {
     handleVolume(e);
   } else if (mouseOverDuration) {
-	  hoverDuration.style.display = 'block';
-	  const rect = duration.getBoundingClientRect();
+      hoverDuration.style.display = 'block';
+      const rect = duration.getBoundingClientRect();
       const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
       const percent = (width / rect.width) * 100;
-	  hoverTime.style.width = width + "px";
+      hoverTime.style.width = width + "px";
       hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
   } if (!isPlaying) { pause(); } else { play(); }
 }
@@ -439,39 +439,39 @@ function handlePlaybackRateKey(type = "") {
 }
 
 function handleAudioIcon(){
-	if (!muted) {
-		if (volumeVal==0.0){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.add("sh_fulla");
-		   sh_meda.classList.add("sh_meda");
-		   sh_lowa.classList.add("sh_lowa");
-		   sh_noa.classList.remove("sh_noa");
-		} else if (volumeVal>0.67){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.remove("sh_fulla");
-		   sh_meda.classList.add("sh_meda");
-		   sh_lowa.classList.add("sh_lowa");
-		   sh_noa.classList.add("sh_noa");
-		} else if (volumeVal>0.33){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.add("sh_fulla");
-		   sh_meda.classList.remove("sh_meda");
-		   sh_lowa.classList.add("sh_lowa");
-		   sh_noa.classList.add("sh_noa");
-		} else if (volumeVal>0){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.add("sh_fulla");
-		   sh_meda.classList.add("sh_meda");
-		   sh_lowa.classList.remove("sh_lowa");
-		   sh_noa.classList.add("sh_noa");
-		}
-	} else {
-		sh_mute.classList.remove("sh_mute");
-		sh_fulla.classList.add("sh_fulla");
-		sh_meda.classList.add("sh_meda");
-		sh_lowa.classList.add("sh_lowa");
-		sh_noa.classList.add("sh_noa");
-	}
+    if (!muted) {
+        if (volumeVal==0.0){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.remove("sh_noa");
+        } else if (volumeVal>0.67){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.remove("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        } else if (volumeVal>0.33){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.remove("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        } else if (volumeVal>0){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.remove("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        }
+    } else {
+        sh_mute.classList.remove("sh_mute");
+        sh_fulla.classList.add("sh_fulla");
+        sh_meda.classList.add("sh_meda");
+        sh_lowa.classList.add("sh_lowa");
+        sh_noa.classList.add("sh_noa");
+    }
 }
 
 function handleShorthand(e) {
@@ -514,21 +514,21 @@ function handleShorthand(e) {
       toggleMuteUnmute();
       break;
     case "+":
-     if (volumeVal < 1) {
+     if (volumeVal < 1 && !muted) {
         volumeVal=volumeVal+0.05;
         if (volumeVal > 1)
         { volumeVal=1; }
         video.volume = volumeVal;
-		handleAudioIcon();
+        handleAudioIcon();
         currentVol.style.width = volumeVal * 100 +"%";
-     } break;
+    } break;
     case "-":
-     if (volumeVal != 0) {
+     if (volumeVal != 0 && !muted) {
         volumeVal=volumeVal-0.05;
         if (volumeVal < 0)
         { volumeVal=0; }
         video.volume = volumeVal;
-		handleAudioIcon();
+        handleAudioIcon();
         currentVol.style.width = volumeVal * 100 +"%";
      } break;
     default:

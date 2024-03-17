@@ -150,18 +150,18 @@ duration.addEventListener("mousedown", (e) => {
 
 function handleMousemove(e) {
   if (mouseDownProgress) {
-	hoverTime.style.width = 0;
-	hoverDuration.style.display = 'none';
+    hoverTime.style.width = 0;
+    hoverDuration.style.display = 'none';
     e.preventDefault();
     navigate(e);
   } else if (mouseDownVol) {
     handleVolume(e);
   } else if (mouseOverDuration) {
-	  hoverDuration.style.display = 'block';
-	  const rect = duration.getBoundingClientRect();
+      hoverDuration.style.display = 'block';
+      const rect = duration.getBoundingClientRect();
       const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
       const percent = (width / rect.width) * 100;
-	  hoverTime.style.width = width + "px";
+      hoverTime.style.width = width + "px";
       hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
   }
 }
@@ -293,7 +293,7 @@ function handleAudioEnded() {
         localStorage.setItem("audioMode", currentMode);
         localStorage.setItem("audioVolume", audio.volume.toString());
         window.location.href = nextUrl; 
-	} else if (currentMode === 2) { audio.play(); }
+    } else if (currentMode === 2) { audio.play(); }
     else { pause(); }
 }
 
@@ -311,39 +311,39 @@ function download() {
 
 
 function handleAudioIcon(){
-	if (!muted) {
-		if (volumeVal==0.0){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.add("sh_fulla");
-		   sh_meda.classList.add("sh_meda");
-		   sh_lowa.classList.add("sh_lowa");
-		   sh_noa.classList.remove("sh_noa");
-		} else if (volumeVal>0.67){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.remove("sh_fulla");
-		   sh_meda.classList.add("sh_meda");
-		   sh_lowa.classList.add("sh_lowa");
-		   sh_noa.classList.add("sh_noa");
-		} else if (volumeVal>0.33){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.add("sh_fulla");
-		   sh_meda.classList.remove("sh_meda");
-		   sh_lowa.classList.add("sh_lowa");
-		   sh_noa.classList.add("sh_noa");
-		} else if (volumeVal>0){
-		   sh_mute.classList.add("sh_mute");
-		   sh_fulla.classList.add("sh_fulla");
-		   sh_meda.classList.add("sh_meda");
-		   sh_lowa.classList.remove("sh_lowa");
-		   sh_noa.classList.add("sh_noa");
-		}
-	} else {
-		sh_mute.classList.remove("sh_mute");
-		sh_fulla.classList.add("sh_fulla");
-		sh_meda.classList.add("sh_meda");
-		sh_lowa.classList.add("sh_lowa");
-		sh_noa.classList.add("sh_noa");
-	}
+    if (!muted) {
+        if (volumeVal==0.0){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.remove("sh_noa");
+        } else if (volumeVal>0.67){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.remove("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        } else if (volumeVal>0.33){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.remove("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        } else if (volumeVal>0){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.remove("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        }
+    } else {
+        sh_mute.classList.remove("sh_mute");
+        sh_fulla.classList.add("sh_fulla");
+        sh_meda.classList.add("sh_meda");
+        sh_lowa.classList.add("sh_lowa");
+        sh_noa.classList.add("sh_noa");
+    }
 }
 
 function handleShorthand(e) {
@@ -383,23 +383,23 @@ function handleShorthand(e) {
       toggleMuteUnmute();
       break;
     case "+":
-     if (volumeVal < 1) {
+     if (volumeVal < 1 && !muted) {
         volumeVal=volumeVal+0.05;
         if (volumeVal > 1)
         { volumeVal=1; }
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
-		handleAudioIcon();
+        handleAudioIcon();
      } break;
     case "-":
-     if (volumeVal != 0) {
+     if (volumeVal != 0 && !muted) {
         volumeVal=volumeVal-0.05;
         if (volumeVal < 0)
         { volumeVal=0; }
-		handleAudioIcon();
+        handleAudioIcon();
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
-	 } break;
+     } break;
     default:
       break;
   }
