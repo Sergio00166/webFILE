@@ -37,20 +37,24 @@ body {
   max-height: 100%;
 }
 
-.custom-loader {
-  position: absolute;
-  height: 80px;
-  width: 80px;
-  border-radius: 50%;
-  border-top: 10px solid transparent;
-  border-right: 10px solid #ffffff;
-  border-left: 10px solid #ffffff;
-  border-bottom: 10px solid #ffffff;
-  z-index: 9999;
+.loader {
+  width: 108px;
+  height: 108px;
+}
 
-  -webkit-animation: rotation 2s infinite ease;
-  animation: rotation 2s infinite ease;
-  display: none;
+.custom-loader {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  transform: scale(0);
+  display: flex;
+  position: absolute;
+  justify-content: center;
 }
 
 .state-btn {
@@ -382,15 +386,12 @@ body {
 
 .mobile { display: none; }
 
-@media only screen and (max-width: 540px) {
+@media only screen and (max-width: 520px) {
 .settings { display: none; }
 .play-pause { display: none; }
-.current-vol { display: none; }
-.max-vol { display: none; }
 body { height: 85vh; }
-.hover-time { display: none; }
 }
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 450px) {
 .btn-controls {
   padding-top: 1rem;
   font-size: 1.2rem;
@@ -409,3 +410,7 @@ body { height: 85vh; }
 .sh_play_st { display: none; }
 .sh_mute_st { display: none; }
 .sh_unmute_st { display: none; }
+.sh_fulla { display: none; }
+.sh_meda { display: none; }
+.sh_lowa { display: none; }
+.sh_noa { display: none; }

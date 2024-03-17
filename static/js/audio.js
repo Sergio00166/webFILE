@@ -1,3 +1,4 @@
+// JS for the custom audio player
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const currentDuration = document.querySelector(".current-duration");
@@ -9,7 +10,10 @@ const totalDuration = document.querySelector(".total-duration");
 const currentVol = document.querySelector(".current-vol");
 const totalVol = document.querySelector(".max-vol");
 const sh_mute = document.querySelector(".sh_mute");
-const sh_unmute = document.querySelector(".sh_unmute");
+const sh_fulla = document.querySelector(".sh_fulla");
+const sh_lowa = document.querySelector(".sh_lowa");
+const sh_meda = document.querySelector(".sh_meda");
+const sh_noa = document.querySelector(".sh_noa");
 const muteUnmute = document.querySelector(".muteUnmute");
 const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
@@ -17,6 +21,8 @@ var audio = document.getElementById("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
 var currentMode = localStorage.getItem("audioMode");
+
+document.addEventListener("keydown", handleShorthand);
 
 if (currentMode != null) {
     currentMode=parseInt(currentMode);
@@ -31,26 +37,6 @@ else { volumeVal = 1; }
 audio.volume = volumeVal;
 currentVol.style.width = volumeVal * 100 +"%";
 
-handleViewportChange();
-
-// Beacuse some devices can not load it properly
-setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 250);
-setTimeout(function(){ totalDuration.innerHTML = showDuration(audio.duration);}, 400);
-setTimeout(function(){ if (isNaN(audio.duration) || audio.duration === 0) {totalDuration.innerHTML = "00:00";}}, 500);
-
-
-function isMobileDevice() { return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent); }
-
-function handleViewportChange() {
-    // set the volume to 100 if the device is mobile
-    if ( isMobileDevice() ) { volumeVal = 1; }
-    audio.volume = volumeVal;
-    currentVol.style.width = volumeVal*100+"%";
-}
-
-sh_unmute.classList.remove("sh_unmute");
-sh_pause.classList.remove("sh_pause");
-
 let mouseDownProgress = false,
   isPlaying = false,
   mouseDownVol = false,
@@ -62,13 +48,14 @@ let mouseDownProgress = false,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
   
-hoverDuration.style.display = "none";
-
+canPlayInit()
+ 
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
 
 function canPlayInit() {
   muted = audio.muted;
+  handleAudioIcon();
   if (audio.paused) {
     sh_play.classList.remove("sh_play");
     isPlaying = false;
@@ -76,7 +63,13 @@ function canPlayInit() {
     isPlaying = true;
     sh_pause.classList.remove("sh_pause");
   }
+  function setAudioTime() {
+    if (!(isNaN(audio.duration) || audio.duration === 0)) {
+      totalDuration.innerHTML = showDuration(audio.duration); 
+    } else { setTimeout(setAudioTime, 500); }
+  } setAudioTime()
 }
+
 
 function play() {
   audio.play();
@@ -122,11 +115,10 @@ function navigate(e) {
 }
 
 function handleTouchNavigate(e) {
-  hoverTime.style.width = "0px";
   if (e.timeStamp - touchStartTime > 500) {
     const durationRect = duration.getBoundingClientRect();
     const clientX = e.changedTouches[0].clientX;
-    const offsetX = clientX - durationRect.left; // Calcula la posición relativa dentro del elemento "duration"
+    const offsetX = clientX - durationRect.left;
     const value = Math.min(
       Math.max(0, offsetX),
       durationRect.width
@@ -158,21 +150,19 @@ duration.addEventListener("mousedown", (e) => {
 
 function handleMousemove(e) {
   if (mouseDownProgress) {
+    hoverTime.style.width = 0;
+    hoverDuration.style.display = 'none';
     e.preventDefault();
     navigate(e);
-  }
-  if (mouseDownVol) {
+  } else if (mouseDownVol) {
     handleVolume(e);
-  }
-  if (mouseOverDuration) {
-	  const rect = duration.getBoundingClientRect();
+  } else if (mouseOverDuration) {
+      hoverDuration.style.display = 'block';
+      const rect = duration.getBoundingClientRect();
       const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
       const percent = (width / rect.width) * 100;
-	  hoverTime.style.width = width + "px";
+      hoverTime.style.width = width + "px";
       hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
-	if (!isMobileDevice()) {
-      hoverDuration.style.display = "block";
-	} else { hoverDuration.style.display = "none"; }
   }
 }
 
@@ -195,7 +185,18 @@ duration.addEventListener("mouseenter", (e) => {
 duration.addEventListener("mouseleave", (e) => {
   mouseOverDuration = false;
   hoverTime.style.width = 0;
-  hoverDuration.innerHTML = "";
+  hoverDuration.style.display = 'none';
+});
+
+duration.addEventListener("touchend", () => {
+   hoverTime.style.width = 0;
+   hoverDuration.style.display = 'none';
+   mouseOverDuration = false;
+   setTimeout(function() {
+      hoverTime.style.width = 0;
+      hoverDuration.style.display = 'none';
+      mouseOverDuration = false;
+    }, 2);
 });
 
 function formatter(number) {
@@ -208,17 +209,7 @@ function handleVolume(e) {
   currentVol.style.width = volumeVal * 100 +"%";
   saveVolume()
   audio.volume = volumeVal;
-  sh_mute.classList.add("sh_mute");
-  sh_unmute.classList.remove("sh_unmute");
-  if (volumeVal==0) {
-     sh_mute.classList.remove("sh_mute");
-     sh_unmute.classList.add("sh_unmute");
-  }
-  else {
-     sh_mute.classList.add("sh_mute");
-     sh_unmute.classList.remove("sh_unmute");
-  }
-
+  handleAudioIcon();
 }
 
 muteUnmute.addEventListener("mouseenter", (e) => {
@@ -234,13 +225,11 @@ function toggleMuteUnmute() {
   if (!muted) {
     audio.volume = 0;
     muted = true;
-    sh_mute.classList.remove("sh_mute");
-    sh_unmute.classList.add("sh_unmute");
+    handleAudioIcon();
   } else {
     audio.volume = volumeVal;
     muted = false;
-    sh_mute.classList.add("sh_mute");
-    sh_unmute.classList.remove("sh_unmute");
+    handleAudioIcon();
   }
 }
 
@@ -267,14 +256,14 @@ function handlePlaybackRate(e) {
 }
 
 function handlePlaybackRateKey(type = "") {
-  if (type === "increase" && video.playbackRate < 2) {
+  if (type === "increase" && audio.playbackRate < 2) {
     audio.playbackRate += 0.25;
   } else if (audio.playbackRate > 0.25 && type !== "increase") {
     audio.playbackRate -= 0.25;
   }
   speedButtons.forEach((btn) => {
     btn.classList.remove("speed-active");
-    if (btn.dataset.value == video.playbackRate) {
+    if (btn.dataset.value == audio.playbackRate) {
       btn.classList.add("speed-active");
     }
   });
@@ -303,9 +292,11 @@ function handleAudioEnded() {
     if (currentMode === 1) {
         localStorage.setItem("audioMode", currentMode);
         localStorage.setItem("audioVolume", audio.volume.toString());
-        window.location.href = nextUrl; }
-    else if (currentMode === 2) { audio.currentTime = 0; audio.play(); }
-    else { pause(); }}
+        window.location.href = nextUrl; 
+    } else if (currentMode === 2) { audio.play(); }
+    else { pause(); }
+}
+
 function saveVolume() { localStorage.setItem("audioVolume", audio.volume.toString()); }
 
 function download() {
@@ -317,3 +308,102 @@ function download() {
     downloadLink.click();
     document.body.removeChild(downloadLink);
 }
+
+
+function handleAudioIcon(){
+    if (!muted) {
+        if (volumeVal==0.0){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.remove("sh_noa");
+        } else if (volumeVal>0.67){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.remove("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        } else if (volumeVal>0.33){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.remove("sh_meda");
+           sh_lowa.classList.add("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        } else if (volumeVal>0){
+           sh_mute.classList.add("sh_mute");
+           sh_fulla.classList.add("sh_fulla");
+           sh_meda.classList.add("sh_meda");
+           sh_lowa.classList.remove("sh_lowa");
+           sh_noa.classList.add("sh_noa");
+        }
+    } else {
+        sh_mute.classList.remove("sh_mute");
+        sh_fulla.classList.add("sh_fulla");
+        sh_meda.classList.add("sh_meda");
+        sh_lowa.classList.add("sh_lowa");
+        sh_noa.classList.add("sh_noa");
+    }
+}
+
+function handleShorthand(e) {
+  const tagName = document.activeElement.tagName.toLowerCase();
+  if (tagName === "input") return;
+  if (e.key.match(/[0-9]/gi)) {
+    audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
+    currentTime.style.width = parseInt(e.key) * 10 + "%";
+  }
+  switch (e.key.toLowerCase()) {
+    case " ":
+      if (tagName === "button") return;
+      if (isPlaying) {
+        pause();
+      } else {
+        play();
+      }
+      break;
+    case "arrowright":
+      audio.currentTime += 2;
+      handleProgressBar();
+      break;
+    case "arrowleft":
+      audio.currentTime -= 2;
+      handleProgressBar();
+      break;
+    case "arrowup":
+      prev();
+      break;
+    case "arrowdown":
+      next();
+      break;
+    case "r":
+      chMode();
+      break;
+    case "s":
+      toggleMuteUnmute();
+      break;
+    case "+":
+     if (volumeVal < 1 && !muted) {
+        volumeVal=volumeVal+0.05;
+        if (volumeVal > 1)
+        { volumeVal=1; }
+        audio.volume = volumeVal;
+        currentVol.style.width = volumeVal * 100 +"%";
+        handleAudioIcon();
+		saveVolume();
+     } break;
+    case "-":
+     if (volumeVal != 0 && !muted) {
+        volumeVal=volumeVal-0.05;
+        if (volumeVal < 0)
+        { volumeVal=0; }
+        handleAudioIcon();
+        audio.volume = volumeVal;
+        currentVol.style.width = volumeVal * 100 +"%";
+		saveVolume();
+     } break;
+    default:
+      break;
+  }
+}
+
