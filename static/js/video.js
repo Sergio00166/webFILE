@@ -210,6 +210,11 @@ volume.addEventListener("mouseleave", (e) => {
     totalVol.classList.remove("show");
 });
 
+totalVol.addEventListener("mousedown", (e) => {
+  mouseDownVol = true;
+  handleVolume(e);
+});
+
 forward.addEventListener("click", handleForward);
 
 backward.addEventListener("click", handleBackward);
