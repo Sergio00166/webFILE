@@ -178,9 +178,32 @@ duration.addEventListener("touchend", () => {
     }, 2);
 });
 
+let cursorTimeout;
+function showCursor() {
+  if (!video.paused) {
+    document.body.style.cursor = 'auto';
+    clearTimeout(cursorTimeout);
+    cursorTimeout = setTimeout(function() {
+      document.body.style.cursor = 'none';
+    }, 2000);
+  }
+}
+
+video.addEventListener("click", (e) => {
+  toggleMainState();
+  document.body.style.cursor = 'auto';
+  showCursor();
+});
+
+
+document.addEventListener("mouseover", (e) => {
+  clearTimeout(cursorTimeout);
+  document.body.style.cursor = 'auto';
+});
+
 videoContainer.addEventListener("mousemove", (e) => {
   controls.classList.add("show-controls");
-  hideControls();
+  showCursor(); hideControls();
 });
 
 duration.addEventListener("touchmove", handleTouchNavigate);
@@ -191,8 +214,6 @@ videoContainer.addEventListener("fullscreenchange", () => {
 
 mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
-
-video.addEventListener("click", toggleMainState);
 
 video.addEventListener("animationend", handleMainSateAnimationEnd);
 
