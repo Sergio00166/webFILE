@@ -178,10 +178,11 @@ duration.addEventListener("touchend", () => {
     }, 2);
 });
 
-controls.addEventListener("mouseover", (e) => {
+videoContainer.addEventListener("mousemove", (e) => {
   controls.classList.add("show-controls");
   hideControls();
 });
+
 
 duration.addEventListener("touchmove", handleTouchNavigate);
 
