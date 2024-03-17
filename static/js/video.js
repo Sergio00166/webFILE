@@ -183,7 +183,6 @@ videoContainer.addEventListener("mousemove", (e) => {
   hideControls();
 });
 
-
 duration.addEventListener("touchmove", handleTouchNavigate);
 
 videoContainer.addEventListener("fullscreenchange", () => {
@@ -236,6 +235,7 @@ function play() {
   mainState.classList.remove("show-state");
   sh_mute_st.classList.add("sh_mute_st");
   sh_unmute_st.classList.add("sh_unmute_st");
+  hideControls();
 }
 
 video.ontimeupdate = handleProgressBar;
@@ -522,6 +522,7 @@ function handleShorthand(e) {
         video.volume = volumeVal;
         handleAudioIcon();
         currentVol.style.width = volumeVal * 100 +"%";
+		saveVolume();
     } break;
     case "-":
      if (volumeVal != 0 && !muted) {
@@ -531,6 +532,7 @@ function handleShorthand(e) {
         video.volume = volumeVal;
         handleAudioIcon();
         currentVol.style.width = volumeVal * 100 +"%";
+		saveVolume();
      } break;
     default:
       break;

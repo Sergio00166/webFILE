@@ -390,6 +390,7 @@ function handleShorthand(e) {
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
         handleAudioIcon();
+		saveVolume();
      } break;
     case "-":
      if (volumeVal != 0 && !muted) {
@@ -399,6 +400,7 @@ function handleShorthand(e) {
         handleAudioIcon();
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
+		saveVolume();
      } break;
     default:
       break;
