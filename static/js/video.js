@@ -184,7 +184,9 @@ function showCursor() {
     document.body.style.cursor = 'auto';
     clearTimeout(cursorTimeout);
     cursorTimeout = setTimeout(function() {
-      document.body.style.cursor = 'none';
+	  if (!video.paused) {
+        document.body.style.cursor = 'none';
+	  }
     }, 2000);
   }
 }
