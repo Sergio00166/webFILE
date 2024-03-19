@@ -66,7 +66,7 @@ function canPlayInit() {
   function setAudioTime() {
     if (!(isNaN(audio.duration) || audio.duration === 0)) {
       totalDuration.innerHTML = showDuration(audio.duration); 
-    } else { setTimeout(setAudioTime, 500); }
+    } else { setTimeout(setAudioTime, 25); }
   } setAudioTime()
 }
 
@@ -188,15 +188,19 @@ duration.addEventListener("mouseleave", (e) => {
   hoverDuration.style.display = 'none';
 });
 
+// Magic trick to hide the time when using touchscreen
 duration.addEventListener("touchend", () => {
-   hoverTime.style.width = 0;
-   hoverDuration.style.display = 'none';
-   mouseOverDuration = false;
+   const oldleft = hoverDuration.style.left;
+   const oldwidth = hoverDuration.style.width;
+   hoverDuration.style.left = "-9999px";
+   hoverDuration.style.width = "0px";
    setTimeout(function() {
+	  hoverDuration.style.left = oldleft;
+      hoverDuration.style.width = oldwidth;
       hoverTime.style.width = 0;
       hoverDuration.style.display = 'none';
       mouseOverDuration = false;
-    }, 2);
+    }, 250);
 });
 
 function formatter(number) {

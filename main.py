@@ -41,7 +41,7 @@ def explorer(path):
             return send_file(file)
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
-    except: return render_template('500.html'), 500
+    #except: return render_template('500.html'), 500
 
 @app.route('/')
 def index():

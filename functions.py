@@ -89,20 +89,3 @@ def get_folder_content(folder_path, root, folder_size):
             'description': description, "size": size,"mtime": mtime})
         except: pass
     return content
-
-# This returns the directory and the name of
-# the file if it is inside the root directory
-def fix_Addr(file_path, root):
-    file_path=file_path.replace("/",sep)
-    file_path=file_path.split(sep)
-    if len(file_path)==1:
-        file=file_path[0]
-        directory=root
-    else:
-        file=file_path[-1]
-        file_path.pop()
-        fix=sep.join(file_path)
-        directory=root+sep+fix
-    if not is_subdirectory(root, abspath(directory)):
-        return None, None
-    else: return directory, file

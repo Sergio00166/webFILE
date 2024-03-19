@@ -2,7 +2,7 @@
 
 from os.path import join, isdir, relpath
 from os.path import exists, pardir, abspath
-from functions import get_folder_content, is_subdirectory, fix_Addr, fix_pth_url, unreadable, unreadable_date
+from functions import get_folder_content, is_subdirectory, fix_pth_url, unreadable, unreadable_date
 from os import access, R_OK, sep
 from sys import argv
 
@@ -50,41 +50,35 @@ def init():
     return dic["port"], dic["listen"], root, folder_size
 
 def isornot(path,root):
-    directory, file=fix_Addr(path,root)
-    if not exists(root+sep+path): raise FileNotFoundError
-    if not access(root+sep+path, R_OK): raise PermissionError
-    if directory==None or file==None: raise PermissionError
-    return directory+sep+file
+    path=path.replace("/",sep)
+    path=abspath(root+sep+path)
+    if is_subdirectory(root, path):
+        if not exists(path): raise FileNotFoundError
+        if not access(path, R_OK): raise PermissionError
+    else: raise PermissionError
+    return path
 
 def filepage_func(path,root,filetype):
-    if not exists(root+sep+path): raise FileNotFoundError
-    if not access(root+sep+path, R_OK): raise PermissionError
-    folder=sep.join(path.split("/")[:-1])
-    name=path.split("/")[-1]; lst=[]
+    path=relpath(isornot(path,root), start=root)
+    folder=sep.join(path.split(sep)[:-1])
+    name=path.split(sep)[-1]
     out=get_folder_content(root+sep+folder,root,False)
-    for x in out:
-        if x["description"]==filetype: lst.append(x["path"])
-    # Get previous song
+    path=path.replace(sep,"/")
+    lst = [x["path"] for x in out if x["description"] == filetype]
+    # Get previous one
     try: nxt=lst[lst.index(path)+1]
     except: nxt=lst[0]
-    # Get next song
+    # Get next one
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
-    # The {{ url_for('audio_page', path=nxt} inside the html does
-    # a weird thing with the ' char, fixed with this code
-    nxt = fix_pth_url(nxt); prev=fix_pth_url(prev)
-    nxt="/"+nxt; prev="/"+prev
+    # Fix url strings
+    nxt = "/" + fix_pth_url(nxt)
+    prev = "/" + fix_pth_url(prev)
     return prev, nxt, name, path
 
 def index_func(folder_path,root,folder_size):
-    is_root=False
-    if folder_path=="": folder_path=root; is_root=True
-    elif folder_path==root: is_root=True
-    else: folder_path=root+sep+folder_path
-    #if not exists(folder_path): raise FileNotFoundError
-    if not access(folder_path, R_OK): raise PermissionError
-    # Deny access if not inside root
-    if not is_subdirectory(root, abspath(folder_path)): raise PermissionError
+    folder_path=isornot(folder_path,root)
+    is_root = folder_path==root
     folder_content = get_folder_content(folder_path,root,folder_size)
     parent_directory = abspath(join(folder_path, pardir))
     if parent_directory==root: parent_directory=""
