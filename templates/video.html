@@ -86,10 +86,6 @@
   </div>
   <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
   <script>
-    const pause_ico = "{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}";
-    const play_ico = "{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}";
-    const mute_ico = "{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}";
-    const unmute_ico = "{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}";
     const prev = '{{ prev }}';
     const next = '{{ nxt }}';
     const urlVideo = '{{ url_for('index', raw=path) }}';
