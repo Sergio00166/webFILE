@@ -4,7 +4,7 @@ from os.path import join, isdir, relpath
 from os.path import exists, pardir, abspath
 from functions import get_folder_content, is_subdirectory, fix_pth_url, unreadable, unreadable_date
 from os import access, R_OK, sep
-from sys import argv
+from argparse import ArgumentParser
 
 
 def sort_contents(folder_content,sort):
@@ -25,29 +25,13 @@ def sort_contents(folder_content,sort):
     else: return folder_content
 
 def init():
-    if len(argv)==1: file="bin"+sep+"config.cfg"
-    else: file=argv[1]
-    try: file = open(file,"r")
-    except: print("ERROR: config file not valid or not exists"); exit()
-    dic={}
-    for x in file:
-        x=x.rstrip().lstrip()
-        if not len(x)==0 and not x.startswith("#"):
-            key=x[:x.find(":")]
-            value=x[x.find(":")+1:]
-            value=value.rstrip().lstrip()
-            key=key.rstrip().lstrip()
-            dic[key]=value
-    if not "port" in dic: dic["port"]="5000"
-    if not "listen" in dic: dic["listen"]="172.0.0.1"
-    if not "show.folder.size" in dic: folder_size="false"
-    else: folder_size=dic["show.folder.size"].lower()
-    if not "folder" in dic:
-        print("[CFG_FILE]: A FOLDER PATH IS NEEDED"); exit()
-    root=dic["folder"]
-    if not (exists(root) and isdir(root)):
-        print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
-    return dic["port"], dic["listen"], root, folder_size
+    parser = ArgumentParser(description="Arguments for the webFILE")
+    parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind")
+    parser.add_argument("-p", "--port", type=int, required=True, help="Specify port number")
+    parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
+    parser.add_argument("--dirsize", action="store_true", help="Enable folder size")
+    args = parser.parse_args()
+    return args.port, args.bind, args.dir, args.dirsize
 
 def isornot(path,root):
     path=path.replace("/",sep)
