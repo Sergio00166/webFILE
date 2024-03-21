@@ -6,7 +6,7 @@ Same as python3 -m http.server but with better appareance (custom video and audi
 
 Some browsers cannot play some video formats, and others can because this project is not using transcoding (and will not) to convert in realtime the media
 
-To change the options you can edit the config.cfg
+To change the options you can edit the config.cfg inside the bin dir, create a custom one or passing an arg to the main file located in bin/main.py
 
 Requirements:
  Python3 (tested under python 3.12)
@@ -16,4 +16,5 @@ Dependencys:
  flask
 
 Usage:
-  python3 main.py [config.file]
+  python3 start.py [config.file]
+  or python3 bin/main.py -b IP_addr -p port -d directory [--dirsize]
