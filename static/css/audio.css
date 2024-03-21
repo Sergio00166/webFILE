@@ -33,6 +33,7 @@ img {
   box-sizing: border-box;
   position: relative;
   margin-right: 0.5rem;
+  cursor: pointer;
 }    
 .duration {
   position: relative;
@@ -110,7 +111,6 @@ img {
 .volume {
   display: flex;
   align-items: center;
-  cursor: default;
 }
 .time-container {
   font-size: 13px;
@@ -166,8 +166,8 @@ img {
   margin-block-start: 0;
   margin-block-end: 0;
   position: absolute;
-  margin-top: -20vh;
-  margin-left: -10rem;
+  margin-top: -26vh;
+  margin-left: -10.5rem;
   transition: all 0.2s;
   background: rgba(50, 50, 50, 1);
   border-radius: 5px;
@@ -191,6 +191,7 @@ img {
   transform: scaleY(1);
   visibility: visible;
 }
+span { user-select: none; }
 .sh_pause { display: none; }
 .sh_play { display: none; }
 .sh_mute { display: none; }

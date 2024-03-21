@@ -14,9 +14,10 @@ const sh_fulla = document.querySelector(".sh_fulla");
 const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
-const muteUnmute = document.querySelector(".muteUnmute");
 const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
+const volume = document.querySelector(".volume");
+
 var audio = document.getElementById("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
@@ -216,7 +217,7 @@ function handleVolume(e) {
   handleAudioIcon();
 }
 
-muteUnmute.addEventListener("mouseenter", (e) => {
+volume.addEventListener("mouseenter", (e) => {
   if (!muted) {
     totalVol.classList.add("show");
   } else {
@@ -242,7 +243,7 @@ totalVol.addEventListener("mousedown", (e) => {
   handleVolume(e);
 });
 
-muteUnmute.addEventListener("mouseleave", (e) => {
+volume.addEventListener("mouseleave", (e) => {
     totalVol.classList.remove("show");
 });
 

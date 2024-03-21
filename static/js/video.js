@@ -1,6 +1,4 @@
 const video = document.querySelector("video");
-const fullscreen = document.querySelector(".fullscreen-btn");
-const playPause = document.querySelector(".play-pause");
 const volume = document.querySelector(".volume");
 const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
@@ -12,16 +10,12 @@ const videoContainer = document.querySelector(".video-container");
 const currentVol = document.querySelector(".current-vol");
 const totalVol = document.querySelector(".max-vol");
 const mainState = document.querySelector(".main-state");
-const muteUnmute = document.querySelector(".mute-unmute");
 const sh_fulla = document.querySelector(".sh_fulla");
 const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
-const forward = document.querySelector(".forward");
-const backward = document.querySelector(".backward");
 const hoverTime = document.querySelector(".hover-time");
 const hoverDuration = document.querySelector(".hover-duration");
-const settingsBtn = document.querySelector(".setting-btn");
 const settingMenu = document.querySelector(".setting-menu");
 const downloadBtn = document.querySelector(".download-btn");
 const speedButtons = document.querySelectorAll(".setting-menu li");
@@ -35,16 +29,14 @@ const sh_play_st = document.querySelector(".sh_play_st");
 const sh_mute_st = document.querySelector(".sh_mute_st");
 const sh_unmute_st = document.querySelector(".sh_unmute_st");
 
-var modeTxtBtn = document.getElementById("mdbttn");
+var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
-
-modeBtn.addEventListener("click", changeMode);
 
 if (currentMode != null) {
     currentMode=parseInt(currentMode);
-    if (currentMode === 0) { modeTxtBtn.innerHTML = "1"; }
-    else if (currentMode === 1) { modeTxtBtn.innerHTML = "»"; }
-    else if (currentMode === 2) { modeTxtBtn.innerHTML = "↻"; }
+    if (currentMode === 0) { mode.innerHTML = "1"; }
+    else if (currentMode === 1) { mode.innerHTML = "»"; }
+    else if (currentMode === 2) { mode.innerHTML = "↻"; }
  } else { currentMode = 0; }
 
 var volumeVal = localStorage.getItem("videoVolume");
@@ -68,14 +60,13 @@ let mouseDownProgress = false,
 
 canPlayInit();
 
-function changeMode() {
-    if (currentMode === 2) { currentMode = 0 ; modeTxtBtn.innerHTML = "1";  }
-    else if (currentMode === 0) { currentMode = 1 ; modeTxtBtn.innerHTML = "»";  }
-    else if (currentMode === 1) { currentMode = 2 ; modeTxtBtn.innerHTML = "↻";  }
+function chMode() {
+    if (currentMode === 2) { currentMode = 0 ; mode.innerHTML = "1";  }
+    else if (currentMode === 0) { currentMode = 1 ; mode.innerHTML = "»";  }
+    else if (currentMode === 1) { currentMode = 2 ; mode.innerHTML = "↻";  }
     localStorage.setItem("videoMode", currentMode);
 }
 function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
-
 
 function canPlayInit() {
   muted = video.muted;
@@ -97,15 +88,15 @@ function canPlayInit() {
   } setVideoTime()
 }
 
-function handleForward() {
+function next() {
     localStorage.setItem("videoMode", currentMode);
     localStorage.setItem("videoVolume", video.volume.toString());
-    window.location.href = next;
+    window.location.href = nextUrl;
 }
-function handleBackward() {
+function prev() {
     localStorage.setItem("videoMode", currentMode);
     localStorage.setItem("videoVolume", video.volume.toString());
-    window.location.href =  prev;
+    window.location.href =  prevUrl;
 }
 function handleVideoEnded() {
     if (currentMode === 1) {
@@ -133,15 +124,6 @@ video.addEventListener("waiting", handleWaiting);
 video.addEventListener("playing", handlePlaying);
 
 document.addEventListener("keydown", handleShorthand);
-fullscreen.addEventListener("click", toggleFullscreen);
-
-playPause.addEventListener("click", (e) => {
-  if (!isPlaying) {
-    play();
-  } else {
-    pause();
-  }
-});
 
 duration.addEventListener("click", navigate);
 
@@ -223,9 +205,7 @@ mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 
 video.addEventListener("animationend", handleMainSateAnimationEnd);
 
-muteUnmute.addEventListener("click", toggleMuteUnmute);
-
-muteUnmute.addEventListener("mouseenter", (e) => {
+volume.addEventListener("mouseenter", (e) => {
   if (!muted) {
     totalVol.classList.add("show");
   } else {
@@ -241,14 +221,6 @@ totalVol.addEventListener("mousedown", (e) => {
   mouseDownVol = true;
   handleVolume(e);
 });
-
-forward.addEventListener("click", handleForward);
-
-backward.addEventListener("click", handleBackward);
-
-downloadBtn.addEventListener("click", download);
-
-settingsBtn.addEventListener("click", handleSettingMenu);
 
 speedButtons.forEach((btn) => {
   btn.addEventListener("click", handlePlaybackRate);
@@ -530,10 +502,10 @@ function handleShorthand(e) {
       handleProgressBar();
       break;
     case "arrowup":
-      handleForward();
+      next();
       break;
     case "arrowdown":
-      handleBackward();
+      prev();
       break;
     case "r":
       changeMode();
