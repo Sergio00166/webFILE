@@ -266,6 +266,7 @@ body {
   border-radius: 5px;
   font-size: 0.9rem;
   font-weight: 500;
+  cursor: pointer;
 }
 .speed-active {
   background: rgb(64, 64, 64);
