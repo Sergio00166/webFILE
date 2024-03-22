@@ -1,5 +1,6 @@
 body { font-family: Arial, sans-serif; background-color: #000000; }
-h2 { text-align: center; background-color: #666666; color: #EEEEEE; margin-top: 25px; padding-top: 15px; padding-bottom: 15px; }
+h2 { text-align: center; background-color: #666666; color: #EEEEEE;
+     margin-top: 25px; padding: 15px 25px 15px 25px; }
 a:hover { text-decoration: None }
 .container {border: none; background-color: #333333; padding-left: 35px; padding-right: 40px; disply: flex;}
 .list-group { position: absolute; width: 90%; left: 50%; transform: translate(-50%); }
