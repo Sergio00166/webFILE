@@ -208,8 +208,10 @@ span { user-select: none; }
 }
 @media only screen and (max-width: 600px) {
 .duration { width: 85%; }
-.volume { display: none; }
 }
 @media only screen and (max-width: 500px) {
+.volume { display: none; }
+}
+@media only screen and (max-width: 300px) {
 .settings { display: none; }
 }

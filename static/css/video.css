@@ -8,7 +8,6 @@ img {
 .fullimg {
   width: 48px;
   height: 48px;
-  user-select: none;
 }
 .round-button {
   user-select: none;
@@ -261,7 +260,7 @@ body {
   margin-left: -3rem;
 }
 .setting-menu li {
-  padding: 0.3rem 2rem;
+  padding: 0.3rem 1.5rem;
   margin: 0.5rem;
   transition: all 0.2s;
   border-radius: 5px;
@@ -330,12 +329,11 @@ body {
 .sh_noa { display: none; }
 .text { color: #ffffff; }
 
-@media only screen and (max-width: 520px) {
-  .settings { display: none; }
+@media only screen and (max-width: 540px) {
   .play-pause { display: none; }
   body { height: 85vh; }
 }
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 480px) {
   .btn-controls {
     padding-top: 1rem;
     font-size: 1.2rem;
@@ -343,5 +341,13 @@ body {
     align-items: center;
     flex-direction: column;
   }
+  .setting-menu { margin-left: 2.5rem; margin-bottom: 1.33rem; }
+  .setting-menu li { padding: 0.3rem 1rem; }
   .volume { display: none; }
+}
+@media only screen and (max-width: 400px) {
+  .setting-menu { margin-left: 1rem; }
+}
+@media only screen and (max-width: 320px) {
+  .settings { display: none; }
 }
