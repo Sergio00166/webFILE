@@ -172,7 +172,7 @@ function showCursor() {
 	  if (!video.paused) {
         document.body.style.cursor = 'none';
 	  }
-    }, 2000);
+    }, 3000);
   }
 }
 
@@ -186,11 +186,6 @@ video.addEventListener("click", (e) => {
 document.addEventListener("mouseover", (e) => {
   clearTimeout(cursorTimeout);
   document.body.style.cursor = 'auto';
-});
-
-videoContainer.addEventListener("mousemove", (e) => {
-  controls.classList.add("show-controls");
-  showCursor(); hideControls();
 });
 
 duration.addEventListener("touchmove", handleTouchNavigate);
@@ -224,6 +219,33 @@ totalVol.addEventListener("mousedown", (e) => {
 speedButtons.forEach((btn) => {
   btn.addEventListener("click", handlePlaybackRate);
 });
+
+// slide up to show the control bar
+videoContainer.addEventListener('touchmove', function(event) {
+    var touch = event.touches[0];
+    if (touch.clientY < this.previousY-10) {
+      controls.classList.add("show-controls");
+      showCursor(); hideControls();
+    }
+    this.previousY = touch.clientY;
+}, false);
+
+controls.addEventListener('touchstart', (e) => {
+	controls.classList.add("show-controls");
+    showCursor(); clearTimeout(timeout);
+});
+
+controls.addEventListener('mousemove', (e) => {
+	controls.classList.add("show-controls");
+    showCursor(); clearTimeout(timeout);
+});
+
+video.addEventListener("mousemove", (e) => {
+  controls.classList.add("show-controls");
+  showCursor(); hideControls();
+});
+
+controls.addEventListener('touchend', hideControls);
 
 function play() {
   video.play();
@@ -333,7 +355,7 @@ function hideControls() {
       controls.classList.remove("show-controls");
       settingMenu.classList.remove("show-setting-menu");
     }
-  }, 1000);
+  }, 2500);
 }
 
 function toggleMainState() {
@@ -536,4 +558,3 @@ function handleShorthand(e) {
       break;
   }
 }
-
