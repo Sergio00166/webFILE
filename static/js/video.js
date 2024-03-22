@@ -69,16 +69,10 @@ function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()
 
 function canPlayInit() {
   muted = video.muted;
-  video.play();
+  play();
   handleAudioIcon();
   if (video.paused) {
-    controls.classList.add("show-controls");
-    sh_play_st.classList.remove("sh_play_st");
-    sh_play.classList.remove("sh_play");
-    isPlaying = false;
-  } else {
-    isPlaying = true;
-    sh_pause.classList.remove("sh_pause");
+    pause();
   }
   function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
