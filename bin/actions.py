@@ -26,10 +26,10 @@ def sort_contents(folder_content,sort):
 
 def init():
     parser = ArgumentParser(description="Arguments for the webFILE")
-    parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind")
+    parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind", metavar="IP")
     parser.add_argument("-p", "--port", type=int, required=True, help="Specify port number")
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
-    parser.add_argument("--dirsize", action="store_true", help="Enable folder size")
+    parser.add_argument("--dirsize", action="store_true", help="Show folder size")
     args = parser.parse_args()
     return args.port, args.bind, args.dir, args.dirsize
 
