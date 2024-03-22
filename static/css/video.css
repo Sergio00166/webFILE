@@ -8,6 +8,7 @@ img {
 .fullimg {
   width: 48px;
   height: 48px;
+  user-select: none;
 }
 .round-button {
   user-select: none;
