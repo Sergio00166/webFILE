@@ -89,7 +89,6 @@ function pause() {
   }
 }
 
-duration.addEventListener("touchmove", handleTouchNavigate);
 audio.ontimeupdate = handleProgressBar;
 
 function handleProgressBar() {
@@ -189,20 +188,27 @@ duration.addEventListener("mouseleave", (e) => {
   hoverDuration.style.display = 'none';
 });
 
-// Magic trick to hide the time when using touchscreen
-duration.addEventListener("touchend", () => {
+// Magic tricks to hide the time when using touchscreen
+duration.addEventListener("touchmove", handleTouchNavigate);
+duration.addEventListener("touchstart", (e) => {
+ setTimeout(function() { hideHoverDuration(); }, 250);
+}); // Fix showing the time when hoving
+duration.addEventListener("touchend", hideHoverDuration);
+
+function hideHoverDuration() {
    const oldleft = hoverDuration.style.left;
    const oldwidth = hoverDuration.style.width;
    hoverDuration.style.left = "-9999px";
    hoverDuration.style.width = "0px";
    setTimeout(function() {
-	  hoverDuration.style.left = oldleft;
+      hoverDuration.style.left = oldleft;
       hoverDuration.style.width = oldwidth;
       hoverTime.style.width = 0;
       hoverDuration.style.display = 'none';
       mouseOverDuration = false;
+      currentTime.style.content = "none";
     }, 250);
-});
+}
 
 function formatter(number) {
   return new Intl.NumberFormat({}, { minimumIntegerDigits: 2 }).format(number);
@@ -405,10 +411,9 @@ function handleShorthand(e) {
         handleAudioIcon();
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
-		saveVolume();
+	saveVolume();
      } break;
     default:
       break;
   }
 }
-

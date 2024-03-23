@@ -117,9 +117,6 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-.duration:hover {
-  height: 17px;
-}
 .duration .buffer {
   height: 100%;
   position: absolute;

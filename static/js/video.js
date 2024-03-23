@@ -142,20 +142,27 @@ duration.addEventListener("mouseleave", (e) => {
   hoverDuration.style.display = 'none';
 });
 
-// Magic trick to hide the time when using touchscreen
-duration.addEventListener("touchend", () => {
+
+function hideHoverDuration() {
    const oldleft = hoverDuration.style.left;
    const oldwidth = hoverDuration.style.width;
    hoverDuration.style.left = "-9999px";
    hoverDuration.style.width = "0px";
    setTimeout(function() {
-	  hoverDuration.style.left = oldleft;
+      hoverDuration.style.left = oldleft;
       hoverDuration.style.width = oldwidth;
       hoverTime.style.width = 0;
       hoverDuration.style.display = 'none';
       mouseOverDuration = false;
     }, 250);
-});
+}
+
+// Magic tricks to hide the time when using touchscreen
+duration.addEventListener("touchmove", handleTouchNavigate);
+duration.addEventListener("touchstart", (e) => {
+ setTimeout(function() { hideHoverDuration(); }, 250);
+}); // Fix showing the time when hoving
+duration.addEventListener("touchend", hideHoverDuration);
 
 let cursorTimeout;
 function showCursor() {
@@ -163,9 +170,9 @@ function showCursor() {
     document.body.style.cursor = 'auto';
     clearTimeout(cursorTimeout);
     cursorTimeout = setTimeout(function() {
-	  if (!video.paused) {
+      if (!video.paused) {
         document.body.style.cursor = 'none';
-	  }
+      }
     }, 3000);
   }
 }
@@ -181,8 +188,6 @@ document.addEventListener("mouseover", (e) => {
   clearTimeout(cursorTimeout);
   document.body.style.cursor = 'auto';
 });
-
-duration.addEventListener("touchmove", handleTouchNavigate);
 
 videoContainer.addEventListener("fullscreenchange", () => {
   videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
@@ -225,12 +230,12 @@ videoContainer.addEventListener('touchmove', function(event) {
 }, false);
 
 controls.addEventListener('touchstart', (e) => {
-	controls.classList.add("show-controls");
+    controls.classList.add("show-controls");
     showCursor(); clearTimeout(timeout);
 });
 
 controls.addEventListener('mousemove', (e) => {
-	controls.classList.add("show-controls");
+    controls.classList.add("show-controls");
     showCursor(); clearTimeout(timeout);
 });
 
@@ -536,7 +541,7 @@ function handleShorthand(e) {
         video.volume = volumeVal;
         handleAudioIcon();
         currentVol.style.width = volumeVal * 100 +"%";
-		saveVolume();
+        saveVolume();
     } break;
     case "-":
      if (volumeVal != 0 && !muted) {
@@ -546,9 +551,10 @@ function handleShorthand(e) {
         video.volume = volumeVal;
         handleAudioIcon();
         currentVol.style.width = volumeVal * 100 +"%";
-		saveVolume();
+        saveVolume();
      } break;
     default:
       break;
   }
 }
+
