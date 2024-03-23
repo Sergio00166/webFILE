@@ -195,19 +195,18 @@ duration.addEventListener("touchstart", (e) => {
 }); // Fix showing the time when hoving
 duration.addEventListener("touchend", hideHoverDuration);
 
+let hideHoverTimeout;
 function hideHoverDuration() {
-   const oldleft = hoverDuration.style.left;
-   const oldwidth = hoverDuration.style.width;
+   clearTimeout(hideHoverTimeout);
    hoverDuration.style.left = "-9999px";
    hoverDuration.style.width = "0px";
-   setTimeout(function() {
-      hoverDuration.style.left = oldleft;
-      hoverDuration.style.width = oldwidth;
+   hideHoverTimeout = setTimeout(function() {
+      hoverDuration.style.left = "";
+      hoverDuration.style.width = "";
       hoverTime.style.width = 0;
       hoverDuration.style.display = 'none';
       mouseOverDuration = false;
-      currentTime.style.content = "none";
-    }, 250);
+   }, 250);
 }
 
 function formatter(number) {

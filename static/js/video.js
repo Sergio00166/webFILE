@@ -143,18 +143,18 @@ duration.addEventListener("mouseleave", (e) => {
 });
 
 
+let hideHoverTimeout;
 function hideHoverDuration() {
-   const oldleft = hoverDuration.style.left;
-   const oldwidth = hoverDuration.style.width;
+   clearTimeout(hideHoverTimeout);
    hoverDuration.style.left = "-9999px";
    hoverDuration.style.width = "0px";
-   setTimeout(function() {
-      hoverDuration.style.left = oldleft;
-      hoverDuration.style.width = oldwidth;
+   hideHoverTimeout = setTimeout(function() {
+      hoverDuration.style.left = "";
+      hoverDuration.style.width = "";
       hoverTime.style.width = 0;
       hoverDuration.style.display = 'none';
       mouseOverDuration = false;
-    }, 250);
+   }, 250);
 }
 
 // Magic tricks to hide the time when using touchscreen
