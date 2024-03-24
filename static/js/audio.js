@@ -49,7 +49,7 @@ let mouseDownProgress = false,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
   
-canPlayInit()
+canPlayInit();
  
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
