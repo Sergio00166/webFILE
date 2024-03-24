@@ -3,6 +3,8 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
+from sys import path
+from os import sep
 from functions import *
 from actions import *
 from flask import Flask, render_template, stream_template, request, send_file
@@ -11,7 +13,8 @@ from sys import path as pypath
 
 if __name__=="__main__":
     port, listen, root, folder_size = init()
-    app = Flask(__name__, static_folder=None)
+    templates=abspath(path[0]+sep+".."+sep+"templates")
+    app = Flask(__name__, static_folder=None, template_folder=templates)
 
 @app.route('/<path:path>')
 def explorer(path):
@@ -52,7 +55,7 @@ def index():
             return send_file(file)
         
         elif "static" in request.args:
-            sroot=pypath[0]+sep+"static"+sep
+            sroot=abspath(pypath[0]+sep+".."+sep+"static"+sep)
             path=request.args["static"].replace("/",sep)
             file = isornot(path,sroot)
             return send_file(file)

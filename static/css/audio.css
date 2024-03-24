@@ -4,7 +4,9 @@ body {
   align-items: center;
   height: 90vh;
   background-color: #000; 
-  flex-direction: column; 
+  flex-direction: column;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 .flex { 
   display: flex;
@@ -13,15 +15,13 @@ body {
 h2 { 
   text-align: center;
   color: #FFFFFF; 
+  user-select: text;
 }
 img {
   width: 20px;
   height: 20px;
-  display: inline-block;
-  vertical-align: middle;
 }
 .round-button {
-  user-select: none;
   width: 2.2rem;
   height: 2.2rem;
   border-radius: 50%;
@@ -33,6 +33,7 @@ img {
   box-sizing: border-box;
   position: relative;
   margin-right: 0.5rem;
+  cursor: pointer;
 }    
 .duration {
   position: relative;
@@ -42,7 +43,6 @@ img {
   cursor: pointer;
   transition: all 0.2s;
 }
-.duration:hover { height: 17px; }
 .duration .buffer {
   height: 100%;
   position: absolute;
@@ -110,7 +110,6 @@ img {
 .volume {
   display: flex;
   align-items: center;
-  cursor: default;
 }
 .time-container {
   font-size: 13px;
@@ -166,8 +165,8 @@ img {
   margin-block-start: 0;
   margin-block-end: 0;
   position: absolute;
-  margin-top: -20vh;
-  margin-left: -10rem;
+  margin-top: -26vh;
+  margin-left: -10.5rem;
   transition: all 0.2s;
   background: rgba(50, 50, 50, 1);
   border-radius: 5px;
@@ -207,8 +206,11 @@ img {
 }
 @media only screen and (max-width: 600px) {
 .duration { width: 85%; }
-.volume { display: none; }
 }
 @media only screen and (max-width: 500px) {
+.volume { display: none; }
+.setting-menu { margin-left: -9rem; }
+}
+@media only screen and (max-width: 300px) {
 .settings { display: none; }
 }

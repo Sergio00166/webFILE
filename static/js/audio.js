@@ -14,9 +14,10 @@ const sh_fulla = document.querySelector(".sh_fulla");
 const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
-const muteUnmute = document.querySelector(".muteUnmute");
 const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
+const volume = document.querySelector(".volume");
+
 var audio = document.getElementById("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
@@ -48,7 +49,7 @@ let mouseDownProgress = false,
   touchPastDurationWidth = 0,
   touchStartTime = 0;
   
-canPlayInit()
+canPlayInit();
  
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
@@ -66,7 +67,7 @@ function canPlayInit() {
   function setAudioTime() {
     if (!(isNaN(audio.duration) || audio.duration === 0)) {
       totalDuration.innerHTML = showDuration(audio.duration); 
-    } else { setTimeout(setAudioTime, 500); }
+    } else { setTimeout(setAudioTime, 25); }
   } setAudioTime()
 }
 
@@ -88,7 +89,6 @@ function pause() {
   }
 }
 
-duration.addEventListener("touchmove", handleTouchNavigate);
 audio.ontimeupdate = handleProgressBar;
 
 function handleProgressBar() {
@@ -188,16 +188,26 @@ duration.addEventListener("mouseleave", (e) => {
   hoverDuration.style.display = 'none';
 });
 
-duration.addEventListener("touchend", () => {
-   hoverTime.style.width = 0;
-   hoverDuration.style.display = 'none';
-   mouseOverDuration = false;
-   setTimeout(function() {
+// Magic tricks to hide the time when using touchscreen
+duration.addEventListener("touchmove", handleTouchNavigate);
+duration.addEventListener("touchstart", (e) => {
+ setTimeout(function() { hideHoverDuration(); }, 250);
+}); // Fix showing the time when hoving
+duration.addEventListener("touchend", hideHoverDuration);
+
+let hideHoverTimeout;
+function hideHoverDuration() {
+   clearTimeout(hideHoverTimeout);
+   hoverDuration.style.left = "-9999px";
+   hoverDuration.style.width = "0px";
+   hideHoverTimeout = setTimeout(function() {
+      hoverDuration.style.left = "";
+      hoverDuration.style.width = "";
       hoverTime.style.width = 0;
       hoverDuration.style.display = 'none';
       mouseOverDuration = false;
-    }, 2);
-});
+   }, 250);
+}
 
 function formatter(number) {
   return new Intl.NumberFormat({}, { minimumIntegerDigits: 2 }).format(number);
@@ -212,7 +222,7 @@ function handleVolume(e) {
   handleAudioIcon();
 }
 
-muteUnmute.addEventListener("mouseenter", (e) => {
+volume.addEventListener("mouseenter", (e) => {
   if (!muted) {
     totalVol.classList.add("show");
   } else {
@@ -238,7 +248,7 @@ totalVol.addEventListener("mousedown", (e) => {
   handleVolume(e);
 });
 
-muteUnmute.addEventListener("mouseleave", (e) => {
+volume.addEventListener("mouseleave", (e) => {
     totalVol.classList.remove("show");
 });
 
@@ -400,10 +410,9 @@ function handleShorthand(e) {
         handleAudioIcon();
         audio.volume = volumeVal;
         currentVol.style.width = volumeVal * 100 +"%";
-		saveVolume();
+	saveVolume();
      } break;
     default:
       break;
   }
 }
-
