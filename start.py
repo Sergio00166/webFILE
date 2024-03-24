@@ -4,16 +4,7 @@ from subprocess import Popen
 from sys import path, argv
 from os.path import exists, isdir
 from os import sep
-from threading import Thread
 from time import sleep as delay
-
-def worker(ip,port,folder_size,root):
-    PyExec=path[0]+sep+"bin"+sep+"main.py"
-    if sep==chr(92): python="python"
-    else: python="python3"
-    args=[python,PyExec,"-b",ip,"-p",port,"-d",root]
-    if folder_size: args.append("--dirsize")
-    process = Popen(args)
 
 def init():
     if len(argv)==1:
@@ -46,13 +37,15 @@ def init():
     return ports, listen, root, folder_size
 
 def main():
-    threads=[]
     ports, listen, root, folder_size = init()
+    PyExec=path[0]+sep+"bin"+sep+"main.py"
+    if sep==chr(92): python="python"
+    else: python="python3"
     for ip in listen:
         for port in ports:
-            threads.append(Thread(target=worker,
-                args=(ip,port,folder_size,root,)))
-    for x in threads: x.start(); delay(0.1)
+            args=[python,PyExec,"-b",ip,"-p",port,"-d",root]
+            if folder_size: args.append("--dirsize")
+            Popen(args); delay(0.1)
     try: # wait
         while True: delay(1)
     except: exit()
