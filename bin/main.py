@@ -24,6 +24,7 @@ def explorer(path):
             sort = request.args["sort"] if "sort" in request.args else ""
             folder_content,folder_path,parent_directory,is_root=\
             index_func(path,root,folder_size)
+            folder_content = sort_contents(folder_content, sort)
             par_root = (parent_directory=="")
             return stream_template('index.html', folder_content=folder_content,folder_path=folder_path,
                                    parent_directory=parent_directory,is_root=is_root, par_root=par_root)
