@@ -8,7 +8,8 @@ Some browsers cannot play some video formats, and others can because this projec
 
 To change the options you can edit the config.cfg inside the bin dir, create a custom one or passing an arg to the main file located in bin/main.py
 On that file you can add ports and IP separated by "," to listen to (for example if you put 2 ports and 2 IPs both IPs will listen both ports)
-It makes easier to configure it to use it with a load-balancer proxy like nginx
+It makes easier to configure it to use it with a load-balancer proxy like nginx.
+To get the maximun performance I recommend usign NGINX with least_conn and CPUs//2 webFILE workers
 
 Requirements:
  Python3 (tested under python 3.12)
