@@ -31,6 +31,7 @@ def init():
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
     parser.add_argument("--dirsize", action="store_true", help="Show folder size")
     args = parser.parse_args()
+    print(args)
     return args.port, args.bind, args.dir, args.dirsize
 
 def isornot(path,root):
@@ -42,11 +43,11 @@ def isornot(path,root):
     else: raise PermissionError
     return path
 
-def filepage_func(path,root,filetype):
+def filepage_func(path,root,filetype,folder_size):
     path=relpath(isornot(path,root), start=root)
     folder=sep.join(path.split(sep)[:-1])
     name=path.split(sep)[-1]
-    out=get_folder_content(root+sep+folder,root,False)
+    out=get_folder_content(root+sep+folder,root,folder_size)
     path=path.replace(sep,"/")
     lst = [x["path"] for x in out if x["description"] == filetype]
     # Get previous one
