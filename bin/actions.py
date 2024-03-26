@@ -60,7 +60,7 @@ def filepage_func(path,root,filetype):
     prev = "/" + fix_pth_url(prev)
     return prev, nxt, name, path
 
-def index_func(folder_path,root,folder_size):
+def index_func(folder_path,root,folder_size,sort):
     folder_path=isornot(folder_path,root)
     is_root = folder_path==root
     folder_content = get_folder_content(folder_path,root,folder_size)
@@ -71,4 +71,6 @@ def index_func(folder_path,root,folder_size):
     if folder_path==".": folder_path=""
     folder_path="/"+folder_path.replace(sep,"/")
     parent_directory=parent_directory.replace(sep,"/")
-    return folder_content,folder_path,parent_directory,is_root
+    folder_content = sort_contents(folder_content, sort)
+    par_root = (parent_directory=="")
+    return folder_content,folder_path,parent_directory,is_root,par_root
