@@ -22,10 +22,8 @@ def explorer(path):
         file_type = get_file_type(root+sep+path)
         if file_type=="DIR":
             sort = request.args["sort"] if "sort" in request.args else ""
-            folder_content,folder_path,parent_directory,is_root=\
-            index_func(path,root,folder_size)
-            folder_content = sort_contents(folder_content, sort)
-            par_root = (parent_directory=="")
+            folder_content,folder_path,parent_directory,is_root,\
+            par_root = index_func(path,root,folder_size,sort)
             return stream_template('index.html', folder_content=folder_content,folder_path=folder_path,
                                    parent_directory=parent_directory,is_root=is_root, par_root=par_root)
         elif file_type=="Text" or file_type=="SRC":
