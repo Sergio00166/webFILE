@@ -13,7 +13,6 @@ from sys import path as pypath
 
 if __name__=="__main__":
     port, listen, root, folder_size = init()
-    print(folder_size)
     templates=abspath(path[0]+sep+".."+sep+"templates")
     app = Flask(__name__, static_folder=None, template_folder=templates)
 
