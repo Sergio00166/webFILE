@@ -11,6 +11,8 @@ On that file you can add ports and IP separated by "," to listen to (for example
 It makes easier to configure it to use it with a load-balancer proxy like nginx.
 To get the maximun performance I recommend usign NGINX with least_conn and CPUs_count webFILE workers
 
+To change the audio track from a video you must need to enable "Experimental Web Platform features" in your browser
+
 Requirements:
  Python3 (tested under python 3.12)
  Windows/Linux
