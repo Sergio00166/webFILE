@@ -255,14 +255,25 @@ body {
   margin-left: -3rem;
 }
 .setting-menu li {
-  padding: 0.3rem 1.5rem;
+  padding: 0.3rem 0.25rem;
   margin: 0.5rem;
   transition: all 0.2s;
   border-radius: 5px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
 }
+select {
+   height: 215px;
+   background: rgba(28, 28, 28, 0.9);  
+}
+select option {
+   width: 100px;
+   height: 25px;
+   text-align: center;
+   color: #EEE;
+}
+
 .speed-active {
   background: rgb(64, 64, 64);
   background: rgb(64, 64, 64);
@@ -324,25 +335,26 @@ body {
 .sh_noa { display: none; }
 .text { color: #ffffff; }
 
-@media only screen and (max-width: 540px) {
+.transition { transition: opacity 0.25s ease; }
+
+option { font-size: large; }
+
+button:focus { outline: none; }
+
+@media only screen and (max-width: 500px) {
   .play-pause { display: none; }
   body { height: 85vh; }
 }
-@media only screen and (max-width: 480px) {
-  .btn-controls {
+@media only screen and (max-width: 420px) {
+    .btn-controls {
     padding-top: 1rem;
     font-size: 1.2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
   }
-  .setting-menu { margin-left: 2.5rem; margin-bottom: 1.33rem; }
-  .setting-menu li { padding: 0.3rem 1rem; }
-  .volume { display: none; }
-}
-@media only screen and (max-width: 400px) {
-  .setting-menu { margin-left: 1rem; }
+  .setting-menu { margin-left: 2rem; margin-bottom: 2.25rem; }
 }
 @media only screen and (max-width: 320px) {
-  .settings { display: none; }
+  .volume { display: none; }
 }

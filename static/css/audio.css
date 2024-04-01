@@ -190,6 +190,8 @@ img {
   transform: scaleY(1);
   visibility: visible;
 }
+button:focus { outline: none; }
+
 .sh_pause { display: none; }
 .sh_play { display: none; }
 .sh_mute { display: none; }
