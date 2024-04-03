@@ -30,8 +30,6 @@ const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
 
-audioTracksSelect.style.display = "none";
-speedSelect.style.display = "none";
 speedSelect.selectedIndex = 3;
 
 var mode = document.getElementById("mode");
@@ -83,7 +81,7 @@ function canPlayInit() {
   function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
       totalDuration.innerHTML = showDuration(video.duration);
-	  loadTracks();
+      loadTracks();
     } else { setTimeout(setVideoTime, 25); }
   } setVideoTime()
 }
@@ -356,8 +354,6 @@ function hideControls() {
     if (isPlaying && !isCursorOnControls) {
       controls.classList.remove("show-controls");
       settingMenu.classList.remove("show-setting-menu");
-	  audioTracksSelect.style.display = "none";
-      speedSelect.style.display = "none";
        for (let i = 0; i < menuButtons.length; i++) {
           menuButtons[i].style.display = "block";
        }
@@ -440,11 +436,7 @@ function handleMainSateAnimationEnd() {
 }
 
 function handleSettingMenu() {
-  if (audioTracksSelect.style.display === "none" && speedSelect.style.display === "none") {
-    settingMenu.classList.toggle("show-setting-menu");
-  } else {
-    hideSpeed();hideTracks();
-  }
+  settingMenu.classList.toggle("show-setting-menu");
 }
 
 function handleAudioIcon(){
@@ -554,38 +546,8 @@ function loadTracks() {
       option.value = i;
       option.textContent = (track.label || track.language );
       audioTracksSelect.appendChild(option);
-	  audioTracksSelect.selectedIndex = 0;
+      audioTracksSelect.selectedIndex = 0;
     }
-}
-
-function hideTracks() {
-  if (audioTracksSelect.style.display === "block") {
-    audioTracksSelect.style.opacity = "0";
-    audioTracksSelect.classList.add("transition");
-    setTimeout(() => {
-      audioTracksSelect.style.display = "none";
-      audioTracksSelect.classList.remove("transition");
-      audioTracksSelect.style.opacity = "1";
-      for (let i = 0; i < menuButtons.length; i++) {
-        menuButtons[i].style.display = "block";
-      } 
-    }, 125);
-  }
-}
-
-function hideSpeed() {
-  if (speedSelect.style.display === "block") {
-    speedSelect.style.opacity = "0";
-    speedSelect.classList.add("transition");
-    setTimeout(() => {
-     speedSelect.style.display = "none";
-	 speedSelect.classList.remove("transition");
-     speedSelect.style.opacity = "1";
-	  for (let i = 0; i < menuButtons.length; i++) {
-        menuButtons[i].style.display = "block";
-      } 
-    }, 125);
-  }
 }
 
 let originalTime = 0;
@@ -596,45 +558,13 @@ audioTracksSelect.addEventListener('change', function() {
     for (let i = 0; i < audioTracks.length; i++) {
         audioTracks[i].enabled = (i === selectedIndex);
     } video.currentTime = originalTime; }
-	hideTracks();
 });
-	
-	
+    
+    
 speedSelect.addEventListener('change', function() {
   video.playbackRate = parseFloat(this.value);
-  hideSpeed();
  });
  
- 
-function toggleDropdown1() {
-  if (audioTracksSelect.style.display === "none") {
-    audioTracksSelect.style.display = "block";
-	for (let i = 0; i < menuButtons.length; i++) {
-       menuButtons[i].style.display = "none";
-    }
-  } else {
-    audioTracksSelect.style.display = "none";
-    for (let i = 0; i < menuButtons.length; i++) {
-       menuButtons[i].style.display = "block";
-    }
-  }
-}
-function toggleDropdown2() {
-  if (speedSelect.style.display === "none") {
-    speedSelect.style.display = "block";
-	for (let i = 0; i < menuButtons.length; i++) {
-       menuButtons[i].style.display = "none";
-    }
-  } else {
-    speedSelect.style.display = "none";
-    for (let i = 0; i < menuButtons.length; i++) {
-       menuButtons[i].style.display = "block";
-    }
-  }
-}
-const li1 = document.getElementById("li1");
-const li2 = document.getElementById("li2");
-const li3 = document.getElementById("li3");
-li1.addEventListener("click", toggleDropdown1);
-li2.addEventListener("click", toggleDropdown2);
-li3.addEventListener("click", download);
+
+const liD = document.getElementById("liD");
+liD.addEventListener("click", download);

@@ -247,6 +247,7 @@ body {
   margin-block-end: 0;
   position: absolute;
   bottom: 5rem;
+  margin-right: 2rem;
   transition: all 0.2s;
   background: rgba(28, 28, 28, 0.9);
   transform: scaleY(0);
@@ -262,15 +263,35 @@ body {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
+  text-align: center;
 }
+
+.setting-menu li:nth-child(1)::before {
+	content: "Tracks";
+	color: #FFFFFF;
+    position: absolute;
+}
+.setting-menu li:nth-child(2)::before {
+	content: "Speed";
+	color: #FFFFFF;
+    position: absolute;
+}
+
 select {
-   height: 215px;
-   background: rgba(28, 28, 28, 0.9);  
+  appearance: none;
+  position: absolute
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
+  width: 100%;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0;
+  border: none;
 }
 select option {
-   width: 100px;
-   height: 25px;
-   text-align: center;
+   background-color: rgba(28, 28, 28, 0.9);
    color: #EEE;
 }
 
@@ -337,8 +358,6 @@ select option {
 
 .transition { transition: opacity 0.25s ease; }
 
-option { font-size: large; }
-
 button:focus { outline: none; }
 
 @media only screen and (max-width: 500px) {
@@ -346,7 +365,7 @@ button:focus { outline: none; }
   body { height: 85vh; }
 }
 @media only screen and (max-width: 420px) {
-    .btn-controls {
+  .btn-controls {
     padding-top: 1rem;
     font-size: 1.2rem;
     display: flex;
@@ -357,4 +376,5 @@ button:focus { outline: none; }
 }
 @media only screen and (max-width: 320px) {
   .volume { display: none; }
+  .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
 }
