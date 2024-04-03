@@ -263,17 +263,16 @@ body {
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  text-align: center;
 }
 
 .setting-menu li:nth-child(1)::before {
-	content: "Tracks";
-	color: #FFFFFF;
+    content: "Tracks";
+    color: #FFFFFF;
     position: absolute;
 }
 .setting-menu li:nth-child(2)::before {
-	content: "Speed";
-	color: #FFFFFF;
+    content: "Speed";
+    color: #FFFFFF;
     position: absolute;
 }
 
