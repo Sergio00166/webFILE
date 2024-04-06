@@ -7,8 +7,11 @@ Same as python3 -m http.server but with better appareance (custom video and audi
 Some browsers cannot play some video formats, and others can because this project is not using transcoding (and will not) to convert in realtime the media
 
 To change the options you can edit the config.cfg inside the bin dir, create a custom one or passing an arg to the main file located in bin/main.py
+
 On that file you can add ports and IP separated by "," to listen to (for example if you put 2 ports and 2 IPs both IPs will listen both ports)
+
 It makes easier to configure it to use it with a load-balancer proxy like nginx.
+
 To get the maximun performance I recommend usign NGINX with least_conn and CPUs_count webFILE workers
 
 To change the audio track from a video you must need to enable "Experimental Web Platform features" in your browser
