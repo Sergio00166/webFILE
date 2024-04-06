@@ -18,7 +18,7 @@ Requirements:
  Windows/Linux
 
 Dependencys:
- flask
+ flask  ffmpeg
 
 Usage:
   python3 start.py [config.file]
