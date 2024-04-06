@@ -266,13 +266,18 @@ body {
 }
 
 .setting-menu li:nth-child(1)::before {
-    content: "Tracks";
-    color: #FFFFFF;
+	content: "Subs";
+	color: #FFFFFF;
     position: absolute;
 }
 .setting-menu li:nth-child(2)::before {
-    content: "Speed";
-    color: #FFFFFF;
+	content: "Tracks";
+	color: #FFFFFF;
+    position: absolute;
+}
+.setting-menu li:nth-child(3)::before {
+	content: "Speed";
+	color: #FFFFFF;
     position: absolute;
 }
 
@@ -377,3 +382,9 @@ button:focus { outline: none; }
   .volume { display: none; }
   .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
 }
+
+    ::cue {
+
+        padding: 5000000000px;
+        border-radius: 5px;
+    }

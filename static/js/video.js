@@ -15,6 +15,7 @@ const hoverDuration = document.querySelector(".hover-duration");
 const settingMenu = document.querySelector(".setting-menu");
 const menuButtons = document.querySelectorAll(".setting-menu li");
 const loader = document.querySelector(".custom-loader");
+const subtitleSelect = document.getElementById('s0');
 const audioTracksSelect = document.getElementById('s1');
 const speedSelect = document.getElementById('s2');
 
@@ -561,10 +562,24 @@ audioTracksSelect.addEventListener('change', function() {
 });
     
     
+subtitleSelect.addEventListener('change', function() {
+  value = this.value;
+  var existingTrack = video.querySelector('track[kind="subtitles"]');
+  if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
+  if (value > -1) {
+	url="/?subtitles="+value+"/"+urlVideo.substring(6);
+	var track = document.createElement('track');
+    track.kind = 'subtitles';
+    track.src = url;
+	track.default = true;
+	track.mode = 'showing';
+    video.appendChild(track);
+  } else {}
+ });
+ 
 speedSelect.addEventListener('change', function() {
   video.playbackRate = parseFloat(this.value);
  });
- 
 
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);

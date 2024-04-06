@@ -9,7 +9,9 @@
 </head>
 <body>
   <div class="video-container">
-    <video id="video" onended="handleVideoEnded()" disableRemotePlayback src="{{ url_for('index', raw=path) }}"></video>
+    <video onended="handleVideoEnded()">
+	  <source src="{{ url_for('index', raw=path) }}" type="video/mp4">
+	</video>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}" alt="Loading..."></span>
     <span class="main-state state-btn">
       <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" alt="Play">
@@ -58,6 +60,13 @@
               <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}" alt="Settings">
             </button>
             <ul class="setting-menu">
+			    <li><select id="s0">
+				 <option value="-1">None</option>
+				 {% for item in tracks %}
+				    <option value={{ tracks.index(item) }}>
+				    {{ item }} </option>
+				 {% endfor %}
+				</select></li>
 				<li><select id="s1"></select>
 				</li><li> <select id="s2">
 					  <option value="0.25">0.25x</option>
