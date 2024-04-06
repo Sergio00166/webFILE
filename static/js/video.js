@@ -13,8 +13,11 @@ const mainState = document.querySelector(".main-state");
 const hoverTime = document.querySelector(".hover-time");
 const hoverDuration = document.querySelector(".hover-duration");
 const settingMenu = document.querySelector(".setting-menu");
-const speedButtons = document.querySelectorAll(".setting-menu li");
+const menuButtons = document.querySelectorAll(".setting-menu li");
 const loader = document.querySelector(".custom-loader");
+const subtitleSelect = document.getElementById('s0');
+const audioTracksSelect = document.getElementById('s1');
+const speedSelect = document.getElementById('s2');
 
 const sh_mute = document.querySelector(".sh_mute");
 const sh_unmute = document.querySelector(".sh_unmute");
@@ -27,6 +30,8 @@ const sh_fulla = document.querySelector(".sh_fulla");
 const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
+
+speedSelect.selectedIndex = 3;
 
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
@@ -76,7 +81,8 @@ function canPlayInit() {
   }
   function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
-      totalDuration.innerHTML = showDuration(video.duration); 
+      totalDuration.innerHTML = showDuration(video.duration);
+      loadTracks();
     } else { setTimeout(setVideoTime, 25); }
   } setVideoTime()
 }
@@ -215,10 +221,6 @@ totalVol.addEventListener("mousedown", (e) => {
   handleVolume(e);
 });
 
-speedButtons.forEach((btn) => {
-  btn.addEventListener("click", handlePlaybackRate);
-});
-
 // slide up to show the control bar
 videoContainer.addEventListener('touchmove', function(event) {
     var touch = event.touches[0];
@@ -353,6 +355,9 @@ function hideControls() {
     if (isPlaying && !isCursorOnControls) {
       controls.classList.remove("show-controls");
       settingMenu.classList.remove("show-setting-menu");
+       for (let i = 0; i < menuButtons.length; i++) {
+          menuButtons[i].style.display = "block";
+       }
     }
   }, 2500);
 }
@@ -433,29 +438,6 @@ function handleMainSateAnimationEnd() {
 
 function handleSettingMenu() {
   settingMenu.classList.toggle("show-setting-menu");
-}
-
-function handlePlaybackRate(e) {
-  video.playbackRate = parseFloat(e.target.dataset.value);
-  speedButtons.forEach((btn) => {
-    btn.classList.remove("speed-active");
-  });
-  e.target.classList.add("speed-active");
-  settingMenu.classList.remove("show-setting-menu");
-}
-
-function handlePlaybackRateKey(type = "") {
-  if (type === "increase" && video.playbackRate < 2) {
-    video.playbackRate += 0.25;
-  } else if (video.playbackRate > 0.25 && type !== "increase") {
-    video.playbackRate -= 0.25;
-  }
-  speedButtons.forEach((btn) => {
-    btn.classList.remove("speed-active");
-    if (btn.dataset.value == video.playbackRate) {
-      btn.classList.add("speed-active");
-    }
-  });
 }
 
 function handleAudioIcon(){
@@ -557,4 +539,47 @@ function handleShorthand(e) {
       break;
   }
 }
+function loadTracks() {
+    audioTracks = video.audioTracks;
+    for (let i = 0; i < audioTracks.length; i++) {
+      const track = audioTracks[i];
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = (track.label || track.language );
+      audioTracksSelect.appendChild(option);
+      audioTracksSelect.selectedIndex = 0;
+    }
+}
 
+let originalTime = 0;
+audioTracksSelect.addEventListener('change', function() {
+  const selectedIndex = parseInt(this.value, 10);
+  if (!isNaN(selectedIndex)) {
+  originalTime = video.currentTime;
+    for (let i = 0; i < audioTracks.length; i++) {
+        audioTracks[i].enabled = (i === selectedIndex);
+    } video.currentTime = originalTime; }
+});
+    
+    
+subtitleSelect.addEventListener('change', function() {
+  value = this.value;
+  var existingTrack = video.querySelector('track[kind="subtitles"]');
+  if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
+  if (value > -1) {
+	url="/?subtitles="+value+"/"+urlVideo.substring(6);
+	var track = document.createElement('track');
+    track.kind = 'subtitles';
+    track.src = url;
+	track.default = true;
+	track.mode = 'showing';
+    video.appendChild(track);
+  } else {}
+ });
+ 
+speedSelect.addEventListener('change', function() {
+  video.playbackRate = parseFloat(this.value);
+ });
+
+const liD = document.getElementById("liD");
+liD.addEventListener("click", download);
