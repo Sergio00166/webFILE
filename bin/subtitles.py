@@ -22,10 +22,12 @@ def get_info(source):
     cmd+=' "'+str(source)+'"'
     if sep==chr(92): cmd+=" 2>nul"
     else: cmd+=" 2>/dev/null"
-    out=check_output(cmd, shell=True)
-    out=str(out, encoding="UTF8")
-    out=out.split(linesep)
-    out.pop()
+    try:
+        out=check_output(cmd, shell=True)
+        out=str(out, encoding="UTF8")
+        out=out.split(linesep)
+        out.pop()
+    except: out=[]
     return out
 
 def get_track(arg,root):
