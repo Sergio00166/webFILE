@@ -22,8 +22,6 @@ var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
 var currentMode = localStorage.getItem("audioMode");
 
-document.addEventListener("keydown", handleShorthand);
-
 if (currentMode != null) {
     currentMode=parseInt(currentMode);
     if (currentMode === 0) { mode.innerHTML = "1"; }
@@ -141,6 +139,7 @@ function showDuration(time) {
 
 // Event Listeners
 duration.addEventListener("click", navigate);
+document.addEventListener("keydown", handleShorthand);
 
 duration.addEventListener("mousedown", (e) => {
   mouseDownProgress = true;
