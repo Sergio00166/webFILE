@@ -6,6 +6,7 @@
 from os import sep, linesep
 from actions import isornot
 from subprocess import check_output
+from flask import Response
 
 
 def track_wk(source,index):
@@ -33,4 +34,8 @@ def get_track(arg,root):
     file=arg[separator+1:]
     file=isornot(file,root)
     out=track_wk(file,index)
-    return out
+    return Response(out,
+        mimetype="text/plain",
+        headers={"Content-disposition":
+                "attachment; filename=subs.vtt"}
+        ) 

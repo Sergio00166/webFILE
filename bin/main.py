@@ -7,7 +7,7 @@ from sys import path
 from os import sep
 from functions import *
 from actions import *
-from flask import Flask, render_template, stream_template, request, send_file, Response
+from flask import Flask, render_template, stream_template, request, send_file
 from subtitles import get_info, get_track
 from sys import path as pypath
 
@@ -59,12 +59,7 @@ def index():
         
         elif "subtitles" in request.args:
             arg = request.args["subtitles"]
-            return Response(
-                get_track(arg,root),
-                mimetype="text/plain",
-                headers={"Content-disposition":
-                         "attachment; filename=subs.vtt"}
-                )
+            return get_track(arg,root)
         
         else:
             sort = request.args["sort"] if "sort" in request.args else ""
