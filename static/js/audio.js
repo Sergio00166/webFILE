@@ -1,3 +1,8 @@
+var audio = document.getElementById("audio");
+var mode = document.getElementById("mode");
+var volumeVal = localStorage.getItem("audioVolume");
+var currentMode = localStorage.getItem("audioMode");
+
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const currentDuration = document.querySelector(".current-duration");
@@ -16,11 +21,6 @@ const sh_noa = document.querySelector(".sh_noa");
 const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
 const volume = document.querySelector(".volume");
-
-var audio = document.getElementById("audio");
-var mode = document.getElementById("mode");
-var volumeVal = localStorage.getItem("audioVolume");
-var currentMode = localStorage.getItem("audioMode");
 
 if (currentMode != null) {
     currentMode=parseInt(currentMode);
