@@ -1,4 +1,3 @@
-// JS for the custom audio player
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const currentDuration = document.querySelector(".current-duration");
