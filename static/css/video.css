@@ -382,9 +382,3 @@ button:focus { outline: none; }
   .volume { display: none; }
   .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
 }
-
-    ::cue {
-
-        padding: 5000000000px;
-        border-radius: 5px;
-    }
