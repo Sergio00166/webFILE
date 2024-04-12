@@ -574,7 +574,7 @@ subtitleSelect.addEventListener('change', function() {
 	track.default = true;
 	track.mode = 'showing';
     video.appendChild(track);
-  } else {}
+  }
  });
  
 speedSelect.addEventListener('change', function() {
