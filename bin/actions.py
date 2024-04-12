@@ -20,7 +20,7 @@ def sort_contents(folder_content,sort):
         else: return out
     elif sort=="dp" or sort=="dd":
         out=sorted(folder_content,key=lambda x:unreadable_date(x['mtime']))
-        if sort=="dd": return out[::-1]
+        if sort=="dp": return out[::-1]
         else: return out
     else: return folder_content
 
