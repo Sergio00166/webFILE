@@ -58,8 +58,8 @@ def index():
             return send_file(isornot(path,sroot))
         
         elif "subtitles" in request.args:
-            arg = request.args["subtitles"]
-            return get_track(arg,root)
+            try: return get_track(request.args["subtitles"],root)
+            except: return render_template('415.html'), 415
         
         else:
             sort = request.args["sort"] if "sort" in request.args else ""

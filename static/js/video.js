@@ -287,13 +287,15 @@ function handleWaiting() { loader.classList.add("show-state"); }
 function handlePlaying() { loader.classList.remove("show-state"); }
 
 function navigate(e) {
-  const totalDurationRect = duration.getBoundingClientRect();
-  const width = Math.min(
-    Math.max(0, e.clientX - totalDurationRect.x),
-    totalDurationRect.width
-  );
-  currentTime.style.width = (width / totalDurationRect.width) * 100 + "%";
-  video.currentTime = (width / totalDurationRect.width) * video.duration;
+  try {
+    const totalDurationRect = duration.getBoundingClientRect();
+    const width = Math.min(
+      Math.max(0, e.clientX - totalDurationRect.x),
+      totalDurationRect.width
+    );
+    currentTime.style.width = (width / totalDurationRect.width) * 100 + "%";
+    video.currentTime = (width / totalDurationRect.width) * video.duration;
+  } catch { };
 }
 
 function handleTouchNavigate(e) {
