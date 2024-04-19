@@ -112,7 +112,7 @@ function navigate(e) {
       totalDurationRect.width
     );
     currentTime.style.width = (width / totalDurationRect.width) * 100 + "%";
-    video.currentTime = (width / totalDurationRect.width) * audio.duration;
+    audio.currentTime = (width / totalDurationRect.width) * audio.duration;
   } catch { };
 }
 
