@@ -105,13 +105,15 @@ function toggleMainState() {
 }
 
 function navigate(e) {
-  const totalDurationRect = duration.getBoundingClientRect();
-  const width = Math.min(
-    Math.max(0, e.clientX - totalDurationRect.x),
-    totalDurationRect.width
-  );
-  currentTime.style.width = (width / totalDurationRect.width) * 100 + "%";
-  audio.currentTime = (width / totalDurationRect.width) * audio.duration;
+  try {
+    const totalDurationRect = duration.getBoundingClientRect();
+    const width = Math.min(
+      Math.max(0, e.clientX - totalDurationRect.x),
+      totalDurationRect.width
+    );
+    currentTime.style.width = (width / totalDurationRect.width) * 100 + "%";
+    video.currentTime = (width / totalDurationRect.width) * audio.duration;
+  } catch { };
 }
 
 function handleTouchNavigate(e) {
