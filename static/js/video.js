@@ -506,10 +506,10 @@ function handleShorthand(e) {
       handleProgressBar();
       break;
     case "arrowup":
-      next();
+      prev();     
       break;
     case "arrowdown":
-      prev();
+	  next();
       break;
     case "r":
       changeMode();
