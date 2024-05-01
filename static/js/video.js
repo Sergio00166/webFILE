@@ -97,13 +97,16 @@ function prev() {
     localStorage.setItem("videoVolume", video.volume.toString());
     window.location.href =  prevUrl;
 }
+
 function handleVideoEnded() {
     if (currentMode === 1) {
         localStorage.setItem("videoMode", currentMode);
-        localStorage.setItem("videoVolume", volumeVal.toString());
-        window.location.href = next; }
-    else if (currentMode === 2) { play(); }
+        localStorage.setItem("videoVolume", video.volume.toString());
+        window.location.href = nextUrl; 
+    } else if (currentMode === 2) { video.play(); }
+    else { pause(); }
 }
+
 function download() {
     const downloadLink = document.createElement('a');
     downloadLink.style.display = 'none';
