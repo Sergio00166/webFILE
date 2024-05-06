@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,11 +12,11 @@
     <video onended="handleVideoEnded()">
 	  <source src="{{ url_for('index', raw=path) }}" type="video/mp4">
 	</video>
-    <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}" alt="Loading..."></span>
+    <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
     <span class="main-state state-btn">
-      <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" alt="Play">
-      <img class="fullimg sh_mute_st" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" alt="Mute">
-      <img class="fullimg sh_unmute_st" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" alt="Unmute">
+      <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+      <img class="fullimg sh_mute_st" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
+      <img class="fullimg sh_unmute_st" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
     </span>
     <div class="controls">
       <div class="duration">
@@ -29,16 +29,16 @@
       <div class="btn-controls">
         <div class="side-controls">
           <button class="round-button play-pause" onclick="toggleMainState()">
-            <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" alt="Play">
-            <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" alt="Pause">
+            <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+            <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
           </button>
           <span class="volume">
             <button class="round-button" onclick="toggleMuteUnmute()">
-              <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" alt="Mute">
-              <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" alt="Full Volume">
-              <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" alt="Medium Volume">
-              <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}" alt="Low Volume">
-              <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}" alt="No Volume">
+              <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
+              <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
+              <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
+              <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
+              <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
             </button>
             <div class="max-vol">
               <div class="current-vol"></div>
@@ -57,7 +57,7 @@
           <button class="round-button text" id="mode" onclick="chMode()">1</button> 
           <span class="settings">
             <button class="round-button" onclick="handleSettingMenu()">
-              <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}" alt="Settings">
+              <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
             </button>
             <ul class="setting-menu">
 			    <li><select id="s0">
