@@ -23,10 +23,8 @@ def get_info(source):
     if sep==chr(92): cmd+=" 2>nul"
     else: cmd+=" 2>/dev/null"
     try:
-        out=check_output(cmd, shell=True)
-        out=str(out, encoding="UTF8")
-        out=out.split(linesep)
-        out.pop()
+        out=str(check_output(cmd, shell=True), encoding="UTF8").split(linesep)
+        out=["Track "+str(out.index(x)+1) if x=="" else x for x in out[:-1]]
     except: out=[]
     return out
 
