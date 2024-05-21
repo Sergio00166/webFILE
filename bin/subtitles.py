@@ -12,17 +12,22 @@ from io import StringIO
 import pysubs2
 
 
-def combine_same_time(subs):
-    new_events,grouped_events = [],{}
+def combine_same_time(src):
+    subs = pysubs2.SSAFile.from_string(src)
+    new_events,grouped_events,oldtxt = [],{},""
     for event in subs:
         key = (event.start, event.end)
         if key not in grouped_events:
-            grouped_events[key] = event.text
-        else: grouped_events[key] += " " + event.text
+            if not oldtxt==event.text:
+                grouped_events[key] = event.text
+        elif not oldtxt==event.text:
+            grouped_events[key] += " "+event.text
+        oldtxt=event.text
     for (start, end), text in grouped_events.items():
         new_event = pysubs2.SSAEvent(start=start, end=end, text=text)
         new_events.append(new_event)
-    return new_events
+    subs.events = new_events
+    return subs
 
 def get_codec(source,index):
     cmd=f"ffprobe -v error -select_streams s:{index} -show_entries \
@@ -34,7 +39,10 @@ def get_codec(source,index):
 
 def convert(src):
     subs = pysubs2.SSAFile.from_string(src)
-    subs.events = combine_same_time(subs.events)
+    with StringIO() as tmp:
+        subs.to_file(tmp,"vtt",apply_styles=False)
+        out = tmp.getvalue()
+    subs = combine_same_time(out)
     with StringIO() as tmp:
         subs.to_file(tmp,"vtt",apply_styles=False)
         out = tmp.getvalue()
