@@ -21,7 +21,7 @@ Requirements:
  Windows/Linux
 
 Dependencys:
- python3  flask(python3)  ffmpeg(as a command)
+ python3  flask(pip) pysubs2(pip) ffmpeg(as a command)
 
 Usage:
   python3 start.py [config.file]
