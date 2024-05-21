@@ -13,7 +13,7 @@ It makes easier to configure it to use it with a load-balancer proxy like nginx 
 
 To change the audio track from a video you must need to enable "Experimental Web Platform features" in your browser
 
-Extra: Using /?subtitles=index/videopath will download the index subtitle from that video
+Because of the limitations of HTLM5 it can only play webVTT subs but dont worry it will convert it automatically, but sometimes the subs can get a litte weird (poor chance to happen)
 
 ---------------------------------------------------
 Requirements:
