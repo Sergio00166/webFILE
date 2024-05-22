@@ -1,8 +1,8 @@
 # Code by Sergio1260
-# Obtains info and tracks for the video player
-# Also fixes weird things with the codecs while
+# Obtains info and extracts tracks from a video file
+# It is used for the video player subtitles
+# Also fixes weird things with the codecs when
 # converting formats like ASS/SSA to webVTT
-# Yes WebExplorers sucks
 
 from os import sep, linesep
 from actions import isornot
