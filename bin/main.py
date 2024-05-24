@@ -14,10 +14,9 @@ if __name__=="__main__":
     from subtitles import get_info, get_track
     from sys import path as pypath
     
-    port, listen, root, folder_size = init()
+    port, listen, root, folder_size, async_subs = init()
     templates=abspath(path[0]+sep+".."+sep+"templates")
     app = Flask(__name__, static_folder=None, template_folder=templates)
-
 
     @app.route('/<path:path>')
     def explorer(path):
@@ -48,7 +47,6 @@ if __name__=="__main__":
         except FileNotFoundError: return render_template('404.html'), 404
         except: return render_template('500.html'), 500
 
-
     @app.route('/')
     def index():
         try:
@@ -61,7 +59,7 @@ if __name__=="__main__":
                 return send_file(isornot(path,sroot))
             
             elif "subtitles" in request.args:
-                try: return get_track(request.args["subtitles"],root)
+                try: return get_track(request.args["subtitles"],root,async_subs)
                 except: return render_template('415.html'), 415
             
             else:
