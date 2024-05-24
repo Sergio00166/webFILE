@@ -16,6 +16,7 @@ On that config file you can add ports and IP separated by "," to listen to (for 
 It makes easier to configure it to use it with a load-balancer proxy like nginx Because it will spawn a new process for each port and ip
 
 ---------------------------------------------------
+
 Requirements:
  Python3 (tested under python 3.12)
  Windows/Linux
@@ -25,6 +26,10 @@ Dependencys:
 
 Usage:
   python3 start.py [config.file]
-  or python3 bin/main.py -b IP_addr -p port -d directory [--dirsize]
+  or python3 bin/main.py -b IP_addr -p port -d directory [--dirsize] [--async_subtitles]
+
+  Async subtitles moves all the logic to a new process, it will take more RAM but will spread the CPU load across all cores<br>
+ <b> Then I wont lock the main process</b><br>
+  
   
   ---------------------------------------------------
