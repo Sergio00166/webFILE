@@ -22,13 +22,24 @@ def init():
     if not "listen" in dic: dic["listen"]="172.0.0.1"
     if not "show.folder.size" in dic: folder_size="false"
     if not "async.subtitles" in dic: async_subs="false"
-    else: folder_size=dic["show.folder.size"].lower()
+
     if not "folder" in dic:
         print("[CFG_FILE]: A FOLDER PATH IS NEEDED"); exit()
     root=dic["folder"]
     if not (exists(root) and isdir(root)):
         print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
-    port=dic["port"]; listen=dic["listen"]; async_subs=dic["listen"]
+    port=dic["port"]; listen=dic["listen"]
+
+    async_subs=dic["async.subtitles"].upper()
+    if async_subs=="TRUE": async_subs=True
+    elif async_subs=="FALSE": async_subs=False
+    else: print("[CFG_FILE]: INVALID VALUE"); exit()
+
+    folder_size=dic["show.folder.size"].upper()
+    if folder_size=="TRUE": folder_size=True
+    elif folder_size=="FALSE": folder_size=False
+    else: print("[CFG_FILE]: INVALID VALUE"); exit()   
+
     if "-" in port:
         st,end = port.split("-")
         st=int(st); end=int(end)
