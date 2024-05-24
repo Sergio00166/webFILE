@@ -1,4 +1,4 @@
-#Code by Sergio 1260
+ #Code by Sergio 1260
 
 from os.path import join, isdir, relpath
 from os.path import exists, pardir, abspath
@@ -30,8 +30,9 @@ def init():
     parser.add_argument("-p", "--port", type=int, required=True, help="Specify port number")
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
     parser.add_argument("--dirsize", action="store_true", help="Show folder size")
+    parser.add_argument("--async_subtitles", action="store_true", help="Enable async subtitle conversion")
     args = parser.parse_args()
-    return args.port, args.bind, args.dir, args.dirsize
+    return args.port, args.bind, args.dir, args.dirsize, args.async_subtitles
 
 def isornot(path,root):
     path=path.replace("/",sep)

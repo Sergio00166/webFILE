@@ -7,6 +7,7 @@
 from os import sep, linesep
 from actions import isornot
 from subprocess import check_output
+from multiprocessing import Process, Queue
 from flask import Response
 from io import StringIO
 import pysubs2
@@ -48,14 +49,15 @@ def convert(src):
         out = tmp.getvalue()
     return out
 
-def extract(source,index):
+def extract(source,index,ret):
     codec = get_codec(source,index)
     cmd=f'ffmpeg -i "{source}" -map 0:s:{str(index)} -f {codec} -'
     if sep==chr(92): cmd+=" 2>nul"
     else: cmd+=" 2>/dev/null"
-    out = check_output(cmd, shell=True)
-    out = str(out, encoding="UTF8")
-    return out
+    out = str(check_output(cmd, shell=True), encoding="UTF8")
+    out = Response(convert(out), mimetype="text/plain", headers=
+                   {"Content-disposition":"attachment; filename=subs.vtt"})
+    ret.put(out)
 
 def get_info(source):
     cmd="ffprobe -v error -select_streams s -show_entries stream_tags=title -of csv=p=0"
@@ -68,14 +70,15 @@ def get_info(source):
     except: out=[]
     return out
 
-def get_track(arg,root):
+
+def get_track(arg,root,async_subs):
     separator = arg.find("/")
     index = arg[:separator]
     file = arg[separator+1:]
     file = isornot(file,root)
-    out = extract(file,index)
-    return Response(convert(out),
-        mimetype="text/plain",
-        headers={"Content-disposition":
-                "attachment; filename=subs.vtt"}
-        )
+    if async_subs:
+        ret = Queue()
+        proc = Process(target=extract, args=(source,index,ret,))
+        proc.start(); out=ret.get(); proc.join()
+    else: out = extract(file,index)
+
