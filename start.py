@@ -6,6 +6,7 @@ from os.path import exists, isdir
 from os import sep
 from time import sleep as delay
 
+
 def init():
     if len(argv)==1:
         file=path[0]+sep+"bin"+sep+"config.cfg"
@@ -21,7 +22,6 @@ def init():
     if not "port" in dic: dic["port"]="80"
     if not "listen" in dic: dic["listen"]="172.0.0.1"
     if not "show.folder.size" in dic: folder_size="false"
-    if not "async.subtitles" in dic: async_subs="false"
 
     if not "folder" in dic:
         print("[CFG_FILE]: A FOLDER PATH IS NEEDED"); exit()
@@ -29,11 +29,6 @@ def init():
     if not (exists(root) and isdir(root)):
         print("[CFG_FILE]: THE SPECIFIED FOLDER PATH IS NOT VALID"); exit()
     port=dic["port"]; listen=dic["listen"]
-
-    async_subs=dic["async.subtitles"].upper()
-    if async_subs=="TRUE": async_subs=True
-    elif async_subs=="FALSE": async_subs=False
-    else: print("[CFG_FILE]: INVALID VALUE"); exit()
 
     folder_size=dic["show.folder.size"].upper()
     if folder_size=="TRUE": folder_size=True
@@ -46,10 +41,11 @@ def init():
         ports=[str(x) for x in range(st,end+1)]
     else: ports=[x.strip() for x in port.split(",")]
     listen=[x.strip() for x in listen.split(",")]
-    return ports, listen, root, folder_size, async_subs
+    return ports, listen, root, folder_size
+
 
 def main():
-    ports,listen,root,folder_size,async_subs = init()
+    ports,listen,root,folder_size = init()
     PyExec=path[0]+sep+"bin"+sep+"main.py"
     if sep==chr(92): python="python"
     else: python="python3"
@@ -57,7 +53,6 @@ def main():
         for port in ports:
             args=[python,PyExec,"-b",ip,"-p",port,"-d",root]
             if folder_size: args.append("--dirsize")
-            if async_subs: args.append("--async_subtitles")
             Popen(args); delay(0.1)
     try: # wait forever
         while True: delay(1)

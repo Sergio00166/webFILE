@@ -49,15 +49,13 @@ def convert(src):
         out = tmp.getvalue()
     return out
 
-def extract(source,index,ret):
+def extract(source,index):
     codec = get_codec(source,index)
     cmd=f'ffmpeg -i "{source}" -map 0:s:{str(index)} -f {codec} -'
     if sep==chr(92): cmd+=" 2>nul"
     else: cmd+=" 2>/dev/null"
-    out = str(check_output(cmd, shell=True), encoding="UTF8")
-    out = Response(convert(out), mimetype="text/plain", headers=
-                   {"Content-disposition":"attachment; filename=subs.vtt"})
-    ret.put(out)
+    out = check_output(cmd, shell=True)
+    out = convert(str(out, encoding="UTF8"))
 
 def get_info(source):
     cmd="ffprobe -v error -select_streams s -show_entries stream_tags=title -of csv=p=0"
@@ -71,15 +69,13 @@ def get_info(source):
     return out
 
 
-def get_track(arg,root,async_subs):
+def get_track(arg,root):
     separator = arg.find("/")
     index = arg[:separator]
     file = arg[separator+1:]
     file = isornot(file,root)
-    if async_subs:
-        ret = Queue()
-        proc = Process(target=extract, args=(file,index,ret,))
-        proc.start(); out=ret.get(); proc.join()
-    else: out = extract(file,index)
-    return out
-
+    out = extract(file,index)
+    return Response(out, mimetype="text/plain", headers=\
+    {"Content-disposition":"attachment; filename=subs.vtt"})
+    
+ 
