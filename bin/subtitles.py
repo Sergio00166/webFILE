@@ -78,7 +78,8 @@ def get_track(arg,root,async_subs):
     file = isornot(file,root)
     if async_subs:
         ret = Queue()
-        proc = Process(target=extract, args=(source,index,ret,))
+        proc = Process(target=extract, args=(file,index,ret,))
         proc.start(); out=ret.get(); proc.join()
     else: out = extract(file,index)
+    return out
 
