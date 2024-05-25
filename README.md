@@ -30,7 +30,5 @@ Usage:
 
   Async subtitles moves all the logic to a new process, it will take more RAM but will spread the CPU load across all cores and it
  <b> wont lock the main process</b><br>
- <b> USE WITH CAUTION IT WILL EAT SO MUCH RAM </b>
-  
   
   ---------------------------------------------------
