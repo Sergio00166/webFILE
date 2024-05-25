@@ -14,8 +14,7 @@ import pysubs2
 
 def combine_same_time(src):
     subs = pysubs2.SSAFile.from_string(src)
-    grouped_events = {}
-    oldtxt = ""
+    grouped_events,oldtxt = {},""
     
     for event in subs:
         key = (event.start, event.end)
@@ -50,14 +49,15 @@ def convert(src, ret):
     subs = pysubs2.SSAFile.from_string(src)
     with StringIO() as tmp:
         subs.to_file(tmp, "vtt", apply_styles=False)
+        del subs # Free memory 
         out = tmp.getvalue()
-    del subs # Free memory 
+    
     subs = combine_same_time(out)
     del out # Free memory 
     with StringIO() as tmp:
         subs.to_file(tmp, "vtt", apply_styles=False)
+        del subs  # Free memory
         out = tmp.getvalue()
-    del subs  # Free memory
 
     if not ret==None:
         ret.put(out)
@@ -92,7 +92,7 @@ def get_track(arg, root, async_subs):
     ]
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
     stdout, _ = process.communicate()
-    del process  # Free memory
+    del  # Free memory
     source = stdout.decode('UTF8')
     del stdout # Free memory
 
