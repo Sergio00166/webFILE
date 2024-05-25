@@ -6,80 +6,107 @@
 
 from os import sep, linesep
 from actions import isornot
-from subprocess import check_output
+from subprocess import Popen, PIPE
 from multiprocessing import Process, Queue
 from flask import Response
 from io import StringIO
 import pysubs2
 
-
 def combine_same_time(src):
     subs = pysubs2.SSAFile.from_string(src)
-    new_events,grouped_events,oldtxt = [],{},""
+    grouped_events = {}
+    oldtxt = ""
+    
     for event in subs:
         key = (event.start, event.end)
         if key not in grouped_events:
-            if not oldtxt==event.text:
+            if oldtxt != event.text:
                 grouped_events[key] = event.text
-        elif not oldtxt==event.text:
-            grouped_events[key] += " "+event.text
-        oldtxt=event.text
-    for (start, end), text in grouped_events.items():
-        new_event = pysubs2.SSAEvent(start=start, end=end, text=text)
-        new_events.append(new_event)
-    subs.events = new_events
+        elif oldtxt != event.text:
+            grouped_events[key] += " " + event.text
+        oldtxt = event.text
+    
+    del subs.events  # Free memory
+    subs.events = [
+        pysubs2.SSAEvent(start=start, end=end, text=text)
+        for (start, end), text in grouped_events.items()
+    ]
+    del grouped_events, oldtxt # Free memory
     return subs
 
-def get_codec(source,index):
-    cmd=f"ffprobe -v error -select_streams s:{index} -show_entries \
-        stream=codec_name -of default=noprint_wrappers=1:nokey=1 "
-    cmd += ' "'+source+'"'
-    if sep==chr(92): cmd+=" 2>nul"
-    else: cmd+=" 2>/dev/null"
-    return str(check_output(cmd, shell=True), encoding="UTF8").split(linesep)[0]
 
-def convert(src):
+def get_codec(source, index):
+    cmd = [
+        'ffprobe', '-v', 'error',
+        '-select_streams', f's:{index}',
+        '-show_entries', 'stream=codec_name',
+        '-of', 'default=noprint_wrappers=1:nokey=1',
+        source
+    ]
+    return Popen(cmd, stdout=PIPE).communicate()[0].decode('UTF8').strip()
+
+
+def convert(src, ret):
     subs = pysubs2.SSAFile.from_string(src)
     with StringIO() as tmp:
-        subs.to_file(tmp,"vtt",apply_styles=False)
+        subs.to_file(tmp, "vtt", apply_styles=False)
         out = tmp.getvalue()
+    del subs # Free memory 
     subs = combine_same_time(out)
+    del out # Free memory 
     with StringIO() as tmp:
-        subs.to_file(tmp,"vtt",apply_styles=False)
+        subs.to_file(tmp, "vtt", apply_styles=False)
         out = tmp.getvalue()
-    return out
+    del subs  # Free memory
 
-def extract(source,index,ret):
-    codec = get_codec(source,index)
-    cmd=f'ffmpeg -i "{source}" -map 0:s:{str(index)} -f {codec} -'
-    if sep==chr(92): cmd+=" 2>nul"
-    else: cmd+=" 2>/dev/null"
-    out = str(check_output(cmd, shell=True), encoding="UTF8")
-    out = Response(convert(out), mimetype="text/plain", headers=
-                   {"Content-disposition":"attachment; filename=subs.vtt"})
-    ret.put(out)
+    if not ret==None:
+        ret.put(out)
+    else: return out
+
 
 def get_info(source):
-    cmd="ffprobe -v error -select_streams s -show_entries stream_tags=title -of csv=p=0"
-    cmd += ' "'+source+'"'
-    if sep==chr(92): cmd+=" 2>nul"
-    else: cmd+=" 2>/dev/null"
+    cmd = [
+        'ffprobe', '-v', 'error',
+        '-select_streams', 's',
+        '-show_entries', 'stream_tags=title',
+        '-of', 'csv=p=0',
+        source
+    ]
     try:
-        out=str(check_output(cmd, shell=True), encoding="UTF8").split(linesep)
-        out=["Track "+str(out.index(x)+1) if x=="" else x for x in out[:-1]]
-    except: out=[]
-    return out
+        output = Popen(cmd, stdout=PIPE).communicate()[0].decode('UTF8').split(linesep)
+        return ["Track " + str(index + 1) if not title else title for index, title in enumerate(output) if title]
+    except Exception: return []
 
 
-def get_track(arg,root,async_subs):
+def get_track(arg, root, async_subs):
     separator = arg.find("/")
     index = arg[:separator]
-    file = arg[separator+1:]
-    file = isornot(file,root)
+    file = arg[separator + 1:]
+    file = isornot(file, root)
+
+    codec = get_codec(file, index)
+    cmd = [
+        'ffmpeg', '-i', file,
+        '-map', f'0:s:{index}',
+        '-f', codec, '-'
+    ]
+    process = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    stdout, _ = process.communicate()
+    del process  # Free memory
+    source = stdout.decode('UTF8')
+    del stdout # Free memory
+
     if async_subs:
         ret = Queue()
-        proc = Process(target=extract, args=(file,index,ret,))
-        proc.start(); out=ret.get(); proc.join()
-    else: out = extract(file,index)
-    return out
+        proc = Process(target=convert, args=(source, ret))
+        del source # Free memory
+        proc.start(); out = ret.get(); proc.join()
+        del proc, ret # Free memory
+
+    else:
+        out = convert(source, None)
+        del source # Free memory
+        
+    return Response(out, mimetype="text/plain",
+    headers={"Content-disposition": "attachment; filename=subs.vtt"})
 
