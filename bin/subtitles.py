@@ -12,27 +12,6 @@ from flask import Response
 from io import StringIO
 import pysubs2
 
-def combine_same_time(src):
-    subs = pysubs2.SSAFile.from_string(src)
-    grouped_events,oldtxt = {},""
-    
-    for event in subs:
-        key = (event.start, event.end)
-        if key not in grouped_events:
-            if oldtxt != event.text:
-                grouped_events[key] = event.text
-        elif oldtxt != event.text:
-            grouped_events[key] += " " + event.text
-        oldtxt = event.text
-    
-    del subs.events  # Free memory
-    subs.events = [
-        pysubs2.SSAEvent(start=start, end=end, text=text)
-        for (start, end), text in grouped_events.items()
-    ]
-    del grouped_events, oldtxt # Free memory
-    return subs
-
 
 def get_codec(source, index):
     cmd = [
@@ -52,8 +31,26 @@ def convert(src, ret):
         del subs # Free memory 
         out = tmp.getvalue()
     
-    subs = combine_same_time(out)
-    del out # Free memory 
+    subs = pysubs2.SSAFile.from_string(out)
+    del out # Free memory
+    grouped_events,oldtxt = {},""
+    
+    for event in subs:
+        key = (event.start, event.end)
+        if key not in grouped_events:
+            if oldtxt != event.text:
+                grouped_events[key] = event.text
+        elif oldtxt != event.text:
+            grouped_events[key] += " "+event.text
+        oldtxt = event.text
+    
+    del subs.events, oldtxt  # Free memory
+    subs.events = [
+        pysubs2.SSAEvent(start=start, end=end, text=text)
+        for (start, end), text in grouped_events.items()
+    ]
+    del grouped_events # Free memory
+
     with StringIO() as tmp:
         subs.to_file(tmp, "vtt", apply_styles=False)
         del subs  # Free memory
@@ -62,6 +59,7 @@ def convert(src, ret):
     if not ret==None:
         ret.put(out)
     else: return out
+
 
 
 def get_info(source):
@@ -92,9 +90,8 @@ def get_track(arg, root, async_subs):
     ]
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
     stdout, _ = process.communicate()
-    del  # Free memory
     source = stdout.decode('UTF8')
-    del stdout # Free memory
+    del stdout, process # Free memory
 
     if async_subs:
         ret = Queue()
