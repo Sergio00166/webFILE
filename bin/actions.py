@@ -1,10 +1,9 @@
  #Code by Sergio 1260
 
-from os.path import join, isdir, relpath
-from os.path import exists, pardir, abspath
+from os.path import join, isdir, relpath, exists, pardir, abspath, getsize
 from functions import get_folder_content, is_subdirectory, fix_pth_url, unreadable, unreadable_date
+from subtitles import cache_dir, get_track, random_str, save_subs_cache, get_subs_cache, get_info
 from os import access, R_OK, sep
-from argparse import ArgumentParser
 
 
 def sort_contents(folder_content,sort):
@@ -23,16 +22,6 @@ def sort_contents(folder_content,sort):
         if sort=="dp": return out[::-1]
         else: return out
     else: return folder_content
-
-def init():
-    parser = ArgumentParser(description="Arguments for the webFILE")
-    parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind", metavar="IP")
-    parser.add_argument("-p", "--port", type=int, required=True, help="Specify port number")
-    parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
-    parser.add_argument("--dirsize", action="store_true", help="Show folder size")
-    parser.add_argument("--async_subtitles", action="store_true", help="Enable async subtitle conversion")
-    args = parser.parse_args()
-    return args.port, args.bind, args.dir, args.dirsize, args.async_subtitles
 
 def isornot(path,root):
     path=path.replace("/",sep)
@@ -75,3 +64,36 @@ def index_func(folder_path,root,folder_size,sort):
     folder_content = sort_contents(folder_content, sort)
     par_root = (parent_directory=="")
     return folder_content,folder_path,parent_directory,is_root,par_root
+
+def sub_cache_handler(arg,root,subtitle_cache):
+    separator = arg.find("/")
+    index = arg[:separator]
+    file = arg[separator + 1:]
+    file = isornot(file, root)
+
+    if subtitle_cache:
+        dic = get_subs_cache()
+        filesize = str(getsize(file))
+        if not arg in dic:
+            out = get_track(file,index)
+            dic = get_subs_cache()
+            if not arg in dic:
+                cache = random_str(24)
+                dic[arg] = [cache,filesize]
+                file = open(cache_dir+cache,"w",newline='')
+                file.write(out); file.close()
+                del file; save_subs_cache(dic)
+        else:
+            fix = (filesize == dic[arg][1])
+            if not fix:
+                out = get_track(file,index)
+                cache = dic[arg][0]
+                dic[arg] = [cache,filesize]
+                file = open(cache_dir+cache,"w",newline='')
+                file.write(out); file.close()
+                del file; save_subs_cache(dic)                 
+            else: out=open(cache_dir+dic[arg][0],"r").read()
+            
+    else: out=get_track(file,index)
+    
+    return out

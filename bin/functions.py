@@ -5,6 +5,7 @@ from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir, access, R_OK
 from pathlib import Path
+from argparse import ArgumentParser
 
 file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml", ".ini",
 ".json",".bat", ".cmd", ".sh", ".md", ".xmls", ".yml", ".yaml", ".ini" ".asm", ".cfg", ".sql", ".htm", ".config"],
@@ -17,6 +18,16 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+
+def init():
+    parser = ArgumentParser(description="Arguments for the webFILE")
+    parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind", metavar="IP")
+    parser.add_argument("-p", "--port", type=int, required=True, help="Specify port number")
+    parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
+    parser.add_argument("--dirsize", action="store_true", help="Show folder size")
+    parser.add_argument("--subtitle_cache", action="store_true", help="Enable caching of subtitles")
+    args = parser.parse_args()
+    return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache
 
 def fix_pth_url(path):
     return path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")

@@ -10,17 +10,17 @@ if __name__=="__main__":
     from os import sep
     from functions import *
     from actions import *
-    from flask import Flask, render_template, stream_template, request, send_file
-    from subtitles import get_info, get_track
+    from flask import Flask, render_template, stream_template, request, send_file, Response
     from sys import path as pypath
     
-    port, listen, root, folder_size, async_subs = init()
+    port, listen, root, folder_size, subtitle_cache = init()
     templates=abspath(path[0]+sep+".."+sep+"templates")
+    del path # Free memory
     app = Flask(__name__, static_folder=None, template_folder=templates)
 
     @app.route('/<path:path>')
     def explorer(path):
-        try:   
+        try:
             file_type = get_file_type(root+sep+path)
             
             if file_type=="DIR":
@@ -47,6 +47,7 @@ if __name__=="__main__":
         except FileNotFoundError: return render_template('404.html'), 404
         except: return render_template('500.html'), 500
 
+
     @app.route('/')
     def index():
         try:
@@ -59,9 +60,14 @@ if __name__=="__main__":
                 return send_file(isornot(path,sroot))
             
             elif "subtitles" in request.args:
-                try: return get_track(request.args["subtitles"],root,async_subs)
+                try:
+                    arg = request.args["subtitles"]
+                    out = sub_cache_handler(arg,root,subtitle_cache)
+                    return Response(out,mimetype="text/plain",headers=
+                    {"Content-disposition":"attachment; filename=subs.vtt"})
+
                 except: return render_template('415.html'), 415
-            
+                          
             else:
                 sort = request.args["sort"] if "sort" in request.args else ""
                 folder_content = sort_contents(get_folder_content(root, root, folder_size),sort)
