@@ -51,7 +51,6 @@ def convert(src, ret):
             if oldtxt != event.text:
                 grouped_events[key] = event.text
         elif oldtxt != event.text:
-            
             grouped_events[key] += " "+event.text
         oldtxt = event.text
     
@@ -62,10 +61,8 @@ def convert(src, ret):
     ]
     del grouped_events # Free memory
 
-    with StringIO() as tmp:
-        subs.to_file(tmp, "vtt", apply_styles=False)
-        del subs  # Free memory
-        out = tmp.getvalue()
+    out=subs.to_string("vtt")
+    del subs  # Free memory
 
     ret.put(out) # Return values
 
