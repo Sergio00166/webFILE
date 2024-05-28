@@ -134,11 +134,14 @@ def get_track(file,index):
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
     source, _ = process.communicate()
     del process # Free memory
+    
+    if not codec=="webvtt":
+        ret = Queue()
+        proc = Process(target=convert, args=(source, ret))
+        del source # Free memory
+        proc.start(); out = ret.get(); proc.join()
+        del proc, ret # Free memory
+        return out
 
-    ret = Queue()
-    proc = Process(target=convert, args=(source, ret))
-    del source # Free memory
-    proc.start(); out = ret.get(); proc.join()
-    del proc, ret # Free memory
-
-    return out
+    else: return source.decode("UTF-8")
+    
