@@ -70,7 +70,6 @@ def sub_cache_handler(arg,root,subtitle_cache):
     index = arg[:separator]
     file = arg[separator + 1:]
     file = isornot(file, root)
-
     if subtitle_cache:
         dic = get_subs_cache()
         filesize = str(getsize(file))
@@ -85,7 +84,7 @@ def sub_cache_handler(arg,root,subtitle_cache):
                 del file; save_subs_cache(dic)
         else:
             fix = (filesize == dic[arg][1])
-            if not fix:
+            if not fix or not exists(cache_dir+dic[arg][0]):
                 out = get_track(file,index)
                 cache = dic[arg][0]
                 dic[arg] = [cache,filesize]
