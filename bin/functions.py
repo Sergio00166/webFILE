@@ -30,7 +30,7 @@ def init():
     return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache
 
 def fix_pth_url(path):
-    return path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C")
+    return path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
 
 def sort_results(paths,folder_path):
     dirs=[]; files=[]
