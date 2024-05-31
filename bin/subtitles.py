@@ -131,7 +131,7 @@ def save_subs_cache(dic):
 
 def random_str(length):
     # Generate a random name for the file cache
-    characters = [chr(i) for i in range(48, 58)] + [chr(i) for i in range(65, 91)] + [chr(i) for i in range(97, 123)]
+    characters = [chr(i) for i in range(48, 58)] + [chr(i) for i in range(65, 91)]
     random_string = ''.join(choice(characters) for _ in range(length))
     return random_string
 
@@ -156,7 +156,7 @@ def get_track(file,index):
     # incompatible stuff and cleans the output
     if not codec=="webvtt":
         ret = Queue()
-        proc = Process(target=convert, args=(source,ret,codec,))
+        proc = Process(target=convert, args=(source,ret,))
         del source # Free memory
         proc.start(); out = ret.get(); proc.join()
         del proc, ret # Free memory

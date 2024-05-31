@@ -1,9 +1,9 @@
  #Code by Sergio 1260
 
-from os.path import join, isdir, relpath, exists, pardir, abspath, getsize
+from os.path import join, isdir, relpath, exists, pardir, abspath, getsize, isfile
 from functions import get_folder_content, is_subdirectory, fix_pth_url, unreadable, unreadable_date
 from subtitles import cache_dir, get_track, random_str, save_subs_cache, get_subs_cache, get_info
-from os import access, R_OK, sep
+from os import access, R_OK, sep, listdir, remove
 
 
 def sort_contents(folder_content,sort):
@@ -102,6 +102,12 @@ def sub_cache_handler(arg,root,subtitle_cache):
     if subtitle_cache:
         # Get the index table of the cache
         dic = get_subs_cache()
+        # Generate a map of used values
+        available = [x[0] for x in dic.values()]
+        # Get map to delete shit
+        todelete = [x for x in listdir(cache_dir) if x not in available and isfile(cache_dir+x)]
+        if "index.txt" in todelete: todelete.remove("index.txt")
+        [remove(cache_dir+x) for x in todelete]
         # Get filesize as str
         filesize = str(getsize(file))
         # If the file is not in the index table
@@ -114,7 +120,11 @@ def sub_cache_handler(arg,root,subtitle_cache):
             # the same subs as this proc has generated
             # then write an new entry and a new cache file
             if not arg in dic:
-                cache = random_str(24)
+                # Generate a new one until not used
+                cache=random_str(32)
+                while cache in available:
+                    cache=random_str(32)
+                # Do the rest stuff to save the cache
                 dic[arg] = [cache,filesize]
                 file = open(cache_dir+cache,"w",newline='')
                 file.write(out); file.close()
