@@ -23,6 +23,7 @@ cache_dir+="/cache/"
 
 
 def get_codec(source, index):
+    # Gets the codec name from a file
     cmd = [
         'ffprobe', '-v', 'error',
         '-select_streams', f's:{index}',
@@ -37,6 +38,8 @@ def convert(src, ret):
     subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
     del src # Free memory
     with StringIO() as tmp:
+        # Here we convert to webVTT without
+        # styles bc it show a some weird stuff
         subs.to_file(tmp, "vtt", apply_styles=False)
         del subs # Free memory 
         out = tmp.getvalue()
@@ -45,6 +48,9 @@ def convert(src, ret):
     del out # Free memory
     grouped_events,oldtxt = {},""
 
+    # Here we combine th subs that has the same
+    # start and end time as others, and remove
+    # duplicated entries
     for event in subs:
         key = (event.start, event.end)
         if key not in grouped_events:
@@ -55,6 +61,8 @@ def convert(src, ret):
         oldtxt = event.text
     
     del subs.events, oldtxt  # Free memory
+    
+    # Pass to the object the values
     subs.events = [
         pysubs2.SSAEvent(start=start, end=end, text=text)
         for (start, end), text in grouped_events.items()
@@ -68,6 +76,9 @@ def convert(src, ret):
 
 
 def get_info(source):
+    # This is to get all the subtitles
+    # tracks names, and if it dont have
+    # Name return "Track" + index
     cmd = [
         'ffprobe', '-v', 'error',
         '-select_streams', 's',
@@ -81,9 +92,10 @@ def get_info(source):
     except Exception: return []
 
 
-# Checks if it exists both dir and index file
-# If they are missing it creates them again
 def get_subs_cache():
+    # Returns a dict wiht the values from a file
+    # Also it checks if it exists both dir and index file
+    # If they are missing it creates them again
     file=cache_dir+"index.txt"
     if exists(file):
         file = open(file,"r").read()
@@ -106,6 +118,8 @@ def get_subs_cache():
 
 
 def save_subs_cache(dic):
+    # Here we write the dict to a
+    # file with custom syntax
     out=""
     for x in dic:
        out+=x+"\n"
@@ -116,25 +130,33 @@ def save_subs_cache(dic):
 
 
 def random_str(length):
+    # Generate a random name for the file cache
     characters = [chr(i) for i in range(48, 58)] + [chr(i) for i in range(65, 91)] + [chr(i) for i in range(97, 123)]
     random_string = ''.join(choice(characters) for _ in range(length))
     return random_string
 
 
 def get_track(file,index):
+    # Here we extract [and corvert] a
+    # subtitle track from a video file
     codec = get_codec(file, index)
+    # If the codec is not ssa or ass simply let
+    # Fmmpeg to convert it directly
+    if not codec in ["ssa", "ass"]: codec="webvtt"
     cmd = [
         'ffmpeg', '-i', file,
         '-map', f'0:s:{index}',
         '-f', codec, '-'
     ]
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-    source, _ = process.communicate()
-    del process # Free memory
-    
+    source, _ = process.communicate(); del process
+    # To convert ass/ssa subtitles
+    # Yes ffmpeg can do it but id does it
+    # in a weird way. This cleans all
+    # incompatible stuff and cleans the output
     if not codec=="webvtt":
         ret = Queue()
-        proc = Process(target=convert, args=(source, ret))
+        proc = Process(target=convert, args=(source,ret,codec,))
         del source # Free memory
         proc.start(); out = ret.get(); proc.join()
         del proc, ret # Free memory

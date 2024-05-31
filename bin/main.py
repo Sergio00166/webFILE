@@ -12,13 +12,18 @@ if __name__=="__main__":
     from actions import *
     from flask import Flask, render_template, stream_template, request, send_file, Response
     from sys import path as pypath
-    
+
+    # Get the values from the initor (args from cli)
     port, listen, root, folder_size, subtitle_cache = init()
+    # Set the template folder
     templates=abspath(path[0]+sep+".."+sep+"templates")
     del path # Free memory
+    # Create the main app flask
     app = Flask(__name__, static_folder=None, template_folder=templates)
 
     @app.route('/<path:path>')
+    # Shows a directory, interpret the media, launching
+    # the custom media players] or donwloads the file
     def explorer(path):
         try:
             file_type = get_file_type(root+sep+path)
@@ -49,6 +54,9 @@ if __name__=="__main__":
 
 
     @app.route('/')
+    # Here we show the root dir, or send a raw file with filepath as arg
+    # Serve the static files filepath as arg, or return a subtitle track
+    # with this sintan index/filepath
     def index():
         try:
             if "raw" in request.args:
@@ -78,6 +86,6 @@ if __name__=="__main__":
         except FileNotFoundError: return render_template('404.html'), 404
         except: return render_template('500.html'), 500
 
-
+    # Run the main app with the custom args
     app.run(host=listen, port=int(port), debug=False)
 
