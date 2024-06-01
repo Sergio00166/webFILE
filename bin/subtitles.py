@@ -129,8 +129,8 @@ def save_subs_cache(dic):
     del out # Free memory
 
 
-def random_str(length):
-    # Generate a random name for the file cache
+def random_str():
+    lenght=24 # Generate a random name for the file cache
     characters = [chr(i) for i in range(48, 58)] + [chr(i) for i in range(65, 91)]
     random_string = ''.join(choice(characters) for _ in range(length))
     return random_string

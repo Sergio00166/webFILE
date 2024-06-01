@@ -121,9 +121,9 @@ def sub_cache_handler(arg,root,subtitle_cache):
             # then write an new entry and a new cache file
             if not arg in dic:
                 # Generate a new one until not used
-                cache=random_str(32)
+                cache=random_str()
                 while cache in available:
-                    cache=random_str(32)
+                    cache=random_str()
                 # Do the rest stuff to save the cache
                 dic[arg] = [cache,filesize]
                 file = open(cache_dir+cache,"w",newline='')
