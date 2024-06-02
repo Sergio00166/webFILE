@@ -26,9 +26,6 @@ Dependencys:
 
 Usage:
   python3 start.py [config.file]
-  or python3 bin/main.py -b IP_addr -p port -d directory [--dirsize] [--async_subtitles]
+  or python3 bin/main.py -b IP_addr -p port -d directory [--dirsize] [--subtitle_cache]
 
-  Async subtitles moves all the logic to a new process, it will take more RAM but will spread the CPU load across all cores and it
- <b> wont lock the main process</b><br>
-  
   ---------------------------------------------------
