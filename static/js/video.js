@@ -35,6 +35,7 @@ speedSelect.selectedIndex = 3;
 
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
+var muted = localStorage.getItem("videoMuted");
 
 if (currentMode != null) {
     currentMode=parseInt(currentMode);
@@ -45,17 +46,22 @@ if (currentMode != null) {
 
 var volumeVal = localStorage.getItem("videoVolume");
 
-if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
-else { volumeVal = 1; }
+if (volumeVal === null) { volumeVal = 1; }
 video.volume = volumeVal;
 currentVol.style.width = volumeVal*100+"%";
+
+if (muted != null) {
+    if (muted == "true") {
+        muted = true;
+       video.volume = 0;
+    } else { muted = false; }
+} else { muted = false; }
 
 totalDuration.innerHTML = "00:00";
 
 let mouseDownProgress = false,
   mouseDownVol = false,
   isCursorOnControls = false,
-  muted = false,
   timeout,
   mouseOverDuration = false,
   touchClientX = 0,
@@ -70,10 +76,9 @@ function chMode() {
     else if (currentMode === 1) { currentMode = 2 ; mode.innerHTML = "↻";  }
     localStorage.setItem("videoMode", currentMode);
 }
-function saveVolume() { localStorage.setItem("videoVolume", volumeVal.toString()); }
+function saveVolume() { localStorage.setItem("videoVolume", volumeVal); }
 
 function canPlayInit() {
-  muted = video.muted;
   play();
   handleAudioIcon();
   if (video.paused) {
@@ -89,21 +94,20 @@ function canPlayInit() {
 
 function next() {
     localStorage.setItem("videoMode", currentMode);
-    localStorage.setItem("videoVolume", video.volume.toString());
+    localStorage.setItem("videoVolume", volumeVal);
+    localStorage.setItem("videoMuted", muted);
     window.location.href = nextUrl;
 }
 function prev() {
     localStorage.setItem("videoMode", currentMode);
-    localStorage.setItem("videoVolume", video.volume.toString());
+    localStorage.setItem("videoVolume", volumeVal);
+    localStorage.setItem("videoMuted", muted);
     window.location.href =  prevUrl;
 }
 
 function handleVideoEnded() {
-    if (currentMode === 1) {
-        localStorage.setItem("videoMode", currentMode);
-        localStorage.setItem("videoVolume", video.volume.toString());
-        window.location.href = nextUrl; 
-    } else if (currentMode === 2) { video.play(); }
+    if (currentMode === 1) { next(); }
+    else if (currentMode === 2) { video.play(); }
     else { pause(); }
 }
 
@@ -334,22 +338,20 @@ function formatter(number) {
 function toggleMuteUnmute() {
   totalVol.classList.remove("show");
   if (!muted) {
-    video.volume = 0;
-    muted = true;
+    video.volume = 0; muted = true;
     sh_play_st.classList.add("sh_play_st");
     sh_mute_st.classList.remove("sh_mute_st");
     sh_unmute_st.classList.add("sh_unmute_st");
     handleAudioIcon();
     mainState.classList.add("animate-state");
   } else {
-    video.volume = volumeVal;
-    muted = false;
+    video.volume = volumeVal; muted = false;
     sh_play_st.classList.add("sh_play_st");
     sh_mute_st.classList.add("sh_mute_st");
     sh_unmute_st.classList.remove("sh_unmute_st");
     handleAudioIcon();
     mainState.classList.add("animate-state");
-  }
+  } localStorage.setItem("videoMuted", muted);
 }
 
 function hideControls() {

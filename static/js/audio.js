@@ -22,8 +22,7 @@ var audio = document.getElementById("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
 var currentMode = localStorage.getItem("audioMode");
-
-document.addEventListener("keydown", handleShorthand);
+var muted = localStorage.getItem("audioMuted");
 
 if (currentMode != null) {
     currentMode=parseInt(currentMode);
@@ -32,17 +31,21 @@ if (currentMode != null) {
     else if (currentMode === 2) { mode.innerHTML = "↻"; }
  } else { currentMode = 0; }
 
-if (volumeVal !== null) { volumeVal = parseFloat(volumeVal); }
-else { volumeVal = 1; }
-
+if (volumeVal === null) { volumeVal = 1; }
 audio.volume = volumeVal;
 currentVol.style.width = volumeVal * 100 +"%";
+
+if (muted != null) {
+    if (muted == "true") {
+        muted = true;
+        audio.volume = 0;
+    } else { muted = false; }
+} else { muted = false; }
 
 let mouseDownProgress = false,
   isPlaying = false,
   mouseDownVol = false,
   isCursorOnControls = false,
-  muted = false,
   timeout,
   mouseOverDuration = false,
   touchClientX = 0,
@@ -51,11 +54,11 @@ let mouseDownProgress = false,
   
 canPlayInit();
  
+document.addEventListener("keydown", handleShorthand);
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
 
 function canPlayInit() {
-  muted = audio.muted;
   handleAudioIcon();
   if (audio.paused) {
     sh_play.classList.remove("sh_play");
@@ -242,7 +245,7 @@ function toggleMuteUnmute() {
     audio.volume = volumeVal;
     muted = false;
     handleAudioIcon();
-  }
+  } localStorage.setItem("audioMuted", muted);
 }
 
 totalVol.addEventListener("mousedown", (e) => {
@@ -286,12 +289,14 @@ speedButtons.forEach((btn) => {
 
 function next() {
     localStorage.setItem("audioMode", currentMode);
-    localStorage.setItem("audioVolume", audio.volume.toString());
+    localStorage.setItem("audioVolume", volumeVal);
+    localStorage.setItem("videoMuted", muted);
     window.location.href = nextUrl; }
 
 function prev() {
     localStorage.setItem("audioMode", currentMode);
-    localStorage.setItem("audioVolume", audio.volume.toString());
+    localStorage.setItem("audioVolume", volumeVal);
+    localStorage.setItem("videoMuted", muted);
     window.location.href = prevUrl; }
 
 function chMode() {
@@ -301,15 +306,12 @@ function chMode() {
     localStorage.setItem("audioMode", currentMode); }
 
 function handleAudioEnded() {
-    if (currentMode === 1) {
-        localStorage.setItem("audioMode", currentMode);
-        localStorage.setItem("audioVolume", audio.volume.toString());
-        window.location.href = nextUrl; 
-    } else if (currentMode === 2) { audio.play(); }
+    if (currentMode === 1) { next(); }
+    else if (currentMode === 2) { audio.play(); }
     else { pause(); }
 }
 
-function saveVolume() { localStorage.setItem("audioVolume", audio.volume.toString()); }
+function saveVolume() { localStorage.setItem("audioVolume", volumeVal); }
 
 function download() {
     const downloadLink = document.createElement('a');
