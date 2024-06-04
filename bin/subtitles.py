@@ -132,7 +132,7 @@ def save_subs_cache(dic):
 def random_str():
     lenght=24 # Generate a random name for the file cache
     characters = [chr(i) for i in range(48, 58)] + [chr(i) for i in range(65, 91)]
-    random_string = ''.join(choice(characters) for _ in range(length))
+    random_string = ''.join(choice(characters) for _ in range(lenght))
     return random_string
 
 
