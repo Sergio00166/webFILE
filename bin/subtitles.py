@@ -140,9 +140,6 @@ def get_track(file,index):
     # Here we extract [and corvert] a
     # subtitle track from a video file
     codec = get_codec(file, index)
-    # If the codec is not ssa or ass simply let
-    # Fmmpeg to convert it directly
-    if not codec in ["ssa", "ass"]: codec="webvtt"
     cmd = [
         'ffmpeg', '-i', file,
         '-map', f'0:s:{index}',
@@ -150,17 +147,12 @@ def get_track(file,index):
     ]
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
     source, _ = process.communicate(); del process
-    # To convert ass/ssa subtitles
     # Yes ffmpeg can do it but id does it
     # in a weird way. This cleans all
     # incompatible stuff and cleans the output
-    if not codec=="webvtt":
-        ret = Queue()
-        proc = Process(target=convert, args=(source,ret,))
-        del source # Free memory
-        proc.start(); out = ret.get(); proc.join()
-        del proc, ret # Free memory
-        return out
-
-    else: return source.decode("UTF-8")
-    
+    ret = Queue()
+    proc = Process(target=convert, args=(source,ret,))
+    del source # Free memory
+    proc.start(); out = ret.get(); proc.join()
+    del proc, ret # Free memory
+    return out
