@@ -34,20 +34,24 @@ const sh_noa = document.querySelector(".sh_noa");
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
-var saved_speed = localStorage.getItem("videoSpeed");
 
-if (saved_speed != null) {
-    video.playbackRate = parseFloat(saved_speed);
-    for (let i = 0; i < speedSelect.options.length; i++) {
-        if (speedSelect.options[i].value === saved_speed) {
-            speedSelect.selectedIndex = i;
-            break;
-        }
-    }
-} else {
-    speedSelect.selectedIndex = 3;
+{
+	var text = localStorage.getItem("videoSubs");
+	var selectedIndex = 0;
+	for (var i = 0; i < subtitleSelect.options.length; i++) {
+		if (subtitleSelect.options[i].text === text) {
+		  selectedIndex = i; break; }
+	}  subtitleSelect.selectedIndex = selectedIndex;
+	changeSubs(selectedIndex-1);
+	
+	var saved_speed = localStorage.getItem("videoSpeed");
+	if (saved_speed != null) {
+		video.playbackRate = parseFloat(saved_speed);
+		for (let i = 0; i < speedSelect.options.length; i++) {
+			if (speedSelect.options[i].value === saved_speed) {
+				speedSelect.selectedIndex = i; break; } }
+	} else { speedSelect.selectedIndex = 3; }
 }
-delete saved_speed;
 
 if (currentMode != null) {
     currentMode = parseInt(currentMode);
@@ -640,10 +644,8 @@ audioTracksSelect.addEventListener('change', function() {
     }
 });
 
-
-subtitleSelect.addEventListener('change', function() {
-    value = this.value;
-    var existingTrack = video.querySelector('track[kind="subtitles"]');
+function changeSubs(value){
+	var existingTrack = video.querySelector('track[kind="subtitles"]');
     if (existingTrack) {
         existingTrack.parentNode.removeChild(existingTrack);
     }
@@ -656,6 +658,15 @@ subtitleSelect.addEventListener('change', function() {
         track.mode = 'showing';
         video.appendChild(track);
     }
+}
+
+subtitleSelect.addEventListener('change', function() {
+	const value = parseInt(this.value);
+	changeSubs(value);
+	var text = subtitleSelect.options[value+1].text;
+	console.log(this.value);
+	localStorage.setItem("videoSubs", text);
+
 });
 
 speedSelect.addEventListener('change', function() {
