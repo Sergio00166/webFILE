@@ -36,8 +36,8 @@ var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 
 {
-	var text = localStorage.getItem("videoSubs");
-	var selectedIndex = 0;
+	text = localStorage.getItem("videoSubs");
+	selectedIndex = 0;
 	for (var i = 0; i < subtitleSelect.options.length; i++) {
 		if (subtitleSelect.options[i].text === text) {
 		  selectedIndex = i; break; }
@@ -110,10 +110,6 @@ function chMode() {
         mode.innerHTML = "↻";
     }
     localStorage.setItem("videoMode", currentMode);
-}
-
-function saveVolume() {
-    localStorage.setItem("videoVolume", volumeVal);
 }
 
 function canPlayInit() {
@@ -445,7 +441,7 @@ function handleVolume(e) {
     const totalVolRect = totalVol.getBoundingClientRect();
     volumeVal = Math.min(Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width), 1);
     currentVol.style.width = volumeVal * 100 + "%";
-    saveVolume()
+    localStorage.setItem("videoVolume", volumeVal);
     video.volume = volumeVal;
     handleAudioIcon();
 }
@@ -600,7 +596,7 @@ function handleShorthand(e) {
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
-                saveVolume();
+                localStorage.setItem("videoVolume", volumeVal);
             }
             break;
         case "-":
@@ -612,7 +608,7 @@ function handleShorthand(e) {
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
-                saveVolume();
+                localStorage.setItem("videoVolume", volumeVal);
             }
             break;
         default:
@@ -621,27 +617,37 @@ function handleShorthand(e) {
 }
 
 function loadTracks() {
+	saved = localStorage.getItem("videoAudio");
     audioTracks = video.audioTracks;
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
         const option = document.createElement('option');
         option.value = i;
-        option.textContent = (track.label || track.language);
+		name = (track.label || track.language || "Track "+(i+1));
+        option.textContent = name;
         audioTracksSelect.appendChild(option);
-        audioTracksSelect.selectedIndex = 0;
-    }
+		if (name === saved) { 
+			audioTracksSelect.selectedIndex = i;
+			changeTrack();
+		} else { audioTracksSelect.selectedIndex = 0; }
+    } 
 }
 
 let originalTime = 0;
-audioTracksSelect.addEventListener('change', function() {
-    const selectedIndex = parseInt(this.value, 10);
+function changeTrack(selectedIndex) {
     if (!isNaN(selectedIndex)) {
         originalTime = video.currentTime;
         for (let i = 0; i < audioTracks.length; i++) {
             audioTracks[i].enabled = (i === selectedIndex);
-        }
-        video.currentTime = originalTime;
-    }
+        } video.currentTime = originalTime;
+    }	
+}
+
+audioTracksSelect.addEventListener('change', function() {
+	selectedIndex = parseInt(this.value, 10);
+	changeTrack(selectedIndex);
+	text = audioTracksSelect[selectedIndex].text
+	localStorage.setItem("videoAudio", text);
 });
 
 function changeSubs(value){
