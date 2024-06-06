@@ -25,7 +25,7 @@ Dependencys:
  python3  flask(pip) pysubs2(pip) ffmpeg(as a command)
 
 Usage:
-  python3 start.py [config.file]
-  or python3 bin/main.py -b IP_addr -p port -d directory [--dirsize] [--subtitle_cache]
+  python3 start.py [config.file] or<br>
+  python3 bin/main.py -b IP_addr -p port -d directory [--dirsize] [--subtitle_cache]
 
   ---------------------------------------------------
