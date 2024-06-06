@@ -81,7 +81,7 @@ def get_info(file_path):
     for stream in ffprobe_output.get('streams', []):
         tags = stream.get('tags', {})
         title = tags.get('title')
-        language = tags.get('language', 'unknown')
+        language = tags.get('language')
         subtitles_list.append(title if title else language) 
     return subtitles_list
 
