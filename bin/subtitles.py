@@ -5,7 +5,7 @@
 # converting formats like ASS/SSA to webVTT
 
 from os import sep, linesep, remove, mkdir
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, run
 from multiprocessing import Process, Queue
 from io import StringIO
 import pysubs2
@@ -13,6 +13,7 @@ from random import choice
 from sys import path
 from glob import glob
 from os.path import exists
+from json import loads as jsload
 
 cache_dir = path[0]
 del path # Free memory
@@ -42,12 +43,10 @@ def convert(src, ret):
         # styles bc it show a some weird stuff
         subs.to_file(tmp, "vtt", apply_styles=False)
         del subs # Free memory 
-        out = tmp.getvalue()
-    
+        out = tmp.getvalue() 
     subs = pysubs2.SSAFile.from_string(out)
     del out # Free memory
     grouped_events,oldtxt = {},""
-
     # Here we combine th subs that has the same
     # start and end time as others, and remove
     # duplicated entries
@@ -58,38 +57,33 @@ def convert(src, ret):
                 grouped_events[key] = event.text
         elif oldtxt != event.text:
             grouped_events[key] += " "+event.text
-        oldtxt = event.text
-    
+        oldtxt = event.text    
     del subs.events, oldtxt  # Free memory
-    
     # Pass to the object the values
     subs.events = [
         pysubs2.SSAEvent(start=start, end=end, text=text)
         for (start, end), text in grouped_events.items()
     ]
     del grouped_events # Free memory
-
     out=subs.to_string("vtt")
     del subs  # Free memory
-
     ret.put(out) # Return values
 
 
-def get_info(source):
-    # This is to get all the subtitles
-    # tracks names, and if it dont have
-    # Name return "Track" + index
-    cmd = [
-        'ffprobe', '-v', 'error',
-        '-select_streams', 's',
-        '-show_entries', 'stream_tags=title',
-        '-of', 'csv=p=0',
-        source
-    ]
-    try:
-        output = Popen(cmd, stdout=PIPE).communicate()[0].decode('UTF8').split(linesep)
-        return ["Track " + str(index + 1) if not title else title for index, title in enumerate(output) if title]
-    except Exception: return []
+def get_info(file_path):
+    # This is to get all the subtitles name or language
+    result = run([
+        'ffprobe', '-v', 'error', '-select_streams', 's', 
+        '-show_entries', 'stream=index:stream_tags=title:stream_tags=language',
+        '-of', 'json', file_path
+    ], stdout=PIPE, stderr=PIPE, text=True) 
+    ffprobe_output,subtitles_list = jsload(result.stdout),[]
+    for stream in ffprobe_output.get('streams', []):
+        tags = stream.get('tags', {})
+        title = tags.get('title')
+        language = tags.get('language', 'unknown')
+        subtitles_list.append(title if title else language) 
+    return subtitles_list
 
 
 def get_subs_cache():
