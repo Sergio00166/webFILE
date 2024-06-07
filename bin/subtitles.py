@@ -78,11 +78,13 @@ def get_info(file_path):
         '-of', 'json', file_path
     ], stdout=PIPE, stderr=PIPE, text=True) 
     ffprobe_output,subtitles_list = jsload(result.stdout),[]
+    del result # Free memory
     for stream in ffprobe_output.get('streams', []):
         tags = stream.get('tags', {})
         title = tags.get('title')
         language = tags.get('language')
-        subtitles_list.append(title if title else language) 
+        subtitles_list.append(title if title else language)
+    del ffprobe_output,stream # Free memory
     return subtitles_list
 
 
