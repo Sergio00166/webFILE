@@ -669,10 +669,12 @@ function changeSubs(value){
 subtitleSelect.addEventListener('change', function() {
 	const value = parseInt(this.value);
 	changeSubs(value);
-	var text = subtitleSelect.options[value+1].text;
-	console.log(this.value);
-	localStorage.setItem("videoSubs", text);
-
+    if (value == -1) { 
+        localStorage.removeItem("videoSubs");
+    } else { 
+        text = subtitleSelect.options[value+1].text;
+        localStorage.setItem("videoSubs", text);
+    }
 });
 
 speedSelect.addEventListener('change', function() {
