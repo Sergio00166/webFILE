@@ -117,6 +117,7 @@ body {
   background: #62626274;
   cursor: pointer;
   transition: all 0.2s;
+  border-radius: 5px;
 }
 .duration .buffer {
   height: 100%;
@@ -134,6 +135,7 @@ body {
   display: flex;
   align-items: center;
   width: 0;
+  border-radius: 5px;
 }
 .hover-time .hover-duration {
   position: absolute;
@@ -163,6 +165,7 @@ body {
   display: flex;
   align-items: center;
   width: 0;
+  border-radius: 5px;
 }
 .current-time::before {
   content: "";
@@ -291,6 +294,7 @@ select {
   text-align: center;
   font-size: 1rem;
   font-weight: 500;
+  width: 64px;
   opacity: 0;
   border: none;
 }
