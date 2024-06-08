@@ -101,13 +101,11 @@ body {
 .controls {
   position: absolute;
   bottom: 0;
-  left: 0;
   padding: 2rem 1rem 0.5rem 1rem;
   width: 100%;
   background: linear-gradient(to top, #000000b8 -100%, transparent);
   box-sizing: border-box;
   opacity: 0;
-  transform: translateY(40px);
   visibility: hidden;
   z-index: 99;
   transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -119,11 +117,11 @@ body {
   background: #62626274;
   cursor: pointer;
   transition: all 0.2s;
+  border-radius: 5px;
 }
 .duration .buffer {
   height: 100%;
   position: absolute;
-  inset: 0;
   background-color: #ff6a0045;
   z-index: 9;
   width: 0;
@@ -137,6 +135,7 @@ body {
   display: flex;
   align-items: center;
   width: 0;
+  border-radius: 5px;
 }
 .hover-time .hover-duration {
   position: absolute;
@@ -166,6 +165,7 @@ body {
   display: flex;
   align-items: center;
   width: 0;
+  border-radius: 5px;
 }
 .current-time::before {
   content: "";
@@ -294,6 +294,7 @@ select {
   text-align: center;
   font-size: 1rem;
   font-weight: 500;
+  width: 64px;
   opacity: 0;
   border: none;
 }
