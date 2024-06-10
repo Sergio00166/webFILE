@@ -19,6 +19,8 @@ const subtitleSelect = document.getElementById('s0');
 const audioTracksSelect = document.getElementById('s1');
 const speedSelect = document.getElementById('s2');
 
+const canvas = document.querySelector("canvas");
+
 const sh_mute = document.querySelector(".sh_mute");
 const sh_unmute = document.querySelector(".sh_unmute");
 const sh_pause = document.querySelector(".sh_pause");
@@ -34,6 +36,7 @@ const sh_noa = document.querySelector(".sh_noa");
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
+
 
 {
 	text = localStorage.getItem("videoSubs");
@@ -98,6 +101,7 @@ let mouseDownProgress = false,
 
 canPlayInit();
 
+
 function chMode() {
     if (currentMode === 2) {
         currentMode = 0;
@@ -127,7 +131,7 @@ function canPlayInit() {
             setTimeout(setVideoTime, 25);
         }
     }
-    setVideoTime()
+    setVideoTime();
 }
 
 function next() {
@@ -196,20 +200,24 @@ duration.addEventListener("mouseleave", (e) => {
     mouseOverDuration = false;
     hoverTime.style.width = 0;
     hoverDuration.style.display = 'none';
+	canvas.style.display = 'none';
 });
 
-
 let hideHoverTimeout;
-
 function hideHoverDuration() {
     clearTimeout(hideHoverTimeout);
+	canvas.style.left = "-9999px";
+    canvas.style.width = "0px";
     hoverDuration.style.left = "-9999px";
     hoverDuration.style.width = "0px";
     hideHoverTimeout = setTimeout(function() {
         hoverDuration.style.left = "";
         hoverDuration.style.width = "";
+		canvas.style.left = "";
+        canvas.style.width = "";
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
+		canvas.style.display = 'none';
         mouseOverDuration = false;
     }, 250);
 }
@@ -480,17 +488,21 @@ function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
+		canvas.style.display = 'none';
         e.preventDefault();
         navigate(e);
     } else if (mouseDownVol) {
         handleVolume(e);
     } else if (mouseOverDuration) {
         hoverDuration.style.display = 'block';
+		canvas.style.display = 'block';
         const rect = duration.getBoundingClientRect();
         const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
         const percent = (width / rect.width) * 100;
         hoverTime.style.width = width + "px";
-        hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
+		hovtime = (video.duration / 100) * percent;
+        hoverDuration.innerHTML = showDuration(hovtime);
+		showFrameAtTime(video, canvas, hovtime);
     }
     if (!isPlaying) {
         pause();
@@ -684,3 +696,18 @@ speedSelect.addEventListener('change', function() {
 
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
+
+/// Frame view
+
+const tempVideo = video.cloneNode(true);
+
+tempVideo.addEventListener('seeked', function captureFrame() {
+    const context = canvas.getContext('2d');
+	context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
+});
+function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
+    tempVideo.currentTime = timeInSeconds;
+}
+
+
+

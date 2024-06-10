@@ -3,6 +3,14 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+canvas {
+	width: 128px;
+	height: 72px;
+	position: absolute;
+    right: calc((-128px / 2));
+    top: -78px;
+}
+
 img {
   width: 20px;
   height: 20px;
@@ -139,7 +147,7 @@ body {
 }
 .hover-time .hover-duration {
   position: absolute;
-  right: calc((-25px / 2));
+  right: -63px;
   top: -25px;
   background: #3c3c3ca7;
   padding: 0.2rem;
