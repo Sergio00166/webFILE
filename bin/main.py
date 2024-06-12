@@ -50,7 +50,7 @@ if __name__=="__main__":
             
         except PermissionError: return render_template('403.html'), 403
         except FileNotFoundError: return render_template('404.html'), 404
-        except: return render_template('500.html'), 500
+        except Exception as e: printerr(e); return render_template('500.html'), 500
 
 
     @app.route('/')
@@ -84,7 +84,7 @@ if __name__=="__main__":
 
         except PermissionError: return render_template('403.html'), 403
         except FileNotFoundError: return render_template('404.html'), 404
-        except: return render_template('500.html'), 500
+        except Exception as e: printerr(e); return render_template('500.html'), 500
 
     # Run the main app with the custom args
     app.run(host=listen, port=int(port), debug=False)
