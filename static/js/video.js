@@ -37,7 +37,6 @@ var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 
-
 {
 	text = localStorage.getItem("videoSubs");
 	selectedIndex = 0;
@@ -483,7 +482,6 @@ function toggleFullscreen() {
     }
 }
 
-
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
@@ -501,7 +499,12 @@ function handleMousemove(e) {
         const percent = (width / rect.width) * 100;
         hoverTime.style.width = width + "px";
 		hovtime = (video.duration / 100) * percent;
-        hoverDuration.innerHTML = showDuration(hovtime);
+		ctime = showDuration(hovtime);
+		/// Fix not centered
+		if ((ctime.match(/:/g) || []).length === 2) {
+			hoverDuration.style.right = "-25px";
+		} else { hoverDuration.style.right = "-18px"; }
+        hoverDuration.innerHTML = ctime;
 		showFrameAtTime(video, canvas, hovtime);
     }
     if (!isPlaying) {
@@ -697,17 +700,20 @@ speedSelect.addEventListener('change', function() {
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
 
-/// Frame view
+/// Frame preview
+var tempVideo = video.cloneNode(true);
+tempVideo.preload = "metadata";
+tempVideo.onended = null; 
+tempVideo.pause();
 
-const tempVideo = video.cloneNode(true);
+var context = canvas.getContext('2d');
 
-tempVideo.addEventListener('seeked', function captureFrame() {
-    const context = canvas.getContext('2d');
-	context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-});
 function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
+    context.fillStyle = "black";
+    context.fillRect(0, 0, canvas.width, canvas.height);
     tempVideo.currentTime = timeInSeconds;
+    tempVideo.onseeked = function captureFrame() {
+		tempVideo.onseeked = null; tempVideo.pause();
+        context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
+    };
 }
-
-
-

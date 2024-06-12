@@ -7,7 +7,7 @@ canvas {
 	width: 128px;
 	height: 72px;
 	position: absolute;
-    right: calc((-128px / 2));
+    right: -64px;
     top: -78px;
 }
 
@@ -120,7 +120,10 @@ body {
 }
 .duration {
   position: relative;
-  width: 100%;
+  align: center;
+    margin-left: auto;
+  margin-right: auto;
+  width: calc((100% - 64px));
   height: 15px;
   background: #62626274;
   cursor: pointer;
@@ -134,6 +137,7 @@ body {
   z-index: 9;
   width: 0;
 }
+
 .hover-time {
   height: 100%;
   position: absolute;
@@ -147,8 +151,8 @@ body {
 }
 .hover-time .hover-duration {
   position: absolute;
-  right: -63px;
-  top: -25px;
+  right: 0px;
+  top: -24px;
   background: #3c3c3ca7;
   padding: 0.2rem;
   border-radius: 5px;
