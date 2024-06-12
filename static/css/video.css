@@ -4,9 +4,9 @@
 }
 
 canvas {
-	width: 128px;
-	height: 72px;
-	position: absolute;
+    width: 128px;
+    height: 72px;
+    position: absolute;
     right: -64px;
     top: -78px;
 }
@@ -281,18 +281,18 @@ body {
 }
 
 .setting-menu li:nth-child(1)::before {
-	content: "Subs";
-	color: #FFFFFF;
+    content: "Subs";
+    color: #FFFFFF;
     position: absolute;
 }
 .setting-menu li:nth-child(2)::before {
-	content: "Tracks";
-	color: #FFFFFF;
+    content: "Tracks";
+    color: #FFFFFF;
     position: absolute;
 }
 .setting-menu li:nth-child(3)::before {
-	content: "Speed";
-	color: #FFFFFF;
+    content: "Speed";
+    color: #FFFFFF;
     position: absolute;
 }
 
