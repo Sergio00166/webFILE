@@ -19,6 +19,8 @@ const subtitleSelect = document.getElementById('s0');
 const audioTracksSelect = document.getElementById('s1');
 const speedSelect = document.getElementById('s2');
 
+const canvas = document.querySelector("canvas");
+
 const sh_mute = document.querySelector(".sh_mute");
 const sh_unmute = document.querySelector(".sh_unmute");
 const sh_pause = document.querySelector(".sh_pause");
@@ -36,21 +38,21 @@ var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 
 {
-	text = localStorage.getItem("videoSubs");
-	selectedIndex = 0;
-	for (var i = 0; i < subtitleSelect.options.length; i++) {
-		if (subtitleSelect.options[i].text === text) {
-		  selectedIndex = i; break; }
-	}  subtitleSelect.selectedIndex = selectedIndex;
-	changeSubs(selectedIndex-1);
-	
-	var saved_speed = localStorage.getItem("videoSpeed");
-	if (saved_speed != null) {
-		video.playbackRate = parseFloat(saved_speed);
-		for (let i = 0; i < speedSelect.options.length; i++) {
-			if (speedSelect.options[i].value === saved_speed) {
-				speedSelect.selectedIndex = i; break; } }
-	} else { speedSelect.selectedIndex = 3; }
+    text = localStorage.getItem("videoSubs");
+    selectedIndex = 0;
+    for (var i = 0; i < subtitleSelect.options.length; i++) {
+        if (subtitleSelect.options[i].text === text) {
+          selectedIndex = i; break; }
+    }  subtitleSelect.selectedIndex = selectedIndex;
+    changeSubs(selectedIndex-1);
+    
+    var saved_speed = localStorage.getItem("videoSpeed");
+    if (saved_speed != null) {
+        video.playbackRate = parseFloat(saved_speed);
+        for (let i = 0; i < speedSelect.options.length; i++) {
+            if (speedSelect.options[i].value === saved_speed) {
+                speedSelect.selectedIndex = i; break; } }
+    } else { speedSelect.selectedIndex = 3; }
 }
 
 if (currentMode != null) {
@@ -98,6 +100,7 @@ let mouseDownProgress = false,
 
 canPlayInit();
 
+
 function chMode() {
     if (currentMode === 2) {
         currentMode = 0;
@@ -127,7 +130,7 @@ function canPlayInit() {
             setTimeout(setVideoTime, 25);
         }
     }
-    setVideoTime()
+    setVideoTime();
 }
 
 function next() {
@@ -196,20 +199,24 @@ duration.addEventListener("mouseleave", (e) => {
     mouseOverDuration = false;
     hoverTime.style.width = 0;
     hoverDuration.style.display = 'none';
+    canvas.style.display = 'none';
 });
 
-
 let hideHoverTimeout;
-
 function hideHoverDuration() {
     clearTimeout(hideHoverTimeout);
+    canvas.style.left = "-9999px";
+    canvas.style.width = "0px";
     hoverDuration.style.left = "-9999px";
     hoverDuration.style.width = "0px";
     hideHoverTimeout = setTimeout(function() {
         hoverDuration.style.left = "";
         hoverDuration.style.width = "";
+        canvas.style.left = "";
+        canvas.style.width = "";
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
+        canvas.style.display = 'none';
         mouseOverDuration = false;
     }, 250);
 }
@@ -475,22 +482,30 @@ function toggleFullscreen() {
     }
 }
 
-
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
+        canvas.style.display = 'none';
         e.preventDefault();
         navigate(e);
     } else if (mouseDownVol) {
         handleVolume(e);
     } else if (mouseOverDuration) {
         hoverDuration.style.display = 'block';
+        canvas.style.display = 'block';
         const rect = duration.getBoundingClientRect();
         const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
         const percent = (width / rect.width) * 100;
         hoverTime.style.width = width + "px";
-        hoverDuration.innerHTML = showDuration((video.duration / 100) * percent);
+        hovtime = (video.duration / 100) * percent;
+        ctime = showDuration(hovtime);
+        /// Fix not centered
+        if ((ctime.match(/:/g) || []).length === 2) {
+            hoverDuration.style.right = "-25px";
+        } else { hoverDuration.style.right = "-18px"; }
+        hoverDuration.innerHTML = ctime;
+        showFrameAtTime(video, canvas, hovtime);
     }
     if (!isPlaying) {
         pause();
@@ -617,19 +632,19 @@ function handleShorthand(e) {
 }
 
 function loadTracks() {
-	saved = localStorage.getItem("videoAudio");
+    saved = localStorage.getItem("videoAudio");
     audioTracks = video.audioTracks;
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
         const option = document.createElement('option');
         option.value = i;
-		name = (track.label || track.language || "Track "+(i+1));
+        name = (track.label || track.language || "Track "+(i+1));
         option.textContent = name;
         audioTracksSelect.appendChild(option);
-		if (name === saved) { 
-			audioTracksSelect.selectedIndex = i;
-			changeTrack();
-		} else { audioTracksSelect.selectedIndex = 0; }
+        if (name === saved) { 
+            audioTracksSelect.selectedIndex = i;
+            changeTrack();
+        } else { audioTracksSelect.selectedIndex = 0; }
     } 
 }
 
@@ -640,18 +655,18 @@ function changeTrack(selectedIndex) {
         for (let i = 0; i < audioTracks.length; i++) {
             audioTracks[i].enabled = (i === selectedIndex);
         } video.currentTime = originalTime;
-    }	
+    }    
 }
 
 audioTracksSelect.addEventListener('change', function() {
-	selectedIndex = parseInt(this.value, 10);
-	changeTrack(selectedIndex);
-	text = audioTracksSelect[selectedIndex].text
-	localStorage.setItem("videoAudio", text);
+    selectedIndex = parseInt(this.value, 10);
+    changeTrack(selectedIndex);
+    text = audioTracksSelect[selectedIndex].text
+    localStorage.setItem("videoAudio", text);
 });
 
 function changeSubs(value){
-	var existingTrack = video.querySelector('track[kind="subtitles"]');
+    var existingTrack = video.querySelector('track[kind="subtitles"]');
     if (existingTrack) {
         existingTrack.parentNode.removeChild(existingTrack);
     }
@@ -667,8 +682,8 @@ function changeSubs(value){
 }
 
 subtitleSelect.addEventListener('change', function() {
-	const value = parseInt(this.value);
-	changeSubs(value);
+    const value = parseInt(this.value);
+    changeSubs(value);
     if (value == -1) { 
         localStorage.removeItem("videoSubs");
     } else { 
@@ -684,3 +699,25 @@ speedSelect.addEventListener('change', function() {
 
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
+
+/// Frame preview
+var tempVideo = video.cloneNode(true);
+tempVideo.preload = "metadata";
+tempVideo.onended = null; 
+tempVideo.pause();
+
+var context = canvas.getContext('2d');
+
+let frameprevlast = 0;
+function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
+    const now = Date.now();
+    if (now - frameprevlast >= 250) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        frameprevlast = now;
+        tempVideo.currentTime = timeInSeconds;
+        tempVideo.onseeked = function captureFrame() {
+            tempVideo.onseeked = null; tempVideo.pause();
+            context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
+        };
+    }
+}

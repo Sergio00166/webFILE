@@ -84,7 +84,7 @@ def get_info(file_path):
         title = tags.get('title')
         language = tags.get('language')
         subtitles_list.append(title if title else language)
-    del ffprobe_output,stream # Free memory
+    del ffprobe_output # Free memory
     return subtitles_list
 
 

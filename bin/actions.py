@@ -105,9 +105,11 @@ def sub_cache_handler(arg,root,subtitle_cache):
         # Generate a map of used values
         available = [x[0] for x in dic.values()]
         # Get map to delete shit
-        todelete = [x for x in listdir(cache_dir) if x not in available and isfile(cache_dir+x)]
-        if "index.txt" in todelete: todelete.remove("index.txt")
-        [remove(cache_dir+x) for x in todelete]
+        try:
+            todelete = [x for x in listdir(cache_dir) if x not in available and isfile(cache_dir+x)]
+            if "index.txt" in todelete: todelete.remove("index.txt")
+            [remove(cache_dir+x) for x in todelete]
+        except: pass
         # Get filesize as str
         filesize = str(getsize(file))
         # If the file is not in the index table

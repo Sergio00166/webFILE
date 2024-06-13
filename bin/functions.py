@@ -114,3 +114,13 @@ def get_folder_content(folder_path, root, folder_size):
             'description': description, "size": size,"mtime": mtime})
         except: pass
     return content
+
+
+def printerr(e):
+    e_type = type(e).__name__
+    e_file = e.__traceback__.tb_frame.f_code.co_filename
+    e_line = e.__traceback__.tb_lineno
+    e_message = str(e)
+    print(f"[line {e_line}] '{e_file}'")
+    print(f"[{e_type}] {e_message}")
+
