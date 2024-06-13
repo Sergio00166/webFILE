@@ -708,11 +708,16 @@ tempVideo.pause();
 
 var context = canvas.getContext('2d');
 
+let frameprevlast = 0;
 function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    tempVideo.currentTime = timeInSeconds;
-    tempVideo.onseeked = function captureFrame() {
-        tempVideo.onseeked = null; tempVideo.pause();
-        context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-    };
+    const now = Date.now();
+    if (now - frameprevlast >= 250) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        frameprevlast = now;
+        tempVideo.currentTime = timeInSeconds;
+        tempVideo.onseeked = function captureFrame() {
+            tempVideo.onseeked = null; tempVideo.pause();
+            context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
+        };
+    }
 }
