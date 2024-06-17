@@ -216,7 +216,7 @@ button:focus { outline: none; }
 }
 @media only screen and (max-width: 500px) {
 .volume { display: none; }
-.setting-menu { margin-left: -9rem; }
+.setting-menu { margin-left: -8rem; }
 }
 @media only screen and (max-width: 300px) {
 .settings { display: none; }
