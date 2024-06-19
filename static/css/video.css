@@ -2,7 +2,6 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
-
 canvas {
     width: 128px;
     height: 72px;
@@ -10,7 +9,6 @@ canvas {
     right: -64px;
     top: -78px;
 }
-
 img {
   width: 20px;
   height: 20px;
@@ -46,8 +44,8 @@ body {
   background: #000000;
 }
 .video-container {
-  width: 1024px;
   position: relative;
+  width: 1024px;
   height: calc((9 / 16) * 1024px);
   color: #fff;
   overflow: hidden;
@@ -55,9 +53,13 @@ body {
   align-items: center;
   justify-content: center;
 }
-.video-container video {
-  width: 100%;
-}
+.video-container:fullscreen video { 
+    max-height: 100%;
+    max-width: 100%;
+    width: auto !important;
+    height: auto !important;
+} video { width: 100%; }
+
 .loader {
   width: 108px;
   height: 108px;
