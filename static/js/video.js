@@ -698,10 +698,10 @@ var tempVideo = video.cloneNode(true);
 tempVideo.preload = "metadata";
 tempVideo.onended = null; 
 tempVideo.pause();
-
+tempVideo.muted = true;
 var context = canvas.getContext('2d');
-
 let frameprevlast = 0;
+
 function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
     const now = Date.now();
     if (now - frameprevlast >= 250) {
