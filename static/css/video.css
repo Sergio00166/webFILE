@@ -45,8 +45,8 @@ body {
 }
 .video-container {
   position: relative;
-  width: 1024px;
-  height: calc((9 / 16) * 1024px);
+  width: calc((16/9)*90vh);
+  height: 90vh;
   color: #fff;
   overflow: hidden;
   display: flex;
@@ -79,6 +79,7 @@ body {
   justify-content: center;
 }
 .state-btn {
+  margin-bottom: 2rem;
   font-size: 2.3rem;
   width: 80px;
   height: 80px;
@@ -111,7 +112,7 @@ body {
 .controls {
   position: absolute;
   bottom: 0;
-  padding: 2rem 1rem 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
   width: 100%;
   background: linear-gradient(to top, #000000b8 -100%, transparent);
   box-sizing: border-box;
@@ -396,7 +397,18 @@ button:focus { outline: none; }
   }
   .setting-menu { margin-left: 2rem; margin-bottom: 2.25rem; }
 }
-@media only screen and (max-width: 320px) {
+@media only screen and (max-width: 340px) {
   .volume { display: none; }
   .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
+}
+
+@media only screen and (max-height: 290px) {
+  .controls { 
+       padding: 0px;
+       padding-top: 1rem; 
+       margin-bottom: -0.6rem;
+   }
+   .state-btn { width: 25vh; height: 25vh; }
+   .fullimg { width: 16vh; height: 16vh; }
+  .side-controls { display: none; }
 }

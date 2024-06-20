@@ -38,11 +38,12 @@ img {
 .duration {
   position: relative;
   width: 33%;
-  height: 15px;
+  height: 0px;
   background: #62626274;
   cursor: pointer;
   border-radius: 4px;
   transition: all 0.2s;
+  padding: 8px;
 }
 .duration .buffer {
   height: 100%;
@@ -206,18 +207,25 @@ button:focus { outline: none; }
 .sh_noa { display: none; }
 
 @media only screen and (max-width: 1200px) {
-.duration { width: 50%; }
+   .duration { width: 50%; }
 }
 @media only screen and (max-width: 960px) {
-.duration { width: 67%; }
+   .duration { width: 67%; }
 }
 @media only screen and (max-width: 600px) {
-.duration { width: 85%; }
+   .duration { width: 85%; }
 }
 @media only screen and (max-width: 500px) {
-.volume { display: none; }
-.setting-menu { margin-left: -8rem; }
+   .volume { display: none; }
+   .setting-menu { margin-left: -8rem; }
 }
 @media only screen and (max-width: 300px) {
-.settings { display: none; }
+   .settings { display: none; }
+}
+
+@media only screen and (max-height: 280px) {
+   body { overflow: hidden; }
+   h2 { display: none; }
+   br { display: none; }
+   .settings { display: none; }
 }
