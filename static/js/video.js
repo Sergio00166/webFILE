@@ -259,6 +259,7 @@ document.addEventListener("mouseover", (e) => {
 
 videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
+    screen.orientation.lock('landscape').catch(() => {});
 });
 
 mainState.addEventListener("click", toggleMainState);
