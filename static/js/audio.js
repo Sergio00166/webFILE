@@ -68,7 +68,6 @@ if (muted != null) {
 }
 
 let mouseDownProgress = false,
-    isPlaying = false,
     mouseDownVol = false,
     isCursorOnControls = false,
     timeout,
@@ -87,9 +86,7 @@ function canPlayInit() {
     handleAudioIcon();
     if (audio.paused) {
         sh_play.classList.remove("sh_play");
-        isPlaying = false;
     } else {
-        isPlaying = true;
         sh_pause.classList.remove("sh_pause");
     }
 
@@ -103,17 +100,14 @@ function canPlayInit() {
     setAudioTime()
 }
 
-
 function play() {
     audio.play();
-    isPlaying = true;
     sh_pause.classList.remove("sh_pause");
     sh_play.classList.add("sh_play");
 }
 
 function pause() {
     audio.pause();
-    isPlaying = false;
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
     if (audio.ended) {
@@ -129,7 +123,7 @@ function handleProgressBar() {
 }
 
 function toggleMainState() {
-    if (!isPlaying) {
+    if (audio.paused) {
         play();
     } else {
         pause();
@@ -398,7 +392,7 @@ function handleShorthand(e) {
     switch (e.key.toLowerCase()) {
         case " ":
             if (tagName === "button") return;
-            if (isPlaying) {
+            if (!audio.paused) {
                 pause();
             } else {
                 play();
