@@ -100,7 +100,6 @@ let mouseDownProgress = false,
 
 canPlayInit();
 
-
 function chMode() {
     if (currentMode === 2) {
         currentMode = 0;
@@ -115,20 +114,20 @@ function chMode() {
     localStorage.setItem("videoMode", currentMode);
 }
 
+function setVideoTime() {
+    if (!(isNaN(video.duration) || video.duration === 0)) {
+        totalDuration.innerHTML = showDuration(video.duration);
+        loadTracks();
+    } else {
+        setTimeout(setVideoTime, 25);
+    }
+}
+
 function canPlayInit() {
     play();
     handleAudioIcon();
     if (video.paused) {
         pause();
-    }
-
-    function setVideoTime() {
-        if (!(isNaN(video.duration) || video.duration === 0)) {
-            totalDuration.innerHTML = showDuration(video.duration);
-            loadTracks();
-        } else {
-            setTimeout(setVideoTime, 25);
-        }
     }
     setVideoTime();
 }
@@ -317,7 +316,6 @@ controls.addEventListener('touchend', hideControls);
 
 function play() {
     video.play();
-    isPlaying = true;
     sh_pause.classList.remove("sh_pause");
     sh_play.classList.add("sh_play");
     mainState.classList.remove("show-state");
@@ -335,7 +333,6 @@ function handleProgressBar() {
 
 function pause() {
     video.pause();
-    isPlaying = false;
     controls.classList.add("show-controls");
     mainState.classList.add("show-state");
     sh_play_st.classList.remove("sh_play_st");
@@ -420,7 +417,7 @@ function hideControls() {
         clearTimeout(timeout);
     }
     timeout = setTimeout(() => {
-        if (isPlaying && !isCursorOnControls) {
+        if (!video.paused && !isCursorOnControls) {
             controls.classList.remove("show-controls");
             settingMenu.classList.remove("show-setting-menu");
             for (let i = 0; i < menuButtons.length; i++) {
@@ -431,7 +428,7 @@ function hideControls() {
 }
 
 function toggleMainState() {
-    if (!isPlaying) {
+    if (video.paused) {
         play();
     } else {
         pause();
@@ -501,7 +498,7 @@ function handleMousemove(e) {
         hoverDuration.innerHTML = ctime;
         showFrameAtTime(video, canvas, hovtime);
     } 
-	if (!isPlaying) {
+	if (video.paused) {
         pause();
     } else {
         play();
@@ -510,7 +507,7 @@ function handleMousemove(e) {
 
 function handleMainSateAnimationEnd() {
     mainState.classList.remove("animate-state");
-    if (!isPlaying) {
+    if (video.paused) {
         sh_play_st.classList.remove("sh_play_st");
         sh_mute_st.classList.add("sh_mute_st");
         sh_unmute_st.classList.add("sh_unmute_st");
@@ -566,7 +563,7 @@ function handleShorthand(e) {
     }
     switch (e.key.toLowerCase()) {
         case " ":
-            if (isPlaying) {
+            if (!video.paused) {
                 pause();
             } else {
                 play();
