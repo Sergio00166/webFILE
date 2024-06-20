@@ -172,11 +172,13 @@ video.addEventListener("play", play);
 video.addEventListener("pause", pause);
 // Disable the video buffered representation due to weird bugs
 //video.addEventListener("progress", handleProgress);
-video.addEventListener("waiting", handleWaiting);
-video.addEventListener("playing", handlePlaying);
-
+video.addEventListener("waiting", function() {
+	loader.classList.add("show-state");	
+});
+video.addEventListener("playing", function() {
+	loader.classList.remove("show-state");
+});
 document.addEventListener("keydown", handleShorthand);
-
 duration.addEventListener("click", navigate);
 
 duration.addEventListener("mousedown", (e) => {
@@ -347,14 +349,6 @@ function pause() {
     }
 }
 
-function handleWaiting() {
-    loader.classList.add("show-state");
-}
-
-function handlePlaying() {
-    loader.classList.remove("show-state");
-}
-
 function navigate(e) {
     try {
         const totalDurationRect = duration.getBoundingClientRect();
@@ -506,8 +500,8 @@ function handleMousemove(e) {
         } else { hoverDuration.style.right = "-18px"; }
         hoverDuration.innerHTML = ctime;
         showFrameAtTime(video, canvas, hovtime);
-    }
-    if (!isPlaying) {
+    } 
+	if (!isPlaying) {
         pause();
     } else {
         play();
@@ -572,7 +566,6 @@ function handleShorthand(e) {
     }
     switch (e.key.toLowerCase()) {
         case " ":
-            if (tagName === "button") return;
             if (isPlaying) {
                 pause();
             } else {
@@ -715,7 +708,7 @@ function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
         context.clearRect(0, 0, canvas.width, canvas.height);
         frameprevlast = now;
         tempVideo.currentTime = timeInSeconds;
-        tempVideo.onseeked = function captureFrame() {
+        tempVideo.onseeked = function() {
             tempVideo.onseeked = null; tempVideo.pause();
             context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
         };
