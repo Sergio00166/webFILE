@@ -1,3 +1,5 @@
+// JS for the custom video player
+const downloadLink = document.querySelector("a");
 const video = document.querySelector("video");
 const volume = document.querySelector(".volume");
 const currentTime = document.querySelector(".current-time");
@@ -98,6 +100,11 @@ let mouseDownProgress = false,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
 
+
+function next() { window.location.href = nextUrl; }
+function prev() { window.location.href = prevUrl; }
+function download() { downloadLink.click(); }
+
 canPlayInit();
 
 function chMode() {
@@ -132,20 +139,6 @@ function canPlayInit() {
     setVideoTime();
 }
 
-function next() {
-    localStorage.setItem("videoMode", currentMode);
-    localStorage.setItem("videoVolume", volumeVal);
-    localStorage.setItem("videoMuted", muted);
-    window.location.href = nextUrl;
-}
-
-function prev() {
-    localStorage.setItem("videoMode", currentMode);
-    localStorage.setItem("videoVolume", volumeVal);
-    localStorage.setItem("videoMuted", muted);
-    window.location.href = prevUrl;
-}
-
 function handleVideoEnded() {
     if (currentMode === 1) {
         next();
@@ -154,16 +147,6 @@ function handleVideoEnded() {
     } else {
         pause();
     }
-}
-
-function download() {
-    const downloadLink = document.createElement('a');
-    downloadLink.style.display = 'none';
-    downloadLink.href = urlVideo;
-    downloadLink.download = fileName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
 }
 
 // Video Event Listeners

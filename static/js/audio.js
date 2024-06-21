@@ -1,4 +1,5 @@
 // JS for the custom audio player
+const downloadLink = document.querySelector("a");
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const currentDuration = document.querySelector(".current-duration");
@@ -77,6 +78,10 @@ let mouseDownProgress = false,
     touchStartTime = 0;
 
 canPlayInit();
+
+function next() { window.location.href = nextUrl; }
+function prev() { window.location.href = prevUrl; }
+function download() { downloadLink.click(); }
 
 document.addEventListener("keydown", handleShorthand);
 audio.addEventListener("play", play);
@@ -304,14 +309,6 @@ speedButtons.forEach((btn) => {
     btn.addEventListener("click", handlePlaybackRate);
 });
 
-function next() {
-    window.location.href = nextUrl;
-}
-
-function prev() {
-    window.location.href = prevUrl;
-}
-
 function chMode() {
     if (currentMode === 0) {
         currentMode = 1;
@@ -334,16 +331,6 @@ function handleAudioEnded() {
     } else {
         pause();
     }
-}
-
-function download() {
-    const downloadLink = document.createElement('a');
-    downloadLink.style.display = 'none';
-    downloadLink.href = urlaudio;
-    downloadLink.download = fileName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
 }
 
 function handleAudioIcon() {

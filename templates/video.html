@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('index', static='css/video.css') }}">
 </head>
 <body>
+  <a href="{{ url_for('index', raw=path) }}" download="{{ name }}" ></a>
   <div class="video-container">
     <video onended="handleVideoEnded()">
 	  <source src="{{ url_for('index', raw=path) }}" type="video/mp4">
@@ -96,8 +97,6 @@
   <script>
     const nextUrl = '{{ nxt }}'; 
     const prevUrl = '{{ prev }}';
-    const urlVideo = '{{ url_for('index', raw=path) }}';
-    const fileName = '{{ name }}';
   </script>
 </body>
 </html>
