@@ -385,7 +385,6 @@ button:focus { outline: none; }
 
 @media only screen and (max-width: 500px) {
   .play-pause { display: none; }
-  body { height: 85vh; }
 }
 @media only screen and (max-width: 420px) {
   .btn-controls {
@@ -408,7 +407,19 @@ button:focus { outline: none; }
        padding-top: 1rem; 
        margin-bottom: -0.6rem;
    }
-   .state-btn { width: 25vh; height: 25vh; }
-   .fullimg { width: 16vh; height: 16vh; }
+  .state-btn { width: 25vh; height: 25vh; }
+  .fullimg { width: 16vh; height: 16vh; }
   .side-controls { display: none; }
 }
+
+@media (max-aspect-ratio: 1/1) {
+   .video-container { 
+      height: auto;
+      padding-bottom: 96px;
+      margin-top: 76px;   
+   }
+   body { height: 90vh; }
+  .state-btn { margin-bottom: 0px; }
+}
+
+
