@@ -674,14 +674,16 @@ speedSelect.addEventListener('change', function() {
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
 
+
 /// Frame preview
 var tempVideo = video.cloneNode(true);
 tempVideo.preload = "metadata";
-tempVideo.onended = null; 
+tempVideo.onended = null;
 tempVideo.pause();
 tempVideo.muted = true;
 var context = canvas.getContext('2d');
 let frameprevlast = 0;
+let frameRequest = null;
 
 function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
     const now = Date.now();
@@ -689,9 +691,12 @@ function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
         context.clearRect(0, 0, canvas.width, canvas.height);
         frameprevlast = now;
         tempVideo.currentTime = timeInSeconds;
-        tempVideo.onseeked = function() {
-            tempVideo.onseeked = null; tempVideo.pause();
-            context.drawImage(tempVideo, 0, 0, canvas.width, canvas.height);
-        };
+        if (frameRequest) {
+            tempVideo.cancelVideoFrameCallback(frameRequest);
+        } frameRequest = tempVideo.requestVideoFrameCallback(
+            (now, metadata) => { context.drawImage(
+                tempVideo, 0, 0, canvas.width, canvas.height
+            );}
+        );
     }
 }
