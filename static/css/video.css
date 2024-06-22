@@ -2,13 +2,6 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
-canvas {
-    width: 128px;
-    height: 72px;
-    position: absolute;
-    right: -64px;
-    top: -78px;
-}
 img {
   width: 20px;
   height: 20px;

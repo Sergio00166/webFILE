@@ -20,9 +20,6 @@ const loader = document.querySelector(".custom-loader");
 const subtitleSelect = document.getElementById('s0');
 const audioTracksSelect = document.getElementById('s1');
 const speedSelect = document.getElementById('s2');
-
-const canvas = document.querySelector("canvas");
-
 const sh_mute = document.querySelector(".sh_mute");
 const sh_unmute = document.querySelector(".sh_unmute");
 const sh_pause = document.querySelector(".sh_pause");
@@ -183,24 +180,18 @@ duration.addEventListener("mouseleave", (e) => {
     mouseOverDuration = false;
     hoverTime.style.width = 0;
     hoverDuration.style.display = 'none';
-    canvas.style.display = 'none';
 });
 
 let hideHoverTimeout;
 function hideHoverDuration() {
     clearTimeout(hideHoverTimeout);
-    canvas.style.left = "-9999px";
-    canvas.style.width = "0px";
     hoverDuration.style.left = "-9999px";
     hoverDuration.style.width = "0px";
     hideHoverTimeout = setTimeout(function() {
         hoverDuration.style.left = "";
         hoverDuration.style.width = "";
-        canvas.style.left = "";
-        canvas.style.width = "";
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
-        canvas.style.display = 'none';
         mouseOverDuration = false;
     }, 250);
 }
@@ -461,14 +452,12 @@ function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
-        canvas.style.display = 'none';
         e.preventDefault();
         navigate(e);
     } else if (mouseDownVol) {
         handleVolume(e);
     } else if (mouseOverDuration) {
         hoverDuration.style.display = 'block';
-        canvas.style.display = 'block';
         const rect = duration.getBoundingClientRect();
         const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
         const percent = (width / rect.width) * 100;
@@ -480,8 +469,7 @@ function handleMousemove(e) {
             hoverDuration.style.right = "-25px";
         } else { hoverDuration.style.right = "-18px"; }
         hoverDuration.innerHTML = ctime;
-        showFrameAtTime(video, canvas, hovtime);
-    } 
+    }
 	if (video.paused) {
         pause();
     } else {
@@ -673,30 +661,3 @@ speedSelect.addEventListener('change', function() {
 
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
-
-
-/// Frame preview
-var tempVideo = video.cloneNode(true);
-tempVideo.preload = "metadata";
-tempVideo.onended = null;
-tempVideo.pause();
-tempVideo.muted = true;
-var context = canvas.getContext('2d');
-let frameprevlast = 0;
-let frameRequest = null;
-
-function showFrameAtTime(videoElement, canvasElement, timeInSeconds) {
-    const now = Date.now();
-    if (now - frameprevlast >= 250) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        frameprevlast = now;
-        tempVideo.currentTime = timeInSeconds;
-        if (frameRequest) {
-            tempVideo.cancelVideoFrameCallback(frameRequest);
-        } frameRequest = tempVideo.requestVideoFrameCallback(
-            (now, metadata) => { context.drawImage(
-                tempVideo, 0, 0, canvas.width, canvas.height
-            );}
-        );
-    }
-}
