@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}" />
 </head>
 <body>
+    <a href="{{ url_for('index', raw=path) }}" download="{{ name }}" ></a>
     <h2>{{ name }}</h2><br>
     <audio autoplay id="audio" data-mode="0" onended="handleAudioEnded()" onvolumechange="saveVolume()">
         <source src="{{ url_for('index', raw=path) }}" type="audio/mp3">
@@ -61,13 +62,11 @@
                 <li data-value="2">2x</li>
             </ul>
         </span>
-    </div><br><br><br> 
+    </div><br>
     <script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
     <script>
         const nextUrl = '{{ nxt }}'; 
         const prevUrl = '{{ prev }}';
-        const urlaudio = '{{ url_for('index', raw=path) }}'
-        const fileName = '{{ name }}';
     </script>
 </body>
 </html>

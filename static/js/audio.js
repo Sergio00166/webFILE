@@ -1,4 +1,5 @@
 // JS for the custom audio player
+const downloadLink = document.querySelector("a");
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const currentDuration = document.querySelector(".current-duration");
@@ -53,7 +54,7 @@ if (currentMode != null) {
 if (volumeVal === null) {
     volumeVal = 1;
 }
-audio.volume = volumeVal;
+audio.volume = parseFloat(volumeVal);
 currentVol.style.width = volumeVal * 100 + "%";
 
 if (muted != null) {
@@ -68,7 +69,6 @@ if (muted != null) {
 }
 
 let mouseDownProgress = false,
-    isPlaying = false,
     mouseDownVol = false,
     isCursorOnControls = false,
     timeout,
@@ -79,6 +79,10 @@ let mouseDownProgress = false,
 
 canPlayInit();
 
+function next() { window.location.href = nextUrl; }
+function prev() { window.location.href = prevUrl; }
+function download() { downloadLink.click(); }
+
 document.addEventListener("keydown", handleShorthand);
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
@@ -87,9 +91,7 @@ function canPlayInit() {
     handleAudioIcon();
     if (audio.paused) {
         sh_play.classList.remove("sh_play");
-        isPlaying = false;
     } else {
-        isPlaying = true;
         sh_pause.classList.remove("sh_pause");
     }
 
@@ -103,17 +105,14 @@ function canPlayInit() {
     setAudioTime()
 }
 
-
 function play() {
     audio.play();
-    isPlaying = true;
     sh_pause.classList.remove("sh_pause");
     sh_play.classList.add("sh_play");
 }
 
 function pause() {
     audio.pause();
-    isPlaying = false;
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
     if (audio.ended) {
@@ -129,7 +128,7 @@ function handleProgressBar() {
 }
 
 function toggleMainState() {
-    if (!isPlaying) {
+    if (audio.paused) {
         play();
     } else {
         pause();
@@ -310,14 +309,6 @@ speedButtons.forEach((btn) => {
     btn.addEventListener("click", handlePlaybackRate);
 });
 
-function next() {
-    window.location.href = nextUrl;
-}
-
-function prev() {
-    window.location.href = prevUrl;
-}
-
 function chMode() {
     if (currentMode === 0) {
         currentMode = 1;
@@ -340,16 +331,6 @@ function handleAudioEnded() {
     } else {
         pause();
     }
-}
-
-function download() {
-    const downloadLink = document.createElement('a');
-    downloadLink.style.display = 'none';
-    downloadLink.href = urlaudio;
-    downloadLink.download = fileName;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
 }
 
 function handleAudioIcon() {
@@ -398,7 +379,7 @@ function handleShorthand(e) {
     switch (e.key.toLowerCase()) {
         case " ":
             if (tagName === "button") return;
-            if (isPlaying) {
+            if (!audio.paused) {
                 pause();
             } else {
                 play();
@@ -426,7 +407,7 @@ function handleShorthand(e) {
             break;
         case "+":
             if (volumeVal < 1 && !muted) {
-                volumeVal = volumeVal + 0.05;
+                volumeVal = parseFloat(volumeVal + 0.05);
                 if (volumeVal > 1) {
                     volumeVal = 1;
                 }
@@ -437,8 +418,8 @@ function handleShorthand(e) {
             }
             break;
         case "-":
-            if (volumeVal != 0 && !muted) {
-                volumeVal = volumeVal - 0.05;
+            if (volumeVal > 0 && !muted) {
+                volumeVal = parseFloat(volumeVal - 0.05);
                 if (volumeVal < 0) {
                     volumeVal = 0;
                 }

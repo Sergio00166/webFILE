@@ -2,15 +2,6 @@
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
-
-canvas {
-    width: 128px;
-    height: 72px;
-    position: absolute;
-    right: -64px;
-    top: -78px;
-}
-
 img {
   width: 20px;
   height: 20px;
@@ -46,18 +37,22 @@ body {
   background: #000000;
 }
 .video-container {
-  width: 1024px;
   position: relative;
-  height: calc((9 / 16) * 1024px);
+  width: calc((16/9)*90vh);
+  height: 90vh;
   color: #fff;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.video-container video {
-  width: 100%;
-}
+.video-container:fullscreen video { 
+    max-height: 100%;
+    max-width: 100%;
+    width: auto !important;
+    height: auto !important;
+} video { width: 100%; }
+
 .loader {
   width: 108px;
   height: 108px;
@@ -77,6 +72,7 @@ body {
   justify-content: center;
 }
 .state-btn {
+  margin-bottom: 2rem;
   font-size: 2.3rem;
   width: 80px;
   height: 80px;
@@ -109,7 +105,7 @@ body {
 .controls {
   position: absolute;
   bottom: 0;
-  padding: 2rem 1rem 0.5rem 1rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
   width: 100%;
   background: linear-gradient(to top, #000000b8 -100%, transparent);
   box-sizing: border-box;
@@ -382,7 +378,6 @@ button:focus { outline: none; }
 
 @media only screen and (max-width: 500px) {
   .play-pause { display: none; }
-  body { height: 85vh; }
 }
 @media only screen and (max-width: 420px) {
   .btn-controls {
@@ -394,7 +389,30 @@ button:focus { outline: none; }
   }
   .setting-menu { margin-left: 2rem; margin-bottom: 2.25rem; }
 }
-@media only screen and (max-width: 320px) {
+@media only screen and (max-width: 340px) {
   .volume { display: none; }
   .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
 }
+
+@media only screen and (max-height: 290px) {
+  .controls { 
+       padding: 0px;
+       padding-top: 1rem; 
+       margin-bottom: -0.6rem;
+   }
+  .state-btn { width: 25vh; height: 25vh; }
+  .fullimg { width: 16vh; height: 16vh; }
+  .side-controls { display: none; }
+}
+
+@media (max-aspect-ratio: 1/1) {
+   .video-container { 
+      height: auto;
+      padding-bottom: 96px;
+      margin-top: 76px;   
+   }
+   body { height: 90vh; }
+  .state-btn { margin-bottom: 0px; }
+}
+
+
