@@ -54,7 +54,7 @@ if (currentMode != null) {
 if (volumeVal === null) {
     volumeVal = 1;
 }
-audio.volume = volumeVal;
+audio.volume = parseFloat(volumeVal);
 currentVol.style.width = volumeVal * 100 + "%";
 
 if (muted != null) {
@@ -407,7 +407,7 @@ function handleShorthand(e) {
             break;
         case "+":
             if (volumeVal < 1 && !muted) {
-                volumeVal = volumeVal + 0.05;
+                volumeVal = parseFloat(volumeVal + 0.05);
                 if (volumeVal > 1) {
                     volumeVal = 1;
                 }
@@ -418,8 +418,8 @@ function handleShorthand(e) {
             }
             break;
         case "-":
-            if (volumeVal != 0 && !muted) {
-                volumeVal = volumeVal - 0.05;
+            if (volumeVal > 0 && !muted) {
+                volumeVal = parseFloat(volumeVal - 0.05);
                 if (volumeVal < 0) {
                     volumeVal = 0;
                 }
