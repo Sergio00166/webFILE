@@ -437,3 +437,8 @@ function handleShorthand(e) {
 function saveVolume() { 
     localStorage.setItem("audioVolume", volumeVal);
  }
+
+if ('mediaSession' in navigator) {
+    navigator.mediaSession.setActionHandler('previoustrack', prev);
+    navigator.mediaSession.setActionHandler('nexttrack', next);
+}   
