@@ -57,6 +57,7 @@ def init():
     if "-" in port:
         st,end = port.split("-")
         st=int(st); end=int(end)
+        if st>end: st,end = end,st
         ports=[str(x) for x in range(st,end+1)]
     else: ports=[x.strip() for x in port.split(",")]
     listen=[x.strip() for x in listen.split(",")]
