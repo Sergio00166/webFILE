@@ -9,7 +9,7 @@ banner = [
 " ░░███████████  ░███░░░   ░███ ░███ ░███  ░     ░███  ░███      █ ░███ ░   █   ",
 "  ░░████░████   ░░██████  ████████  █████       █████ ███████████ ██████████   ",
 "   ░░░░ ░░░░     ░░░░░░  ░░░░░░░░  ░░░░░       ░░░░░ ░░░░░░░░░░░ ░░░░░░░░░░    ",
-"   lightweight web server to share and play multimedia over the network        "]
+" lightweight web server to share files and play multimedia over the network    "]
 banner = "\n"+("\n".join(banner))+"\n\n"
 
 
