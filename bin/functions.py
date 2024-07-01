@@ -29,8 +29,11 @@ def init():
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
     parser.add_argument("--dirsize", action="store_true", help="Show folder size")
     parser.add_argument("--subtitle_cache", action="store_true", help="Enable caching of subtitles")
+    parser.add_argument("--no_banner", action="store_true", help="Disable printing of the banner")
     args = parser.parse_args()
-    return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache
+    if not (exists(args.dir) and isdir(args.dir)):
+        print("THE SPECIFIED FOLDER PATH IS NOT VALID"); exit(1)
+    return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache, args.no_banner
 
 def fix_pth_url(path):
     # This replaced buggy chars with the HTML replacement
