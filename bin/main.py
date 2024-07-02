@@ -41,8 +41,9 @@ if __name__=="__main__":
     # Remove banner if flag
     if no_banner: banner=""
     modules['flask.cli'].show_server_banner = lambda *x: print(banner,end="")
-    # Set the template folder
+    # Set the paths of templates and static
     templates=abspath(path[0]+sep+".."+sep+"templates")
+    sroot=abspath(pypath[0]+sep+".."+sep+"static"+sep)
     del path # Free memory
     # Create the main app flask
     app = Flask(__name__, static_folder=None, template_folder=templates)
@@ -90,7 +91,6 @@ if __name__=="__main__":
                 return send_file(isornot(request.args["raw"],root))
             
             elif "static" in request.args:
-                sroot=abspath(pypath[0]+sep+".."+sep+"static"+sep)
                 path=request.args["static"].replace("/",sep)
                 return send_file(isornot(path,sroot))
             
@@ -119,4 +119,3 @@ if __name__=="__main__":
     # Run the main app with the custom args
     app.run(host=listen, port=int(port), debug=False)
     
-
