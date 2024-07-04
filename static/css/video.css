@@ -51,8 +51,13 @@ body {
     max-width: 100%;
     width: auto !important;
     height: auto !important;
-} video { width: 100%; }
-
+} 
+video {
+    max-height: 90vh;
+    max-width: 90vw;
+    width: auto !important;
+    height: auto !important;
+}
 .loader {
   width: 108px;
   height: 108px;
@@ -411,8 +416,7 @@ button:focus { outline: none; }
       padding-bottom: 96px;
       margin-top: 76px;   
    }
-   body { height: 90vh; }
+   body { height: 98vh; }
+   video { max-height: 75vh; }
   .state-btn { margin-bottom: 0px; }
 }
-
-
