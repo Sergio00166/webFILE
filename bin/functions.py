@@ -120,10 +120,14 @@ def get_folder_content(folder_path, root, folder_size):
 
 
 def printerr(e):
+    tb = e.__traceback__
+    while tb.tb_next:
+        tb = tb.tb_next
     e_type = type(e).__name__
-    e_file = e.__traceback__.tb_frame.f_code.co_filename
-    e_line = e.__traceback__.tb_lineno
+    e_file = tb.tb_frame.f_code.co_filename
+    e_line = tb.tb_lineno
     e_message = str(e)
-    print(f"[line {e_line}] '{e_file}'")
-    print(f"[{e_type}] {e_message}")
-
+    print("\033[31m[SERVER ERROR]\033[0m")
+    print(f"  [line {e_line}] '{e_file}'")
+    print(f"  [{e_type}] {e_message}")
+    print("\033[31m[END ERROR]\033[0m")
