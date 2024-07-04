@@ -95,13 +95,10 @@ if __name__=="__main__":
                 return send_file(isornot(path,sroot))
             
             elif "subtitles" in request.args:
-                try:
-                    arg = request.args["subtitles"]
-                    out = sub_cache_handler(arg,root,subtitle_cache)
-                    return Response(out,mimetype="text/plain",headers=
-                    {"Content-disposition":"attachment; filename=subs.vtt"})
-
-                except: return render_template('415.html'), 415
+                arg = request.args["subtitles"]
+                out = sub_cache_handler(arg,root,subtitle_cache)
+                return Response(out,mimetype="text/plain",headers=
+                {"Content-disposition":"attachment; filename=subs.vtt"})
                           
             else:
                 sort = request.args["sort"] if "sort" in request.args else ""
