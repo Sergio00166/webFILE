@@ -1,4 +1,4 @@
-<// JS for the custom video player
+// JS for the custom video player
 const downloadLink = document.querySelector("a");
 const video = document.querySelector("video");
 const volume = document.querySelector(".volume");
