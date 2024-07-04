@@ -125,6 +125,10 @@ audio.ontimeupdate = handleProgressBar;
 function handleProgressBar() {
     currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
     currentDuration.innerHTML = showDuration(audio.currentTime);
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.setPositionState
+        ({ position: audio.currentTime });
+    }
 }
 
 function toggleMainState() {
