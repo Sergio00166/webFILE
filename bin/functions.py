@@ -5,7 +5,10 @@ from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir, access, R_OK
 from pathlib import Path
+from sys import stderr
 from argparse import ArgumentParser
+import logging
+
 
 # Some file formats
 file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml", ".ini",
@@ -29,11 +32,10 @@ def init():
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
     parser.add_argument("--dirsize", action="store_true", help="Show folder size")
     parser.add_argument("--subtitle_cache", action="store_true", help="Enable caching of subtitles")
-    parser.add_argument("--no_banner", action="store_true", help="Disable printing of the banner")
     args = parser.parse_args()
     if not (exists(args.dir) and isdir(args.dir)):
         print("THE SPECIFIED FOLDER PATH IS NOT VALID"); exit(1)
-    return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache, args.no_banner
+    return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache
 
 def fix_pth_url(path):
     # This replaced buggy chars with the HTML replacement
@@ -119,15 +121,26 @@ def get_folder_content(folder_path, root, folder_size):
     return content
 
 
-def printerr(e):
+def printerr(e):  
     tb = e.__traceback__
-    while tb.tb_next:
-        tb = tb.tb_next
+    while tb.tb_next: tb = tb.tb_next
     e_type = type(e).__name__
     e_file = tb.tb_frame.f_code.co_filename
     e_line = tb.tb_lineno
     e_message = str(e)
-    print("\033[31m[SERVER ERROR]\033[0m")
-    print(f"  [line {e_line}] '{e_file}'")
-    print(f"  [{e_type}] {e_message}")
-    print("\033[31m[END ERROR]\033[0m")
+    logger = logging.getLogger(__name__)
+    simple_handler = logging.StreamHandler()
+    simple_handler.setFormatter(logging.Formatter('%(message)s'))
+    logger.addHandler(simple_handler)
+    msg = (
+        "\033[31m[SERVER ERROR]\033[0m\n"+
+        f"   [line {e_line}] '{e_file}'\n"+
+        f"   [{e_type}] {e_message}\n"+
+        "\033[31m[END ERROR]\033[0m"
+    )
+    if simple_handler.stream is stderr:
+        msg = msg.replace("\033[31m","")
+        msg = msg.replace("\033[0m","")
+    logger.critical(msg)
+    logger.removeHandler(simple_handler)
+

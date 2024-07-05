@@ -31,15 +31,13 @@ if __name__=="__main__":
     # Disable every shit that flask prints
     log = getLogger('werkzeug'); log.setLevel(WARNING)
     # Get the values from the initor (args from cli)
-    port, listen, root, folder_size, subtitle_cache, no_banner = init()
+    port, listen, root, folder_size, subtitle_cache = init()
     # Change start message
     p1="\033[32mListening on: \033[34m"
     p2="\033[32m:\033[31m"
     p3="\033[32mServing path: \033[34m"
     banner+=p1+listen+p2+str(port)+"\033[0m\n"
     banner+=p3+root+"\033[0m\n\n"
-    # Remove banner if flag
-    if no_banner: banner=""
     modules['flask.cli'].show_server_banner = lambda *x: print(banner,end="")
     # Set the paths of templates and static
     templates=abspath(path[0]+sep+".."+sep+"templates")

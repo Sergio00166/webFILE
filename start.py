@@ -13,7 +13,7 @@ banner = [
 banner = "\n"+("\n".join(banner))+"\n\n"
 
 
-from subprocess import Popen
+from subprocess import Popen, DEVNULL
 from sys import path, argv
 from os.path import exists, isdir
 from os import sep
@@ -83,8 +83,7 @@ def main():
             args=[python,PyExec,"-b",ip,"-p",port,"-d",root]
             if folder_size: args.append("--dirsize")
             if subtitle_cache: args.append("--subtitle_cache")
-            args.append("--no_banner")
-            Popen(args); delay(0.1)
+            Popen(args,stdout=DEVNULL); delay(0.1)
     try: # wait forever
         while True: delay(1)
     except: exit()
