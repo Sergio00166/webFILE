@@ -13,7 +13,7 @@ banner = [
 "  ░░████░████   ░░██████  ████████  █████       █████ ███████████ ██████████   ",
 "   ░░░░ ░░░░     ░░░░░░  ░░░░░░░░  ░░░░░       ░░░░░ ░░░░░░░░░░░ ░░░░░░░░░░    ",
 " lightweight web server to share files and play multimedia over the network    "]
-banner = "\n"+("\n".join(banner))+"\n\n"
+banner = ("\n".join(banner))+"\n\n"
  
 
 if __name__=="__main__":

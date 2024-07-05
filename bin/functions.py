@@ -6,6 +6,7 @@ from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir, access, R_OK
 from pathlib import Path
 from sys import stderr
+from re import compile as recompile
 from argparse import ArgumentParser
 import logging
 
@@ -24,18 +25,42 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
+ipv4_pattern = recompile(r'^(\d{1,3}\.){3}\d{1,3}$')
+ipv6_pattern = recompile(r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$')
+
+def is_valid_ip(ip):
+    if ipv4_pattern.match(ip):
+        parts = ip.split('.')
+        for part in parts:
+            if int(part) < 0 or int(part) > 255:
+                return False
+        return True
+    elif ipv6_pattern.match(ip): return True
+    else: return False
+
 def init():
+    print(""); exit_err = False
     # Parse all CLI arguments
     parser = ArgumentParser(description="Arguments for the webFILE")
     parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind", metavar="IP")
-    parser.add_argument("-p", "--port", type=int, required=True, help="Specify port number")
+    parser.add_argument("-p", "--port", type=str, required=True, help="Specify port number")
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
     parser.add_argument("--dirsize", action="store_true", help="Show folder size")
     parser.add_argument("--subtitle_cache", action="store_true", help="Enable caching of subtitles")
     args = parser.parse_args()
+    if not is_valid_ip(args.bind):
+        print("THE IP IS NOT VALID")
+        exit_err = True   
+    try: int(args.port)
+    except:
+        print("THE PORT IS NOT VALID")
+        exit_err = True     
     if not (exists(args.dir) and isdir(args.dir)):
-        print("THE SPECIFIED FOLDER PATH IS NOT VALID"); exit(1)
+        print("THE FOLDER PATH IS NOT VALID")
+        exit_err = True   
+    if exit_err: exit(1)
     return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache
+
 
 def fix_pth_url(path):
     # This replaced buggy chars with the HTML replacement
