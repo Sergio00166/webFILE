@@ -128,7 +128,6 @@ function setVideoTime() {
 }
 
 function canPlayInit() {
-    play();
     handleAudioIcon();
     if (video.paused) {
         pause();
@@ -151,11 +150,12 @@ video.addEventListener("play", play);
 video.addEventListener("pause", pause);
 // Disable the video buffered representation due to weird bugs
 //video.addEventListener("progress", handleProgress);
+
 video.addEventListener("waiting", function() {
-	loader.classList.add("show-state");	
+    loader.classList.add("show-state");    
 });
 video.addEventListener("playing", function() {
-	loader.classList.remove("show-state");
+    loader.classList.remove("show-state");
 });
 document.addEventListener("keydown", handleShorthand);
 duration.addEventListener("click", navigate);
@@ -233,7 +233,11 @@ document.addEventListener("mouseover", (e) => {
 
 videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
-    screen.orientation.lock('landscape').catch(() => {});
+    if (video.videoWidth>=video.videoHeight) {
+        screen.orientation.lock('landscape').catch(() => {});
+    } else {
+        screen.orientation.lock('portrait').catch(() => {});
+    }
 });
 
 mainState.addEventListener("click", toggleMainState);
@@ -470,7 +474,7 @@ function handleMousemove(e) {
         } else { hoverDuration.style.right = "-18px"; }
         hoverDuration.innerHTML = ctime;
     }
-	if (video.paused) {
+    if (video.paused) {
         pause();
     } else {
         play();

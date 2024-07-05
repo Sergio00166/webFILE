@@ -5,7 +5,11 @@ from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir, access, R_OK
 from pathlib import Path
+from sys import stderr
+from re import compile as recompile
 from argparse import ArgumentParser
+import logging
+
 
 # Some file formats
 file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml", ".ini",
@@ -21,16 +25,42 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
+ipv4_pattern = recompile(r'^(\d{1,3}\.){3}\d{1,3}$')
+ipv6_pattern = recompile(r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$')
+
+def is_valid_ip(ip):
+    if ipv4_pattern.match(ip):
+        parts = ip.split('.')
+        for part in parts:
+            if int(part) < 0 or int(part) > 255:
+                return False
+        return True
+    elif ipv6_pattern.match(ip): return True
+    else: return False
+
 def init():
+    print(""); exit_err = False
     # Parse all CLI arguments
     parser = ArgumentParser(description="Arguments for the webFILE")
     parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind", metavar="IP")
-    parser.add_argument("-p", "--port", type=int, required=True, help="Specify port number")
+    parser.add_argument("-p", "--port", type=str, required=True, help="Specify port number")
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
     parser.add_argument("--dirsize", action="store_true", help="Show folder size")
     parser.add_argument("--subtitle_cache", action="store_true", help="Enable caching of subtitles")
     args = parser.parse_args()
+    if not is_valid_ip(args.bind):
+        print("THE IP IS NOT VALID")
+        exit_err = True   
+    try: int(args.port)
+    except:
+        print("THE PORT IS NOT VALID")
+        exit_err = True     
+    if not (exists(args.dir) and isdir(args.dir)):
+        print("THE FOLDER PATH IS NOT VALID")
+        exit_err = True   
+    if exit_err: exit(1)
     return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache
+
 
 def fix_pth_url(path):
     # This replaced buggy chars with the HTML replacement
@@ -116,11 +146,26 @@ def get_folder_content(folder_path, root, folder_size):
     return content
 
 
-def printerr(e):
+def printerr(e):  
+    tb = e.__traceback__
+    while tb.tb_next: tb = tb.tb_next
     e_type = type(e).__name__
-    e_file = e.__traceback__.tb_frame.f_code.co_filename
-    e_line = e.__traceback__.tb_lineno
+    e_file = tb.tb_frame.f_code.co_filename
+    e_line = tb.tb_lineno
     e_message = str(e)
-    print(f"[line {e_line}] '{e_file}'")
-    print(f"[{e_type}] {e_message}")
+    logger = logging.getLogger(__name__)
+    simple_handler = logging.StreamHandler()
+    simple_handler.setFormatter(logging.Formatter('%(message)s'))
+    logger.addHandler(simple_handler)
+    msg = (
+        "\033[31m[SERVER ERROR]\033[0m\n"+
+        f"   [line {e_line}] '{e_file}'\n"+
+        f"   [{e_type}] {e_message}\n"+
+        "\033[31m[END ERROR]\033[0m"
+    )
+    if simple_handler.stream is stderr:
+        msg = msg.replace("\033[31m","")
+        msg = msg.replace("\033[0m","")
+    logger.critical(msg)
+    logger.removeHandler(simple_handler)
 

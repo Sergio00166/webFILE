@@ -108,7 +108,8 @@ def get_subs_cache():
     dic = {}
     for x in file:
         x=x.split("\n")
-        dic[x[0]]=[x[1],x[2]]
+        if len(x)==3:
+            dic[x[0]]=[x[1],x[2]]
 
     return dic
 

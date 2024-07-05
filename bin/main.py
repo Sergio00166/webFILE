@@ -3,23 +3,49 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
+banner = [
+"                          █████     ███████████ █████ █████       ██████████   ",
+"                         ░░███     ░░███░░░░░░█░░███ ░░███       ░░███░░░░░█   ",
+" █████ ███ █████  ██████  ░███████  ░███   █ ░  ░███  ░███        ░███  █ ░    ",
+"░░███ ░███░░███  ███░░███ ░███░░███ ░███████    ░███  ░███        ░██████      ",
+" ░███ ░███ ░███ ░███████  ░███ ░███ ░███░░░█    ░███  ░███        ░███░░█      ",
+" ░░███████████  ░███░░░   ░███ ░███ ░███  ░     ░███  ░███      █ ░███ ░   █   ",
+"  ░░████░████   ░░██████  ████████  █████       █████ ███████████ ██████████   ",
+"   ░░░░ ░░░░     ░░░░░░  ░░░░░░░░  ░░░░░       ░░░░░ ░░░░░░░░░░░ ░░░░░░░░░░    ",
+" lightweight web server to share files and play multimedia over the network    "]
+banner = ("\n".join(banner))+"\n\n"
+ 
 
 if __name__=="__main__":
     
-    from sys import path
+    from sys import path, modules
     from os import sep
     from functions import *
     from actions import *
     from flask import Flask, render_template, stream_template, request, send_file, Response
     from sys import path as pypath
+    from threading import Thread
+    from time import sleep as delay
+    from logging import getLogger, WARNING, INFO
 
+    # Disable every shit that flask prints
+    log = getLogger('werkzeug'); log.setLevel(WARNING)
     # Get the values from the initor (args from cli)
     port, listen, root, folder_size, subtitle_cache = init()
-    # Set the template folder
+    # Change start message
+    p1="\033[32mListening on: \033[34m"
+    p2="\033[32m:\033[31m"
+    p3="\033[32mServing path: \033[34m"
+    banner+=p1+listen+p2+str(port)+"\033[0m\n"
+    banner+=p3+root+"\033[0m\n\n"
+    modules['flask.cli'].show_server_banner = lambda *x: print(banner,end="")
+    # Set the paths of templates and static
     templates=abspath(path[0]+sep+".."+sep+"templates")
+    sroot=abspath(pypath[0]+sep+".."+sep+"static"+sep)
     del path # Free memory
     # Create the main app flask
     app = Flask(__name__, static_folder=None, template_folder=templates)
+
 
     @app.route('/<path:path>')
     # Shows a directory, interpret the media, launching
@@ -63,18 +89,14 @@ if __name__=="__main__":
                 return send_file(isornot(request.args["raw"],root))
             
             elif "static" in request.args:
-                sroot=abspath(pypath[0]+sep+".."+sep+"static"+sep)
                 path=request.args["static"].replace("/",sep)
                 return send_file(isornot(path,sroot))
             
             elif "subtitles" in request.args:
-                try:
-                    arg = request.args["subtitles"]
-                    out = sub_cache_handler(arg,root,subtitle_cache)
-                    return Response(out,mimetype="text/plain",headers=
-                    {"Content-disposition":"attachment; filename=subs.vtt"})
-
-                except: return render_template('415.html'), 415
+                arg = request.args["subtitles"]
+                out = sub_cache_handler(arg,root,subtitle_cache)
+                return Response(out,mimetype="text/plain",headers=
+                {"Content-disposition":"attachment; filename=subs.vtt"})
                           
             else:
                 sort = request.args["sort"] if "sort" in request.args else ""
@@ -86,6 +108,9 @@ if __name__=="__main__":
         except FileNotFoundError: return render_template('404.html'), 404
         except Exception as e: printerr(e); return render_template('500.html'), 500
 
+    
+    # Change logging to default after app is running 
+    Thread(target=lambda: (delay(0.1), log.setLevel(INFO))).start()
     # Run the main app with the custom args
     app.run(host=listen, port=int(port), debug=False)
-
+    

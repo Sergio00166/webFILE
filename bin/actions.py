@@ -134,7 +134,7 @@ def sub_cache_handler(arg,root,subtitle_cache):
         else:
             # Checks if the size of this file is the
             # same as the one is in the index table
-            # It works like a shitty cehcksum
+            # It works like a shitty checksum
             fix = (filesize == dic[arg][1])
             # If the checksum is not equal or the cache file
             # is missing then we create a new cache file with
