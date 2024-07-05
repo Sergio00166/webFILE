@@ -17,15 +17,19 @@ It makes easier to configure it to use it with a load-balancer proxy like nginx 
 
 ---------------------------------------------------
 
-Requirements:
- Python3 (tested under python 3.12)
+Requirements:<br>
+ Python3<br>
  Windows/Linux
 
-Dependencys:
+Dependencys:<br>
  python3  flask(pip) pysubs2(pip) ffmpeg(as a command)
 
-Usage:
+Usage: <br>
   python3 start.py [config.file] or<br>
   python3 bin/main.py -b IP_addr -p port -d directory [--dirsize] [--subtitle_cache]
+
+ Logging:<br>
+    To create a log of all access and responses and erros of the server you can redirect
+    stderr to a file (2>file), in stdout is only the banner and info
 
   ---------------------------------------------------
