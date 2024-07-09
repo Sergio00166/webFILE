@@ -46,7 +46,7 @@ def init():
     parser.add_argument("-p", "--port", type=str, required=True, help="Specify port number")
     parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
     parser.add_argument("--dirsize", action="store_true", help="Show folder size")
-    parser.add_argument("--subtitle_cache", action="store_true", help="Enable caching of subtitles")
+    parser.add_argument("--no-sub-cache", action="store_false", help="Disable caching of subtitles")
     args = parser.parse_args()
     if not is_valid_ip(args.bind):
         print("THE IP IS NOT VALID")
@@ -59,7 +59,7 @@ def init():
         print("THE FOLDER PATH IS NOT VALID")
         exit_err = True   
     if exit_err: exit(1)
-    return args.port, args.bind, args.dir, args.dirsize, args.subtitle_cache
+    return args.port, args.bind, args.dir, args.dirsize, args.no_sub_cache
 
 
 def fix_pth_url(path):
