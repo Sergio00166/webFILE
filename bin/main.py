@@ -16,6 +16,9 @@ banner = [
 banner = ("\n".join(banner))+"\n\n"
  
 
+
+make it only flask to process GET requests
+
 if __name__=="__main__":
     
     from sys import path, modules
@@ -47,7 +50,7 @@ if __name__=="__main__":
     app = Flask(__name__, static_folder=None, template_folder=templates)
 
 
-    @app.route('/<path:path>')
+    @app.route('/<path:path>', methods=['GET'])
     # Shows a directory, interpret the media, launching
     # the custom media players] or donwloads the file
     def explorer(path):
@@ -79,7 +82,7 @@ if __name__=="__main__":
         except Exception as e: printerr(e); return render_template('500.html'), 500
 
 
-    @app.route('/')
+    @app.route('/', methods=['GET'])
     # Here we show the root dir, or send a raw file with filepath as arg
     # Serve the static files filepath as arg, or return a subtitle track
     # with this sintan index/filepath
