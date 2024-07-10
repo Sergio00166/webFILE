@@ -14,10 +14,6 @@ banner = [
 "   ░░░░ ░░░░     ░░░░░░  ░░░░░░░░  ░░░░░       ░░░░░ ░░░░░░░░░░░ ░░░░░░░░░░    ",
 " lightweight web server to share files and play multimedia over the network    "]
 banner = ("\n".join(banner))+"\n\n"
- 
-
-
-make it only flask to process GET requests
 
 if __name__=="__main__":
     
