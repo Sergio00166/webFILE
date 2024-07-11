@@ -134,6 +134,7 @@ function canPlayInit() {
         pause();
     } setVideoTime();
 }
+
 function handleVideoEnded() {
     if (currentMode === 1) {
         next();
