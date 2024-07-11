@@ -129,12 +129,11 @@ function setVideoTime() {
 
 function canPlayInit() {
     handleAudioIcon();
+	video.play();
     if (video.paused) {
         pause();
-    }
-    setVideoTime();
+    } setVideoTime();
 }
-
 function handleVideoEnded() {
     if (currentMode === 1) {
         next();
