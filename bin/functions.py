@@ -39,7 +39,7 @@ def is_valid_ip(ip):
     else: return False
 
 def init():
-    print(""); exit_err = False
+    exit_err = False
     # Parse all CLI arguments
     parser = ArgumentParser(description="Arguments for the webFILE")
     parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind", metavar="IP")
