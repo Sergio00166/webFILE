@@ -219,10 +219,42 @@ function showCursor() {
     }
 }
 
-video.addEventListener("click", (e) => {
-    toggleMainState();
+// Play/Pause or advance video (touch)
+
+let clickTimeout;
+var lastClickTime = 0;
+const doubleClickThreshold = 300;
+const deadZoneWidthPercentage = 36;
+
+function touch_chg_vstatus() {
+	toggleMainState();
     document.body.style.cursor = 'auto';
-    showCursor();
+    showCursor();	
+}
+
+video.addEventListener("click", (e) => {
+    const clickTime = new Date().getTime();
+    const isDoubleClick = (clickTime - lastClickTime) < doubleClickThreshold;
+    lastClickTime = clickTime;
+    clearTimeout(clickTimeout);
+    const clickX = e.clientX - video.getBoundingClientRect().left;
+    const elementWidth = video.offsetWidth;
+    const deadZoneWidth = elementWidth * (deadZoneWidthPercentage / 100);
+    const leftDeadZoneBoundary = (elementWidth / 2) - (deadZoneWidth / 2);
+    const rightDeadZoneBoundary = (elementWidth / 2) + (deadZoneWidth / 2);
+    if (isDoubleClick) {
+        if (clickX < leftDeadZoneBoundary) {
+            video.currentTime -= 5;
+            handleProgressBar();
+        } else if (clickX > rightDeadZoneBoundary) {
+            video.currentTime += 5;
+            handleProgressBar();
+        } else { touch_chg_vstatus(); }
+    } else {
+        if (clickX >= leftDeadZoneBoundary && clickX <= rightDeadZoneBoundary) {
+			touch_chg_vstatus();
+        } else { clickTimeout = setTimeout(touch_chg_vstatus, doubleClickThreshold); }
+    }
 });
 
 

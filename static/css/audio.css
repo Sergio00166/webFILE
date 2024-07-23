@@ -222,7 +222,23 @@ button:focus { outline: none; }
 @media only screen and (max-width: 300px) {
    .settings { display: none; }
 }
-
+@media only screen and (max-width: 260px) {
+   #mode { display: none; }
+}
+@media only screen and (max-width: 210px) {
+   .download { display: none; }
+}
+@media only screen and (max-width: 160px) {
+   div { display: none; }
+   h2 { display: none; }
+   span { display: none; }
+   .round-button { display: none; }
+}
+@media only screen and (max-height: 140px) {
+   div { display: none; }
+   h2 { display: none; }
+   span { display: none; }
+}
 @media only screen and (max-height: 280px) {
    body { overflow: hidden; }
    h2 { display: none; }

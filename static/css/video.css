@@ -121,8 +121,7 @@ video {
 }
 .duration {
   position: relative;
-  align: center;
-    margin-left: auto;
+  margin-left: auto;
   margin-right: auto;
   width: calc((100% - 64px));
   height: 15px;
@@ -395,10 +394,20 @@ button:focus { outline: none; }
   .setting-menu { margin-left: 2rem; margin-bottom: 2.25rem; }
 }
 @media only screen and (max-width: 340px) {
+  .controls { padding: 0px; }
   .volume { display: none; }
   .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
+  .settings { display: none; }
 }
-
+@media only screen and (max-width: 240px) {
+  .text { display: none; }
+  .duration { width: calc((100% - 36px)); }
+  .state-btn { width: 35vw; height: 35vw; }
+  .fullimg { width: 21vw; height: 21vw; }
+}
+@media only screen and (max-width: 180px) {
+	.video-container { display: none; }
+}
 @media only screen and (max-height: 290px) {
   .controls { 
        padding: 0px;
@@ -409,7 +418,9 @@ button:focus { outline: none; }
   .fullimg { width: 16vh; height: 16vh; }
   .side-controls { display: none; }
 }
-
+@media only screen and (max-height: 140px) {
+	.video-container { display: none; }
+}
 @media (max-aspect-ratio: 1/1) {
    .video-container { 
       height: auto;
