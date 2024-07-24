@@ -259,25 +259,14 @@ totalVol.addEventListener("mousedown", (e) => {
 
 videoContainer.addEventListener('touchmove', function(event) {
     var touch = event.touches[0];
-    if (!this.previousX) { 
-        this.previousX = touch.clientX;
-    }
-    if (!this.previousY) {
-        this.previousY = touch.clientY;
-    }
-    // Swipe UP to show menu
-    if (touch.clientY < this.previousY - 10) {
-        controls.classList.add("show-controls");
-        showCursor(); hideControls();
-    } 
-    //Swipe to the right to advance the time
-    else if (touch.clientX > this.previousX + 36) {
-        video.currentTime += 5;
-    }
-    //Swipe to the left to recede the time
-    else if (touch.clientX < this.previousX - 36) {
-        video.currentTime -= 5;
-    }
+    if (!this.previousX) { this.previousX = touch.clientX; }
+    if (!this.previousY) { this.previousY = touch.clientY; }
+    // Show menu if screen movement (touch)
+    controls.classList.add("show-controls");
+    showCursor(); hideControls();
+    //Swipe to the right/left to advance/recede the time
+    if (touch.clientX > this.previousX+36) { video.currentTime+=5; }
+    if (touch.clientX < this.previousX-36) { video.currentTime-=5; }
     this.previousX = touch.clientX;
     this.previousY = touch.clientY;
 }, false);
