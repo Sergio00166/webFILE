@@ -129,7 +129,7 @@ function setVideoTime() {
 
 function canPlayInit() {
     handleAudioIcon();
-	video.play();
+    video.play();
     if (video.paused) {
         pause();
     } setVideoTime();
@@ -219,48 +219,10 @@ function showCursor() {
     }
 }
 
-// Play/Pause or advance video (touch)
-
-let clickTimeout;
-var lastClickTime = 0;
-const doubleClickThreshold = 300;
-const deadZoneWidthPercentage = 36;
-
-function touch_chg_vstatus() {
-	toggleMainState();
-    document.body.style.cursor = 'auto';
-    showCursor();	
-}
-
 video.addEventListener("click", (e) => {
-    const clickTime = new Date().getTime();
-    const isDoubleClick = (clickTime - lastClickTime) < doubleClickThreshold;
-    lastClickTime = clickTime;
-    clearTimeout(clickTimeout);
-    const clickX = e.clientX - video.getBoundingClientRect().left;
-    const elementWidth = video.offsetWidth;
-    const deadZoneWidth = elementWidth * (deadZoneWidthPercentage / 100);
-    const leftDeadZoneBoundary = (elementWidth / 2) - (deadZoneWidth / 2);
-    const rightDeadZoneBoundary = (elementWidth / 2) + (deadZoneWidth / 2);
-    if (isDoubleClick) {
-        if (clickX < leftDeadZoneBoundary) {
-            video.currentTime -= 5;
-            handleProgressBar();
-        } else if (clickX > rightDeadZoneBoundary) {
-            video.currentTime += 5;
-            handleProgressBar();
-        } else { touch_chg_vstatus(); }
-    } else {
-        if (clickX >= leftDeadZoneBoundary && clickX <= rightDeadZoneBoundary) {
-			touch_chg_vstatus();
-        } else { clickTimeout = setTimeout(touch_chg_vstatus, doubleClickThreshold); }
-    }
-});
-
-
-document.addEventListener("mouseover", (e) => {
-    clearTimeout(cursorTimeout);
+    toggleMainState();
     document.body.style.cursor = 'auto';
+    showCursor();    
 });
 
 videoContainer.addEventListener("fullscreenchange", () => {
@@ -294,16 +256,32 @@ totalVol.addEventListener("mousedown", (e) => {
     handleVolume(e);
 });
 
-// slide up to show the control bar
+
 videoContainer.addEventListener('touchmove', function(event) {
     var touch = event.touches[0];
+    if (!this.previousX) { 
+        this.previousX = touch.clientX;
+    }
+    if (!this.previousY) {
+        this.previousY = touch.clientY;
+    }
+    // Swipe UP to show menu
     if (touch.clientY < this.previousY - 10) {
         controls.classList.add("show-controls");
-        showCursor();
-        hideControls();
+        showCursor(); hideControls();
+    } 
+    //Swipe to the right to advance the time
+    else if (touch.clientX > this.previousX + 36) {
+        video.currentTime += 5;
     }
+    //Swipe to the left to recede the time
+    else if (touch.clientX < this.previousX - 36) {
+        video.currentTime -= 5;
+    }
+    this.previousX = touch.clientX;
     this.previousY = touch.clientY;
 }, false);
+
 
 controls.addEventListener('touchstart', (e) => {
     controls.classList.add("show-controls");
