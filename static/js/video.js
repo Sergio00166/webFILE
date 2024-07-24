@@ -549,11 +549,9 @@ function handleShorthand(e) {
             break;
         case "arrowright":
             video.currentTime += 5;
-            handleProgressBar();
             break;
         case "arrowleft":
             video.currentTime -= 5;
-            handleProgressBar();
             break;
         case "arrowup":
             prev();
