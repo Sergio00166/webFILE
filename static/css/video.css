@@ -39,7 +39,6 @@ body {
 .video-container {
   position: relative;
   width: calc((16/9)*90vh);
-  height: auto;
   color: #fff;
   overflow: hidden;
   display: flex;
@@ -53,9 +52,9 @@ video {
     height: 100%;
     object-fit: contain !important;
 }
-.video-container:fullscreen video {
+.video-container:fullscreen video { 
     max-height: 100vh;
-}
+} 
 
 .loader {
   width: 108px;
@@ -418,24 +417,25 @@ button:focus { outline: none; }
   .side-controls { display: none; }
 }
 @media only screen and (max-height: 140px) {
-        .video-container { display: none; }
+   .video-container { display: none; }
 }
 
 @media (max-aspect-ratio: 1/1) {
+   body { height: 92vh; }
    .video-container {
       padding-bottom: 86px;
-      margin-top: 64px;
+      margin-top: 74px;
    } .state-btn { margin-bottom: 0px; }
 }
 @media (max-aspect-ratio: 1/1) and (max-width: 420px) {
-        .video-container {
+   .video-container {
       padding-bottom: 120px;
-      margin-top: 96px;
+      margin-top: 108px;
    } .state-btn { margin-bottom: 0px; }
 }
 @media (max-aspect-ratio: 1/1) and (max-width: 340px) {
    .video-container {
       padding-bottom: 98px;
-      margin-top: 72px;
+      margin-top: 86px;
    } .state-btn { margin-bottom: 0px; }
 }
