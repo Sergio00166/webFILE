@@ -39,7 +39,7 @@ body {
 .video-container {
   position: relative;
   width: calc((16/9)*90vh);
-  height: 90vh;
+  height: auto;
   color: #fff;
   overflow: hidden;
   display: flex;
@@ -418,15 +418,24 @@ button:focus { outline: none; }
 @media only screen and (max-height: 140px) {
 	.video-container { display: none; }
 }
+
 @media (max-aspect-ratio: 1/1) {
    .video-container { 
-      height: auto;
-      padding-bottom: 96px;
-      margin-top: 76px;   
-   }
-   body { height: 92vh; }
-   video { max-height: 75vh; }
-  .state-btn { margin-bottom: 0px; }
+      padding-bottom: 98px;
+      margin-top: 72px;   
+   } .state-btn { margin-bottom: 0px; }
+}
+@media (max-aspect-ratio: 1/1) and (max-width: 420px) {
+	.video-container { 
+      padding-bottom: 120px;
+      margin-top: 96px;   
+   } .state-btn { margin-bottom: 0px; }
+}
+@media (max-aspect-ratio: 1/1) and (max-width: 340px) {
+   .video-container { 
+      padding-bottom: 98px;
+      margin-top: 72px;   
+   } .state-btn { margin-bottom: 0px; }
 }
 
 
