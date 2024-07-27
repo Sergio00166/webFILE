@@ -19,8 +19,9 @@ if __name__=="__main__":
     
     from sys import path, modules
     from os import sep
-    from functions import *
+    from functions import printerr, get_file_type
     from actions import *
+    from actions1 import *
     from flask import Flask, render_template, stream_template, request, send_file, Response
     from sys import path as pypath
     from threading import Thread
@@ -86,6 +87,9 @@ if __name__=="__main__":
         try:
             if "raw" in request.args:
                 return send_file(isornot(request.args["raw"],root))
+
+            elif "dir" in request.args:
+                return send_dir(isornot(request.args["dir"],root))
             
             elif "static" in request.args:
                 path=request.args["static"].replace("/",sep)
