@@ -1,14 +1,3 @@
-body { font-family: Arial, sans-serif; background-color: #000000; }
-h2 { text-align: center; background-color: #666666; color: #EEEEEE;
-     margin-top: 25px; padding: 15px 25px 15px 25px; }
-a:hover { text-decoration: None }
-.container {border: none; background-color: #333333; padding-left: 35px; padding-right: 40px; disply: flex;}
-.list-group { position: absolute; width: 90%; left: 50%; transform: translate(-50%); }
-
-a { text-decoration: none; color: #FFFFFF; display: flex; justify-content: space-between;
-padding-top: 5px; padding-bottom: 3px; padding-left: 8px; padding-right: 5px; 
-margin-top: 4px; margin-bottom: 4px; }
-.no_overflow { white-space: nowrap; }
 
 .row { display: flex; justify-content: space-between; }
 a:hover { background-color: #111111; }
@@ -24,16 +13,51 @@ a:hover { background-color: #111111; }
 .zip { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(3000%) brightness(50%) contrast(100%) }
 .iso { filter: brightness(0) invert(1) brightness(50%) }
 
-.wrap { flex: 1; flex-basis: auto; flex-shrink: 0;
-inline-size: 150px; overflow-wrap: break-word; }
-
-@media (max-width: 650px) {
-.sortsz { display: none; }
-.nosize { display: none; } }
-
-@media (max-width: 1080px) {
-.sorttm { display: none; }
-.notime { display: none; } }
-
+a:hover { text-decoration: None }
+.no_overflow { white-space: nowrap; }
+.first { flex: 1; }
 .sort { display: flex; justify-content: space-between; }
 .sort1 { display: flex; }
+
+body {
+	font-family: Arial, sans-serif;
+	background-color: #000000;
+}
+h2 { 
+	background-color: #666666;
+	color: #EEEEEE;
+	margin-top: 25px;
+        padding: 10px 25px 10px 25px;
+}
+.container {
+	border: none;
+	background-color: #333333;
+	padding-left: 35px;
+	padding-right: 40px;
+	disply: flex;
+}
+.list-group { 
+	position: absolute;
+	width: 90%; left: 50%;
+	transform: translate(-50%);
+}
+a { 
+	text-decoration: none;
+	color: #FFFFFF;
+	display: flex;
+	justify-content: space-between;
+	padding-top: 5px;
+	padding-bottom: 3px;
+	padding-left: 8px;
+	padding-right: 5px; 
+	margin-top: 4px;
+	margin-bottom: 4px; 
+}
+@media (max-width: 650px) {
+	.sortsz { display: none; }
+	.nosize { display: none; }
+}
+@media (max-width: 1080px) {
+	.sorttm { display: none; }
+	.notime { display: none; }
+}

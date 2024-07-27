@@ -1,4 +1,4 @@
-* {
+ * {
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 }
@@ -39,25 +39,23 @@ body {
 .video-container {
   position: relative;
   width: calc((16/9)*90vh);
-  height: 90vh;
   color: #fff;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.video-container:fullscreen video { 
-    max-height: 100%;
-    max-width: 100%;
-    width: auto !important;
-    height: auto !important;
-} 
+
 video {
     max-height: 90vh;
-    max-width: 90vw;
-    width: auto !important;
-    height: auto !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
 }
+.video-container:fullscreen video { 
+    max-height: 100vh;
+} 
+
 .loader {
   width: 108px;
   height: 108px;
@@ -121,8 +119,7 @@ video {
 }
 .duration {
   position: relative;
-  align: center;
-    margin-left: auto;
+  margin-left: auto;
   margin-right: auto;
   width: calc((100% - 64px));
   height: 15px;
@@ -395,30 +392,50 @@ button:focus { outline: none; }
   .setting-menu { margin-left: 2rem; margin-bottom: 2.25rem; }
 }
 @media only screen and (max-width: 340px) {
+  .controls { padding: 0px; }
   .volume { display: none; }
   .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
+  .settings { display: none; }
 }
-
+@media only screen and (max-width: 240px) {
+  .text { display: none; }
+  .duration { width: calc((100% - 36px)); }
+  .state-btn { width: 35vw; height: 35vw; }
+  .fullimg { width: 21vw; height: 21vw; }
+}
+@media only screen and (max-width: 180px) {
+        .video-container { display: none; }
+}
 @media only screen and (max-height: 290px) {
-  .controls { 
+  .controls {
        padding: 0px;
-       padding-top: 1rem; 
+       padding-top: 1rem;
        margin-bottom: -0.6rem;
    }
   .state-btn { width: 25vh; height: 25vh; }
   .fullimg { width: 16vh; height: 16vh; }
   .side-controls { display: none; }
 }
-
-@media (max-aspect-ratio: 1/1) {
-   .video-container { 
-      height: auto;
-      padding-bottom: 96px;
-      margin-top: 76px;   
-   }
-   body { height: 92vh; }
-   video { max-height: 75vh; }
-  .state-btn { margin-bottom: 0px; }
+@media only screen and (max-height: 140px) {
+   .video-container { display: none; }
 }
 
-
+@media (max-aspect-ratio: 1/1) {
+   body { height: 92vh; }
+   .video-container {
+      padding-bottom: 86px;
+      margin-top: 74px;
+   } .state-btn { margin-bottom: 0px; }
+}
+@media (max-aspect-ratio: 1/1) and (max-width: 420px) {
+   .video-container {
+      padding-bottom: 120px;
+      margin-top: 108px;
+   } .state-btn { margin-bottom: 0px; }
+}
+@media (max-aspect-ratio: 1/1) and (max-width: 340px) {
+   .video-container {
+      padding-bottom: 98px;
+      margin-top: 86px;
+   } .state-btn { margin-bottom: 0px; }
+}

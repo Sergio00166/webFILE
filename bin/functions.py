@@ -6,10 +6,7 @@ from datetime import datetime as dt
 from os import listdir, pardir, sep, scandir, access, R_OK
 from pathlib import Path
 from sys import stderr
-from re import compile as recompile
-from argparse import ArgumentParser
 import logging
-
 
 # Some file formats
 file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml", ".ini",
@@ -25,46 +22,12 @@ file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".p
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
-ipv4_pattern = recompile(r'^(\d{1,3}\.){3}\d{1,3}$')
-ipv6_pattern = recompile(r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$')
-
-def is_valid_ip(ip):
-    if ipv4_pattern.match(ip):
-        parts = ip.split('.')
-        for part in parts:
-            if int(part) < 0 or int(part) > 255:
-                return False
-        return True
-    elif ipv6_pattern.match(ip): return True
-    else: return False
-
-def init():
-    exit_err = False
-    # Parse all CLI arguments
-    parser = ArgumentParser(description="Arguments for the webFILE")
-    parser.add_argument("-b", "--bind", type=str, required=True, help="Specify IP address to bind", metavar="IP")
-    parser.add_argument("-p", "--port", type=str, required=True, help="Specify port number")
-    parser.add_argument("-d", "--dir", type=str, required=True, help="Specify directory to share")
-    parser.add_argument("--dirsize", action="store_true", help="Show folder size")
-    parser.add_argument("--no-sub-cache", action="store_false", help="Disable caching of subtitles")
-    args = parser.parse_args()
-    if not is_valid_ip(args.bind):
-        print("THE IP IS NOT VALID")
-        exit_err = True   
-    try: int(args.port)
-    except:
-        print("THE PORT IS NOT VALID")
-        exit_err = True     
-    if not (exists(args.dir) and isdir(args.dir)):
-        print("THE FOLDER PATH IS NOT VALID")
-        exit_err = True   
-    if exit_err: exit(1)
-    return args.port, args.bind, args.dir, args.dirsize, args.no_sub_cache
-
-
 def fix_pth_url(path):
     # This replaced buggy chars with the HTML replacement
     return path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
+
+def is_subdirectory(parent, child):
+    return commonpath([parent]) == commonpath([parent, child])
 
 def sort_results(paths,folder_path):
     # Here we sort the folder contents
@@ -109,9 +72,6 @@ def get_file_type(path):
             return "Text"
         else: return "File"
 
-def is_subdirectory(parent, child):
-    return commonpath([parent]) == commonpath([parent, child])
-
 def get_directory_size(directory):
     # Get the dir size recursively
     total = 0
@@ -144,6 +104,43 @@ def get_folder_content(folder_path, root, folder_size):
             'description': description, "size": size,"mtime": mtime})
         except: pass
     return content
+
+def isornot(path,root):
+    # Checks if the path is inside the root dir
+    # else raise an exception depending on the case
+    path="/".join(path.split("/.."))
+    path=path.replace("/",sep)
+    path=abspath(root+sep+path)
+    if is_subdirectory(root, path):
+        if not exists(path): raise FileNotFoundError
+        if not access(path, R_OK): raise PermissionError
+    else: raise PermissionError
+    return path
+
+def sort_contents(folder_content,sort):
+    # Sorts the folder content with several modes 
+    # The first char (sort var) indicates the mode 
+    #    n = sorts by name 
+    #    s = sorts by size 
+    #    d = sorts by date 
+    # The second char indicates the order 
+    #    d = sorts downwards 
+    #    p = sorts upwards
+    if sort=="nd":
+        dirs = []; files = []
+        for d in folder_content:
+            if d['description']=='DIR': dirs.append(d)
+            else: files.append(d)
+        return files[::-1]+dirs[::-1]
+    elif sort=="sp" or sort=="sd":
+        out=sorted(folder_content,key=lambda x:unreadable(x['size']))
+        if sort=="sp": return out[::-1]
+        else: return out
+    elif sort=="dp" or sort=="dd":
+        out=sorted(folder_content,key=lambda x:unreadable_date(x['mtime']))
+        if sort=="dp": return out[::-1]
+        else: return out
+    else: return folder_content
 
 
 def printerr(e):  

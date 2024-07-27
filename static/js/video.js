@@ -129,7 +129,7 @@ function setVideoTime() {
 
 function canPlayInit() {
     handleAudioIcon();
-	video.play();
+    video.play();
     if (video.paused) {
         pause();
     } setVideoTime();
@@ -222,13 +222,7 @@ function showCursor() {
 video.addEventListener("click", (e) => {
     toggleMainState();
     document.body.style.cursor = 'auto';
-    showCursor();
-});
-
-
-document.addEventListener("mouseover", (e) => {
-    clearTimeout(cursorTimeout);
-    document.body.style.cursor = 'auto';
+    showCursor();    
 });
 
 videoContainer.addEventListener("fullscreenchange", () => {
@@ -262,16 +256,21 @@ totalVol.addEventListener("mousedown", (e) => {
     handleVolume(e);
 });
 
-// slide up to show the control bar
+
 videoContainer.addEventListener('touchmove', function(event) {
     var touch = event.touches[0];
-    if (touch.clientY < this.previousY - 10) {
-        controls.classList.add("show-controls");
-        showCursor();
-        hideControls();
-    }
+    if (!this.previousX) { this.previousX = touch.clientX; }
+    if (!this.previousY) { this.previousY = touch.clientY; }
+    // Show menu if screen movement (touch)
+    controls.classList.add("show-controls");
+    showCursor(); hideControls();
+    //Swipe to the right/left to advance/recede the time
+    if (touch.clientX > this.previousX+36) { video.currentTime+=5; }
+    if (touch.clientX < this.previousX-36) { video.currentTime-=5; }
+    this.previousX = touch.clientX;
     this.previousY = touch.clientY;
 }, false);
+
 
 controls.addEventListener('touchstart', (e) => {
     controls.classList.add("show-controls");
@@ -550,11 +549,9 @@ function handleShorthand(e) {
             break;
         case "arrowright":
             video.currentTime += 5;
-            handleProgressBar();
             break;
         case "arrowleft":
             video.currentTime -= 5;
-            handleProgressBar();
             break;
         case "arrowup":
             prev();
