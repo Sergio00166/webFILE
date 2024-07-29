@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}" />
 </head>
 <body>
-    <a href="{{ url_for('index', raw=path) }}" download="{{ name }}" ></a>
+    <a href="{{ request.path }}/?mode=raw" download="{{ name }}" ></a>
     <h2>{{ name }}</h2><br>
     <audio autoplay id="audio" data-mode="0" onended="handleAudioEnded()" onvolumechange="saveVolume()">
-        <source src="{{ url_for('index', raw=path) }}" type="audio/mp3">
+        <source src="{{ request.path }}/?mode=raw" type="audio/mp3">
     </audio>
     <div class="duration">
         <div class="current-time"></div>

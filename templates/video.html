@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="{{ url_for('index', static='css/video.css') }}">
 </head>
 <body>
-  <a href="{{ url_for('index', raw=path) }}" download="{{ name }}" ></a>
+  <a href="{{ request.path }}/?mode=raw" download="{{ name }}" ></a>
   <div class="video-container">
     <video onended="handleVideoEnded()">
-	  <source src="{{ url_for('index', raw=path) }}" type="video/mp4">
+	  <source src="{{ request.path }}/?mode=raw" type="video/mp4">
 	</video>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
     <span class="main-state state-btn">

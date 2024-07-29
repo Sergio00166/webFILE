@@ -11,7 +11,7 @@
     <body>
         <div class="list-group">
             <h2>
-                <a href="{{ url_for('index', dir=folder_path) }}">
+                <a href="{{ request.path }}/?mode=dir">
                     <span>&nbsp;</span>
                     <span>Index of {{ folder_path }}</span>
                     <span>&nbsp;</span>
