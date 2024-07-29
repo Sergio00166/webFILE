@@ -11,6 +11,11 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 ---------------------------------------------------
 
+In the file explorer page if you touch in the "Index of /..." it will donwload the current folder as TAR, dont worry it wont blow up the server,
+it generates the TAR header for each entry and then streams the bin file contentents directly, in other words it creates a TAR archive on the fly.
+
+---------------------------------------------------
+
 To change the options you can edit the config.cfg inside the bin dir, create a custom one or passing an arg to the main file located in bin/main.py.
 On that config file you can add ports and IP separated by "," to listen to (for example if you put 2 ports and 2 IPs both IPs will listen both ports)
 It makes easier to configure it to use it with a load-balancer proxy like nginx Because it will spawn a new process for each port and ip
