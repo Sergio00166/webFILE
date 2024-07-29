@@ -32,7 +32,7 @@ if __name__=="__main__":
     # Disable every shit that flask prints
     log = getLogger('werkzeug'); log.setLevel(WARNING)
     # Get the values from the initor (args from cli)
-    port, listen, root, folder_size, subtitle_cache = init()
+    port, listen, root, folder_size = init()
     # Change start message
     p1="\033[32mListening on: \033[34m"
     p2="\033[32m:\033[31m"
@@ -71,7 +71,7 @@ if __name__=="__main__":
                 if cmp and mode[:4]=="subs":
                     try: arg = str(int(mode[4:]))+"/"+path
                     except: raise FileNotFoundError
-                    out = sub_cache_handler(arg,root,subtitle_cache)
+                    out = sub_cache_handler(arg,root)
                     return Response(out,mimetype="text/plain",headers=
                     {"Content-disposition":"attachment; filename=subs.vtt"})
                 prev, nxt, name, path = filepage_func(path,root,file_type)
