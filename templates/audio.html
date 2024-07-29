@@ -10,7 +10,7 @@
 <body>
     <a href="{{ request.path }}/?mode=raw" download="{{ name }}" ></a>
     <h2>{{ name }}</h2><br>
-    <audio autoplay id="audio" data-mode="0" onended="handleAudioEnded()" onvolumechange="saveVolume()">
+    <audio autoplay onended="handleAudioEnded()">
         <source src="{{ request.path }}/?mode=raw" type="audio/mp3">
     </audio>
     <div class="duration">

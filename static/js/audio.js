@@ -19,7 +19,7 @@ const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
 const volume = document.querySelector(".volume");
 
-var audio = document.getElementById("audio");
+var audio = document.querySelector("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
 var currentMode = localStorage.getItem("audioMode");
@@ -261,7 +261,7 @@ function handleVolume(e) {
     const totalVolRect = totalVol.getBoundingClientRect();
     volumeVal = Math.min(Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width), 1);
     currentVol.style.width = volumeVal * 100 + "%";
-    saveVolume()
+    saveVolume();
     audio.volume = volumeVal;
     handleAudioIcon();
 }
@@ -420,7 +420,7 @@ function handleShorthand(e) {
                 audio.volume = volumeVal;
                 currentVol.style.width = volumeVal * 100 + "%";
                 handleAudioIcon();
-                saveVolume()
+                saveVolume();
             }
             break;
         case "-":
@@ -432,7 +432,7 @@ function handleShorthand(e) {
                 handleAudioIcon();
                 audio.volume = volumeVal;
                 currentVol.style.width = volumeVal * 100 + "%";
-                saveVolume()
+                saveVolume();
             }
             break;
         default:

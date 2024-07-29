@@ -417,7 +417,7 @@ function handleVolume(e) {
     const totalVolRect = totalVol.getBoundingClientRect();
     volumeVal = Math.min(Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width), 1);
     currentVol.style.width = volumeVal * 100 + "%";
-    localStorage.setItem("videoVolume", volumeVal);
+    saveVolume();
     video.volume = volumeVal;
     handleAudioIcon();
 }
@@ -574,7 +574,7 @@ function handleShorthand(e) {
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
-                localStorage.setItem("videoVolume", volumeVal);
+                saveVolume();
             }
             break;
         case "-":
@@ -586,7 +586,7 @@ function handleShorthand(e) {
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
-                localStorage.setItem("videoVolume", volumeVal);
+                saveVolume();
             }
             break;
         default:
@@ -662,3 +662,7 @@ speedSelect.addEventListener('change', function() {
 
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
+
+function saveVolume() {
+	localStorage.setItem("videoVolume", volumeVal);
+}
