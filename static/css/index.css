@@ -54,6 +54,7 @@ a:hover { background-color: #111111; }
 body {
 	font-family: Arial, sans-serif;
 	background-color: #000000;
+	word-break: break-all;
 }
 h2 { 
 	background-color: #666666;
@@ -86,9 +87,21 @@ h2 {
 	padding-left: 8px;
 	padding-right: 5px; 
 	margin-top: 4px;
-	margin-bottom: 4px; 
+	margin-bottom: 4px;
 }
 
+@media (max-width: 160px) {
+	.list-group { display: none; }
+}
+@media (max-width: 250px) {
+	.image { display: none; }
+	.backdir .first { display: none; }
+	.filename { 
+		border-bottom: 2px solid black;
+		padding-left: 0px;
+		padding-right: 0px; 
+	}
+}
 @media (max-width: 380px) {
 	.controls {
 		  display: flex;
