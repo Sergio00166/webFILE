@@ -11,14 +11,14 @@
     <body>
         <div class="list-group">
             <h2>Index of {{ folder_path }}</h2>
-			<div class="controls">
-				<button onclick="sortNameBT()">NAME</button>
-				<button onclick="sortSizeBT()" class="nosize">SIZE</button>
-				<button onclick="sortDateBT()" class="notime">DATE</button>
-				<button id="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
-				<button id="toggleAllNone" onclick="toggleSelectAll()" disabled>TOGGLE</button>
-				<button onclick="executeDownloads()">DOWNLOAD</button>
-			</div>
+            <div class="controls">
+                <button onclick="sortNameBT()">NAME</button>
+                <button onclick="sortSizeBT()" class="nosize">SIZE</button>
+                <button onclick="sortDateBT()" class="notime">DATE</button>
+                <button id="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
+                <button id="toggleAllNone" onclick="toggleSelectAll()" disabled>TOGGLE</button>
+                <button onclick="executeDownloads()">DOWNLOAD</button>
+            </div>
             <div class="container">
                 <br>
                 {% if not is_root %}
@@ -28,14 +28,14 @@
                         <a class="backdir" href="{{ url_for('index') }}">
                     {% endif %}
                         <img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback">&nbsp;</img>
-			<span class="first">Parent Directory</span>
+                        <span class="first">Parent Directory</span>
                     </a>
                 {% endif %}
                 {% for item in folder_content %}
                     <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}" {% if item['description'] == 'DIR' %}dir{% endif %}>
                         {% if item['description'] == 'DIR' %}
-						<span class="image"> 
-							<img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">&nbsp;</img>
+                        <span class="image"> 
+                            <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">&nbsp;</img>
                         {% else %}
                             <span class="image">
                                 {% if item['description'] == 'SRC' %}

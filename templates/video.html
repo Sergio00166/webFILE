@@ -11,8 +11,8 @@
   <a href="{{ request.path }}/?mode=raw" download="{{ name }}" ></a>
   <div class="video-container">
     <video autoplay onended="handleVideoEnded()">
-	  <source src="{{ request.path }}/?mode=raw" type="video/mp4">
-	</video>
+      <source src="{{ request.path }}/?mode=raw" type="video/mp4">
+    </video>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
     <span class="main-state state-btn">
       <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
@@ -50,7 +50,7 @@
             <span>/</span>
             <span class="total-duration">0:00</span>
           </span>
-		  <span>&nbsp;&nbsp;</span>
+          <span>&nbsp;&nbsp;</span>
         </div>
         <div class="side-controls">
           <button class="round-button" onclick="prev()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
@@ -61,25 +61,25 @@
               <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
             </button>
             <ul class="setting-menu">
-			    <li><select id="s0">
-				 <option value="-1">None</option>
-				 {% for item in tracks %}
-				    <option value={{ tracks.index(item) }}>
-				    {{ item }} </option>
-				 {% endfor %}
-				</select></li>
-				<li><select id="s1"></select>
-				</li><li> <select id="s2">
-					  <option value="0.25">0.25x</option>
-					  <option value="0.5">0.5x</option>
-					  <option value="0.75">0.75x</option>
-					  <option value="1">1x</option>
-					  <option value="1.25">1.25x</option>
-					  <option value="1.5">1.5x</option>
-					  <option value="1.75">1.75x</option>
-					  <option value="2">2x</option>
-				</select></li>
-			  <li id="liD">Download</li>
+                <li><select id="s0">
+                 <option value="-1">None</option>
+                 {% for item in tracks %}
+                    <option value={{ tracks.index(item) }}>
+                    {{ item }} </option>
+                 {% endfor %}
+                </select></li>
+                <li><select id="s1"></select>
+                </li><li> <select id="s2">
+                      <option value="0.25">0.25x</option>
+                      <option value="0.5">0.5x</option>
+                      <option value="0.75">0.75x</option>
+                      <option value="1">1x</option>
+                      <option value="1.25">1.25x</option>
+                      <option value="1.5">1.5x</option>
+                      <option value="1.75">1.75x</option>
+                      <option value="2">2x</option>
+                </select></li>
+              <li id="liD">Download</li>
             </ul>
           </span>
           <button class="round-button" onclick="toggleFullscreen()">

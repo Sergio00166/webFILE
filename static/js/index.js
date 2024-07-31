@@ -32,8 +32,8 @@ function sortDateBT() {
       urlObj.searchParams.set("mode", sortValue);
       window.history.replaceState({}, document.title, urlObj.href);
       location.reload(); }
-	  
-	  
+      
+      
 
 let selectMode = false;
 const selectedElements = {};
@@ -42,8 +42,8 @@ const selectedElements = {};
 function toggleSelectMode() {
     selectMode = !selectMode;
     const buttonText = selectMode ? 'CANCEL' : 'SELECT';
-	document.getElementById('toggleSelectMode').textContent = buttonText;
-	document.getElementById('toggleAllNone').disabled = !selectMode;
+    document.getElementById('toggleSelectMode').textContent = buttonText;
+    document.getElementById('toggleAllNone').disabled = !selectMode;
     if (!selectMode) { deselectAll(); }
 
 }
@@ -78,11 +78,11 @@ function handleDivClick(event) {
     } else {
         const url = event.currentTarget.getAttribute('data-value');
         if (url) { 
-			const div = document.getElementById(event.currentTarget.id);
-			if (div.hasAttribute('dir')) {
-				window.location.href = url;
-			} else { window.open(url, '_blank'); }	
-		}
+            const div = document.getElementById(event.currentTarget.id);
+            if (div.hasAttribute('dir')) {
+                window.location.href = url;
+            } else { window.open(url, '_blank'); }    
+        }
     }
 }
 
@@ -93,7 +93,7 @@ function downloadURL(downloadUrl) {
     tempLink.style.display = 'none';
     document.body.appendChild(tempLink);
     tempLink.click();
-    document.body.removeChild(tempLink);	
+    document.body.removeChild(tempLink);    
 }
 
 // Function to execute downloads for selected divs
@@ -103,36 +103,36 @@ function executeDownloads() {
             const div = selectedElements[id];
             const url = div.getAttribute('data-value');
             if (url) {
-				if (div.hasAttribute('dir')) {
-					newURL = url+(url.includes('?')?'&':'?') + 'mode=dir';
+                if (div.hasAttribute('dir')) {
+                    newURL = url+(url.includes('?')?'&':'?') + 'mode=dir';
                 } else {
-					newURL = url+(url.includes('?')?'&':'?') + 'mode=raw';
-				} downloadURL(newURL);
+                    newURL = url+(url.includes('?')?'&':'?') + 'mode=raw';
+                } downloadURL(newURL);
             }
         }
     } else {
-		const url = new URL(window.location.href).pathname;
-		newURL = url+(url.includes('?')?'&':'?') + 'mode=dir';
-		downloadURL(newURL);
-	}
+        const url = new URL(window.location.href).pathname;
+        newURL = url+(url.includes('?')?'&':'?') + 'mode=dir';
+        downloadURL(newURL);
+    }
 }
 
 // Function to select or deselect all divs
 function toggleSelectAll() {
-	if (selectMode) {
-		const allDivs = document.querySelectorAll('.filename');
-		const allSelected = allDivs.length === Object.keys(selectedElements).length;
+    if (selectMode) {
+        const allDivs = document.querySelectorAll('.filename');
+        const allSelected = allDivs.length === Object.keys(selectedElements).length;
 
-		if (allSelected) { deselectAll();
-		} else {
-			allDivs.forEach(div => {
-				if (!selectedElements[div.id]) {
-					selectedElements[div.id] = div;
-					div.classList.add('selected');
-				}
-			});
-		}
-	}
+        if (allSelected) { deselectAll();
+        } else {
+            allDivs.forEach(div => {
+                if (!selectedElements[div.id]) {
+                    selectedElements[div.id] = div;
+                    div.classList.add('selected');
+                }
+            });
+        }
+    }
 }
 
 // Bind click handling to divs
