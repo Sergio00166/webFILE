@@ -27,15 +27,15 @@
                     {% else %}
                         <a class="backdir" href="{{ url_for('index') }}">
                     {% endif %}
-						<img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback">&nbsp;</img>
-						<span class="first">Parent Directory</span>
+                        <img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback">&nbsp;</img>
+			<span class="first">Parent Directory</span>
                     </a>
                 {% endif %}
                 {% for item in folder_content %}
                     <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}" {% if item['description'] == 'DIR' %}dir{% endif %}>
                         {% if item['description'] == 'DIR' %}
 						<span class="image"> 
-							<img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder"> &nbsp;</img>
+							<img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">&nbsp;</img>
                         {% else %}
                             <span class="image">
                                 {% if item['description'] == 'SRC' %}
@@ -43,7 +43,7 @@
                                 {% elif item['description'] == 'Video' %}
                                     <img src="{{ url_for('index', static='svg/index/film-solid.svg') }}" class="default">&nbsp;</img>
                                 {% elif item['description'] == 'Audio' %}
-                                    <img src="{{ url_for('index', static='svg/index/music-solid.svg') }}" class="default">&nbsp;</img>
+                                    <img src="{{ url_for('index', static='svg/index/music-solid.svg') }}" class="default"> &nbsp;</img>
                                 {% elif item['description'] == 'Text' %}
                                     <img src="{{ url_for('index', static='svg/index/file-lines-solid.svg') }}" class="files">&nbsp;</img>
                                 {% elif item['description'] == 'PDF' %}
