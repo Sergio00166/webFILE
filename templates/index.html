@@ -13,8 +13,8 @@
             <h2>Index of {{ folder_path }}</h2>
 			<div class="controls">
 				<button onclick="sortNameBT()">NAME</button>
-				<button onclick="sortSizeBT()">SIZE</button>
-				<button onclick="sortDateBT()">DATE</button>
+				<button onclick="sortSizeBT()" class="nosize">SIZE</button>
+				<button onclick="sortDateBT()" class="notime">DATE</button>
 				<button id="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
 				<button id="toggleAllNone" onclick="toggleSelectAll()" disabled>TOGGLE</button>
 				<button onclick="executeDownloads()">DOWNLOAD</button>
