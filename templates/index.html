@@ -29,7 +29,7 @@
                     {% endif %}
 						<img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback">&nbsp;</img>
 						<span class="first">Parent Directory</span>
-                    </a><br>
+                    </a>
                 {% endif %}
                 {% for item in folder_content %}
                     <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}" {% if item['description'] == 'DIR' %}dir{% endif %}>

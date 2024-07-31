@@ -39,8 +39,7 @@ a:hover { background-color: #111111; }
 	padding-bottom: 3px;
 	padding-left: 8px;
 	padding-right: 5px; 
-	margin-top: 4px;
-	margin-bottom: 4px; 
+	margin-bottom: 16px;
 }
 .controls button {
 	flex: 1;
