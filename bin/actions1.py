@@ -43,6 +43,7 @@ def generate_tar(directory_path):
     
 def send_dir(directory):
     folder = basename(directory)
+    if folder=="": folder="index"
     return Response(generate_tar(directory),mimetype='application/x-tar',
     headers={'Content-Disposition': 'attachment;filename='+folder+'.tar'})
 
