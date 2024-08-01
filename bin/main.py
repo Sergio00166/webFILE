@@ -69,7 +69,8 @@ if __name__=="__main__":
             
             elif file_type=="Video": 
                 if cmp and mode[:4]=="subs":
-                    try: arg = str(int(mode[4:]))+"/"+path[:-1]
+                    if path.endswith("/"): path=path[:-1]
+                    try: arg = str(int(mode[4:]))+"/"+path
                     except: raise FileNotFoundError
                     out = sub_cache_handler(arg,root)
                     return Response(out,mimetype="text/plain",headers=
