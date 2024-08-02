@@ -1,4 +1,5 @@
-// JS for the custom audio player
+/* Code by Sergio00166 */
+
 const downloadLink = document.querySelector("a");
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");

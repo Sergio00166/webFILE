@@ -1,4 +1,4 @@
-// JS for the index page
+/* Code by Sergio00166 */
 
 function sortNameBT() {
       var url = window.location.href;
