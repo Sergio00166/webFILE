@@ -37,52 +37,37 @@ def get_codec(source, index):
 
 def convert(src, ret):
     subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
-    del src  # Free memory
-    
-    # Avoid superposition before converting
-    for i in range(len(subs.events)):
-        if i < len(subs.events) - 1:
-            current_event = subs.events[i]
-            next_event = subs.events[i + 1]
-            if current_event.end > next_event.start:
-                current_event.end = next_event.start
-
-    # Convert to webVTT
+    del src # Free memory
     with StringIO() as tmp:
+        # Here we convert to webVTT without
+        # styles bc it show a some weird stuff
         subs.to_file(tmp, "vtt", apply_styles=False)
-        del subs  # Free memory
-        out = tmp.getvalue()
-        
-    # Generate object and define vars
+        del subs # Free memory 
+        out = tmp.getvalue() 
     subs = pysubs2.SSAFile.from_string(out)
-    del out  # Free memory
-    grouped_events, oldtxt = {}, ""
-    
+    del out # Free memory
+    grouped_events,oldtxt = {},""
     # Here we combine th subs that has the same
     # start and end time as others, and remove
     # duplicated entries
-    for event in subs.events:
+    for event in subs:
         key = (event.start, event.end)
         if key not in grouped_events:
             if oldtxt != event.text:
                 grouped_events[key] = event.text
         elif oldtxt != event.text:
-            grouped_events[key] += " " + event.text
-        oldtxt = event.text
-    
+            grouped_events[key] += " "+event.text
+        oldtxt = event.text    
     del subs.events, oldtxt  # Free memory
-    
     # Pass to the object the values
     subs.events = [
         pysubs2.SSAEvent(start=start, end=end, text=text)
         for (start, end), text in grouped_events.items()
     ]
-    
-    del grouped_events  # Free memory
-    out = subs.to_string("vtt")
+    del grouped_events # Free memory
+    out=subs.to_string("vtt")
     del subs  # Free memory
-    ret.put(out)  # Return values
-
+    ret.put(out) # Return values
 
 
 def get_info(file_path):
