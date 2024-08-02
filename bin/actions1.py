@@ -1,4 +1,4 @@
-#Code by Sergio 1260
+#Code by Sergio00166
 
 from os import access, R_OK, sep, listdir, remove, stat, walk
 from subtitles import cache_dir, get_track, random_str, save_subs_cache, get_subs_cache, get_info

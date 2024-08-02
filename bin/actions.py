@@ -1,4 +1,4 @@
-#Code by Sergio 1260
+#Code by Sergio00166
 
 from os.path import join, isdir, relpath, exists, pardir, abspath, getsize, isfile
 from functions import *

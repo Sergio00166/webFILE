@@ -1,4 +1,4 @@
-#Code by Sergio 1260
+#Code by Sergio00166
 
 from os.path import commonpath, join, isdir, relpath, abspath
 from os.path import getmtime, getsize, exists
