@@ -107,15 +107,15 @@ async function executeDownloads() {
             const url = div.getAttribute('data-value');
             if (url) {
                 if (div.hasAttribute('dir')) {
-                    mode = 'mode=dir';
-                } else { mode = 'mode=raw'; }
+                    mode = '/?mode=dir';
+                } else { mode = '/?mode=raw'; }
                 downloadURL(url+mode);
                 await delay(100);
             }
         }
     } else {
         const url = new URL(window.location.href).pathname;
-        const newURL = url+'mode=dir';
+        const newURL = url+'/?mode=dir';
         downloadURL(newURL);
     }
 }
