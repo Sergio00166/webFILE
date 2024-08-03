@@ -26,7 +26,7 @@ Dependencys:<br>
 
 Usage: <br>
   python3 start.py [config.file] or<br>
-  python3 bin/main.py -b IP_addr -p port -d directory [--dirsize] [--subtitle_cache]
+  python3 bin/main.py -b IP_addr -p port -d directory [--dirsize]
 
  Logging:<br>
     To create a log of all access and responses and erros of the server you can redirect

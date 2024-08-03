@@ -1,7 +1,8 @@
-#Code by Sergio 1260
+#Code by Sergio00166
 
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
+
 
 banner = [
 "                          █████     ███████████ █████ █████       ██████████   ",
@@ -31,7 +32,7 @@ if __name__=="__main__":
     # Disable every shit that flask prints
     log = getLogger('werkzeug'); log.setLevel(WARNING)
     # Get the values from the initor (args from cli)
-    port, listen, root, folder_size, subtitle_cache = init()
+    port, listen, root, folder_size = init()
     # Change start message
     p1="\033[32mListening on: \033[34m"
     p2="\033[32m:\033[31m"
@@ -42,7 +43,7 @@ if __name__=="__main__":
     # Set the paths of templates and static
     templates=abspath(path[0]+sep+".."+sep+"templates")
     sroot=abspath(pypath[0]+sep+".."+sep+"static"+sep)
-    del path # Free memory
+    sort_mod = ["np","nd","sp","sd","dp","dd"]
     # Create the main app flask
     app = Flask(__name__, static_folder=None, template_folder=templates)
 
@@ -52,23 +53,32 @@ if __name__=="__main__":
     # the custom media players] or donwloads the file
     def explorer(path):
         try:
+            cmp,sort = "mode" in request.args,""
+            mode = request.args["mode"] if cmp else ""  
+            if cmp and mode=="raw": return send_file(isornot(path,root))
             file_type = get_file_type(root+sep+path)
             
-            if file_type=="DIR":
-                sort = request.args["sort"] if "sort" in request.args else ""
-                folder_content,folder_path,parent_directory,is_root,\
-                par_root = index_func(path,root,folder_size,sort)
-                return stream_template('index.html', folder_content=folder_content,folder_path=folder_path,
-                                       parent_directory=parent_directory,is_root=is_root, par_root=par_root)
+            if file_type=="DIR": 
+                if cmp:
+                    if mode=="dir": return send_dir(isornot(path,root))
+                    if mode in sort_mod: sort=mode   
+                folder_content,folder_path,parent_directory,is_root,par_root = index_func(path,root,folder_size,sort)
+                return stream_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,par_root=par_root)
+
+            elif file_type=="Text" or file_type=="SRC": return send_file(isornot(path,root), mimetype='text')
             
-            elif file_type=="Text" or file_type=="SRC":
-                return send_file(isornot(path,root), mimetype='text')
-            
-            elif file_type=="Video":
+            elif file_type=="Video": 
+                if cmp and mode[:4]=="subs":
+                    if path.endswith("/"): path=path[:-1]
+                    try: arg = str(int(mode[4:]))+"/"+path
+                    except: raise FileNotFoundError
+                    out = sub_cache_handler(arg,root)
+                    return Response(out,mimetype="text/plain",headers=
+                    {"Content-disposition":"attachment; filename=subs.vtt"})
                 prev, nxt, name, path = filepage_func(path,root,file_type)
                 tracks = get_info(root+sep+path)
                 return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks)
-            
+
             elif file_type=="Audio":
                 prev, nxt, name, path = filepage_func(path,root,file_type)
                 return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt)
@@ -85,31 +95,23 @@ if __name__=="__main__":
     # with this sintan index/filepath
     def index():
         try:
-            if "raw" in request.args:
-                return send_file(isornot(request.args["raw"],root))
+            cmp,sort = "mode" in request.args,""
+            mode = request.args["mode"] if cmp else ""
 
-            elif "dir" in request.args:
-                return send_dir(isornot(request.args["dir"],root))
-            
-            elif "static" in request.args:
+            if "static" in request.args:
                 path=request.args["static"].replace("/",sep)
                 return send_file(isornot(path,sroot))
             
-            elif "subtitles" in request.args:
-                arg = request.args["subtitles"]
-                out = sub_cache_handler(arg,root,subtitle_cache)
-                return Response(out,mimetype="text/plain",headers=
-                {"Content-disposition":"attachment; filename=subs.vtt"})
-                          
-            else:
-                sort = request.args["sort"] if "sort" in request.args else ""
-                folder_content = sort_contents(get_folder_content(root, root, folder_size),sort)
-                return stream_template('index.html', folder_content=folder_content,folder_path="/",
-                                       parent_directory=root,is_root=True)
+            elif cmp and mode=="dir": return send_dir(root)
+            elif cmp and mode in sort_mod: sort=mode
 
+            folder_content = sort_contents(get_folder_content(root, root, folder_size),sort)
+            return stream_template('index.html',folder_content=folder_content,folder_path="/",parent_directory=root,is_root=True)
+                    
         except PermissionError: return render_template('403.html'), 403
         except FileNotFoundError: return render_template('404.html'), 404
         except Exception as e: printerr(e); return render_template('500.html'), 500
+
 
     
     # Change logging to default after app is running 

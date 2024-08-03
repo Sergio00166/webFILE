@@ -1,3 +1,4 @@
+<!-- Code by Sergio00166 -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,10 +9,10 @@
     <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}" />
 </head>
 <body>
-    <a href="{{ url_for('index', raw=path) }}" download="{{ name }}" ></a>
+    <a href="{{ request.path }}/?mode=raw" download="{{ name }}" ></a>
     <h2>{{ name }}</h2><br>
-    <audio autoplay id="audio" data-mode="0" onended="handleAudioEnded()" onvolumechange="saveVolume()">
-        <source src="{{ url_for('index', raw=path) }}" type="audio/mp3">
+    <audio autoplay onended="handleAudioEnded()">
+        <source src="{{ request.path }}/?mode=raw" type="audio/mp3">
     </audio>
     <div class="duration">
         <div class="current-time"></div>
@@ -27,7 +28,7 @@
         <span>&nbsp;</span>
     </span>
     <div class="flex">
-        <button class="round-button" onclick="toggleMainState()">
+        <button class="round-button play" onclick="toggleMainState()">
             <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
             <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
         </button>
@@ -47,7 +48,7 @@
         <button class="round-button" onclick="next()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
         <button class="round-button" id="mode" onclick="chMode()">1</button> 
         <button class="round-button download" onclick="download()">
-		<img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
+        <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
         <span class="settings">
             <button class="round-button" onclick="handleSettingMenu()">
                 <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}">

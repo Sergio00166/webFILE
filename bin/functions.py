@@ -1,4 +1,4 @@
-#Code by Sergio 1260
+#Code by Sergio00166
 
 from os.path import commonpath, join, isdir, relpath, abspath
 from os.path import getmtime, getsize, exists
@@ -108,7 +108,6 @@ def get_folder_content(folder_path, root, folder_size):
 def isornot(path,root):
     # Checks if the path is inside the root dir
     # else raise an exception depending on the case
-    path="/".join(path.split("/.."))
     path=path.replace("/",sep)
     path=abspath(root+sep+path)
     if is_subdirectory(root, path):

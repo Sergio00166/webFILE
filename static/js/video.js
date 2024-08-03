@@ -1,4 +1,5 @@
-// JS for the custom video player
+/* Code by Sergio00166 */
+
 const downloadLink = document.querySelector("a");
 const video = document.querySelector("video");
 const volume = document.querySelector(".volume");
@@ -417,7 +418,7 @@ function handleVolume(e) {
     const totalVolRect = totalVol.getBoundingClientRect();
     volumeVal = Math.min(Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width), 1);
     currentVol.style.width = volumeVal * 100 + "%";
-    localStorage.setItem("videoVolume", volumeVal);
+    saveVolume();
     video.volume = volumeVal;
     handleAudioIcon();
 }
@@ -574,7 +575,7 @@ function handleShorthand(e) {
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
-                localStorage.setItem("videoVolume", volumeVal);
+                saveVolume();
             }
             break;
         case "-":
@@ -586,7 +587,7 @@ function handleShorthand(e) {
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
-                localStorage.setItem("videoVolume", volumeVal);
+                saveVolume();
             }
             break;
         default:
@@ -634,7 +635,7 @@ function changeSubs(value){
         existingTrack.parentNode.removeChild(existingTrack);
     }
     if (value > -1) {
-        url = "/?subtitles="+value+window.location.pathname;
+        url = window.location.pathname+"/?mode=subs"+value;
         var track = document.createElement('track');
         track.kind = 'subtitles';
         track.src = url;
@@ -662,3 +663,7 @@ speedSelect.addEventListener('change', function() {
 
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
+
+function saveVolume() {
+    localStorage.setItem("videoVolume", volumeVal);
+}

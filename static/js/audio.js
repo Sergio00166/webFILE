@@ -1,4 +1,5 @@
-// JS for the custom audio player
+/* Code by Sergio00166 */
+
 const downloadLink = document.querySelector("a");
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
@@ -19,7 +20,7 @@ const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
 const volume = document.querySelector(".volume");
 
-var audio = document.getElementById("audio");
+var audio = document.querySelector("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
 var currentMode = localStorage.getItem("audioMode");
@@ -126,10 +127,10 @@ function handleProgressBar() {
     currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
     currentDuration.innerHTML = showDuration(audio.currentTime);
     if ('mediaSession' in navigator) {
-		navigator.mediaSession.setPositionState({
-		  position: audio.currentTime,
-		  duration: audio.duration
-		});
+        navigator.mediaSession.setPositionState({
+          position: audio.currentTime,
+          duration: audio.duration
+        });
     }
 }
 
@@ -261,7 +262,7 @@ function handleVolume(e) {
     const totalVolRect = totalVol.getBoundingClientRect();
     volumeVal = Math.min(Math.max(0, (e.clientX - totalVolRect.x) / totalVolRect.width), 1);
     currentVol.style.width = volumeVal * 100 + "%";
-    saveVolume()
+    saveVolume();
     audio.volume = volumeVal;
     handleAudioIcon();
 }
@@ -420,7 +421,7 @@ function handleShorthand(e) {
                 audio.volume = volumeVal;
                 currentVol.style.width = volumeVal * 100 + "%";
                 handleAudioIcon();
-                saveVolume()
+                saveVolume();
             }
             break;
         case "-":
@@ -432,7 +433,7 @@ function handleShorthand(e) {
                 handleAudioIcon();
                 audio.volume = volumeVal;
                 currentVol.style.width = volumeVal * 100 + "%";
-                saveVolume()
+                saveVolume();
             }
             break;
         default:

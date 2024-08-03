@@ -1,4 +1,4 @@
-# Code by Sergio1260
+# Code by Sergio00166
 # Obtains info and extracts tracks from a video file
 # It is used for the video player subtitles
 # Also fixes weird things with the codecs when
@@ -36,7 +36,7 @@ def get_codec(source, index):
 
 
 def convert(src, ret):
-    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
+    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'), overlap=False)
     del src # Free memory
     with StringIO() as tmp:
         # Here we convert to webVTT without

@@ -1,3 +1,5 @@
+/* Code by Sergio00166 */
+
 body {
   display: flex;
   justify-content: center;
@@ -220,20 +222,22 @@ button:focus { outline: none; }
    .setting-menu { margin-left: -8rem; }
 }
 @media only screen and (max-width: 300px) {
-   .settings { display: none; }
+   .download { display: none; }
 }
 @media only screen and (max-width: 260px) {
-   #mode { display: none; }
+   .settings { display: none; }
 }
 @media only screen and (max-width: 210px) {
-   .download { display: none; }
+    #mode { display: none; }
 }
 @media only screen and (max-width: 160px) {
    div { display: none; }
    h2 { display: none; }
    span { display: none; }
    .round-button { display: none; }
+   .play { display: block; }
 }
+
 @media only screen and (max-height: 140px) {
    div { display: none; }
    h2 { display: none; }

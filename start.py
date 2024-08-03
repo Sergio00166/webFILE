@@ -1,4 +1,4 @@
-# Code by Sergio1260
+# Code by Sergio00166
 
 banner = [
 "                          █████     ███████████ █████ █████       ██████████   ",
@@ -87,15 +87,6 @@ def init():
         listen=buffer; del buffer
     else: listen=["127.0.0.1"]
 
-    if "no.subtitle.cache" in dic: 
-        no_sub_cache=dic["no.subtitle.cache"].upper()
-        if no_sub_cache=="TRUE": no_sub_cache=True
-        elif no_sub_cache=="FALSE": no_sub_cache=False
-        else:
-            print("[CFG_FILE]: BAD VALUE IN no.subtitle.cache")
-            error_exit = True
-    else: no_sub_cache="false"
-
     if "show.folder.size" in dic:
         folder_size=dic["show.folder.size"].upper()
         if folder_size=="TRUE": folder_size=True
@@ -106,13 +97,13 @@ def init():
     else: folder_size="false"
 
     if error_exit: exit(1)
-    return ports, listen, root, folder_size, no_sub_cache
+    return ports, listen, root, folder_size
 
 
 def main():
     print("")
     # Parse and get values
-    ports,listen,root,folder_size,no_sub_cache = init()
+    ports,listen,root,folder_size = init()
     data = ["\033[32mListening on: \033[34m"+ip+\
             "\033[32m:\033[31m"+port+"\033[0m"\
             for ip in listen for port in ports]
@@ -128,7 +119,6 @@ def main():
         for port in ports:
             args=[python,PyExec,"-b",ip,"-p",port,"-d",root]
             if folder_size: args.append("--dirsize")
-            if no_sub_cache: args.append("--no-sub-cache")
             Popen(args,stdout=DEVNULL); delay(0.1)
     try: # wait forever
         while True: delay(1)
