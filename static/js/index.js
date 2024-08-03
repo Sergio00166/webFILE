@@ -96,23 +96,26 @@ function downloadURL(downloadUrl) {
     document.body.removeChild(tempLink);    
 }
 
+// Function to delay execution
+function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
 // Function to execute downloads for selected divs
-function executeDownloads() {
+async function executeDownloads() {
     if (selectMode) {
         for (const id in selectedElements) {
             const div = selectedElements[id];
             const url = div.getAttribute('data-value');
             if (url) {
                 if (div.hasAttribute('dir')) {
-                    newURL = url+(url.includes('?')?'&':'?') + 'mode=dir';
-                } else {
-                    newURL = url+(url.includes('?')?'&':'?') + 'mode=raw';
-                } downloadURL(newURL);
+                    mode = 'mode=dir';
+                } else { mode = 'mode=raw'; }
+                downloadURL(url+mode);
+                await delay(100);
             }
         }
     } else {
         const url = new URL(window.location.href).pathname;
-        newURL = url+(url.includes('?')?'&':'?') + 'mode=dir';
+        const newURL = url+'mode=dir';
         downloadURL(newURL);
     }
 }
