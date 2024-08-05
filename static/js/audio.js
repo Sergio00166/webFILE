@@ -50,15 +50,22 @@ if (currentMode != null) {
 
 if (volumeVal === null) { volumeVal = 1; }
 audio.volume = parseFloat(volumeVal);
-currentVol.style.width = volumeVal * 100 + "%";
-if (random === null) { random = false; }
+currentVol.style.width = volumeVal*100+"%";
 
+// Cast value
 if (muted != null) {
     if (muted == "true") {
         muted = true;
-        audio.volume = 0;
+        video.volume = 0;
     } else { muted = false; }
 } else { muted = false; }
+// Cast value
+if (random != null) {
+    if (random == "true") {
+        random = true;
+    } else { random = false; }
+} else { random = false; }
+
 
 let mouseDownProgress = false,
     mouseDownVol = false,

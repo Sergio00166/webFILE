@@ -64,29 +64,20 @@ if (currentMode != null) {
     } else if (currentMode === 2) {
         mode.innerHTML = "↻";
     }
-} else {
-    currentMode = 0;
-}
+} else { currentMode = 0; }
 
-var volumeVal = localStorage.getItem("videoVolume");
-
-if (volumeVal === null) {
-    volumeVal = 1;
-}
-video.volume = parseFloat(volumeVal);
-currentVol.style.width = volumeVal * 100 + "%";
-
+// Cast value
 if (muted != null) {
     if (muted == "true") {
         muted = true;
         video.volume = 0;
-    } else {
-        muted = false;
-    }
-} else {
-    muted = false;
-}
+    } else { muted = false; }
+} else { muted = false; }
 
+var volumeVal = localStorage.getItem("videoVolume");
+if (volumeVal === null) { volumeVal = 1; }
+video.volume = parseFloat(volumeVal);
+currentVol.style.width = volumeVal * 100 + "%";
 totalDuration.innerHTML = "00:00";
 
 let mouseDownProgress = false,
