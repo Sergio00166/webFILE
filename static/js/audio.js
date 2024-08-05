@@ -48,12 +48,17 @@ if (currentMode != null) {
     }
 } else { currentMode = 0; }
 
-if (random === null) { random = false; }
-if (muted === null) { muted = false; }
-if (muted) { audio.volume = 0; }
 if (volumeVal === null) { volumeVal = 1; }
 audio.volume = parseFloat(volumeVal);
-currentVol.style.width = volumeVal*100+"%";
+currentVol.style.width = volumeVal * 100 + "%";
+if (random === null) { random = false; }
+
+if (muted != null) {
+    if (muted == "true") {
+        muted = true;
+        audio.volume = 0;
+    } else { muted = false; }
+} else { muted = false; }
 
 let mouseDownProgress = false,
     mouseDownVol = false,
