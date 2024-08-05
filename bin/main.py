@@ -80,8 +80,8 @@ if __name__=="__main__":
                 return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks)
 
             elif file_type=="Audio":
-                prev, nxt, name, path = filepage_func(path,root,file_type)
-                return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt)
+                prev,nxt,name,path,rnd = filepage_func(path,root,file_type,True)
+                return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
             else: return send_file(isornot(path,root))
             
         except PermissionError: return render_template('403.html'), 403

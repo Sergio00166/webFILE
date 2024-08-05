@@ -24,7 +24,7 @@ is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
 
 def fix_pth_url(path):
     # This replaced buggy chars with the HTML replacement
-    return path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
+    return "/"+path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
 
 def is_subdirectory(parent, child):
     return commonpath([parent]) == commonpath([parent, child])
