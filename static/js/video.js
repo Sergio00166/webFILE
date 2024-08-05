@@ -70,23 +70,11 @@ if (currentMode != null) {
 
 var volumeVal = localStorage.getItem("videoVolume");
 
-if (volumeVal === null) {
-    volumeVal = 1;
-}
+if (volumeVal === null) { volumeVal = 1; }
+if (muted === null) { muted = false; }
+if (muted) { video.volume = 0; }
 video.volume = parseFloat(volumeVal);
 currentVol.style.width = volumeVal * 100 + "%";
-
-if (muted != null) {
-    if (muted == "true") {
-        muted = true;
-        video.volume = 0;
-    } else {
-        muted = false;
-    }
-} else {
-    muted = false;
-}
-
 totalDuration.innerHTML = "00:00";
 
 let mouseDownProgress = false,
