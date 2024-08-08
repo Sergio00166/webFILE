@@ -33,38 +33,18 @@ def get_codec(source, index):
 
 
 def convert(src, ret):
-    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'), overlap=False)
+    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
     del src # Free memory
     with StringIO() as tmp:
         # Here we convert to webVTT without
         # styles bc it show a some weird stuff
         subs.to_file(tmp, "vtt", apply_styles=False)
         del subs # Free memory 
-        out = tmp.getvalue() 
-    subs = pysubs2.SSAFile.from_string(out)
-    del out # Free memory
-    grouped_events,oldtxt = {},""
-    # Here we combine th subs that has the same
-    # start and end time as others, and remove
-    # duplicated entries
-    for event in subs:
-        key = (event.start, event.end)
-        if key not in grouped_events:
-            if oldtxt != event.text:
-                grouped_events[key] = event.text
-        elif oldtxt != event.text:
-            grouped_events[key] += " "+event.text
-        oldtxt = event.text    
-    del subs.events, oldtxt  # Free memory
-    # Pass to the object the values
-    subs.events = [
-        pysubs2.SSAEvent(start=start, end=end, text=text)
-        for (start, end), text in grouped_events.items()
-    ]
-    del grouped_events # Free memory
-    out=subs.to_string("vtt")
-    del subs  # Free memory
+        out = tmp.getvalue()
+    subs = pysubs2.SSAFile.from_string(out) 
+    out = subs.to_string("vtt")
     ret.put(out) # Return values
+    del out,subs # Free memory 
 
 
 def get_chapters(file_path):
