@@ -23,7 +23,7 @@ cache_dir+="/cache/"
 def get_codec(source, index):
     # Gets the codec name from a file
     cmd = [
-        'ffprobe', '-v', 'error',
+        'ffprobe', '-v', 'quiet',
         '-select_streams', f's:{index}',
         '-show_entries', 'stream=codec_name',
         '-of', 'default=noprint_wrappers=1:nokey=1',
@@ -68,21 +68,23 @@ def convert(src, ret):
 
 
 def get_chapters(file_path):
-    result = run([
-        'ffprobe', '-v', 'quiet', '-print_format',
-        'json', '-show_entries', 'chapters', file_path
-    ], stdout=PIPE, stderr=PIPE, text=True)
-    ffprobe_output = jsload(result.stdout)
-    del result # Free memory
-    filtered_chapters = [
-        {
-            'title': chapter['tags'].get('title', 'Untitled'),
-            'start_time': int(float(chapter['start_time']))
-        }
-        for chapter in ffprobe_output['chapters']
-    ]
-    del ffprobe_output # Free memory
-    return filtered_chapters
+    try:
+        result = run([
+            'ffprobe', '-v', 'quiet', '-print_format',
+            'json', '-show_entries', 'chapters', file_path
+        ], stdout=PIPE, stderr=PIPE, text=True)
+        ffprobe_output = jsload(result.stdout)
+        del result # Free memory
+        filtered_chapters = [
+            {
+                'title': chapter['tags'].get('title', 'Untitled'),
+                'start_time': int(float(chapter['start_time']))
+            }
+            for chapter in ffprobe_output['chapters']
+        ]
+        del ffprobe_output # Free memory
+        return filtered_chapters
+    except: return ""
 
 
 def get_info(file_path):
@@ -118,14 +120,11 @@ def get_subs_cache():
         open(file,"w").close()
         files = glob(cache_dir+"*", recursive=False)
         for x in files: remove(x)
-        del files; file = []
-    
+        del files; file = []    
     dic = {}
     for x in file:
         x=x.split("\n")
-        if len(x)==3:
-            dic[x[0]]=[x[1],x[2]]
-
+        if len(x)==3: dic[x[0]]=[x[1],x[2]]
     return dic
 
 
