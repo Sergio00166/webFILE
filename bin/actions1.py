@@ -1,7 +1,7 @@
 #Code by Sergio00166
 
 from os import access, R_OK, sep, listdir, remove, stat, walk
-from subtitles import cache_dir, get_track, random_str, save_subs_cache, get_subs_cache, get_info
+from video import cache_dir, get_track, random_str, save_subs_cache, get_subs_cache, get_info, get_chapters
 from os.path import join, relpath, exists, getsize, isfile, getsize, getmtime, basename
 from functions import isornot
 from flask import Response

@@ -113,7 +113,7 @@ function chMode() {
 function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
         totalDuration.innerHTML = showDuration(video.duration);
-        loadTracks();
+        loadTracks(); split_timeline_chapters();
     } else {
         setTimeout(setVideoTime, 25);
     }
@@ -443,6 +443,14 @@ function toggleFullscreen() {
     }
 }
 
+function getchptname(timeInSeconds) {
+    for (let i = 0; i < chapters.length; i++) {
+        if (i === chapters.length - 1 || (timeInSeconds >= chapters[i].start_time && timeInSeconds < chapters[i + 1].start_time)) {
+            return chapters[i].title;
+        }
+    } return "";
+}
+
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
@@ -454,22 +462,25 @@ function handleMousemove(e) {
     } else if (mouseOverDuration) {
         hoverDuration.style.display = 'block';
         const rect = duration.getBoundingClientRect();
-        const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
-        const percent = (width / rect.width) * 100;
-        hoverTime.style.width = width + "px";
-        hovtime = (video.duration / 100) * percent;
+        const width = Math.min(Math.max(0,e.clientX-rect.x),rect.width);
+        const percent = (width/rect.width)*100;
+        hoverTime.style.width = percent+"%";
+        hovtime = (video.duration/100)*percent;
         ctime = showDuration(hovtime);
-        /// Fix not centered
-        if ((ctime.match(/:/g) || []).length === 2) {
-            hoverDuration.style.right = "-25px";
-        } else { hoverDuration.style.right = "-18px"; }
-        hoverDuration.innerHTML = ctime;
+        const title = getchptname(hovtime);
+        if (!title) { 
+            hoverDuration.innerHTML = ctime;
+            hoverDuration.style.top = "-25px";
+        } else { 
+            hoverDuration.innerHTML = ctime+"<br>"+title;
+            hoverDuration.style.top = "-35px";
+        }
+        const size = hoverDuration.getBoundingClientRect().width;
+        hoverDuration.style.right = "-"+size/2+"px";    
     }
     if (video.paused) {
         pause();
-    } else {
-        play();
-    }
+    } else { play(); }
 }
 
 function handleMainSateAnimationEnd() {
@@ -532,9 +543,7 @@ function handleShorthand(e) {
         case " ":
             if (!video.paused) {
                 pause();
-            } else {
-                play();
-            }
+            } else { play(); }
             break;
         case "f":
             toggleFullscreen();
@@ -550,7 +559,7 @@ function handleShorthand(e) {
             break;
         case "arrowdown":
             next();
-            break;
+ break;
         case "r":
             changeMode();
             break;
@@ -657,4 +666,20 @@ liD.addEventListener("click", download);
 
 function saveVolume() {
     localStorage.setItem("videoVolume", volumeVal);
+}
+
+function split_timeline_chapters() {
+    const divLength = video.duration;
+    const container = document.querySelector(".chapter-container");
+    // Sort times and add the initial time (0 seconds)
+    chptdata = [...chapters.map(item => item.start_time), divLength];
+    // Create sections within the div
+    chptdata.slice(0, -1).forEach((time, index) => {
+        const nextTime = chptdata[index + 1];
+        const startPercent = Math.min((time/divLength)*100,100)
+        const section = document.createElement('div');
+        section.classList.add("chapter");
+        section.style.left = `${startPercent}%`;
+        container.appendChild(section);
+    });
 }
