@@ -33,7 +33,7 @@ def get_codec(source, index):
 
 
 def convert(src, ret):
-    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'), overlap=False)
+    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
     del src # Free memory
     with StringIO() as tmp:
         # Here we convert to webVTT without
