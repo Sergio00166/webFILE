@@ -66,6 +66,11 @@ if (currentMode != null) {
     }
 } else { currentMode = 0; }
 
+var volumeVal = localStorage.getItem("videoVolume");
+if (volumeVal === null) { volumeVal = 1; }
+video.volume = parseFloat(volumeVal);
+currentVol.style.width = volumeVal * 100 + "%";
+
 // Cast value
 if (muted != null) {
     if (muted == "true") {
@@ -73,12 +78,6 @@ if (muted != null) {
         video.volume = 0;
     } else { muted = false; }
 } else { muted = false; }
-
-var volumeVal = localStorage.getItem("videoVolume");
-if (volumeVal === null) { volumeVal = 1; }
-video.volume = parseFloat(volumeVal);
-currentVol.style.width = volumeVal * 100 + "%";
-totalDuration.innerHTML = "00:00";
 
 let mouseDownProgress = false,
     mouseDownVol = false,
@@ -88,7 +87,6 @@ let mouseDownProgress = false,
     touchClientX = 0,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
-
 
 function next() { window.location.href = nextUrl; }
 function prev() { window.location.href = prevUrl; }
@@ -114,9 +112,7 @@ function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
         totalDuration.innerHTML = showDuration(video.duration);
         loadTracks(); split_timeline_chapters();
-    } else {
-        setTimeout(setVideoTime, 25);
-    }
+    } else { setTimeout(setVideoTime, 25); }
 }
 
 function canPlayInit() {
@@ -132,9 +128,7 @@ function handleVideoEnded() {
         next();
     } else if (currentMode === 2) {
         video.play();
-    } else {
-        pause();
-    }
+    } else { pause(); }
 }
 
 // Video Event Listeners
@@ -248,7 +242,6 @@ totalVol.addEventListener("mousedown", (e) => {
     handleVolume(e);
 });
 
-
 videoContainer.addEventListener('touchmove', function(event) {
     var touch = event.touches[0];
     if (!this.previousX) { this.previousX = touch.clientX; }
@@ -264,19 +257,7 @@ videoContainer.addEventListener('touchmove', function(event) {
 }, false);
 
 
-controls.addEventListener('touchstart', (e) => {
-    controls.classList.add("show-controls");
-    showCursor();
-    clearTimeout(timeout);
-});
-
-controls.addEventListener('mousemove', (e) => {
-    controls.classList.add("show-controls");
-    showCursor();
-    clearTimeout(timeout);
-});
-
-video.addEventListener("mousemove", (e) => {
+document.addEventListener("mousemove", (e) => {
     controls.classList.add("show-controls");
     showCursor();
     hideControls();
@@ -311,9 +292,7 @@ function pause() {
     handleAudioIcon();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
-    if (video.ended) {
-        currentTime.style.width = 100 + "%";
-    }
+    if (video.ended) { currentTime.style.width = 100+"%"; }
 }
 
 function navigate(e) {
@@ -559,7 +538,7 @@ function handleShorthand(e) {
             break;
         case "arrowdown":
             next();
- break;
+            break;
         case "r":
             changeMode();
             break;
