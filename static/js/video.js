@@ -156,7 +156,12 @@ document.addEventListener("mouseup", (e) => {
     mouseDownVol = false;
 });
 
-document.addEventListener("mousemove", handleMousemove);
+document.addEventListener("mousemove", (e) => {
+    controls.classList.add("show-controls");
+    showCursor();
+	handleMousemove(e);
+	hideControls();
+});
 
 duration.addEventListener("mouseenter", (e) => {
     mouseOverDuration = true;
@@ -192,11 +197,11 @@ duration.addEventListener("touchstart", (e) => {
 duration.addEventListener("touchend", hideHoverDuration);
 
 let cursorTimeout;
-
 function showCursor() {
+	if (cursorTimeout) { 
+	    clearTimeout(cursorTimeout);
+	} document.body.style.cursor = 'auto';
     if (!video.paused) {
-        document.body.style.cursor = 'auto';
-        clearTimeout(cursorTimeout);
         cursorTimeout = setTimeout(function() {
             if (!video.paused) {
                 document.body.style.cursor = 'none';
@@ -256,12 +261,6 @@ videoContainer.addEventListener('touchmove', function(event) {
     this.previousY = touch.clientY;
 }, false);
 
-
-document.addEventListener("mousemove", (e) => {
-    controls.classList.add("show-controls");
-    showCursor();
-    hideControls();
-});
 
 controls.addEventListener('touchend', hideControls);
 
