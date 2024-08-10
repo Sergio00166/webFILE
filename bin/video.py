@@ -43,25 +43,17 @@ def convert(src, ret):
         out = tmp.getvalue() 
     subs = pysubs2.SSAFile.from_string(out)
     del out # Free memory
-    grouped_events,oldtxt = {},""
-    # Here we combine th subs that has the same
-    # start and end time as others, and remove
-    # duplicated entries
-    for event in subs:
-        key = (event.start, event.end)
-        if key not in grouped_events:
-            if oldtxt != event.text:
-                grouped_events[key] = event.text
-        elif oldtxt != event.text:
-            grouped_events[key] += " "+event.text
-        oldtxt = event.text    
-    del subs.events, oldtxt  # Free memory
+    # Remove duplicated webVTT entries
+    unique_subs,seen = [],set()
+    for line in subs:
+        key = (line.text, line.start, line.end)
+        if key not in seen:
+            seen.add(key)
+            unique_subs.append(line)
+    del subs.events, seen  # Free memory
     # Pass to the object the values
-    subs.events = [
-        pysubs2.SSAEvent(start=start, end=end, text=text)
-        for (start, end), text in grouped_events.items()
-    ]
-    del grouped_events # Free memory
+    subs.events = unique_subs
+    del unique_subs # Free memory
     out=subs.to_string("vtt")
     del subs  # Free memory
     ret.put(out) # Return values
