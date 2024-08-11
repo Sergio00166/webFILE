@@ -5,6 +5,7 @@ from functions import *
 from os import sep
 from re import compile as recompile
 from argparse import ArgumentParser
+from random import choice
 
 
 def init():
@@ -44,7 +45,7 @@ def init():
     return args.port, args.bind, args.dir, args.dirsize
 
 
-def filepage_func(path,root,filetype):
+def filepage_func(path,root,filetype,random=False):
     # Get relative path from the root dir
     path=relpath(isornot(path,root), start=root)
     # Get the name of the folder
@@ -63,9 +64,13 @@ def filepage_func(path,root,filetype):
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
     # Fix url strings
-    nxt = "/" + fix_pth_url(nxt)
-    prev = "/" + fix_pth_url(prev)
-    return prev, nxt, name, path
+    nxt = fix_pth_url(nxt)
+    prev = fix_pth_url(prev)
+    # Return random flag
+    if random:
+        rnd = fix_pth_url(choice(lst))
+        return prev,nxt,name,path,rnd
+    else: return prev,nxt,name,path
 
 
 def index_func(folder_path,root,folder_size,sort):

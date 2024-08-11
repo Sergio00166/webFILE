@@ -26,18 +26,16 @@ var volumeVal = localStorage.getItem("audioVolume");
 var currentMode = localStorage.getItem("audioMode");
 var muted = localStorage.getItem("audioMuted");
 var saved_speed = localStorage.getItem("audioSpeed");
+var random = localStorage.getItem("audioRandom");
 
 if (saved_speed != null) {
     audio.playbackRate = parseFloat(saved_speed);
     speedButtons.forEach(item => {
         if (item.getAttribute('data-value') === saved_speed) {
             item.classList.add('speed-active');
-        } else {
-            item.classList.remove('speed-active');
-        }
+        } else { item.classList.remove('speed-active'); }
     });
-}
-delete saved_speed;
+} delete saved_speed;
 
 if (currentMode != null) {
     currentMode = parseInt(currentMode);
@@ -48,31 +46,30 @@ if (currentMode != null) {
     } else if (currentMode === 2) {
         mode.innerHTML = "↻";
     }
-} else {
-    currentMode = 0;
-}
+} else { currentMode = 0; }
 
-if (volumeVal === null) {
-    volumeVal = 1;
-}
+if (volumeVal === null) { volumeVal = 1; }
 audio.volume = parseFloat(volumeVal);
-currentVol.style.width = volumeVal * 100 + "%";
+currentVol.style.width = volumeVal*100+"%";
 
+// Cast value
 if (muted != null) {
     if (muted == "true") {
         muted = true;
         audio.volume = 0;
-    } else {
-        muted = false;
-    }
-} else {
-    muted = false;
-}
+    } else { muted = false; }
+} else { muted = false; }
+// Cast value
+if (random != null) {
+    if (random == "true") {
+        random = true;
+    } else { random = false; }
+} else { random = false; }
+
 
 let mouseDownProgress = false,
     mouseDownVol = false,
     isCursorOnControls = false,
-    timeout,
     mouseOverDuration = false,
     touchClientX = 0,
     touchPastDurationWidth = 0,
@@ -80,28 +77,35 @@ let mouseDownProgress = false,
 
 canPlayInit();
 
-function next() { window.location.href = nextUrl; }
-function prev() { window.location.href = prevUrl; }
+function prev() { 
+	if (random) { newURL = rndURL;
+	} else { newURL = prevUrl; } 
+	window.location.href = newURL;
+}
+function next() {
+	if (random) { newURL = rndURL;
+	} else { newURL = nextUrl; } 
+	window.location.href = newURL;
+}
 function download() { downloadLink.click(); }
-
 document.addEventListener("keydown", handleShorthand);
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
 
 function canPlayInit() {
     handleAudioIcon();
+	if (random) { 
+		mode.classList.add('lmbsl');
+	}
     if (audio.paused) {
         sh_play.classList.remove("sh_play");
-    } else {
-        sh_pause.classList.remove("sh_pause");
-    }
-
+    } else { 
+		sh_pause.classList.remove("sh_pause");
+	}
     function setAudioTime() {
         if (!(isNaN(audio.duration) || audio.duration === 0)) {
             totalDuration.innerHTML = showDuration(audio.duration);
-        } else {
-            setTimeout(setAudioTime, 25);
-        }
+        } else { setTimeout(setAudioTime, 25); }
     }
     setAudioTime()
 }
@@ -135,11 +139,8 @@ function handleProgressBar() {
 }
 
 function toggleMainState() {
-    if (audio.paused) {
-        play();
-    } else {
-        pause();
-    }
+    if (audio.paused) { play();
+    } else { pause(); }
 }
 
 function navigate(e) {
@@ -316,6 +317,11 @@ speedButtons.forEach((btn) => {
     btn.addEventListener("click", handlePlaybackRate);
 });
 
+var mber = undefined;
+var mdbtnpress = false;
+mode.addEventListener("mouseup",()=>{clearTimeout(mber);});
+mode.addEventListener("touchend",()=>{clearTimeout(mber);});
+
 function chMode() {
     if (currentMode === 0) {
         currentMode = 1;
@@ -329,6 +335,43 @@ function chMode() {
     }
     localStorage.setItem("audioMode", currentMode);
 }
+function addrmMLcl() {
+    if (mode.classList.contains('lmbsl')) {
+		random = false;
+        mode.classList.remove('lmbsl');
+    } else {
+		random = true;
+		mode.classList.add('lmbsl');
+	} localStorage.setItem("audioRandom",random);
+}
+mode.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    mber = setTimeout(() => {
+        addrmMLcl();
+        mdbtnpress = true;
+    }, 600);
+});
+mode.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    mber = setTimeout(() => {
+        addrmMLcl();
+        mdbtnpress = true;
+    }, 600);
+});
+mode.addEventListener("click", (e) => {
+    if (mdbtnpress) {
+        e.preventDefault();
+        mdbtnpress = false;
+    } else { chMode(); }
+});
+mode.addEventListener("touchend", (e) => {
+    if (mdbtnpress) {
+        e.preventDefault();
+        mdbtnpress = false;
+    } else { chMode(); }
+});
+
+
 
 function handleAudioEnded() {
     if (currentMode === 1) {
@@ -377,6 +420,7 @@ function handleAudioIcon() {
 }
 
 function handleShorthand(e) {
+	e.preventDefault();
     const tagName = document.activeElement.tagName.toLowerCase();
     if (tagName === "input") return;
     if (e.key.match(/[0-9]/gi)) {
@@ -409,7 +453,10 @@ function handleShorthand(e) {
         case "r":
             chMode();
             break;
-        case "s":
+		case "s":
+		    addrmMLcl();
+		    break;
+        case "q":
             toggleMuteUnmute();
             break;
         case "+":

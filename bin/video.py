@@ -1,8 +1,5 @@
 # Code by Sergio00166
-# Obtains info and extracts tracks from a video file
-# It is used for the video player subtitles
-# Also fixes weird things with the codecs when
-# converting formats like ASS/SSA to webVTT
+
 
 from os import sep, linesep, remove, mkdir
 from subprocess import Popen, PIPE, run
@@ -26,7 +23,7 @@ cache_dir+="/cache/"
 def get_codec(source, index):
     # Gets the codec name from a file
     cmd = [
-        'ffprobe', '-v', 'error',
+        'ffprobe', '-v', 'quiet',
         '-select_streams', f's:{index}',
         '-show_entries', 'stream=codec_name',
         '-of', 'default=noprint_wrappers=1:nokey=1',
@@ -36,7 +33,7 @@ def get_codec(source, index):
 
 
 def convert(src, ret):
-    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'), overlap=False)
+    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
     del src # Free memory
     with StringIO() as tmp:
         # Here we convert to webVTT without
@@ -46,34 +43,46 @@ def convert(src, ret):
         out = tmp.getvalue() 
     subs = pysubs2.SSAFile.from_string(out)
     del out # Free memory
-    grouped_events,oldtxt = {},""
-    # Here we combine th subs that has the same
-    # start and end time as others, and remove
-    # duplicated entries
-    for event in subs:
-        key = (event.start, event.end)
-        if key not in grouped_events:
-            if oldtxt != event.text:
-                grouped_events[key] = event.text
-        elif oldtxt != event.text:
-            grouped_events[key] += " "+event.text
-        oldtxt = event.text    
-    del subs.events, oldtxt  # Free memory
+    # Remove duplicated webVTT entries
+    unique_subs,seen = [],set()
+    for line in subs:
+        key = (line.text, line.start, line.end)
+        if key not in seen:
+            seen.add(key)
+            unique_subs.append(line)
+    del subs.events, seen  # Free memory
     # Pass to the object the values
-    subs.events = [
-        pysubs2.SSAEvent(start=start, end=end, text=text)
-        for (start, end), text in grouped_events.items()
-    ]
-    del grouped_events # Free memory
+    subs.events = unique_subs
+    del unique_subs # Free memory
     out=subs.to_string("vtt")
     del subs  # Free memory
     ret.put(out) # Return values
 
 
+def get_chapters(file_path):
+    try:
+        result = run([
+            'ffprobe', '-v', 'quiet', '-print_format',
+            'json', '-show_entries', 'chapters', file_path
+        ], stdout=PIPE, stderr=PIPE, text=True)
+        ffprobe_output = jsload(result.stdout)
+        del result # Free memory
+        filtered_chapters = [
+            {
+                'title': chapter['tags'].get('title', 'Untitled'),
+                'start_time': int(float(chapter['start_time']))
+            }
+            for chapter in ffprobe_output['chapters']
+        ]
+        del ffprobe_output # Free memory
+        return filtered_chapters
+    except: return ""
+
+
 def get_info(file_path):
     # This is to get all the subtitles name or language
     result = run([
-        'ffprobe', '-v', 'error', '-select_streams', 's', 
+        'ffprobe', '-v', 'quiet', '-select_streams', 's', 
         '-show_entries', 'stream=index:stream_tags=title:stream_tags=language',
         '-of', 'json', file_path
     ], stdout=PIPE, stderr=PIPE, text=True) 
@@ -103,14 +112,11 @@ def get_subs_cache():
         open(file,"w").close()
         files = glob(cache_dir+"*", recursive=False)
         for x in files: remove(x)
-        del files; file = []
-    
+        del files; file = []    
     dic = {}
     for x in file:
         x=x.split("\n")
-        if len(x)==3:
-            dic[x[0]]=[x[1],x[2]]
-
+        if len(x)==3: dic[x[0]]=[x[1],x[2]]
     return dic
 
 

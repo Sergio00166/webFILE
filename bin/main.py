@@ -63,7 +63,7 @@ if __name__=="__main__":
                     if mode=="dir": return send_dir(isornot(path,root))
                     if mode in sort_mod: sort=mode   
                 folder_content,folder_path,parent_directory,is_root,par_root = index_func(path,root,folder_size,sort)
-                return stream_template('index.html', folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,par_root=par_root)
+                return stream_template('index.html',folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,par_root=par_root)
 
             elif file_type=="Text" or file_type=="SRC": return send_file(isornot(path,root), mimetype='text')
             
@@ -73,15 +73,14 @@ if __name__=="__main__":
                     try: arg = str(int(mode[4:]))+"/"+path
                     except: raise FileNotFoundError
                     out = sub_cache_handler(arg,root)
-                    return Response(out,mimetype="text/plain",headers=
-                    {"Content-disposition":"attachment; filename=subs.vtt"})
+                    return Response(out,mimetype="text/plain",headers={"Content-disposition":"attachment; filename=subs.vtt"})
                 prev, nxt, name, path = filepage_func(path,root,file_type)
-                tracks = get_info(root+sep+path)
-                return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks)
+                tracks,chapters = get_info(root+sep+path),get_chapters(root+sep+path)
+                return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks,chapters=chapters)
 
             elif file_type=="Audio":
-                prev, nxt, name, path = filepage_func(path,root,file_type)
-                return render_template('audio.html', path=path, name=name,prev=prev, nxt=nxt)
+                prev,nxt,name,path,rnd = filepage_func(path,root,file_type,True)
+                return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
             else: return send_file(isornot(path,root))
             
         except PermissionError: return render_template('403.html'), 403

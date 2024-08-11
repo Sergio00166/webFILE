@@ -26,6 +26,7 @@
         <div class="hover-time">
           <span class="hover-duration"> </span>
         </div>
+        <div class="chapter-container"></div>
         <div class="buffer"></div>
       </div>
       <div class="btn-controls">
@@ -97,6 +98,7 @@
   <script>
     const nextUrl = '{{ nxt }}'; 
     const prevUrl = '{{ prev }}';
+    const chapters = {{chapters | tojson}}
   </script>
 </body>
 </html>

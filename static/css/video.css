@@ -47,7 +47,6 @@ body {
   align-items: center;
   justify-content: center;
 }
-
 video {
     max-height: 90vh;
     width: 100%;
@@ -57,7 +56,6 @@ video {
 .video-container:fullscreen video { 
     max-height: 100vh;
 } 
-
 .loader {
   width: 108px;
   height: 108px;
@@ -128,7 +126,21 @@ video {
   background: #62626274;
   cursor: pointer;
   transition: all 0.2s;
-  border-radius: 5px;
+  border-radius: 4px;
+}
+.chapter-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.chapter {
+    position: absolute;
+    height: 100%;
+    width: 2px;
+    margin-left: -1px;
+    background-color: #000000;
 }
 .duration .buffer {
   height: 100%;
@@ -137,8 +149,8 @@ video {
   z-index: 9;
   width: 0;
 }
-
 .hover-time {
+  overflow: show;
   height: 100%;
   position: absolute;
   inset: 0;
@@ -151,8 +163,8 @@ video {
 }
 .hover-time .hover-duration {
   position: absolute;
-  right: 0px;
-  top: -25px;
+  right: 0%;
+  top: -35px;
   background: #3c3c3ca7;
   padding: 0.2rem;
   border-radius: 5px;
@@ -160,7 +172,7 @@ video {
   visibility: hidden;
   font-weight: bold;
   opacity: 0;
-  transform: scale(0);
+  text-align: center;
 }
 .duration:hover .hover-time .hover-duration {
   visibility: visible;
@@ -279,7 +291,6 @@ video {
   font-weight: 500;
   cursor: pointer;
 }
-
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
     color: #FFFFFF;
@@ -295,7 +306,6 @@ video {
     color: #FFFFFF;
     position: absolute;
 }
-
 select {
   cursor: pointer;
   appearance: none;
@@ -314,7 +324,6 @@ select option {
    background-color: rgba(28, 28, 28, 0.9);
    color: #EEE;
 }
-
 .speed-active {
   background: rgb(64, 64, 64);
   background: rgb(64, 64, 64);
@@ -417,7 +426,7 @@ button:focus { outline: none; }
   .state-btn { 
       margin-bottom: 10vh;
       width: 25vh;
-	  height: 25vh;
+      height: 25vh;
   }
   .fullimg { width: 16vh; height: 16vh; }
   .side-controls { display: none; }

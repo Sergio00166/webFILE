@@ -46,7 +46,7 @@
         </span>
         <button class="round-button" onclick="prev()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
         <button class="round-button" onclick="next()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
-        <button class="round-button" id="mode" onclick="chMode()">1</button> 
+        <button  class="round-button" id="mode">1</button> 
         <button class="round-button download" onclick="download()">
         <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
         <span class="settings">
@@ -69,6 +69,7 @@
     <script>
         const nextUrl = '{{ nxt }}'; 
         const prevUrl = '{{ prev }}';
+		const rndURL = '{{ rnd }}';
     </script>
 </body>
 </html>
