@@ -56,7 +56,7 @@ currentVol.style.width = volumeVal*100+"%";
 if (muted != null) {
     if (muted == "true") {
         muted = true;
-        video.volume = 0;
+        audio.volume = 0;
     } else { muted = false; }
 } else { muted = false; }
 // Cast value
@@ -420,6 +420,7 @@ function handleAudioIcon() {
 }
 
 function handleShorthand(e) {
+	e.preventDefault();
     const tagName = document.activeElement.tagName.toLowerCase();
     if (tagName === "input") return;
     if (e.key.match(/[0-9]/gi)) {
@@ -452,7 +453,10 @@ function handleShorthand(e) {
         case "r":
             chMode();
             break;
-        case "s":
+		case "s":
+		    addrmMLcl();
+		    break;
+        case "q":
             toggleMuteUnmute();
             break;
         case "+":
