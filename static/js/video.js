@@ -210,12 +210,6 @@ function showCursor() {
     }
 }
 
-video.addEventListener("click", (e) => {
-    toggleMainState();
-    document.body.style.cursor = 'auto';
-    showCursor();    
-});
-
 videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
     if (video.videoWidth>=video.videoHeight) {
@@ -248,17 +242,9 @@ totalVol.addEventListener("mousedown", (e) => {
 });
 
 videoContainer.addEventListener('touchmove', function(event) {
-    var touch = event.touches[0];
-    if (!this.previousX) { this.previousX = touch.clientX; }
-    if (!this.previousY) { this.previousY = touch.clientY; }
     // Show menu if screen movement (touch)
     controls.classList.add("show-controls");
     showCursor(); hideControls();
-    //Swipe to the right/left to advance/recede the time
-    if (touch.clientX > this.previousX+36) { video.currentTime+=5; }
-    if (touch.clientX < this.previousX-36) { video.currentTime-=5; }
-    this.previousX = touch.clientX;
-    this.previousY = touch.clientY;
 }, false);
 
 
@@ -375,13 +361,9 @@ function hideControls() {
     }, 2500);
 }
 
-function toggleMainState() {
-    if (video.paused) {
-        play();
-    } else {
-        pause();
-    }
-}
+
+function toggleMainState() { video.paused ? play() : pause(); }
+
 
 function handleVolume(e) {
     const totalVolRect = totalVol.getBoundingClientRect();
@@ -662,3 +644,29 @@ function split_timeline_chapters() {
         container.appendChild(section);
     });
 }
+
+video.addEventListener("click", (e) => {
+	e.preventDefault();
+    toggleMainState();
+    document.body.style.cursor = 'auto';
+    showCursor();    
+});
+
+let lastTouchTime = 0;
+let touchTimeout;
+
+video.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    const now = Date.now();
+    const touchInterval = now-lastTouchTime;
+	const divRect = video.getBoundingClientRect();
+    if (touchInterval < 250) {
+		clearTimeout(touchTimeout);
+		const touchX = event.changedTouches[0].clientX;
+		const centerX = divRect.left+(divRect.width/2);
+		const p = touchX < centerX;
+		if (p) { video.currentTime -= 5; }
+		  else { video.currentTime += 5; }
+    } else { touchTimeout=setTimeout(toggleMainState,250); } 
+	lastTouchTime = now;
+});

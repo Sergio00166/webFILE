@@ -11,6 +11,7 @@ body {
   flex-direction: column;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  word-break: break-all;
 }
 .flex {
   display: flex;
