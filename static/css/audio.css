@@ -166,7 +166,6 @@ img {
   background: #eee;
 }
 .setting-menu {
-  z-index: 9999;
   opacity: 0;
   visibility: hidden;
   list-style: none;
