@@ -309,7 +309,7 @@ function chMode() {
     const modes = ["1", "»", "↻"];
     currentMode = (currentMode + 1) % 3;
     mode.innerHTML = modes[currentMode];
-    localStorage.setItem("videoMode", currentMode);
+    localStorage.setItem("audioMode", currentMode);
 }
 
 function addrmMLcl() {
@@ -352,7 +352,7 @@ mode.addEventListener("touchend", (e) => {
 
 function handleAudioEnded() {
     if (currentMode === 1) { next(); }
-    else if (currentMode === 2) { video.play(); }
+    else if (currentMode === 2) { audio.play(); }
     else { pause(); }
 }
 
