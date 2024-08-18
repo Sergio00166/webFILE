@@ -67,7 +67,8 @@ if __name__=="__main__":
 
             elif file_type=="Text" or file_type=="SRC": return send_file(isornot(path,root), mimetype='text')
             
-            elif file_type=="Video": 
+            elif file_type=="Video":
+                check_ffmpeg_installed()
                 if cmp and mode[:4]=="subs":
                     if path.endswith("/"): path=path[:-1]
                     try: arg = str(int(mode[4:]))+"/"+path

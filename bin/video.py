@@ -20,6 +20,13 @@ cache_dir="/".join(cache_dir)
 cache_dir+="/cache/"
 
 
+def check_ffmpeg_installed():
+    try:
+        result = run(['ffmpeg','-version'])
+        if result.returncode != 0:
+            raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
+    except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
+
 def get_codec(source, index):
     # Gets the codec name from a file
     cmd = [
