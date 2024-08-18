@@ -57,13 +57,7 @@ var muted = localStorage.getItem("videoMuted");
 
 if (currentMode != null) {
     currentMode = parseInt(currentMode);
-    if (currentMode === 0) {
-        mode.innerHTML = "1";
-    } else if (currentMode === 1) {
-        mode.innerHTML = "»";
-    } else if (currentMode === 2) {
-        mode.innerHTML = "↻";
-    }
+    mode.innerHTML = ["1", "»", "↻"][currentMode] || "1";
 } else { currentMode = 0; }
 
 var volumeVal = localStorage.getItem("videoVolume");
@@ -95,17 +89,20 @@ function download() { downloadLink.click(); }
 canPlayInit();
 
 function chMode() {
-    if (currentMode === 2) {
-        currentMode = 0;
-        mode.innerHTML = "1";
-    } else if (currentMode === 0) {
-        currentMode = 1;
-        mode.innerHTML = "»";
-    } else if (currentMode === 1) {
-        currentMode = 2;
-        mode.innerHTML = "↻";
-    }
+    const modes = ["1", "»", "↻"];
+    currentMode = (currentMode + 1) % 3;
+    mode.innerHTML = modes[currentMode];
     localStorage.setItem("videoMode", currentMode);
+}
+
+function toggleMainState() { 
+    video.paused ? play() : pause();
+}
+function handleSettingMenu() {
+    settingMenu.classList.toggle("show-setting-menu");
+}
+function saveVolume() {
+    localStorage.setItem("videoVolume", volumeVal);
 }
 
 function setVideoTime() {
@@ -124,11 +121,9 @@ function canPlayInit() {
 }
 
 function handleVideoEnded() {
-    if (currentMode === 1) {
-        next();
-    } else if (currentMode === 2) {
-        video.play();
-    } else { pause(); }
+    if (currentMode === 1) { next(); }
+    else if (currentMode === 2) { video.play(); }
+    else { pause(); }
 }
 
 // Video Event Listeners
@@ -159,8 +154,8 @@ document.addEventListener("mouseup", (e) => {
 document.addEventListener("mousemove", (e) => {
     controls.classList.add("show-controls");
     showCursor();
-	handleMousemove(e);
-	hideControls();
+    handleMousemove(e);
+    hideControls();
 });
 
 duration.addEventListener("mouseenter", (e) => {
@@ -190,31 +185,20 @@ function hideHoverDuration() {
 // Magic tricks to hide the time when using touchscreen
 duration.addEventListener("touchmove", handleTouchNavigate);
 duration.addEventListener("touchstart", (e) => {
-    setTimeout(function() {
-        hideHoverDuration();
-    }, 250);
+    setTimeout(function() { hideHoverDuration(); },250);
 }); // Fix showing the time when hoving
 duration.addEventListener("touchend", hideHoverDuration);
 
 let cursorTimeout;
 function showCursor() {
-	if (cursorTimeout) { 
-	    clearTimeout(cursorTimeout);
-	} document.body.style.cursor = 'auto';
+    if (cursorTimeout) { clearTimeout(cursorTimeout); }
+    document.body.style.cursor = 'auto';
     if (!video.paused) {
         cursorTimeout = setTimeout(function() {
-            if (!video.paused) {
-                document.body.style.cursor = 'none';
-            }
+            if (!video.paused) { document.body.style.cursor = 'none'; }
         }, 3000);
     }
 }
-
-video.addEventListener("click", (e) => {
-    toggleMainState();
-    document.body.style.cursor = 'auto';
-    showCursor();    
-});
 
 videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
@@ -227,15 +211,10 @@ videoContainer.addEventListener("fullscreenchange", () => {
 
 mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
-
 video.addEventListener("animationend", handleMainSateAnimationEnd);
 
-volume.addEventListener("mouseenter", (e) => {
-    if (!muted) {
-        totalVol.classList.add("show");
-    } else {
-        totalVol.classList.remove("show");
-    }
+volume.addEventListener("mouseenter", () => {
+    muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
 });
 
 volume.addEventListener("mouseleave", (e) => {
@@ -248,19 +227,10 @@ totalVol.addEventListener("mousedown", (e) => {
 });
 
 videoContainer.addEventListener('touchmove', function(event) {
-    var touch = event.touches[0];
-    if (!this.previousX) { this.previousX = touch.clientX; }
-    if (!this.previousY) { this.previousY = touch.clientY; }
     // Show menu if screen movement (touch)
     controls.classList.add("show-controls");
     showCursor(); hideControls();
-    //Swipe to the right/left to advance/recede the time
-    if (touch.clientX > this.previousX+36) { video.currentTime+=5; }
-    if (touch.clientX < this.previousX-36) { video.currentTime-=5; }
-    this.previousX = touch.clientX;
-    this.previousY = touch.clientY;
 }, false);
-
 
 controls.addEventListener('touchend', hideControls);
 
@@ -361,9 +331,7 @@ function toggleMuteUnmute() {
 }
 
 function hideControls() {
-    if (timeout) {
-        clearTimeout(timeout);
-    }
+    if (timeout) { clearTimeout(timeout); }
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
             controls.classList.remove("show-controls");
@@ -373,14 +341,6 @@ function hideControls() {
             }
         }
     }, 2500);
-}
-
-function toggleMainState() {
-    if (video.paused) {
-        play();
-    } else {
-        pause();
-    }
 }
 
 function handleVolume(e) {
@@ -406,7 +366,6 @@ function handleProgress() {
     // Calculate buffer width
     var width = (currentBufferLength / video.duration) * 100;
     buffer.style.width = width + "%";
-
 }
 
 function toggleFullscreen() {
@@ -423,9 +382,11 @@ function toggleFullscreen() {
 
 function getchptname(timeInSeconds) {
     for (let i = 0; i < chapters.length; i++) {
-        if (i === chapters.length - 1 || (timeInSeconds >= chapters[i].start_time && timeInSeconds < chapters[i + 1].start_time)) {
-            return chapters[i].title;
-        }
+        const cond0 = i === chapters.length-1;
+        const cond1 = timeInSeconds >= chapters[i].start_time;
+        const cond2 = timeInSeconds < chapters[i+1].start_time;
+        const cond = cond0 || (cond1 && cond2);
+        if (cond) { return chapters[i].title; }
     } return "";
 }
 
@@ -456,9 +417,6 @@ function handleMousemove(e) {
         const size = hoverDuration.getBoundingClientRect().width;
         hoverDuration.style.right = "-"+size/2+"px";    
     }
-    if (video.paused) {
-        pause();
-    } else { play(); }
 }
 
 function handleMainSateAnimationEnd() {
@@ -468,10 +426,6 @@ function handleMainSateAnimationEnd() {
         sh_mute_st.classList.add("sh_mute_st");
         sh_unmute_st.classList.add("sh_unmute_st");
     }
-}
-
-function handleSettingMenu() {
-    settingMenu.classList.toggle("show-setting-menu");
 }
 
 function handleAudioIcon() {
@@ -511,7 +465,6 @@ function handleAudioIcon() {
 }
 
 function handleShorthand(e) {
-	e.preventDefault();
     const tagName = document.activeElement.tagName.toLowerCase();
     if (tagName === "input") return;
     if (e.key.match(/[0-9]/gi)) {
@@ -519,58 +472,33 @@ function handleShorthand(e) {
         currentTime.style.width = parseInt(e.key) * 10 + "%";
     }
     switch (e.key.toLowerCase()) {
-        case " ":
-            if (!video.paused) {
-                pause();
-            } else { play(); }
-            break;
-        case "f":
-            toggleFullscreen();
-            break;
-        case "arrowright":
-            video.currentTime += 5;
-            break;
-        case "arrowleft":
-            video.currentTime -= 5;
-            break;
-        case "arrowup":
-            prev();
-            break;
-        case "arrowdown":
-            next();
-            break;
-        case "r":
-            changeMode();
-            break;
-        case "q":
-            toggleMuteUnmute();
-            break;
+        case " ": video.paused ? play() : pause(); break;
+        case "f": toggleFullscreen(); break;
+        case "arrowright": video.currentTime += 5; break;
+        case "arrowleft": video.currentTime -= 5; break;
+        case "arrowup": prev(); break;
+        case "arrowdown": next(); break;
+        case "r": changeMode(); break;
+        case "q": toggleMuteUnmute(); break;
         case "+":
             if (volumeVal < 1 && !muted) {
                 volumeVal = parseFloat(volumeVal + 0.05);
-                if (volumeVal > 1) {
-                    volumeVal = 1;
-                }
+                if (volumeVal > 1) { volumeVal = 1; }
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
                 saveVolume();
-            }
-            break;
+            } break;
         case "-":
             if (volumeVal > 0 && !muted) {
                 volumeVal = parseFloat(volumeVal - 0.05);
-                if (volumeVal < 0) {
-                    volumeVal = 0;
-                }
+                if (volumeVal < 0) { volumeVal = 0; }
                 video.volume = volumeVal;
                 handleAudioIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
                 saveVolume();
-            }
-            break;
-        default:
-            break;
+            } break;
+        default: break;
     }
 }
 
@@ -643,9 +571,6 @@ speedSelect.addEventListener('change', function() {
 const liD = document.getElementById("liD");
 liD.addEventListener("click", download);
 
-function saveVolume() {
-    localStorage.setItem("videoVolume", volumeVal);
-}
 
 function split_timeline_chapters() {
     const divLength = video.duration;
@@ -662,3 +587,29 @@ function split_timeline_chapters() {
         container.appendChild(section);
     });
 }
+
+video.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleMainState();
+    document.body.style.cursor = 'auto';
+    showCursor();    
+});
+
+let lastTouchTime = 0;
+let touchTimeout;
+
+video.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    const now = Date.now();
+    const touchInterval = now-lastTouchTime;
+    const divRect = video.getBoundingClientRect();
+    if (touchInterval < 250) {
+        clearTimeout(touchTimeout);
+        const touchX = event.changedTouches[0].clientX;
+        const centerX = divRect.left+(divRect.width/2);
+        const p = touchX < centerX;
+        if (p) { video.currentTime -= 5; }
+          else { video.currentTime += 5; }
+    } else { touchTimeout=setTimeout(toggleMainState(false),250); } 
+    lastTouchTime = now;
+});

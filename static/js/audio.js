@@ -39,13 +39,7 @@ if (saved_speed != null) {
 
 if (currentMode != null) {
     currentMode = parseInt(currentMode);
-    if (currentMode === 0) {
-        mode.innerHTML = "1";
-    } else if (currentMode === 1) {
-        mode.innerHTML = "»";
-    } else if (currentMode === 2) {
-        mode.innerHTML = "↻";
-    }
+    mode.innerHTML = ["1", "»", "↻"][currentMode] || "1";
 } else { currentMode = 0; }
 
 if (volumeVal === null) { volumeVal = 1; }
@@ -78,14 +72,14 @@ let mouseDownProgress = false,
 canPlayInit();
 
 function prev() { 
-	if (random) { newURL = rndURL;
-	} else { newURL = prevUrl; } 
-	window.location.href = newURL;
+    if (random) { newURL = rndURL;
+    } else { newURL = prevUrl; } 
+    window.location.href = newURL;
 }
 function next() {
-	if (random) { newURL = rndURL;
-	} else { newURL = nextUrl; } 
-	window.location.href = newURL;
+    if (random) { newURL = rndURL;
+    } else { newURL = nextUrl; } 
+    window.location.href = newURL;
 }
 function download() { downloadLink.click(); }
 document.addEventListener("keydown", handleShorthand);
@@ -94,20 +88,13 @@ audio.addEventListener("pause", pause);
 
 function canPlayInit() {
     handleAudioIcon();
-	if (random) { 
-		mode.classList.add('lmbsl');
-	}
-    if (audio.paused) {
-        sh_play.classList.remove("sh_play");
-    } else { 
-		sh_pause.classList.remove("sh_pause");
-	}
+    if (random) { mode.classList.add('lmbsl'); }
+    audio.paused ? sh_play.classList.remove("sh_play") : sh_pause.classList.remove("sh_pause");
     function setAudioTime() {
         if (!(isNaN(audio.duration) || audio.duration === 0)) {
             totalDuration.innerHTML = showDuration(audio.duration);
         } else { setTimeout(setAudioTime, 25); }
-    }
-    setAudioTime()
+    } setAudioTime();
 }
 
 function play() {
@@ -120,9 +107,17 @@ function pause() {
     audio.pause();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
-    if (audio.ended) {
-        currentTime.style.width = 100 + "%";
-    }
+    if (audio.ended) { currentTime.style.width = 100+"%"; }
+}
+
+function toggleMainState() {
+    audio.paused ? play() : pause();
+}
+function handleSettingMenu() {
+    settingMenu.classList.toggle("show-setting-menu");
+}
+function saveVolume() { 
+    localStorage.setItem("audioVolume", volumeVal);
 }
 
 audio.ontimeupdate = handleProgressBar;
@@ -136,11 +131,6 @@ function handleProgressBar() {
           duration: audio.duration
         });
     }
-}
-
-function toggleMainState() {
-    if (audio.paused) { play();
-    } else { pause(); }
 }
 
 function navigate(e) {
@@ -268,12 +258,8 @@ function handleVolume(e) {
     handleAudioIcon();
 }
 
-volume.addEventListener("mouseenter", (e) => {
-    if (!muted) {
-        totalVol.classList.add("show");
-    } else {
-        totalVol.classList.remove("show");
-    }
+volume.addEventListener("mouseenter", () => {
+    muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
 });
 
 function toggleMuteUnmute() {
@@ -299,9 +285,6 @@ volume.addEventListener("mouseleave", (e) => {
     totalVol.classList.remove("show");
 });
 
-function handleSettingMenu() {
-    settingMenu.classList.toggle("show-setting-menu");
-}
 
 function handlePlaybackRate(e) {
     audio.playbackRate = parseFloat(e.target.dataset.value);
@@ -323,26 +306,21 @@ mode.addEventListener("mouseup",()=>{clearTimeout(mber);});
 mode.addEventListener("touchend",()=>{clearTimeout(mber);});
 
 function chMode() {
-    if (currentMode === 0) {
-        currentMode = 1;
-        mode.textContent = "»";
-    } else if (currentMode === 1) {
-        currentMode = 2;
-        mode.textContent = "↻";
-    } else if (currentMode === 2) {
-        currentMode = 0;
-        mode.textContent = "1";
-    }
+    const modes = ["1", "»", "↻"];
+    currentMode = (currentMode + 1) % 3;
+    mode.innerHTML = modes[currentMode];
     localStorage.setItem("audioMode", currentMode);
 }
+
 function addrmMLcl() {
     if (mode.classList.contains('lmbsl')) {
-		random = false;
+        random = false;
         mode.classList.remove('lmbsl');
     } else {
-		random = true;
-		mode.classList.add('lmbsl');
-	} localStorage.setItem("audioRandom",random);
+        random = true;
+        mode.classList.add('lmbsl');
+    }
+    localStorage.setItem("audioRandom",random);
 }
 mode.addEventListener("mousedown", (e) => {
     e.preventDefault();
@@ -372,15 +350,10 @@ mode.addEventListener("touchend", (e) => {
 });
 
 
-
 function handleAudioEnded() {
-    if (currentMode === 1) {
-        next();
-    } else if (currentMode === 2) {
-        audio.play();
-    } else {
-        pause();
-    }
+    if (currentMode === 1) { next(); }
+    else if (currentMode === 2) { audio.play(); }
+    else { pause(); }
 }
 
 function handleAudioIcon() {
@@ -420,7 +393,6 @@ function handleAudioIcon() {
 }
 
 function handleShorthand(e) {
-	e.preventDefault();
     const tagName = document.activeElement.tagName.toLowerCase();
     if (tagName === "input") return;
     if (e.key.match(/[0-9]/gi)) {
@@ -428,69 +400,35 @@ function handleShorthand(e) {
         currentTime.style.width = parseInt(e.key) * 10 + "%";
     }
     switch (e.key.toLowerCase()) {
-        case " ":
-            if (tagName === "button") return;
-            if (!audio.paused) {
-                pause();
-            } else {
-                play();
-            }
-            break;
-        case "arrowright":
-            audio.currentTime += 2;
-            handleProgressBar();
-            break;
-        case "arrowleft":
-            audio.currentTime -= 2;
-            handleProgressBar();
-            break;
-        case "arrowup":
-            prev();
-            break;
-        case "arrowdown":
-            next();
-            break;
-        case "r":
-            chMode();
-            break;
-		case "s":
-		    addrmMLcl();
-		    break;
-        case "q":
-            toggleMuteUnmute();
-            break;
+        case " ": audio.paused ? play(): pause(); break;
+        case "arrowright": audio.currentTime += 2; break;
+        case "arrowleft": audio.currentTime -= 2; break;
+        case "arrowup": prev(); break;
+        case "arrowdown": next(); break;
+        case "r": chMode(); break;
+        case "s": addrmMLcl(); break;
+        case "q": toggleMuteUnmute(); break;
         case "+":
             if (volumeVal < 1 && !muted) {
                 volumeVal = parseFloat(volumeVal + 0.05);
-                if (volumeVal > 1) {
-                    volumeVal = 1;
-                }
+                if (volumeVal > 1) { volumeVal = 1; }
                 audio.volume = volumeVal;
                 currentVol.style.width = volumeVal * 100 + "%";
                 handleAudioIcon();
                 saveVolume();
-            }
-            break;
+            } break;
         case "-":
             if (volumeVal > 0 && !muted) {
                 volumeVal = parseFloat(volumeVal - 0.05);
-                if (volumeVal < 0) {
-                    volumeVal = 0;
-                }
+                if (volumeVal < 0) { volumeVal = 0; }
                 handleAudioIcon();
                 audio.volume = volumeVal;
                 currentVol.style.width = volumeVal * 100 + "%";
                 saveVolume();
-            }
-            break;
-        default:
-            break;
+            } break;
+        default: break;
     }
 }
-
-function saveVolume() { 
-    localStorage.setItem("audioVolume", volumeVal);
- }
 
 if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('previoustrack', prev);
