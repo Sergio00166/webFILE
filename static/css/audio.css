@@ -178,6 +178,8 @@ img {
   transition: all 0.2s;
   background: rgba(50, 50, 50, 1);
   border-radius: 5px;
+  z-index: 9999;
+  color: #EEEEEE;
 }
 .setting-menu li {
   padding: 0.3rem 1.33rem;
