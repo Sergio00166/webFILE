@@ -151,7 +151,12 @@ document.addEventListener("mouseup", (e) => {
     mouseDownVol = false;
 });
 
-document.addEventListener("mousemove", (e) => {
+videoContainer.addEventListener("mouseleave", (e) => {
+    if (cursorTimeout) { clearTimeout(cursorTimeout); }
+    document.body.style.cursor = 'auto';
+});
+
+videoContainer.addEventListener("mousemove", (e) => {
     controls.classList.add("show-controls");
     showCursor();
     handleMousemove(e);
