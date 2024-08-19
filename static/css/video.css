@@ -1,8 +1,21 @@
 /* Code by Sergio00166 */
 
- * {
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+
+* {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+video::cue {
+  background: none !important;
+  text-shadow:
+      0.05em 0.05em 0.1em black,
+      -0.05em 0.05em 0.1em black,
+      0.05em -0.05em 0.1em black,
+      -0.05em -0.05em 0.1em black,
+      0.05em 0 0.1em black,
+      -0.05em 0 0.1em black,
+      0 0.05em 0.1em black,
+      0 -0.05em 0.1em black;
 }
 img {
   width: 20px;
@@ -53,9 +66,9 @@ video {
     height: 100%;
     object-fit: contain !important;
 }
-.video-container:fullscreen video { 
+.video-container:fullscreen video {
     max-height: 100vh;
-} 
+}
 .loader {
   width: 108px;
   height: 108px;
@@ -421,7 +434,7 @@ button:focus { outline: none; }
        padding-top: 1rem;
        margin-bottom: -0.6rem;
    }
-  .state-btn { 
+  .state-btn {
       margin-bottom: 10vh;
       width: 25vh;
       height: 25vh;
