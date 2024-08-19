@@ -108,7 +108,7 @@ function saveVolume() {
 function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
         totalDuration.innerHTML = showDuration(video.duration);
-        loadTracks(); split_timeline_chapters();
+		split_timeline_chapters(); loadTracks();
     } else { setTimeout(setVideoTime, 25); }
 }
 
@@ -503,20 +503,22 @@ function handleShorthand(e) {
 }
 
 function loadTracks() {
-    saved = localStorage.getItem("videoAudio");
-    audioTracks = video.audioTracks;
-    for (let i = 0; i < audioTracks.length; i++) {
-        const track = audioTracks[i];
-        const option = document.createElement('option');
-        option.value = i;
-        name = (track.label || track.language || "Track "+(i+1));
-        option.textContent = name;
-        audioTracksSelect.appendChild(option);
-        if (name === saved) { 
-            audioTracksSelect.selectedIndex = i;
-            changeTrack();
-        } else { audioTracksSelect.selectedIndex = 0; }
-    } 
+	try {
+		saved = localStorage.getItem("videoAudio");
+		audioTracks = video.audioTracks;
+		for (let i = 0; i < audioTracks.length; i++) {
+			const track = audioTracks[i];
+			const option = document.createElement('option');
+			option.value = i;
+			name = (track.label || track.language || "Track "+(i+1));
+			option.textContent = name;
+			audioTracksSelect.appendChild(option);
+			if (name === saved) { 
+				audioTracksSelect.selectedIndex = i;
+				changeTrack();
+			} else { audioTracksSelect.selectedIndex = 0; }
+		}
+	} catch {}
 }
 
 let originalTime = 0;
