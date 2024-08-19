@@ -231,12 +231,6 @@ totalVol.addEventListener("mousedown", (e) => {
     handleVolume(e);
 });
 
-videoContainer.addEventListener('touchmove', function(event) {
-    // Show menu if screen movement (touch)
-    controls.classList.add("show-controls");
-    showCursor(); hideControls();
-}, false);
-
 controls.addEventListener('touchend', hideControls);
 
 function play() {
@@ -604,19 +598,28 @@ video.addEventListener("click", (e) => {
 
 let lastTouchTime = 0;
 let touchTimeout;
+let touchFix;
+
+videoContainer.addEventListener('touchmove', (e) => {
+    // Show menu if screen movement (touch)
+    touchFix=true;
+    controls.classList.add("show-controls");
+    showCursor(); hideControls();
+}, false);
 
 video.addEventListener('touchend', (e) => {
     e.preventDefault();
+    clearTimeout(touchTimeout);
+    if (touchFix) { touchFix=false; return; }
     const now = Date.now();
     const touchInterval = now-lastTouchTime;
     const divRect = video.getBoundingClientRect();
     if (touchInterval < 250) {
-        clearTimeout(touchTimeout);
         const touchX = event.changedTouches[0].clientX;
         const centerX = divRect.left+(divRect.width/2);
         const p = touchX < centerX;
         if (p) { video.currentTime -= 5; }
           else { video.currentTime += 5; }
-    } else { touchTimeout=setTimeout(toggleMainState(false),250); } 
+    } else { touchTimeout=setTimeout(toggleMainState,250); }
     lastTouchTime = now;
-});
+});   
