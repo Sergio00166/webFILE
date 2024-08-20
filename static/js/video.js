@@ -37,6 +37,7 @@ var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 
+// Inicialitate everything
 {
     text = localStorage.getItem("videoSubs");
     selectedIndex = 0;
@@ -73,6 +74,10 @@ if (muted != null) {
     } else { muted = false; }
 } else { muted = false; }
 
+canPlayInit();
+
+// Rest of the functions
+
 let mouseDownProgress = false,
     mouseDownVol = false,
     isCursorOnControls = false,
@@ -85,8 +90,6 @@ let mouseDownProgress = false,
 function next() { window.location.href = nextUrl; }
 function prev() { window.location.href = prevUrl; }
 function download() { downloadLink.click(); }
-
-canPlayInit();
 
 function chMode() {
     const modes = ["1", "»", "↻"];
