@@ -5,18 +5,19 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
-video::cue {
-  background: none !important;
-  text-shadow:
-      0.05em 0.05em 0.1em black,
-      -0.05em 0.05em 0.1em black,
-      0.05em -0.05em 0.1em black,
-      -0.05em -0.05em 0.1em black,
-      0.05em 0 0.1em black,
-      -0.05em 0 0.1em black,
-      0 0.05em 0.1em black,
-      0 -0.05em 0.1em black;
-}
+video::cue {                                                                                                                                                                                                                                 
+  background: none !important;                                                                                                                                                                                                               
+  text-shadow:                                                                                                                                                                                                                               
+      0.036em 0.036em 0.025em black,                                                                                                                                                                                                        >
+      -0.036em 0.036em 0.025em black,                                                                                                                                                                                                       >
+      0.036em -0.036em 0.025em black,                                                                                                                                                                                                       >
+      -0.036em -0.036em 0.025em black,                                                                                                                                                                                                      >
+      0.036em 0 0.025em black,                                                                                                                                                                                                              >
+      -0.036em 0 0.025em black,                                                                                                                                                                                                             >
+      0 0.036em 0.025em black,                                                                                                                                                                                                              >
+      0 -0.036em 0.025em black                                                                                                                                                                                                               
+      !important;                                                                                                                                                                                                                            
+}  
 img {
   width: 20px;
   height: 20px;
