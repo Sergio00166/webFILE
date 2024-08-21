@@ -5,19 +5,19 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
-video::cue {                                                                                                                                                                                                                                 
-  background: none !important;                                                                                                                                                                                                               
-  text-shadow:                                                                                                                                                                                                                               
-      0.036em 0.036em 0.025em black,                                                                                                                                                                                                        >
-      -0.036em 0.036em 0.025em black,                                                                                                                                                                                                       >
-      0.036em -0.036em 0.025em black,                                                                                                                                                                                                       >
-      -0.036em -0.036em 0.025em black,                                                                                                                                                                                                      >
-      0.036em 0 0.025em black,                                                                                                                                                                                                              >
-      -0.036em 0 0.025em black,                                                                                                                                                                                                             >
-      0 0.036em 0.025em black,                                                                                                                                                                                                              >
-      0 -0.036em 0.025em black                                                                                                                                                                                                               
-      !important;                                                                                                                                                                                                                            
-}  
+video::cue {
+  background: none !important;
+  text-shadow:
+      0.04em 0.04em 0.025em black,
+      -0.04em 0.04em 0.025em black,
+      0.04em -0.04em 0.025em black,
+      -0.04em -0.04em 0.025em black,
+      0.04em 0 0.025em black,
+      -0.04em 0 0.025em black,
+      0 0.04em 0.025em black,
+      0 -0.04em 0.025em black
+      !important;
+}
 img {
   width: 20px;
   height: 20px;
