@@ -2,7 +2,7 @@
 
 
 from os import sep, linesep, remove, mkdir
-from subprocess import Popen, PIPE, run
+from subprocess import Popen, PIPE, run, DEVNULL
 from multiprocessing import Process, Queue
 from io import StringIO
 import pysubs2
@@ -22,7 +22,7 @@ cache_dir+="/cache/"
 
 def check_ffmpeg_installed():
     try:
-        result = run(['ffmpeg','-version'])
+        result = run(['ffmpeg','-version'],stdout=DEVNULL)
         if result.returncode != 0:
             raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
     except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")

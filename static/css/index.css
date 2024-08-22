@@ -14,6 +14,7 @@
 .iso { filter: brightness(0) invert(1) brightness(50%) }
 
 .no_overflow { white-space: nowrap; }
+.small { display: none; }
 .first { flex: 1; }
 .sort { display: flex; justify-content: space-between; }
 .sort1 { display: flex; }
@@ -97,6 +98,7 @@ h2 {
 @media (max-width: 250px) {
     .image { display: none; }
     .backdir .first { display: none; }
+	.small { display: inline; }
     .filename { 
         border-bottom: 2px solid black;
         padding-left: 0px;
