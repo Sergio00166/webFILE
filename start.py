@@ -13,7 +13,7 @@ banner = [
 banner = ("\n".join(banner))+"\n\n"
 
 
-from subprocess import Popen, DEVNULL
+from subprocess import Popen
 from sys import path, argv
 from os.path import exists, isdir
 from os import sep
@@ -119,10 +119,11 @@ def main():
         for port in ports:
             args=[python,PyExec,"-b",ip,"-p",port,"-d",root]
             if folder_size: args.append("--dirsize")
-            Popen(args,stdout=DEVNULL); delay(0.1)
+            Popen(args); delay(0.1)
     try: # wait forever
         while True: delay(1)
     except: exit()
 
 
 if __name__=="__main__": main()
+
