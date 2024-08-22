@@ -73,8 +73,7 @@ if __name__=="__main__":
 
     @app.route('/', methods=['GET'])
     # Here we show the root dir, or send a raw file with filepath as arg
-    # Serve the static files filepath as arg, or return a subtitle track
-    # with this sintan index/filepath
+    # Serve the static files filepath as arg, or return a subtitle track arg index/filepath
     def index():
         try:
             cmp,sort = "mode" in request.args,""
