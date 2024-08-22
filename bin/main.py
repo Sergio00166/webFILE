@@ -5,7 +5,7 @@
 
 
 if __name__=="__main__":
-    
+
     from sys import path, modules
     from os import sep
     from functions import printerr, get_file_type

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Code by Sergio00166
 
 banner = [
