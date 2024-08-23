@@ -63,7 +63,7 @@ def sub_cache_handler(arg,root):
     try:
         todelete = [x for x in listdir(cache_dir) if x not in available and isfile(cache_dir+x)]
         if "index.txt" in todelete: todelete.remove("index.txt")
-        [remove(cache_dir+x) for x in todelete]
+        for x in todelete: remove(cache_dir+x) 
     except: pass
     # Get filesize as str
     filesize = str(getsize(file))
