@@ -72,15 +72,18 @@ let mouseDownProgress = false,
 canPlayInit();
 
 function prev() { 
-    if (random) { newURL = rndURL;
-    } else { newURL = prevUrl; } 
-    window.location.href = newURL;
+    if (random) { window.history.go(-1); }
+    else { window.location.href = prevUrl; }
 }
 function next() {
-    if (random) { newURL = rndURL;
-    } else { newURL = nextUrl; } 
-    window.location.href = newURL;
+    if (random) {
+        window.history.forward();
+        setTimeout(() => {
+            window.location.href = rndURL;
+        }, 250 );
+    } else { window.location.href = nextUrl; } 
 }
+
 function download() { downloadLink.click(); }
 document.addEventListener("keydown", handleShorthand);
 audio.addEventListener("play", play);
