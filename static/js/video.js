@@ -33,6 +33,7 @@ const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
 
+
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
@@ -103,6 +104,7 @@ function toggleMainState() {
 }
 function handleSettingMenu() {
     settingMenu.classList.toggle("show-setting-menu");
+	isCursorOnControls = !isCursorOnControls;
 }
 function saveVolume() {
     localStorage.setItem("videoVolume", volumeVal);
@@ -144,18 +146,23 @@ video.addEventListener("playing", function() {
 document.addEventListener("keydown", handleShorthand);
 duration.addEventListener("click", navigate);
 
-duration.addEventListener("mousedown", (e) => {
-    mouseDownProgress = true;
-    navigate(e);
+controls.addEventListener("click", () => {
+	controls.classList.add("show-controls");
+    showCursor();  hideControls();
 });
 
-document.addEventListener("mouseup", (e) => {
+duration.addEventListener("mousedown", (e) => {
+    mouseDownProgress = true; 
+	navigate(e);
+});
+
+document.addEventListener("mouseup", () => {
     mouseDownProgress = false;
     mouseDownVol = false;
 });
 
-videoContainer.addEventListener("mouseleave", (e) => {
-    if (cursorTimeout) { clearTimeout(cursorTimeout); }
+videoContainer.addEventListener("mouseleave", () => {
+    clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
 });
 
@@ -166,11 +173,11 @@ videoContainer.addEventListener("mousemove", (e) => {
     hideControls();
 });
 
-duration.addEventListener("mouseenter", (e) => {
+duration.addEventListener("mouseenter", () => {
     mouseOverDuration = true;
 });
 
-duration.addEventListener("mouseleave", (e) => {
+duration.addEventListener("mouseleave", () => {
     mouseOverDuration = false;
     hoverTime.style.width = 0;
     hoverDuration.style.display = 'none';
@@ -192,19 +199,19 @@ function hideHoverDuration() {
 
 // Magic tricks to hide the time when using touchscreen
 duration.addEventListener("touchmove", handleTouchNavigate);
-duration.addEventListener("touchstart", (e) => {
+duration.addEventListener("touchstart", () => {
     setTimeout(function() { hideHoverDuration(); },250);
 }); // Fix showing the time when hoving
 duration.addEventListener("touchend", hideHoverDuration);
 
 let cursorTimeout;
 function showCursor() {
-    if (cursorTimeout) { clearTimeout(cursorTimeout); }
+    clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
     if (!video.paused) {
         cursorTimeout = setTimeout(function() {
             if (!video.paused) { document.body.style.cursor = 'none'; }
-        }, 3000);
+        }, 960);
     }
 }
 
@@ -225,7 +232,7 @@ volume.addEventListener("mouseenter", () => {
     muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
 });
 
-volume.addEventListener("mouseleave", (e) => {
+volume.addEventListener("mouseleave", () => {
     totalVol.classList.remove("show");
 });
 
@@ -233,8 +240,6 @@ totalVol.addEventListener("mousedown", (e) => {
     mouseDownVol = true;
     handleVolume(e);
 });
-
-controls.addEventListener('touchend', hideControls);
 
 function play() {
     video.play();
@@ -332,8 +337,8 @@ function toggleMuteUnmute() {
     localStorage.setItem("videoMuted", muted);
 }
 
-function hideControls() {
-    if (timeout) { clearTimeout(timeout); }
+function hideControls(delay=1000) {
+    clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
             controls.classList.remove("show-controls");
@@ -342,7 +347,7 @@ function hideControls() {
                 menuButtons[i].style.display = "block";
             }
         }
-    }, 2500);
+    }, delay);
 }
 
 function handleVolume(e) {
@@ -595,20 +600,19 @@ function split_timeline_chapters() {
 video.addEventListener("click", (e) => {
     e.preventDefault();
     toggleMainState();
-    document.body.style.cursor = 'auto';
     showCursor();    
+});
+
+// Show menu if screen movement (touch)
+videoContainer.addEventListener('touchmove', () => { 
+    touchFix=true;
+    controls.classList.add("show-controls");
+    hideControls(2500);
 });
 
 let lastTouchTime = 0;
 let touchTimeout;
 let touchFix;
-
-videoContainer.addEventListener('touchmove', (e) => {
-    // Show menu if screen movement (touch)
-    touchFix=true;
-    controls.classList.add("show-controls");
-    showCursor(); hideControls();
-}, false);
 
 video.addEventListener('touchend', (e) => {
     e.preventDefault();
