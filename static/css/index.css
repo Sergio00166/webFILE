@@ -14,6 +14,7 @@
 .iso { filter: brightness(0) invert(1) brightness(50%) }
 
 .no_overflow { white-space: nowrap; }
+.small { display: none; }
 .first { flex: 1; }
 .sort { display: flex; justify-content: space-between; }
 .sort1 { display: flex; }
@@ -53,7 +54,7 @@ a:hover { background-color: #111111; }
     background-color: #666666; 
 }
 body {
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     background-color: #000000;
     word-break: break-all;
 }
@@ -97,6 +98,7 @@ h2 {
 @media (max-width: 250px) {
     .image { display: none; }
     .backdir .first { display: none; }
+	.small { display: inline; }
     .filename { 
         border-bottom: 2px solid black;
         padding-left: 0px;

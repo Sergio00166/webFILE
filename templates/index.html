@@ -68,7 +68,12 @@
                                 {% endif %}
                         {% endif %}
                             </span>
-                            <span class="first">{{ item['name'] }}</span>
+                            <span class="first">
+								{{ item['name'] }}
+								{% if item['description'] == 'DIR' %}
+									<t class="small">/</t>
+								{% endif %}
+							</span>
                             <span class="no_overflow">
                                 <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ item['size'] }}</t>
                                 <t class="notime">&nbsp;&nbsp; {{ item['mtime'] }}</t>

@@ -4,20 +4,8 @@
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
 
-banner = [
-"                          █████     ███████████ █████ █████       ██████████   ",
-"                         ░░███     ░░███░░░░░░█░░███ ░░███       ░░███░░░░░█   ",
-" █████ ███ █████  ██████  ░███████  ░███   █ ░  ░███  ░███        ░███  █ ░    ",
-"░░███ ░███░░███  ███░░███ ░███░░███ ░███████    ░███  ░███        ░██████      ",
-" ░███ ░███ ░███ ░███████  ░███ ░███ ░███░░░█    ░███  ░███        ░███░░█      ",
-" ░░███████████  ░███░░░   ░███ ░███ ░███  ░     ░███  ░███      █ ░███ ░   █   ",
-"  ░░████░████   ░░██████  ████████  █████       █████ ███████████ ██████████   ",
-"   ░░░░ ░░░░     ░░░░░░  ░░░░░░░░  ░░░░░       ░░░░░ ░░░░░░░░░░░ ░░░░░░░░░░    ",
-" lightweight web server to share files and play multimedia over the network    "]
-banner = ("\n".join(banner))+"\n\n"
-
 if __name__=="__main__":
-    
+
     from sys import path, modules
     from os import sep
     from functions import printerr, get_file_type
@@ -33,13 +21,7 @@ if __name__=="__main__":
     log = getLogger('werkzeug'); log.setLevel(WARNING)
     # Get the values from the initor (args from cli)
     port, listen, root, folder_size = init()
-    # Change start message
-    p1="\033[32mListening on: \033[34m"
-    p2="\033[32m:\033[31m"
-    p3="\033[32mServing path: \033[34m"
-    banner+=p1+listen+p2+str(port)+"\033[0m\n"
-    banner+=p3+root+"\033[0m\n\n"
-    modules['flask.cli'].show_server_banner = lambda *x: print(banner,end="")
+    modules['flask.cli'].show_server_banner = lambda *x: print(end="")
     # Set the paths of templates and static
     templates=abspath(path[0]+sep+".."+sep+"templates")
     sroot=abspath(pypath[0]+sep+".."+sep+"static"+sep)
@@ -91,8 +73,7 @@ if __name__=="__main__":
 
     @app.route('/', methods=['GET'])
     # Here we show the root dir, or send a raw file with filepath as arg
-    # Serve the static files filepath as arg, or return a subtitle track
-    # with this sintan index/filepath
+    # Serve the static files filepath as arg, or return a subtitle track arg index/filepath
     def index():
         try:
             cmp,sort = "mode" in request.args,""

@@ -1,8 +1,23 @@
 /* Code by Sergio00166 */
 
- * {
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+
+* {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+video::cue {
+  background: none !important;
+  line-height: 1.25 !important;
+  text-shadow:
+      0.04em 0.04em 0.025em black,
+      -0.04em 0.04em 0.025em black,
+      0.04em -0.04em 0.025em black,
+      -0.04em -0.04em 0.025em black,
+      0.04em 0 0.025em black,
+      -0.04em 0 0.025em black,
+      0 0.04em 0.025em black,
+      0 -0.04em 0.025em black
+      !important;
 }
 img {
   width: 20px;
@@ -31,7 +46,7 @@ img {
 }
 body {
   margin: 0;
-  font-family: "Montserrat", sans-serif;
+  font-family: sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,9 +68,9 @@ video {
     height: 100%;
     object-fit: contain !important;
 }
-.video-container:fullscreen video { 
+.video-container:fullscreen video {
     max-height: 100vh;
-} 
+}
 .loader {
   width: 108px;
   height: 108px;
@@ -421,7 +436,7 @@ button:focus { outline: none; }
        padding-top: 1rem;
        margin-bottom: -0.6rem;
    }
-  .state-btn { 
+  .state-btn {
       margin-bottom: 10vh;
       width: 25vh;
       height: 25vh;

@@ -33,10 +33,12 @@ const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
 
+
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 
+// Inicialitate everything
 {
     text = localStorage.getItem("videoSubs");
     selectedIndex = 0;
@@ -73,6 +75,10 @@ if (muted != null) {
     } else { muted = false; }
 } else { muted = false; }
 
+canPlayInit();
+
+// Rest of the functions
+
 let mouseDownProgress = false,
     mouseDownVol = false,
     isCursorOnControls = false,
@@ -86,8 +92,6 @@ function next() { window.location.href = nextUrl; }
 function prev() { window.location.href = prevUrl; }
 function download() { downloadLink.click(); }
 
-canPlayInit();
-
 function chMode() {
     const modes = ["1", "»", "↻"];
     currentMode = (currentMode + 1) % 3;
@@ -100,6 +104,7 @@ function toggleMainState() {
 }
 function handleSettingMenu() {
     settingMenu.classList.toggle("show-setting-menu");
+	isCursorOnControls = !isCursorOnControls;
 }
 function saveVolume() {
     localStorage.setItem("videoVolume", volumeVal);
@@ -108,7 +113,7 @@ function saveVolume() {
 function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
         totalDuration.innerHTML = showDuration(video.duration);
-        loadTracks(); split_timeline_chapters();
+		split_timeline_chapters(); loadTracks();
     } else { setTimeout(setVideoTime, 25); }
 }
 
@@ -141,28 +146,38 @@ video.addEventListener("playing", function() {
 document.addEventListener("keydown", handleShorthand);
 duration.addEventListener("click", navigate);
 
-duration.addEventListener("mousedown", (e) => {
-    mouseDownProgress = true;
-    navigate(e);
+controls.addEventListener("click", () => {
+	controls.classList.add("show-controls");
+    showCursor();  hideControls();
 });
 
-document.addEventListener("mouseup", (e) => {
+duration.addEventListener("mousedown", (e) => {
+    mouseDownProgress = true; 
+	navigate(e);
+});
+
+document.addEventListener("mouseup", () => {
     mouseDownProgress = false;
     mouseDownVol = false;
 });
 
-document.addEventListener("mousemove", (e) => {
+videoContainer.addEventListener("mouseleave", () => {
+    clearTimeout(cursorTimeout);
+    document.body.style.cursor = 'auto';
+});
+
+videoContainer.addEventListener("mousemove", (e) => {
     controls.classList.add("show-controls");
     showCursor();
     handleMousemove(e);
     hideControls();
 });
 
-duration.addEventListener("mouseenter", (e) => {
+duration.addEventListener("mouseenter", () => {
     mouseOverDuration = true;
 });
 
-duration.addEventListener("mouseleave", (e) => {
+duration.addEventListener("mouseleave", () => {
     mouseOverDuration = false;
     hoverTime.style.width = 0;
     hoverDuration.style.display = 'none';
@@ -184,19 +199,19 @@ function hideHoverDuration() {
 
 // Magic tricks to hide the time when using touchscreen
 duration.addEventListener("touchmove", handleTouchNavigate);
-duration.addEventListener("touchstart", (e) => {
+duration.addEventListener("touchstart", () => {
     setTimeout(function() { hideHoverDuration(); },250);
 }); // Fix showing the time when hoving
 duration.addEventListener("touchend", hideHoverDuration);
 
 let cursorTimeout;
 function showCursor() {
-    if (cursorTimeout) { clearTimeout(cursorTimeout); }
+    clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
     if (!video.paused) {
         cursorTimeout = setTimeout(function() {
             if (!video.paused) { document.body.style.cursor = 'none'; }
-        }, 3000);
+        }, 960);
     }
 }
 
@@ -217,7 +232,7 @@ volume.addEventListener("mouseenter", () => {
     muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
 });
 
-volume.addEventListener("mouseleave", (e) => {
+volume.addEventListener("mouseleave", () => {
     totalVol.classList.remove("show");
 });
 
@@ -225,14 +240,6 @@ totalVol.addEventListener("mousedown", (e) => {
     mouseDownVol = true;
     handleVolume(e);
 });
-
-videoContainer.addEventListener('touchmove', function(event) {
-    // Show menu if screen movement (touch)
-    controls.classList.add("show-controls");
-    showCursor(); hideControls();
-}, false);
-
-controls.addEventListener('touchend', hideControls);
 
 function play() {
     video.play();
@@ -330,8 +337,8 @@ function toggleMuteUnmute() {
     localStorage.setItem("videoMuted", muted);
 }
 
-function hideControls() {
-    if (timeout) { clearTimeout(timeout); }
+function hideControls(delay=1000) {
+    clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
             controls.classList.remove("show-controls");
@@ -340,7 +347,7 @@ function hideControls() {
                 menuButtons[i].style.display = "block";
             }
         }
-    }, 2500);
+    }, delay);
 }
 
 function handleVolume(e) {
@@ -503,20 +510,22 @@ function handleShorthand(e) {
 }
 
 function loadTracks() {
-    saved = localStorage.getItem("videoAudio");
-    audioTracks = video.audioTracks;
-    for (let i = 0; i < audioTracks.length; i++) {
-        const track = audioTracks[i];
-        const option = document.createElement('option');
-        option.value = i;
-        name = (track.label || track.language || "Track "+(i+1));
-        option.textContent = name;
-        audioTracksSelect.appendChild(option);
-        if (name === saved) { 
-            audioTracksSelect.selectedIndex = i;
-            changeTrack();
-        } else { audioTracksSelect.selectedIndex = 0; }
-    } 
+	try {
+		saved = localStorage.getItem("videoAudio");
+		audioTracks = video.audioTracks;
+		for (let i = 0; i < audioTracks.length; i++) {
+			const track = audioTracks[i];
+			const option = document.createElement('option');
+			option.value = i;
+			name = (track.label || track.language || "Track "+(i+1));
+			option.textContent = name;
+			audioTracksSelect.appendChild(option);
+			if (name === saved) { 
+				audioTracksSelect.selectedIndex = i;
+				changeTrack();
+			} else { audioTracksSelect.selectedIndex = 0; }
+		}
+	} catch {}
 }
 
 let originalTime = 0;
@@ -591,25 +600,33 @@ function split_timeline_chapters() {
 video.addEventListener("click", (e) => {
     e.preventDefault();
     toggleMainState();
-    document.body.style.cursor = 'auto';
     showCursor();    
+});
+
+// Show menu if screen movement (touch)
+videoContainer.addEventListener('touchmove', () => { 
+    touchFix=true;
+    controls.classList.add("show-controls");
+    hideControls(2500);
 });
 
 let lastTouchTime = 0;
 let touchTimeout;
+let touchFix;
 
 video.addEventListener('touchend', (e) => {
     e.preventDefault();
+    clearTimeout(touchTimeout);
+    if (touchFix) { touchFix=false; return; }
     const now = Date.now();
     const touchInterval = now-lastTouchTime;
     const divRect = video.getBoundingClientRect();
     if (touchInterval < 250) {
-        clearTimeout(touchTimeout);
         const touchX = event.changedTouches[0].clientX;
         const centerX = divRect.left+(divRect.width/2);
         const p = touchX < centerX;
         if (p) { video.currentTime -= 5; }
           else { video.currentTime += 5; }
-    } else { touchTimeout=setTimeout(toggleMainState(false),250); } 
+    } else { touchTimeout=setTimeout(toggleMainState,250); }
     lastTouchTime = now;
-});
+});   
