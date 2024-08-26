@@ -7,7 +7,7 @@
 }
 video::cue {
   background: none !important;
-  line-height: 1.25 !important;
+  line-height: normal !important;
   text-shadow:
       0.04em 0.04em 0.025em black,
       -0.04em 0.04em 0.025em black,
