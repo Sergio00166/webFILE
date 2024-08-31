@@ -5,7 +5,7 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
-video::cue {
+::cue {
   background: none !important;
   line-height: 1em !important;
   text-shadow:
