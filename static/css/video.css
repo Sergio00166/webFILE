@@ -1,13 +1,14 @@
 /* Code by Sergio00166 */
 
-
 * {
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
-::cue {
+video::-webkit-media-text-track-display { 
+    padding-bottom: 0.5em !important;
+}
+video::cue {
   background: none !important;
-  line-height: 1em !important;
   text-shadow:
       0.04em 0.04em 0.025em black,
       -0.04em 0.04em 0.025em black,
