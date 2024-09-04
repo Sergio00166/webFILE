@@ -45,7 +45,7 @@ def init():
     return args.port, args.bind, args.dir, args.dirsize
 
 
-def filepage_func(path,root,filetype,random=False):
+def filepage_func(path,root,filetype,random=False,nonxt=False):
     # Get relative path from the root dir
     path=relpath(isornot(path,root), start=root)
     # Get the name of the folder
@@ -64,7 +64,7 @@ def filepage_func(path,root,filetype,random=False):
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
     # Fix url strings
-    nxt = fix_pth_url(nxt)
+    nxt = "" if nonxt else fix_pth_url(nxt)
     prev = fix_pth_url(prev)
     # Return random flag
     if random:

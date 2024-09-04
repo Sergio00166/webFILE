@@ -115,7 +115,7 @@ async function executeDownloads() {
         }
     } else {
         var url = new URL(window.location.href).pathname;
-		if ( url==="/" ) { url=''; }
+        if ( url==="/" ) { url=''; }
         const newURL = url+'/?mode=dir';
         downloadURL(newURL);
     }

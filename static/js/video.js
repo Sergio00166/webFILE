@@ -88,7 +88,7 @@ let mouseDownProgress = false,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
 
-function next() { window.location.href = nextUrl; }
+function next() {if (nextUrl!==""){ window.location.href = nextUrl; }}
 function prev() { window.location.href = prevUrl; }
 function download() { downloadLink.click(); }
 
@@ -104,7 +104,7 @@ function toggleMainState() {
 }
 function handleSettingMenu() {
     settingMenu.classList.toggle("show-setting-menu");
-	isCursorOnControls = !isCursorOnControls;
+    isCursorOnControls = !isCursorOnControls;
 }
 function saveVolume() {
     localStorage.setItem("videoVolume", volumeVal);
@@ -113,7 +113,7 @@ function saveVolume() {
 function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
         totalDuration.innerHTML = showDuration(video.duration);
-		split_timeline_chapters(); loadTracks();
+        split_timeline_chapters(); loadTracks();
     } else { setTimeout(setVideoTime, 25); }
 }
 
@@ -147,13 +147,13 @@ document.addEventListener("keydown", handleShorthand);
 duration.addEventListener("click", navigate);
 
 controls.addEventListener("click", () => {
-	controls.classList.add("show-controls");
+    controls.classList.add("show-controls");
     showCursor();  hideControls();
 });
 
 duration.addEventListener("mousedown", (e) => {
     mouseDownProgress = true; 
-	navigate(e);
+    navigate(e);
 });
 
 document.addEventListener("mouseup", () => {
@@ -510,22 +510,22 @@ function handleShorthand(e) {
 }
 
 function loadTracks() {
-	try {
-		saved = localStorage.getItem("videoAudio");
-		audioTracks = video.audioTracks;
-		for (let i = 0; i < audioTracks.length; i++) {
-			const track = audioTracks[i];
-			const option = document.createElement('option');
-			option.value = i;
-			name = (track.label || track.language || "Track "+(i+1));
-			option.textContent = name;
-			audioTracksSelect.appendChild(option);
-			if (name === saved) { 
-				audioTracksSelect.selectedIndex = i;
-				changeTrack();
-			} else { audioTracksSelect.selectedIndex = 0; }
-		}
-	} catch {}
+    try {
+        saved = localStorage.getItem("videoAudio");
+        audioTracks = video.audioTracks;
+        for (let i = 0; i < audioTracks.length; i++) {
+            const track = audioTracks[i];
+            const option = document.createElement('option');
+            option.value = i;
+            name = (track.label || track.language || "Track "+(i+1));
+            option.textContent = name;
+            audioTracksSelect.appendChild(option);
+            if (name === saved) { 
+                audioTracksSelect.selectedIndex = i;
+                changeTrack();
+            } else { audioTracksSelect.selectedIndex = 0; }
+        }
+    } catch {}
 }
 
 let originalTime = 0;
