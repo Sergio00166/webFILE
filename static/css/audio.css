@@ -16,7 +16,6 @@ body {
   position: relative;
   color: #fff;
   width: 90vw;
-  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
