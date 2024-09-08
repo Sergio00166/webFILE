@@ -28,6 +28,8 @@ const sh_play = document.querySelector(".sh_play");
 const sh_play_st = document.querySelector(".sh_play_st");
 const sh_mute_st = document.querySelector(".sh_mute_st");
 const sh_unmute_st = document.querySelector(".sh_unmute_st");
+const sh_fordward_st = document.querySelector(".sh_fordward_st");
+const sh_back_st = document.querySelector(".sh_back_st");
 const sh_fulla = document.querySelector(".sh_fulla");
 const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
@@ -245,31 +247,23 @@ function play() {
     video.play();
     sh_pause.classList.remove("sh_pause");
     sh_play.classList.add("sh_play");
-    mainState.classList.remove("show-state");
-    sh_mute_st.classList.add("sh_mute_st");
-    sh_unmute_st.classList.add("sh_unmute_st");
+    show_main_animation("");
     hideControls();
 }
-
-video.ontimeupdate = handleProgressBar;
-
-function handleProgressBar() {
-    currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
-    currentDuration.innerHTML = showDuration(video.currentTime);
-}
-
 function pause() {
     video.pause();
     controls.classList.add("show-controls");
-    mainState.classList.add("show-state");
-    sh_play_st.classList.remove("sh_play_st");
-    sh_mute_st.classList.add("sh_mute_st");
-    sh_unmute_st.classList.add("sh_unmute_st");
+    show_main_animation("play");
     handleAudioIcon();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
     if (video.ended) { currentTime.style.width = 100+"%"; }
 }
+
+function handleProgressBar() {
+    currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
+    currentDuration.innerHTML = showDuration(video.currentTime);
+} video.ontimeupdate = handleProgressBar;
 
 function navigate(e) {
     try {
@@ -320,21 +314,14 @@ function toggleMuteUnmute() {
     if (!muted) {
         video.volume = 0;
         muted = true;
-        sh_play_st.classList.add("sh_play_st");
-        sh_mute_st.classList.remove("sh_mute_st");
-        sh_unmute_st.classList.add("sh_unmute_st");
         handleAudioIcon();
-        mainState.classList.add("animate-state");
+        show_main_animation("mute");
     } else {
         video.volume = volumeVal;
         muted = false;
-        sh_play_st.classList.add("sh_play_st");
-        sh_mute_st.classList.add("sh_mute_st");
-        sh_unmute_st.classList.remove("sh_unmute_st");
         handleAudioIcon();
-        mainState.classList.add("animate-state");
-    }
-    localStorage.setItem("videoMuted", muted);
+        show_main_animation("unmute");
+    } localStorage.setItem("videoMuted", muted);
 }
 
 function hideControls(delay=1000) {
@@ -426,15 +413,41 @@ function handleMousemove(e) {
     }
 }
 
+function show_main_animation(mode) {
+    sh_play_st.classList.add("sh_play_st");
+    sh_mute_st.classList.add("sh_mute_st");
+    sh_unmute_st.classList.add("sh_unmute_st");
+    sh_back_st.classList.add("sh_back_st");
+    sh_fordward_st.classList.add("sh_fordward_st");
+    switch (mode) {
+        case "play":
+            mainState.classList.add("show-state");
+            sh_play_st.classList.remove("sh_play_st"); break;
+        case "mute": 
+            sh_mute_st.classList.remove("sh_mute_st");
+            mainState.classList.add("animate-state"); break;
+        case "unmute": 
+            sh_unmute_st.classList.remove("sh_unmute_st");
+            mainState.classList.add("animate-state"); break;
+        case "back": 
+            sh_back_st.classList.remove("sh_back_st");
+            mainState.classList.add("animate-state"); break;
+        case "fordward": 
+            sh_fordward_st.classList.remove("sh_fordward_st");
+            mainState.classList.add("animate-state"); break;
+        default: mainState.classList.remove("show-state"); break;
+    } 
+}
 function handleMainSateAnimationEnd() {
     mainState.classList.remove("animate-state");
     if (video.paused) {
         sh_play_st.classList.remove("sh_play_st");
         sh_mute_st.classList.add("sh_mute_st");
         sh_unmute_st.classList.add("sh_unmute_st");
+        sh_back_st.classList.add("sh_back_st");
+        sh_fordward_st.classList.add("sh_fordward_st");
     }
 }
-
 function handleAudioIcon() {
     if (!muted) {
         if (volumeVal == 0.0) {
@@ -472,18 +485,25 @@ function handleAudioIcon() {
 }
 
 function handleShorthand(e) {
-	e.preventDefault();
+    e.preventDefault();
+    if (e.code==='F5') { location.reload(true); return; }
     const tagName = document.activeElement.tagName.toLowerCase();
     if (tagName === "input") return;
     if (e.key.match(/[0-9]/gi)) {
         video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
         currentTime.style.width = parseInt(e.key) * 10 + "%";
-    }
+    } 
     switch (e.key.toLowerCase()) {
         case " ": video.paused ? play() : pause(); break;
         case "f": toggleFullscreen(); break;
-        case "arrowright": video.currentTime += 5; break;
-        case "arrowleft": video.currentTime -= 5; break;
+        case "arrowright":
+            video.currentTime += 5;
+            show_main_animation("fordward");
+            break;
+        case "arrowleft": 
+            video.currentTime -= 5;
+            show_main_animation("back");
+            break;
         case "arrowup": prev(); break;
         case "arrowdown": next(); break;
         case "r": changeMode(); break;
@@ -626,8 +646,13 @@ video.addEventListener('touchend', (e) => {
         const touchX = event.changedTouches[0].clientX;
         const centerX = divRect.left+(divRect.width/2);
         const p = touchX < centerX;
-        if (p) { video.currentTime -= 5; }
-          else { video.currentTime += 5; }
+        if (p) { 
+            video.currentTime -= 5;
+            show_main_animation("back");
+        } else { 
+            video.currentTime += 5;
+            show_main_animation("fordward");
+        }
     } else { touchTimeout=setTimeout(toggleMainState,250); }
     lastTouchTime = now;
 });   

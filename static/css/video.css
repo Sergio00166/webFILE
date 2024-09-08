@@ -109,7 +109,7 @@ video {
   justify-content: center;
 }
 .animate-state {
-  animation: playPause 0.5s forwards;
+  animation: animation 0.4s forwards;
 }
 .show-state {
   transform: scale(1);
@@ -376,7 +376,7 @@ select option {
 .video-container.fullscreen .contract {
   display: flex;
 }
-@keyframes playPause {
+@keyframes animation {
   50% {
     opacity: 1;
     transform: scale(1.1);
@@ -393,6 +393,8 @@ select option {
 .sh_play_st { display: none; }
 .sh_mute_st { display: none; }
 .sh_unmute_st { display: none; }
+.sh_fordward_st { display: none; }
+.sh_back_st { display: none; }
 .sh_fulla { display: none; }
 .sh_meda { display: none; }
 .sh_lowa { display: none; }

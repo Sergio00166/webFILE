@@ -396,7 +396,8 @@ function handleAudioIcon() {
 }
 
 function handleShorthand(e) {
-	e.preventDefault();
+    e.preventDefault();
+    if (e.code==='F5') { location.reload(true); return; }
     const tagName = document.activeElement.tagName.toLowerCase();
     if (tagName === "input") return;
     if (e.key.match(/[0-9]/gi)) {
