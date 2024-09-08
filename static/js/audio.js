@@ -396,6 +396,7 @@ function handleAudioIcon() {
 }
 
 function handleShorthand(e) {
+	e.preventDefault();
     const tagName = document.activeElement.tagName.toLowerCase();
     if (tagName === "input") return;
     if (e.key.match(/[0-9]/gi)) {
