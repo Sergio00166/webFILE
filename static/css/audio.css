@@ -1,21 +1,33 @@
 /* Code by Sergio00166 */
 
-.lmbsl { background-color: yellow !important; }
 
 body {
+  margin: 0;
   font-family: sans-serif;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 90vh;
-  background-color: #000;
-  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
+  background: #000000;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+}
+.audio-container {
+  position: relative;
+  color: #fff;
+  width: 90vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
 }
 .flex {
   display: flex;
   justify-content: center;
+}
+.lmbsl { 
+    background-color: 
+    yellow !important;
 }
 h2 {
   text-align: center;
@@ -252,4 +264,8 @@ button:focus { outline: none; }
    h2 { display: none; }
    br { display: none; }
    .settings { display: none; }
+}
+
+@media (max-aspect-ratio: 1/1) {
+   body { height: 90vh; }
 }

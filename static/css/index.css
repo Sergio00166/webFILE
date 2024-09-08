@@ -98,7 +98,7 @@ h2 {
 @media (max-width: 250px) {
     .image { display: none; }
     .backdir .first { display: none; }
-	.small { display: inline; }
+    .small { display: inline; }
     .filename { 
         border-bottom: 2px solid black;
         padding-left: 0px;

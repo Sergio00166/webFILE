@@ -10,66 +10,69 @@
 </head>
 <body>
     <a href="{{ request.path }}/?mode=raw" download="{{ name }}" ></a>
-    <h2>{{ name }}</h2><br>
-    <audio autoplay onended="handleAudioEnded()">
-        <source src="{{ request.path }}/?mode=raw" type="audio/mp3">
-    </audio>
-    <div class="duration">
-        <div class="current-time"></div>
-        <div class="hover-time">
-            <span class="hover-duration"></span>
-        </div>
-        <div class="buffer"></div>
-    </div>
-    <span class="time-container">
-        <span class="current-duration">0:00</span>
-        <span>/</span>
-        <span class="total-duration">0:00</span>
-        <span>&nbsp;</span>
-    </span>
-    <div class="flex">
-        <button class="round-button play" onclick="toggleMainState()">
-            <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
-            <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
-        </button>
-        <span class="volume muteUnmute">
-            <button class="round-button" onclick="toggleMuteUnmute()">
-                <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
-                <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
-                <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
-                <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
-                <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
-            </button>
-            <div class="max-vol"> 
-                <div class="current-vol"></div>
+    <div class="audio-container">
+        <h2>{{ name }}</h2><br>
+        <audio autoplay onended="handleAudioEnded()">
+            <source src="{{ request.path }}/?mode=raw" type="audio/mp3">
+        </audio>
+        <div class="duration">
+            <div class="current-time"></div>
+            <div class="hover-time">
+                <span class="hover-duration"></span>
             </div>
+            <div class="buffer"></div>
+        </div>
+        <span class="time-container">
+            <span class="current-duration">0:00</span>
+            <span>/</span>
+            <span class="total-duration">0:00</span>
+            <span>&nbsp;</span>
         </span>
-        <button class="round-button" onclick="prev()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
-        <button class="round-button" onclick="next()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
-        <button  class="round-button" id="mode">1</button> 
-        <button class="round-button download" onclick="download()">
-        <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
-        <span class="settings">
-            <button class="round-button" onclick="handleSettingMenu()">
-                <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}">
+        <div class="flex">
+            <button class="round-button play" onclick="toggleMainState()">
+                <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+                <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
             </button>
-            <ul class="setting-menu">
-                <li data-value="0.25">0.25x</li>
-                <li data-value="0.5">0.5x</li>
-                <li data-value="0.75">0.75x</li>
-                <li data-value="1" class="speed-active">1x</li>
-                <li data-value="1.25">1.25x</li>
-                <li data-value="1.5">1.5x</li>
-                <li data-value="1.75">1.75x</li>
-                <li data-value="2">2x</li>
-            </ul>
-        </span>
+            <span class="volume muteUnmute">
+                <button class="round-button" onclick="toggleMuteUnmute()">
+                    <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
+                    <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
+                    <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
+                    <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
+                    <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
+                </button>
+                <div class="max-vol"> 
+                    <div class="current-vol"></div>
+                </div>
+            </span>
+            <button class="round-button" onclick="prev()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
+            <button class="round-button" onclick="next()"><img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
+            <button  class="round-button" id="mode">1</button> 
+            <button class="round-button download" onclick="download()">
+            <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
+            <span class="settings">
+                <button class="round-button" onclick="handleSettingMenu()">
+                    <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}">
+                </button>
+                <ul class="setting-menu">
+                    <li data-value="0.25">0.25x</li>
+                    <li data-value="0.5">0.5x</li>
+                    <li data-value="0.75">0.75x</li>
+                    <li data-value="1" class="speed-active">1x</li>
+                    <li data-value="1.25">1.25x</li>
+                    <li data-value="1.5">1.5x</li>
+                    <li data-value="1.75">1.75x</li>
+                    <li data-value="2">2x</li>
+                </ul>
+            </span>
+        </div>
+        <br><br>
     </div>
     <script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
     <script>
         const nextUrl = '{{ nxt }}'; 
         const prevUrl = '{{ prev }}';
-		const rndURL = '{{ rnd }}';
+        const rndURL = '{{ rnd }}';
     </script>
 </body>
 </html>

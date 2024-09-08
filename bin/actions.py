@@ -57,10 +57,10 @@ def filepage_func(path,root,filetype,random=False):
     path=path.replace(sep,"/")
     # Get all folder contents that has the same filetype
     lst = [x["path"] for x in out if x["description"] == filetype]
-    # Get previous one
+    # Get next one
     try: nxt=lst[lst.index(path)+1]
     except: nxt=lst[0]
-    # Get next one
+    # Get previous one
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
     # Fix url strings

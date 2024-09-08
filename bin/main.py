@@ -31,8 +31,8 @@ if __name__=="__main__":
 
 
     @app.route('/<path:path>', methods=['GET'])
-    # Shows a directory, interpret the media, launching
-    # the custom media players] or donwloads the file
+    # For showing a directory, launching the custom media players
+    # or send in raw mode (or stream) files or send the dir as .tar
     def explorer(path):
         try:
             cmp,sort = "mode" in request.args,""
@@ -72,8 +72,8 @@ if __name__=="__main__":
 
 
     @app.route('/', methods=['GET'])
-    # Here we show the root dir, or send a raw file with filepath as arg
-    # Serve the static files filepath as arg, or return a subtitle track arg index/filepath
+    # Here we show the root dir, serve the static files
+    # or send the root dir as .tar
     def index():
         try:
             cmp,sort = "mode" in request.args,""
