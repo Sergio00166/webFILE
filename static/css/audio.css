@@ -234,11 +234,11 @@ button:focus { outline: none; }
    .duration { width: 85%; }
 }
 @media only screen and (max-width: 500px) {
-   .volume { display: none; }
-   .setting-menu { margin-left: -8rem; }
+   .download { display: none; }
 }
 @media only screen and (max-width: 300px) {
-   .download { display: none; }
+   .volume { display: none; }
+   .setting-menu { margin-left: -8rem; }
 }
 @media only screen and (max-width: 260px) {
    .settings { display: none; }
