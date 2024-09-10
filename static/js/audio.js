@@ -191,13 +191,13 @@ function handleMousemove(e) {
     } else if (mouseDownVol) {
         handleVolume(e);
     } else if (mouseOverDuration) {
-		hoverDuration.style.display = 'block';
+        hoverDuration.style.display = 'block';
         const rect = duration.getBoundingClientRect();
         const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
         const percent = (width / rect.width) * 100;
         hoverTime.style.width = width + "px";
         hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
-		const size = hoverDuration.getBoundingClientRect().width;
+        const size = hoverDuration.getBoundingClientRect().width;
         hoverDuration.style.right = "-"+size/2+"px"; 
     }
 }
