@@ -197,7 +197,7 @@ function handleMousemove(e) {
         const percent = (width / rect.width) * 100;
         hoverTime.style.width = width + "px";
         hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
-        const size = hoverDuration.getBoundingClientRect().width;
+        const size = hoverDuration.offsetWidth;
         hoverDuration.style.right = "-"+size/2+"px"; 
     }
 }
@@ -207,18 +207,18 @@ duration.addEventListener("mousedown", (e) => {
     navigate(e);
 });
 
-document.addEventListener("mouseup", (e) => {
+document.addEventListener("mouseup", () => {
     mouseDownProgress = false;
     mouseDownVol = false;
 });
 
 document.addEventListener("mousemove", handleMousemove);
 
-duration.addEventListener("mouseenter", (e) => {
+duration.addEventListener("mouseenter", () => {
     mouseOverDuration = true;
 });
 
-duration.addEventListener("mouseleave", (e) => {
+duration.addEventListener("mouseleave", () => {
     mouseOverDuration = false;
     hoverTime.style.width = 0;
     hoverDuration.style.display = 'none';
@@ -226,7 +226,7 @@ duration.addEventListener("mouseleave", (e) => {
 
 // Magic tricks to hide the time when using touchscreen
 duration.addEventListener("touchmove", handleTouchNavigate);
-duration.addEventListener("touchstart", (e) => {
+duration.addEventListener("touchstart", () => {
     setTimeout(function() {
         hideHoverDuration();
     }, 250);
@@ -286,7 +286,7 @@ totalVol.addEventListener("mousedown", (e) => {
     handleVolume(e);
 });
 
-volume.addEventListener("mouseleave", (e) => {
+volume.addEventListener("mouseleave", () => {
     totalVol.classList.remove("show");
 });
 
