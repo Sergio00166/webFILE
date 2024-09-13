@@ -408,7 +408,7 @@ function handleMousemove(e) {
             hoverDuration.innerHTML = ctime+"<br>"+title;
             hoverDuration.style.top = "-35px";
         }
-        const size = hoverDuration.getBoundingClientRect().width;
+        const size = hoverDuration.offsetWidth;
         hoverDuration.style.right = "-"+size/2+"px";    
     }
 }

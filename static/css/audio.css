@@ -84,7 +84,6 @@ img {
 }
 .hover-time .hover-duration {
   position: absolute;
-  right: calc((-25px / 2));
   top: -26px;
   background: #555555;
   color: #FFFFFF;
@@ -234,11 +233,12 @@ button:focus { outline: none; }
    .duration { width: 85%; }
 }
 @media only screen and (max-width: 500px) {
-   .volume { display: none; }
-   .setting-menu { margin-left: -8rem; }
+   .download { display: none; }
+   .setting-menu { margin-left: -8.2rem; }
 }
 @media only screen and (max-width: 300px) {
-   .download { display: none; }
+   .volume { display: none; }
+   .setting-menu { margin-left: -6.67rem; }
 }
 @media only screen and (max-width: 260px) {
    .settings { display: none; }
