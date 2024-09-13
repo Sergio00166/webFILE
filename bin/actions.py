@@ -9,18 +9,13 @@ from random import choice
 
 
 def init():
-    ipv4_pattern = recompile(r'^(\d{1,3}\.){3}\d{1,3}$')
-    ipv6_pattern = recompile(r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$')
+    from ipaddress import IPv4Address,IPv6Address
 
     def is_valid_ip(ip):
-        if ipv4_pattern.match(ip):
-            parts = ip.split('.')
-            for part in parts:
-                if int(part) < 0 or int(part) > 255:
-                    return False
-            return True
-        elif ipv6_pattern.match(ip): return True
-        else: return False
+        try: IPv4Address(ip); return True
+        except:
+            try: IPv6Address(ip); return True
+            except: return False
     
     exit_err = False
     # Parse all CLI arguments

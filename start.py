@@ -19,20 +19,14 @@ from sys import path, argv
 from os.path import exists, isdir
 from os import sep
 from time import sleep as delay
-from re import compile as recompile
+from ipaddress import IPv4Address,IPv6Address
 
-ipv4_pattern = recompile(r'^(\d{1,3}\.){3}\d{1,3}$')
-ipv6_pattern = recompile(r'^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$')
 
 def is_valid_ip(ip):
-    if ipv4_pattern.match(ip):
-        parts = ip.split('.')
-        for part in parts:
-            if int(part) < 0 or int(part) > 255:
-                return False
-        return True
-    elif ipv6_pattern.match(ip): return True
-    else: return False
+    try: IPv4Address(ip); return True
+    except:
+        try: IPv6Address(ip); return True
+        except: return False
 
 def init():
     error_exit=False
@@ -80,7 +74,11 @@ def init():
         listen,buffer = dic["listen"],[]
         for x in listen.split(","):
             x=x.strip()
-            if is_valid_ip(x):
+            if x=="localhost":
+                buffer.append("127.0.0.1")
+            elif x=="localhost6":
+                buffer.append("::1")
+            elif is_valid_ip(x):
                 buffer.append(x)
             else:
                 print("[CFG_FILE]: THE IP IS NOT VALID")
