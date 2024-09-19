@@ -375,15 +375,15 @@ function toggleFullscreen() {
 }
 
 function getchptname(timeInSeconds) {
-    try {
-        for (let i = 0; i < chapters.length; i++) {
-            const cond0 = i === chapters.length-1;
-            const cond1 = timeInSeconds >= chapters[i].start_time;
-            const cond2 = timeInSeconds < chapters[i+1].start_time;
-            const cond = cond0 || (cond1 && cond2);
-            if (cond) { return chapters[i].title; }
-        } return "";
-    catch { return ""; }
+    for (let i = 0; i < chapters.length; i++) {
+		if (timeInSeconds >= chapters[i].start_time) {
+			try {
+				if (timeInSeconds < chapters[i+1].start_time) { 
+					return chapters[i].title;
+				}
+			} catch { return chapters[i].title; }
+		}
+	}
 }
 
 function handleMousemove(e) {
