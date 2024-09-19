@@ -376,14 +376,14 @@ function toggleFullscreen() {
 
 function getchptname(timeInSeconds) {
     for (let i = 0; i < chapters.length; i++) {
-		if (timeInSeconds >= chapters[i].start_time) {
-			try {
-				if (timeInSeconds < chapters[i+1].start_time) { 
-					return chapters[i].title;
-				}
-			} catch { return chapters[i].title; }
-		}
-	}
+        if (timeInSeconds >= chapters[i].start_time) {
+            try {
+                if (timeInSeconds < chapters[i+1].start_time) { 
+                    return chapters[i].title;
+                }
+            } catch { return chapters[i].title; }
+        }
+    }
 }
 
 function handleMousemove(e) {
