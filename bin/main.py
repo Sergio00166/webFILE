@@ -57,7 +57,7 @@ if __name__=="__main__":
                     except: raise FileNotFoundError
                     out = sub_cache_handler(arg,root)
                     return Response(out,mimetype="text/plain",headers={"Content-disposition":"attachment; filename=subs.vtt"})
-                prev, nxt, name, path = filepage_func(path,root,file_type)
+                prev, nxt, name, path = filepage_func(path,root,file_type,no_next=True)
                 tracks,chapters = get_info(root+sep+path),get_chapters(root+sep+path)
                 return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks,chapters=chapters)
 
