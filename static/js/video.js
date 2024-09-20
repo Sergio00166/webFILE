@@ -166,6 +166,7 @@ document.addEventListener("mouseup", () => {
 videoContainer.addEventListener("mouseleave", () => {
     clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
+	hideControls(50);
 });
 
 videoContainer.addEventListener("mousemove", (e) => {
