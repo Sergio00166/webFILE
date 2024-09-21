@@ -35,7 +35,7 @@ if __name__=="__main__":
     # or send in raw mode (or stream) files or send the dir as .tar
     def explorer(path):
         try:
-            cmp,sort = "mode" in request.args,""
+            cmp,sort = "mode" in request.args,"np"
             mode = request.args["mode"] if cmp else ""  
             if cmp and mode=="raw": return send_file(isornot(path,root))
             file_type = get_file_type(root+sep+path)
@@ -45,7 +45,8 @@ if __name__=="__main__":
                     if mode=="dir": return send_dir(isornot(path,root))
                     if mode in sort_mod: sort=mode   
                 folder_content,folder_path,parent_directory,is_root,par_root = index_func(path,root,folder_size,sort)
-                return stream_template('index.html',folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,par_root=par_root)
+                return stream_template('index.html',folder_content=folder_content,folder_path=folder_path,\
+                       parent_directory=parent_directory,is_root=is_root,par_root=par_root,sort=sort)
 
             elif file_type=="Text" or file_type=="SRC": return send_file(isornot(path,root), mimetype='text')
             
@@ -76,7 +77,7 @@ if __name__=="__main__":
     # or send the root dir as .tar
     def index():
         try:
-            cmp,sort = "mode" in request.args,""
+            cmp,sort = "mode" in request.args,"np"
             mode = request.args["mode"] if cmp else ""
 
             if "static" in request.args:
@@ -87,7 +88,8 @@ if __name__=="__main__":
             elif cmp and mode in sort_mod: sort=mode
 
             folder_content = sort_contents(get_folder_content(root, root, folder_size),sort)
-            return stream_template('index.html',folder_content=folder_content,folder_path="/",parent_directory=root,is_root=True)
+            return stream_template('index.html',folder_content=folder_content,\
+                   folder_path="/",parent_directory=root,is_root=True,sort=sort)
                     
         except PermissionError: return render_template('403.html'), 403
         except FileNotFoundError: return render_template('404.html'), 404
