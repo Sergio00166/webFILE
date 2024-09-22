@@ -329,7 +329,7 @@ function toggleMuteUnmute() {
     } localStorage.setItem("videoMuted", muted);
 }
 
-function hideControls(delay=1250) {
+function hideControls(delay=1500) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
