@@ -23,8 +23,8 @@ a:hover { background-color: #111111; }
 .selected { background-color: red; }
 .selected:hover { background-color: #600102; }
 .controls { display: flex; }
-.ctrls1 { flex: 1; display: flex; }
-.ctrls2 { flex: 1; display: flex; }
+.ctrl_flex { flex: 1; display: flex; }
+.tools { flex: 1; display: flex; }
 
 button:hover { 
     background-color: #111111;
@@ -108,13 +108,12 @@ h2 {
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 730px) {
 	.controls { flex-direction: column; }
 	button { margin: 2px; }
 }
 @media (max-width: 360px) {
-	.ctrls1 { flex-direction: column; }
-	.ctrls2 { flex-direction: column; }
+	.ctrl_flex { flex-direction: column; }
 	button { margin: 1px; }
 }
 

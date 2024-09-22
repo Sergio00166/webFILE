@@ -13,7 +13,7 @@
         <div class="list-group">
             <h2>Index of {{ folder_path }}</h2>
             <div class="controls">
-				<div class="ctrls1">
+				<div class="ctrl_flex">
 					<button onclick="sortNameBT()"> NAME
 						{% if sort=="np" %} ↑ {% elif sort=="nd" %} ↓ {% endif %}
 					</button>
@@ -24,9 +24,12 @@
 						{% if sort=="dp" %} ↑ {% elif sort=="dd" %} ↓ {% endif %}
 					</button>
 				</div>
-				<div class="ctrls2">
+				<div class="ctrl_flex">
 					<button id="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
-					<button id="toggleAllNone" onclick="toggleSelectAll()" disabled>TOGGLE</button>
+					<div class="tools">
+						<button id="toggleAllNone" onclick="toggleSelectAll()" disabled>A/N</button>
+						<button id="invertSelection" onclick="invertSelection()" disabled>INV</button>
+					</div>
 					<button onclick="executeDownloads()">DOWNLOAD</button>
 				</div>
             </div>

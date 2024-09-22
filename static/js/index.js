@@ -44,6 +44,7 @@ function toggleSelectMode() {
     const buttonText = selectMode ? 'CANCEL' : 'SELECT';
     document.getElementById('toggleSelectMode').textContent = buttonText;
     document.getElementById('toggleAllNone').disabled = !selectMode;
+	document.getElementById('invertSelection').disabled = !selectMode;
     if (!selectMode) { deselectAll(); }
 
 }
@@ -126,7 +127,6 @@ function toggleSelectAll() {
     if (selectMode) {
         const allDivs = document.querySelectorAll('.filename');
         const allSelected = allDivs.length === Object.keys(selectedElements).length;
-
         if (allSelected) { deselectAll();
         } else {
             allDivs.forEach(div => {
@@ -136,6 +136,22 @@ function toggleSelectAll() {
                 }
             });
         }
+    }
+}
+
+function invertSelection() {
+    if (selectMode) {
+        const allDivs = document.querySelectorAll('.filename');
+        allDivs.forEach(div => {
+            const id = div.id;
+            if (selectedElements[id]) {
+                delete selectedElements[id];
+                div.classList.remove('selected');
+            } else {
+                selectedElements[id] = div;
+                div.classList.add('selected');
+            }
+        });
     }
 }
 
