@@ -40,7 +40,7 @@ def init():
     return args.port, args.bind, args.dir, args.dirsize
 
 
-def filepage_func(path,root,filetype,random=False):
+def filepage_func(path,root,filetype,random=False,no_next=False):
     # Get relative path from the root dir
     path=relpath(isornot(path,root), start=root)
     # Get the name of the folder
@@ -53,13 +53,13 @@ def filepage_func(path,root,filetype,random=False):
     # Get all folder contents that has the same filetype
     lst = [x["path"] for x in out if x["description"] == filetype]
     # Get next one
-    try: nxt=lst[lst.index(path)+1]
-    except: nxt=lst[0]
+    try: nxt = lst[lst.index(path)+1]
+    except: nxt = "" if no_next else lst[0]
     # Get previous one
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
     # Fix url strings
-    nxt = fix_pth_url(nxt)
+    if nxt!="": nxt = fix_pth_url(nxt) 
     prev = fix_pth_url(prev)
     # Return random flag
     if random:

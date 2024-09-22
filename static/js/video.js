@@ -90,7 +90,11 @@ let mouseDownProgress = false,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
 
-function next() {if (nextUrl!==""){ window.location.href = nextUrl; }}
+function next() {
+	if (nextUrl!==""){
+		window.location.href = nextUrl;
+	} else { location.reload(); }
+}
 function prev() { window.location.href = prevUrl; }
 function download() { downloadLink.click(); }
 
@@ -166,6 +170,7 @@ document.addEventListener("mouseup", () => {
 videoContainer.addEventListener("mouseleave", () => {
     clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
+	hideControls(50);
 });
 
 videoContainer.addEventListener("mousemove", (e) => {
@@ -324,7 +329,7 @@ function toggleMuteUnmute() {
     } localStorage.setItem("videoMuted", muted);
 }
 
-function hideControls(delay=1000) {
+function hideControls(delay=1500) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
@@ -376,12 +381,14 @@ function toggleFullscreen() {
 
 function getchptname(timeInSeconds) {
     for (let i = 0; i < chapters.length; i++) {
-        const cond0 = i === chapters.length-1;
-        const cond1 = timeInSeconds >= chapters[i].start_time;
-        const cond2 = timeInSeconds < chapters[i+1].start_time;
-        const cond = cond0 || (cond1 && cond2);
-        if (cond) { return chapters[i].title; }
-    } return "";
+        if (timeInSeconds >= chapters[i].start_time) {
+            try {
+                if (timeInSeconds < chapters[i+1].start_time) { 
+                    return chapters[i].title;
+                }
+            } catch { return chapters[i].title; }
+        }
+    }
 }
 
 function handleMousemove(e) {

@@ -23,12 +23,14 @@ a:hover { background-color: #111111; }
 .selected { background-color: red; }
 .selected:hover { background-color: #600102; }
 .controls { display: flex; }
+.ctrl_flex { flex: 1; display: flex; }
+.tools { flex: 1; display: flex; }
 
-.controls button:hover { 
+button:hover { 
     background-color: #111111;
     border-color: white;
 }
-.controls button:disabled {
+button:disabled {
     background-color: #111111;
     color: gray;
 }
@@ -43,7 +45,7 @@ a:hover { background-color: #111111; }
     padding-right: 5px; 
     margin-bottom: 16px;
 }
-.controls button {
+button {
     flex: 1;
     color: white;
     cursor: pointer;
@@ -105,14 +107,16 @@ h2 {
         padding-right: 0px; 
     }
 }
-@media (max-width: 380px) {
-    .controls {
-          display: flex;
-          flex-direction: column;
-          border: 1px solid black;
-          justify-content: space-between;
-    }
+
+@media (max-width: 730px) {
+	.controls { flex-direction: column; }
+	button { margin: 2px; }
 }
+@media (max-width: 360px) {
+	.ctrl_flex { flex-direction: column; }
+	button { margin: 1px; }
+}
+
 @media (max-width: 650px) {
     .nosize { display: none; }
 }
