@@ -54,15 +54,13 @@ def filepage_func(path,root,filetype,random=False,no_next=False):
     lst = [x["path"] for x in out if x["description"] == filetype]
     # Get next one
     try: nxt = lst[lst.index(path)+1]
-    except: nxt = lst[0]
+    except: nxt = "" if no_next else lst[0]
     # Get previous one
     if lst.index(path)==0: prev=lst[-1]
     else: prev=lst[lst.index(path)-1]
     # Fix url strings
-    nxt = fix_pth_url(nxt)
+    if nxt!="": nxt = fix_pth_url(nxt) 
     prev = fix_pth_url(prev)
-    # Set blank if flag
-    if no_next: nxt = ""
     # Return random flag
     if random:
         rnd = fix_pth_url(choice(lst))

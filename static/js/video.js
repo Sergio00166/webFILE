@@ -90,7 +90,11 @@ let mouseDownProgress = false,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
 
-function next() {if (nextUrl!==""){ window.location.href = nextUrl; }}
+function next() {
+	if (nextUrl!==""){
+		window.location.href = nextUrl;
+	} else { location.reload(); }
+}
 function prev() { window.location.href = prevUrl; }
 function download() { downloadLink.click(); }
 
