@@ -218,7 +218,7 @@ function showCursor() {
     if (!video.paused) {
         cursorTimeout = setTimeout(function() {
             if (!video.paused) { document.body.style.cursor = 'none'; }
-        }, 960);
+        }, 1250);
     }
 }
 
