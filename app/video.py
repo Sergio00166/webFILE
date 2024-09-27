@@ -3,7 +3,6 @@
 
 from os import sep, linesep, remove, mkdir
 from subprocess import Popen, PIPE, run, DEVNULL
-from multiprocessing import Process, Queue
 from io import StringIO
 import pysubs2
 from random import choice
@@ -164,13 +163,6 @@ def get_track(file,index):
     # Yes ffmpeg can do it but id does it
     # in a weird way. This cleans all
     # incompatible stuff and cleans the output
-    if not codec=="webvtt":
-        ret = Queue()
-        proc = Process(target=convert, args=(source,ret,))
-        del source # Free memory
-        proc.start(); out = ret.get(); proc.join()
-        del proc, ret # Free memory
-        return out
-
+    if not codec=="webvtt": return convert(source)
     else: return source.decode("UTF-8")
     
