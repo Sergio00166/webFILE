@@ -22,11 +22,13 @@ Requirements:<br>
  Windows/Linux
 
 Dependencys:<br>
- python3  flask(pip) pysubs2(pip) ffmpeg(as a command)
+ python3  flask(pip) ffmpeg(as a command)
 
 Usage: <br>
-  python3 start.py [config.file] or<br>
-  python3 bin/main.py -b IP_addr -p port -d directory [--dirsize]
+  python3 app/main.py -b IP_addr -p port -d directory [--dirsize]<br>
+  or for use a WSGI for deployment -> (for example gunicorn)
+  gunicorn --env FOLDER=/PATH--env SHOWSIZE=True -b 127.0.0.1 -w 2 app/app:app
+  
 
  Logging:<br>
     To create a log of all access and responses and erros of the server you can redirect
