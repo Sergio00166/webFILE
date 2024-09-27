@@ -90,5 +90,10 @@ def index():
 def mv2index(): return redirect("/explorer")
 
 @app.route("/static/<path:path>", methods=["GET"])
-def static(path): return send_file(isornot(path.replace("/",sep),sroot))
+def static(path):
+    try: return send_file(isornot(path.replace("/",sep),sroot))
+    except PermissionError: return render_template('403.html'), 403
+    except FileNotFoundError: return render_template('404.html'), 404
+    except Exception as e: printerr(e); return render_template('500.html'), 500  
+
 
