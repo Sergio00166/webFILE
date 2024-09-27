@@ -66,7 +66,7 @@ def explorer(path):
     except Exception as e: printerr(e); return render_template('500.html'), 500
 
 
-@app.route('/explorer', methods=['GET'])
+@app.route('/explorer/', methods=['GET'])
 # Here we show the root dir, serve the static files
 # or send the root dir as .tar
 def index():
@@ -87,7 +87,7 @@ def index():
 
 
 @app.route("/", methods=["GET"])
-def mv2index(): return redirect("/explorer")
+def mv2index(): return redirect("/explorer/")
 
 @app.route("/static/<path:path>", methods=["GET"])
 def static(path):

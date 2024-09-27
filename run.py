@@ -5,9 +5,12 @@ from time import sleep as delay
 from logging import getLogger, WARNING, INFO
 from sys import modules
 from os.path import exists, isdir
-from os import environ
+from os import environ,sep
 from re import compile as recompile
 from argparse import ArgumentParser
+from sys import path
+
+path[0] += sep+"app"
 
 def init():
     from ipaddress import IPv4Address,IPv6Address
