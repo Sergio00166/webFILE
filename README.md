@@ -11,21 +11,16 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 ---------------------------------------------------
 
-Requirements:<br>
+<b>Requirements:</b> <br>
  Python3<br>
  Windows/Linux
 
-Dependencys:<br>
+<b>Dependencys:</b> <br>
  python3  flask(pip) ffmpeg(as a command)
 
-Usage: <br>
+<b>Usage:</b> <br>
   python3 app/run.py -b IP_addr -p port -d directory [--dirsize]<br>
   or for use a WSGI for deployment -> (for example gunicorn)
   gunicorn --env FOLDER=/PATH--env SHOWSIZE=True -b 127.0.0.1 -w 2 app/app:app
-  
 
- Logging:<br>
-    To create a log of all access and responses and erros of the server you can redirect
-    stderr to a file (2>file), in stdout is only the banner and info
-
-  ---------------------------------------------------
+---------------------------------------------------
