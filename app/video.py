@@ -3,7 +3,6 @@
 
 from os import sep, linesep, remove, mkdir
 from subprocess import Popen, PIPE, run, DEVNULL
-from multiprocessing import Process, Queue
 from io import StringIO
 import pysubs2
 from random import choice
@@ -39,7 +38,7 @@ def get_codec(source, index):
     return Popen(cmd, stdout=PIPE).communicate()[0].decode('UTF8').strip()
 
 
-def convert(src, ret):
+def convert(src):
     subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
     del src # Free memory
     with StringIO() as tmp:
@@ -63,7 +62,7 @@ def convert(src, ret):
     del unique_subs # Free memory
     out=subs.to_string("vtt")
     del subs  # Free memory
-    ret.put(out) # Return values
+    return out # Return values
 
 
 def get_chapters(file_path):
@@ -164,12 +163,5 @@ def get_track(file,index):
     # Yes ffmpeg can do it but id does it
     # in a weird way. This cleans all
     # incompatible stuff and cleans the output
-    if not codec=="webvtt":
-        ret = Queue()
-        proc = Process(target=convert, args=(source,ret,))
-        del source # Free memory
-        proc.start(); out = ret.get(); proc.join()
-        del proc, ret # Free memory
-        return out
-
+    if not codec=="webvtt": return convert(source)
     else: return source.decode("UTF-8")
