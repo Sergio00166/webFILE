@@ -16,11 +16,16 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
  Windows/Linux
 
 <b>Dependencys:</b> <br>
- python3  flask(pip) ffmpeg(as a command)
+ python3  flask, ffmpeg
 
 <b>Usage:</b> <br>
-  python3 run.py -b IP_addr -p port -d directory [--dirsize]<br>
-  or for use a WSGI for deployment -> (for example gunicorn)
-  cd app; gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 -w 2 app:app
+  - To run via flask internal HTTP server via CLI <br>
+  python3 scripts/run.py -b IP_addr -p port -d directory [--dirsize] <br>
+  - To run via flask internal HTTP server with config file (for use with load balancer) <br>
+  python3 scripts/start.py config.cfg <br>
+    - you can specify the ports with a range like 8000-8007 to spawn 8 workers and distribute the load with nginx
+  - To use a WSGI for deployment -> (for example gunicorn)<br>
+  cd app; gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 -w 2 app:app <br>
+  <b>WARNING: slow video streaming with gunicorn, is recommended to stick with flask internal webserver</b>
 
 ---------------------------------------------------
