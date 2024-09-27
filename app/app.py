@@ -24,7 +24,7 @@ folder_size = folder_size.upper()=="TRUE"
 # Create the main app flask
 app = Flask(__name__, static_folder=None, template_folder=templates)
 
-@app.route('/explorer/<path:path>', methods=['GET'])
+@app.route('/<path:path>', methods=['GET'])
 # For showing a directory, launching the custom media players
 # or send in raw mode (or stream) files or send the dir as .tar
 def explorer(path):
@@ -66,13 +66,17 @@ def explorer(path):
     except Exception as e: printerr(e); return render_template('500.html'), 500
 
 
-@app.route('/explorer/', methods=['GET'])
+@app.route('/', methods=['GET'])
 # Here we show the root dir, serve the static files
 # or send the root dir as .tar
 def index():
     try:
         cmp,sort = "mode" in request.args,"np"
-        mode = request.args["mode"] if cmp else "" 
+        mode = request.args["mode"] if cmp else ""
+
+        if "static" in request.args:
+            path=request.args["static"].replace("/",sep)
+            return send_file(isornot(path,sroot))
         
         if cmp and mode=="dir": return send_dir(root)
         elif cmp and mode in sort_mod: sort=mode
@@ -84,16 +88,4 @@ def index():
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
     except Exception as e: printerr(e); return render_template('500.html'), 500
-
-
-@app.route("/", methods=["GET"])
-def mv2index(): return redirect("/explorer/")
-
-@app.route("/static/<path:path>", methods=["GET"])
-def static(path):
-    try: return send_file(isornot(path.replace("/",sep),sroot))
-    except PermissionError: return render_template('403.html'), 403
-    except FileNotFoundError: return render_template('404.html'), 404
-    except Exception as e: printerr(e); return render_template('500.html'), 500  
-
 

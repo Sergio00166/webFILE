@@ -6,8 +6,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ name }}</title>
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='ico/video.ico') }}">
-  <link rel="stylesheet" href="{{ url_for('static', path='css/video.css') }}">
+  <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/video.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('index', static='css/video.css') }}">
 </head>
 
 <body>
@@ -16,14 +16,14 @@
     <video autoplay onended="handleVideoEnded()">
       <source src="{{ request.path }}/?mode=raw" type="video/mp4">
     </video>
-    <span class="custom-loader"><img class="loader" src="{{ url_for('static', path='svg/load.gif') }}"></span>
+    <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
     <span class="main-state state-btn">
-      <img class="fullimg sh_play_st" src="{{ url_for('static', path='svg/videoplayer/play-outline.svg') }}">
-      <img class="fullimg sh_mute_st" src="{{ url_for('static', path='svg/videoplayer/volume-mute-outline.svg') }}">
-      <img class="fullimg sh_unmute_st" src="{{ url_for('static', path='svg/videoplayer/volume-high-outline.svg') }}">
+      <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+      <img class="fullimg sh_mute_st" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
+      <img class="fullimg sh_unmute_st" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
       <img class="fullimg sh_fordward_st"
-        src="{{ url_for('static', path='svg/videoplayer/chevron-forward-outline.svg') }}">
-      <img class="fullimg sh_back_st" src="{{ url_for('static', path='svg/videoplayer/chevron-back-outline.svg') }}">
+        src="{{ url_for('index', static='svg/videoplayer/chevron-forward-outline.svg') }}">
+      <img class="fullimg sh_back_st" src="{{ url_for('index', static='svg/videoplayer/chevron-back-outline.svg') }}">
     </span>
     <div class="controls">
       <div class="duration">
@@ -37,16 +37,16 @@
       <div class="btn-controls">
         <div class="side-controls">
           <button class="round-button play-pause" onclick="toggleMainState()">
-            <img class="sh_play" src="{{ url_for('static', path='svg/videoplayer/play-outline.svg') }}">
-            <img class="sh_pause" src="{{ url_for('static', path='svg/videoplayer/pause-outline.svg') }}">
+            <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+            <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
           </button>
           <span class="volume">
             <button class="round-button" onclick="toggleMuteUnmute()">
-              <img class="sh_mute" src="{{ url_for('static', path='svg/videoplayer/volume-mute-outline.svg') }}">
-              <img class="sh_fulla" src="{{ url_for('static', path='svg/videoplayer/volume-high-outline.svg') }}">
-              <img class="sh_meda" src="{{ url_for('static', path='svg/videoplayer/volume-medium-outline.svg') }}">
-              <img class="sh_lowa" src="{{ url_for('static', path='svg/videoplayer/volume-low-outline.svg') }}">
-              <img class="sh_noa" src="{{ url_for('static', path='svg/videoplayer/volume-off-outline.svg') }}">
+              <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
+              <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
+              <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
+              <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
+              <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
             </button>
             <div class="max-vol">
               <div class="current-vol"></div>
@@ -61,13 +61,13 @@
         </div>
         <div class="side-controls">
           <button class="round-button" onclick="prev()"><img
-              src="{{ url_for('static', path='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
+              src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
           <button class="round-button" onclick="next()"><img
-              src="{{ url_for('static', path='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
+              src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
           <button class="round-button text" id="mode" onclick="chMode()">1</button>
           <span class="settings">
             <button class="round-button" onclick="handleSettingMenu()">
-              <img src="{{ url_for('static', path='svg/videoplayer/settings-outline.svg') }}">
+              <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
             </button>
             <ul class="setting-menu">
               <li><select id="s0">
@@ -93,15 +93,15 @@
             </ul>
           </span>
           <button class="round-button" onclick="toggleFullscreen()">
-            <img class="full" src="{{ url_for('static', path='svg/videoplayer/scan-outline.svg') }}">
-            <img class="contract" src="{{ url_for('static', path='svg/videoplayer/contract-outline.svg') }}">
+            <img class="full" src="{{ url_for('index', static='svg/videoplayer/scan-outline.svg') }}">
+            <img class="contract" src="{{ url_for('index', static='svg/videoplayer/contract-outline.svg') }}">
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <script defer src="{{ url_for('static', path='js/video.js') }}"></script>
+  <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
 
   <script>
     const nextUrl = '{{ nxt }}';

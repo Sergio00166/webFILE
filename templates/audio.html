@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <title>{{ name }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='ico/audio.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='css/audio.css') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/audio.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}" />
 </head>
 
 <body>
@@ -32,32 +32,32 @@
         </span>
         <div class="flex">
             <button class="round-button play" onclick="toggleMainState()">
-                <img class="sh_play" src="{{ url_for('static', path='svg/videoplayer/play-outline.svg') }}">
-                <img class="sh_pause" src="{{ url_for('static', path='svg/videoplayer/pause-outline.svg') }}">
+                <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+                <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
             </button>
             <span class="volume muteUnmute">
                 <button class="round-button" onclick="toggleMuteUnmute()">
-                    <img class="sh_mute" src="{{ url_for('static', path='svg/videoplayer/volume-mute-outline.svg') }}">
-                    <img class="sh_fulla" src="{{ url_for('static', path='svg/videoplayer/volume-high-outline.svg') }}">
+                    <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
+                    <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
                     <img class="sh_meda"
-                        src="{{ url_for('static', path='svg/videoplayer/volume-medium-outline.svg') }}">
-                    <img class="sh_lowa" src="{{ url_for('static', path='svg/videoplayer/volume-low-outline.svg') }}">
-                    <img class="sh_noa" src="{{ url_for('static', path='svg/videoplayer/volume-off-outline.svg') }}">
+                        src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
+                    <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
+                    <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
                 </button>
                 <div class="max-vol">
                     <div class="current-vol"></div>
                 </div>
             </span>
             <button class="round-button" onclick="prev()"><img
-                    src="{{ url_for('static', path='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
+                    src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
             <button class="round-button" onclick="next()"><img
-                    src="{{ url_for('static', path='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
+                    src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
             <button class="round-button" id="mode">1</button>
             <button class="round-button download" onclick="download()">
-                <img src="{{ url_for('static', path='svg/videoplayer/download-outline.svg') }}"></button>
+                <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
             <span class="settings">
                 <button class="round-button" onclick="handleSettingMenu()">
-                    <img src="{{ url_for('static', path='svg/videoplayer/speed-outline.svg') }}">
+                    <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}">
                 </button>
                 <ul class="setting-menu">
                     <li data-value="0.25">0.25x</li>
@@ -73,7 +73,7 @@
         </div>
         <br><br>
     </div>
-    <script defer src="{{ url_for('static', path='js/audio.js') }}"></script>
+    <script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
     <script>
         const nextUrl = '{{ nxt }}';
         const prevUrl = '{{ prev }}';
