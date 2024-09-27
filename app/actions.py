@@ -1,9 +1,27 @@
 #Code by Sergio00166
 
-from os.path import join, relpath, pardir, abspath, getsize, isfile
-from functions import *
-from os import sep
+from os.path import join,relpath,pardir,abspath,getsize,isfile
+from os import sep, getenv
 from random import choice
+from functions import *
+from flask import Flask
+from sys import path
+path.append(path[0]+sep+"pysubs2.zip")
+
+
+def init():
+    # Set the paths of templates and static
+    templates=abspath(path[0]+sep+".."+sep+"templates")
+    sroot=abspath(path[0]+sep+".."+sep+"static"+sep)
+    sort_mod = ["np","nd","sp","sd","dp","dd"]
+    # Get all the args from the Enviorment
+    root = getenv('FOLDER',None)
+    if root is None: exit()
+    folder_size = getenv('SHOWSIZE',"FALSE")
+    folder_size = folder_size.upper()=="TRUE"
+    # Create the main app flask
+    app = Flask(__name__, static_folder=None, template_folder=templates)
+    return app,folder_size,root,sort_mod,sroot
 
 
 def filepage_func(path,root,filetype,random=False,no_next=False):

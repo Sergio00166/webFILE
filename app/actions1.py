@@ -40,13 +40,12 @@ def generate_tar(directory_path):
             yield from stream_tar_file(file_path, arcname)
   
     yield b'\0'*1024 # Add TAR end
-    
+
 def send_dir(directory):
     folder = basename(directory)
     if folder=="": folder="index"
     return Response(generate_tar(directory),mimetype='application/x-tar',
     headers={'Content-Disposition': 'attachment;filename='+folder+'.tar'})
-
 
 
 def sub_cache_handler(arg,root):

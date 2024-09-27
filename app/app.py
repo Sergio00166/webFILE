@@ -3,26 +3,14 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
-from os import sep, getenv
-from sys import path
-path.append(path[0]+sep+"pysubs2.zip")
 from functions import printerr, get_file_type
 from actions import *
 from actions1 import *
-from flask import Flask, render_template, stream_template
-from flask import request, send_file, Response, redirect
+from flask import render_template, stream_template
+from flask import request, send_file, Response
 
-# Set the paths of templates and static
-templates=abspath(path[0]+sep+".."+sep+"templates")
-sroot=abspath(path[0]+sep+".."+sep+"static"+sep)
-sort_mod = ["np","nd","sp","sd","dp","dd"]
-# Get all the args from the Enviorment
-root = getenv('FOLDER',None)
-if root is None: exit()
-folder_size = getenv('SHOWSIZE',"FALSE")
-folder_size = folder_size.upper()=="TRUE"
-# Create the main app flask
-app = Flask(__name__, static_folder=None, template_folder=templates)
+app,folder_size,root,sort_mod,sroot = init()
+
 
 @app.route('/<path:path>', methods=['GET'])
 # For showing a directory, launching the custom media players
