@@ -1,6 +1,7 @@
 <!-- Code by Sergio00166 -->
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +9,9 @@
   <link rel="icon" type="image/x-icon" href="{{ url_for('static', path='ico/video.ico') }}">
   <link rel="stylesheet" href="{{ url_for('static', path='css/video.css') }}">
 </head>
+
 <body>
-  <a href="{{ request.path }}/?mode=raw" download="{{ name }}" ></a>
+  <a href="{{ request.path }}/?mode=raw" download="{{ name }}"></a>
   <div class="video-container">
     <video autoplay onended="handleVideoEnded()">
       <source src="{{ request.path }}/?mode=raw" type="video/mp4">
@@ -19,7 +21,8 @@
       <img class="fullimg sh_play_st" src="{{ url_for('static', path='svg/videoplayer/play-outline.svg') }}">
       <img class="fullimg sh_mute_st" src="{{ url_for('static', path='svg/videoplayer/volume-mute-outline.svg') }}">
       <img class="fullimg sh_unmute_st" src="{{ url_for('static', path='svg/videoplayer/volume-high-outline.svg') }}">
-      <img class="fullimg sh_fordward_st" src="{{ url_for('static', path='svg/videoplayer/chevron-forward-outline.svg') }}">
+      <img class="fullimg sh_fordward_st"
+        src="{{ url_for('static', path='svg/videoplayer/chevron-forward-outline.svg') }}">
       <img class="fullimg sh_back_st" src="{{ url_for('static', path='svg/videoplayer/chevron-back-outline.svg') }}">
     </span>
     <div class="controls">
@@ -57,31 +60,34 @@
           <span>&nbsp;&nbsp;</span>
         </div>
         <div class="side-controls">
-          <button class="round-button" onclick="prev()"><img src="{{ url_for('static', path='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
-          <button class="round-button" onclick="next()"><img src="{{ url_for('static', path='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
-          <button class="round-button text" id="mode" onclick="chMode()">1</button> 
+          <button class="round-button" onclick="prev()"><img
+              src="{{ url_for('static', path='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
+          <button class="round-button" onclick="next()"><img
+              src="{{ url_for('static', path='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
+          <button class="round-button text" id="mode" onclick="chMode()">1</button>
           <span class="settings">
             <button class="round-button" onclick="handleSettingMenu()">
               <img src="{{ url_for('static', path='svg/videoplayer/settings-outline.svg') }}">
             </button>
             <ul class="setting-menu">
-                <li><select id="s0">
-                 <option value="-1">None</option>
-                 {% for item in tracks %}
-                    <option value={{ tracks.index(item) }}>
+              <li><select id="s0">
+                  <option value="-1">None</option>
+                  {% for item in tracks %}
+                  <option value={{ tracks.index(item) }}>
                     {{ item }} </option>
-                 {% endfor %}
+                  {% endfor %}
                 </select></li>
-                <li><select id="s1"></select>
-                </li><li> <select id="s2">
-                      <option value="0.25">0.25x</option>
-                      <option value="0.5">0.5x</option>
-                      <option value="0.75">0.75x</option>
-                      <option value="1">1x</option>
-                      <option value="1.25">1.25x</option>
-                      <option value="1.5">1.5x</option>
-                      <option value="1.75">1.75x</option>
-                      <option value="2">2x</option>
+              <li><select id="s1"></select>
+              </li>
+              <li> <select id="s2">
+                  <option value="0.25">0.25x</option>
+                  <option value="0.5">0.5x</option>
+                  <option value="0.75">0.75x</option>
+                  <option value="1">1x</option>
+                  <option value="1.25">1.25x</option>
+                  <option value="1.5">1.5x</option>
+                  <option value="1.75">1.75x</option>
+                  <option value="2">2x</option>
                 </select></li>
               <li id="liD">Download</li>
             </ul>
@@ -94,13 +100,14 @@
       </div>
     </div>
   </div>
-  
+
   <script defer src="{{ url_for('static', path='js/video.js') }}"></script>
-  
+
   <script>
-    const nextUrl = '{{ nxt }}'; 
+    const nextUrl = '{{ nxt }}';
     const prevUrl = '{{ prev }}';
-    const chapters = {{chapters | tojson}}
+    const chapters = {{ chapters | tojson}}
   </script>
 </body>
+
 </html>
