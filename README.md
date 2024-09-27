@@ -25,7 +25,7 @@ Dependencys:<br>
  python3  flask(pip) ffmpeg(as a command)
 
 Usage: <br>
-  python3 app/main.py -b IP_addr -p port -d directory [--dirsize]<br>
+  python3 app/run.py -b IP_addr -p port -d directory [--dirsize]<br>
   or for use a WSGI for deployment -> (for example gunicorn)
   gunicorn --env FOLDER=/PATH--env SHOWSIZE=True -b 127.0.0.1 -w 2 app/app:app
   
