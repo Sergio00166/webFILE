@@ -3,13 +3,13 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
+from sys import path
+from os import sep
+path.append(sep.join([path[0],"data","pysubs2.zip"]))
 from functions import printerr, get_file_type
 from actions import *
-from actions1 import *
-from flask import render_template, stream_template
-from flask import request, send_file, Response
 
-app,folder_size,root,sort_mod,sroot = init()
+app,folder_size,root,sroot = init()
 
 
 @app.route('/<path:path>', methods=['GET'])
@@ -17,41 +17,24 @@ app,folder_size,root,sort_mod,sroot = init()
 # or send in raw mode (or stream) files or send the dir as .tar
 def explorer(path):
     try:
-        cmp,sort = "mode" in request.args,"np"
-        mode = request.args["mode"] if cmp else ""  
-        if cmp and mode=="raw": return send_file(isornot(path,root))
+        # Check if we have extra args
+        cmp = "mode" in request.args
+        # If we have args get them else set blank
+        mode = request.args["mode"] if cmp else ""
+        # If the mode is raw send the file in raw mode
+        if mode=="raw": return send_file(isornot(path,root))
+        # Get the file type of the file
         file_type = get_file_type(root+sep+path)
-        
-        if file_type=="DIR": 
-            if cmp:
-                if mode=="dir": return send_dir(isornot(path,root))
-                if mode in sort_mod: sort=mode   
-            folder_content,folder_path,parent_directory,is_root,par_root = index_func(path,root,folder_size,sort)
-            return stream_template('index.html',folder_content=folder_content,folder_path=folder_path,\
-                   parent_directory=parent_directory,is_root=is_root,par_root=par_root,sort=sort)
-
-        elif file_type=="Text" or file_type=="SRC": return send_file(isornot(path,root), mimetype='text')
-        
-        elif file_type=="Video":
-            check_ffmpeg_installed()
-            if cmp and mode[:4]=="subs":
-                if path.endswith("/"): path=path[:-1]
-                try: arg = str(int(mode[4:]))+"/"+path
-                except: raise FileNotFoundError
-                out = sub_cache_handler(arg,root)
-                return Response(out,mimetype="text/plain",headers={"Content-disposition":"attachment; filename=subs.vtt"})
-            prev, nxt, name, path = filepage_func(path,root,file_type,no_next=True)
-            tracks,chapters = get_info(root+sep+path),get_chapters(root+sep+path)
-            return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks,chapters=chapters)
-
-        elif file_type=="Audio":
-            prev,nxt,name,path,rnd = filepage_func(path,root,file_type,True)
-            return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
+        # Check file type and send appropiate response
+        if file_type=="DIR": return directory(path,root,folder_size,mode)
+        elif file_type in ["Text","SRC"]: return send_file(isornot(path,root), mimetype='text')       
+        elif file_type=="Video": return video(path,root,mode,file_type)
+        elif file_type=="Audio": return audio(path,root,file_type)
         else: return send_file(isornot(path,root))
         
-    except PermissionError: return render_template('403.html'), 403
+    #except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
-    except Exception as e: printerr(e); return render_template('500.html'), 500
+    #except Exception as e: printerr(e); return render_template('500.html'), 500
 
 
 @app.route('/', methods=['GET'])
@@ -59,19 +42,16 @@ def explorer(path):
 # or send the root dir as .tar
 def index():
     try:
-        cmp,sort = "mode" in request.args,"np"
+        # Check if we have extra args
+        cmp = "mode" in request.args
+        # If we have args get them else set blank
         mode = request.args["mode"] if cmp else ""
-
+        # Check if static page is requested
         if "static" in request.args:
             path=request.args["static"].replace("/",sep)
             return send_file(isornot(path,sroot))
-        
-        if cmp and mode=="dir": return send_dir(root)
-        elif cmp and mode in sort_mod: sort=mode
-
-        folder_content = sort_contents(get_folder_content(root, root, folder_size),sort)
-        return stream_template('index.html',folder_content=folder_content,\
-               folder_path="/",parent_directory=root,is_root=True,sort=sort)
+        # Else show the root directory
+        return directory("/",root,folder_size,mode)
                 
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404

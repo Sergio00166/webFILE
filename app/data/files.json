@@ -1,0 +1,43 @@
+{
+    "SRC": [
+        ".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", 
+        ".rb", ".go", ".xml", ".ini", ".json", ".bat", ".cmd", ".sh", 
+        ".md", ".xmls", ".yml", ".yaml", ".asm", ".cfg", ".sql", 
+        ".htm", ".config", ".reg", ".log", ".txt", ".ps1", ".csv"
+    ],
+    "IMG": [
+        ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".tiff", 
+        ".ico", ".webp", ".raw"
+    ],
+    "Audio": [
+        ".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma", 
+        ".alac", ".opus"
+    ],
+    "DOC": [
+        ".doc", ".docx", ".odt", ".rtf", ".txt", ".wps", ".wpd"
+    ],
+    "DB": [
+        ".xls", ".xlsx", ".ods", ".csv", ".tsv", ".db", ".odb", 
+        ".mdb", ".sql"
+    ],
+    "PP": [
+        ".ppt", ".pptx", ".odp", ".key"
+    ],
+    "Video": [
+        ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", 
+        ".webm", ".mpeg", ".mpg"
+    ],
+    "PDF": [
+        ".pdf"
+    ],
+    "HdImg": [
+        ".iso", ".img", ".vdi", ".vmdk", ".vhd"
+    ],
+    "Compress": [
+        ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
+        ".xz", ".lz", ".tar.gz"
+    ],
+    "BIN": [
+        ".exe", ".dll", ".bin", ".sys", ".so", ".apk"
+    ]
+}

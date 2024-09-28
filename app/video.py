@@ -12,13 +12,8 @@ from glob import glob
 from os.path import exists
 from json import loads as jsload
 
-cache_dir = path[0]
-del path # Free memory
-cache_dir=cache_dir.split(sep)
-cache_dir.pop()
-cache_dir="/".join(cache_dir)
-cache_dir+="/cache/"
-
+cache_dir = sep.join([path[0],"data","subtitles"])+sep
+database = sep.join([path[0],"data","subtitles.db"])
 
 def check_ffmpeg_installed():
     try:
@@ -108,7 +103,7 @@ def get_subs_cache():
     # Returns a dict wiht the values from a file
     # Also it checks if it exists both dir and index file
     # If they are missing it creates them again
-    file=cache_dir+"index.txt"
+    file = database
     if exists(file):
         file = open(file,"r").read()
         file = file.split("\n\n")
@@ -135,7 +130,7 @@ def save_subs_cache(dic):
        out+=x+"\n"
        out+=dic[x][0]+"\n"+dic[x][1]
        out+="\n\n"
-    open(cache_dir+"index.txt","w").write(out)
+    open(database,"w").write(out)
     del out # Free memory
 
 
