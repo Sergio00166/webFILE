@@ -107,8 +107,8 @@ def exists_pid(pid):
         except: return False
         else: return True
     else:
-        try: os.kill(pid, 0)
-        except OSError: return False
+        try: kill(pid, 0)
+        except: return False
         else: return True
 
 def respawn_msg(txt):
