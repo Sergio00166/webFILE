@@ -32,9 +32,9 @@ def explorer(path):
         elif file_type=="Audio": return audio(path,root,file_type)
         else: return send_file(isornot(path,root))
         
-    #except PermissionError: return render_template('403.html'), 403
+    except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
-    #except Exception as e: printerr(e); return render_template('500.html'), 500
+    except Exception as e: printerr(e); return render_template('500.html'), 500
 
 
 @app.route('/', methods=['GET'])
