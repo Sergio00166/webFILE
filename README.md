@@ -11,25 +11,21 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 ---------------------------------------------------
 
-To change the options you can edit the config.cfg inside the bin dir, create a custom one or passing an arg to the main file located in bin/main.py.
-On that config file you can add ports and IP separated by "," to listen to (for example if you put 2 ports and 2 IPs both IPs will listen both ports)
-It makes easier to configure it to use it with a load-balancer proxy like nginx Because it will spawn a new process for each port and ip
+<b>Requirements:</b> <br>
+ Python3, Windows/Linux, Flask, ffmpeg
+ <br>This software includes pysubs2 module under the MIT license<br>
+ you can find the complete LICENSE inside the zip file in app/data/pysubs2.zip
 
 ---------------------------------------------------
 
-Requirements:<br>
- Python3<br>
- Windows/Linux
+<b>Usage:</b> <br>
+  - To run via flask internal HTTP server via CLI <br>
+  python3 scripts/run.py -b IP_addr -p port -d directory [--dirsize] <br>
+  - To run via flask internal HTTP server with config file (for use with load balancer) <br>
+  python3 scripts/start.py config.cfg <br>
+    - you can specify the ports with a range like 8000-8007 to spawn 8 workers and distribute the load with nginx
+  - To use a WSGI for deployment -> (for example gunicorn)<br>
+  cd app; gunicorn -R --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 -w 2 app:app <br>
+  <b>WARNING: slow video streaming with gunicorn</b>
 
-Dependencys:<br>
- python3  flask(pip) pysubs2(pip) ffmpeg(as a command)
-
-Usage: <br>
-  python3 start.py [config.file] or<br>
-  python3 bin/main.py -b IP_addr -p port -d directory [--dirsize]
-
- Logging:<br>
-    To create a log of all access and responses and erros of the server you can redirect
-    stderr to a file (2>file), in stdout is only the banner and info
-
-  ---------------------------------------------------
+---------------------------------------------------

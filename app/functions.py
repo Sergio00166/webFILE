@@ -1,33 +1,27 @@
 #Code by Sergio00166
 
-from os.path import commonpath, join, isdir, relpath, abspath
-from os.path import getmtime, getsize, exists
+from os.path import commonpath,join,isdir,relpath,abspath
+from os import listdir,pardir,sep,scandir,access,R_OK
+from os.path import getmtime,getsize,exists
 from datetime import datetime as dt
-from os import listdir, pardir, sep, scandir, access, R_OK
+from json import load as jsload
 from pathlib import Path
 from sys import stderr
+from sys import path
 import logging
 
-# Some file formats
-file_types = { "SRC": [".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", ".rb", ".go", ".xml", ".ini",
-".json",".bat", ".cmd", ".sh", ".md", ".xmls", ".yml", ".yaml", ".ini" ".asm", ".cfg", ".sql", ".htm", ".config",
-".reg", ".log"], "IMG": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".tiff", ".ico", ".webp"],
-"Audio": [".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma"], "DOC": [".doc", ".docx", ".odt", ".rtf"],
-"DB": [".xls", ".xlsx", ".ods", ".csv", ".tsv", ".db", ".odb"], "PP": [".ppt", ".pptx", ".odp"],
-"Video": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm"],"PDF": [".pdf"],
-"HdImg": [".iso", ".img", ".vdi", ".vmdk", ".vhd"], "Compress": [".zip", ".7z", ".rar", ".tar", ".bz2", ".gz"],
-"BIN": [".exe", ".dll", ".bin", ".sys", ".so"]}
 
-# Check if the text if binary
+is_subdirectory = lambda parent, child: commonpath([parent]) == commonpath([parent, child])
+# Load database of file type and extensions
+file_types = jsload(open(sep.join([path[0],"data","files.json"])))
+# Convert it to a lookup table to get file type as O(1)
+file_type_map = {v: k for k, vals in file_types.items() for v in vals}
+# Check if the file is a binary file or not
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
-is_binary_string = lambda bytes: bool(bytes.translate(None, textchars))
+is_binary = lambda path: bool(open(path, mode="rb").read(1024).translate(None, textchars))
+# This replaced buggy chars with the HTML replacement
+fix_pth_url = lambda path: "/"+path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
 
-def fix_pth_url(path):
-    # This replaced buggy chars with the HTML replacement
-    return "/"+path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
-
-def is_subdirectory(parent, child):
-    return commonpath([parent]) == commonpath([parent, child])
 
 def sort_results(paths,folder_path):
     # Here we sort the folder contents
@@ -64,13 +58,9 @@ def unreadable_date(date_str):
 
 def get_file_type(path):
     if isdir(path): return "DIR"
-    else:
-        file_extension=Path(path).suffix
-        for types, extensions in file_types.items():
-            if file_extension in extensions: return types
-        if not is_binary_string(open(path, mode="rb").read(1024)):
-            return "Text"
-        else: return "File"
+    file_type = file_type_map.get(Path(path).suffix)
+    if file_type is not None: return file_type
+    return "File" if is_binary(path) else "Text"
 
 def get_directory_size(directory):
     # Get the dir size recursively

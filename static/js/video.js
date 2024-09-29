@@ -218,7 +218,7 @@ function showCursor() {
     if (!video.paused) {
         cursorTimeout = setTimeout(function() {
             if (!video.paused) { document.body.style.cursor = 'none'; }
-        }, 960);
+        }, 1250);
     }
 }
 
@@ -513,7 +513,7 @@ function handleShorthand(e) {
             break;
         case "arrowup": prev(); break;
         case "arrowdown": next(); break;
-        case "r": changeMode(); break;
+        case "r": chMode(); break;
         case "q": toggleMuteUnmute(); break;
         case "+":
             if (volumeVal < 1 && !muted) {
