@@ -13,7 +13,8 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 <b>Requirements:</b> <br>
  Python3, Windows/Linux, Flask, ffmpeg
- <br>This software includes pysubs2 module under the MIT license, you can find the complete LICENSE in app/data/pysubs2.LICENSE
+ <br>This software includes pysubs2 module under the MIT license<br>
+ you can find the complete LICENSE inside the zip file in app/data/pysubs2.zip
 
 ---------------------------------------------------
 
