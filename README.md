@@ -17,6 +17,7 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 <b>Dependencys:</b> <br>
  python3  flask, ffmpeg
+ <br>This software includes pysubs2 library
 
 <b>Usage:</b> <br>
   - To run via flask internal HTTP server via CLI <br>
