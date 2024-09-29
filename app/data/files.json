@@ -3,41 +3,41 @@
         ".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", 
         ".rb", ".go", ".xml", ".ini", ".json", ".bat", ".cmd", ".sh", 
         ".md", ".xmls", ".yml", ".yaml", ".asm", ".cfg", ".sql", 
-        ".htm", ".config", ".reg", ".log", ".txt", ".ps1", ".csv"
+        ".htm", ".config", ".reg", ".log", ".ps1", ".csv", ".ts", ".rs", ".kt"
     ],
     "IMG": [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".tiff", 
-        ".ico", ".webp", ".raw"
+        ".ico", ".webp", ".raw", ".heic", ".psd"
     ],
     "Audio": [
         ".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma", 
-        ".alac", ".opus"
+        ".alac", ".opus", ".aiff"
     ],
     "DOC": [
-        ".doc", ".docx", ".odt", ".rtf", ".txt", ".wps", ".wpd"
+        ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
     ],
     "DB": [
         ".xls", ".xlsx", ".ods", ".csv", ".tsv", ".db", ".odb", 
-        ".mdb", ".sql"
+        ".mdb", ".sql", ".sqlite"
     ],
     "PP": [
-        ".ppt", ".pptx", ".odp", ".key"
+        ".ppt", ".pptx", ".odp", ".key", ".pps", ".ppsx"
     ],
     "Video": [
         ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", 
-        ".webm", ".mpeg", ".mpg"
+        ".webm", ".mpeg", ".mpg", ".3gp", ".m4v"
     ],
     "PDF": [
         ".pdf"
     ],
     "HdImg": [
-        ".iso", ".img", ".vdi", ".vmdk", ".vhd"
+        ".iso", ".img", ".vdi", ".vmdk", ".vhd", ".dmg"
     ],
     "Compress": [
         ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
-        ".xz", ".lz", ".tar.gz"
+        ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz", ".zst"
     ],
     "BIN": [
-        ".exe", ".dll", ".bin", ".sys", ".so", ".apk"
+        ".exe", ".dll", ".bin", ".sys", ".so", ".apk", ".jar", ".app", ".deb", ".rpm"
     ]
 }
