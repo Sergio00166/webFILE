@@ -14,12 +14,12 @@ banner = [
 banner = ("\n".join(banner))+"\n\n"
 
 
-from subprocess import Popen
-from sys import path, argv
-from os.path import exists, isdir
-from os import sep
-from time import sleep as delay
+from subprocess import Popen, check_output as chout
 from ipaddress import IPv4Address,IPv6Address
+from os.path import exists, isdir
+from time import sleep as delay
+from sys import path, argv
+from os import sep, kill
 
 
 def is_valid_ip(ip):
@@ -99,28 +99,61 @@ def init():
     return ports, listen, root, folder_size
 
 
+def exists_pid(pid):
+    if sep==chr(92):
+        cmd = f'powershell "Get-Process -Id {pid} |'
+        cmd += ' Select-Object -ExpandProperty Id"'
+        try: chout(cmd)
+        except: return False
+        else: return True
+    else:
+        try: os.kill(pid, 0)
+        except OSError: return False
+        else: return True
+
+def respawn_msg(txt):
+    print("\033[32mRelaunching Process: ",end="")
+    txt = " ".join(txt)
+    port = txt[txt.find("-p ")+3:]
+    port = port[:port.find(" ")]
+    bind = txt[txt.find("-b ")+3:]
+    bind = bind[:bind.find(" ")]
+    print("\033[34m"+bind+"\033[32m:\033[31m"+port+"\033[0m")    
+
 def main():
-    print("")
-    # Parse and get values
+    proc = {} # Initialize proc dict
+    # Define the path of the child script
+    PyExec = path[0]+sep+"run.py"
+    # Detect OS and add proper executable
+    if sep==chr(92): python="python"
+    else: python="python3"
+    # Parse and get values from the file config
     ports,listen,root,folder_size = init()
+    # Set some data for the banner and info
     data = ["\033[32mListening on: \033[34m"+ip+\
             "\033[32m:\033[31m"+port+"\033[0m"\
             for ip in listen for port in ports]
-    # Print info
-    print(banner, end="")
+    # Print and create all the banner
+    print("\n"+banner, end="")
     print("\n".join(data))
     print("\033[32mServing path: \033[34m"+root+"\033[0m\n")
+
     # Execute each process
-    PyExec=path[0]+sep+"run.py"
-    if sep==chr(92): python="python"
-    else: python="python3"
     for ip in listen:
         for port in ports:
             args=[python,PyExec,"-b",ip,"-p",port,"-d",root]
             if folder_size: args.append("--dirsize")
-            Popen(args); delay(0.1)
+            proc[Popen(args).pid] = args;  delay(0.1)
+
     try: # wait forever
-        while True: delay(1)
+        while True:
+            # Check if one process has died
+            for x in proc.copy():
+                if not exists_pid(x):
+                    respawn_msg(proc[x])
+                    proc[Popen(proc[x]).pid] = proc[x]
+                    del proc[x] # Clear old one
+            delay(2) # Reduce polling rate
     except: exit()
 
 
