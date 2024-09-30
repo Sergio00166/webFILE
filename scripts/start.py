@@ -19,7 +19,8 @@ from os.path import exists,isdir
 from time import sleep as delay
 from threading import Thread
 from sys import path,argv
-from os import sep,kill
+from os import sep
+
 
 # Disable traceback
 import sys
@@ -121,7 +122,6 @@ def wait4child(cmd):
         respawn_msg(cmd)
 
 def main():
-    proc = {} # Initialize proc dict
     # Define the path of the child script
     PyExec = path[0]+sep+"run.py"
     # Detect OS and add proper executable
