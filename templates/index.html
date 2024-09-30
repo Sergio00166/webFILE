@@ -48,12 +48,11 @@
                 </a>
                 {% endif %}
                 {% for item in folder_content %}
-                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"
-                    {% if item['description']=='DIR' %}dir{% endif %}>
+                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}" {% if item['description']=='DIR' %}dir{% endif %}>
                     {% if item['description'] == 'DIR' %}
-                    <span class="image">
-                        <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}"
-                            class="folder">&nbsp;</img>
+                        <span class="image">
+                            <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}"
+							class="folder">&nbsp;</img>
                     {% else %}
                         <span class="image">
                             {% if item['description'] == 'SRC' %}
@@ -95,8 +94,8 @@
                             <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}"
                                 class="files">&nbsp;</img>
                             {% endif %}
-						</span>
                     {% endif %}
+					</span>
                     <span class="first">
                         {{ item['name'] }}
                         {% if item['description'] == 'DIR' %}
@@ -114,4 +113,5 @@
         <br><br>
     </div>
 </body>
+
 </html>
