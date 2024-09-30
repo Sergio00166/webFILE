@@ -22,12 +22,6 @@ from threading import Thread
 from os import sep
 
 
-# Disable traceback
-import sys
-sys.tracebacklimit = 0
-del sys
-
-
 def is_valid_ip(ip):
     try: IPv4Address(ip); return True
     except:
@@ -61,18 +55,27 @@ def init():
         port=dic["port"]
         if "-" in port:
             st,end = port.split("-")
-            try: st=int(st); end=int(end)
+            try:
+                st,end = int(st),int(end)
+                if     1>=st : raise ValueError
+                if 65536<=st : raise ValueError
+                if     1>=end: raise ValueError
+                if 65536<=end: raise ValueError
             except:
-                print("[CFG_FILE]: PORTS MUST BE A NUMBER")
+                print("[CFG_FILE]: THE PORT IS NOT VALID")
                 error_exit = True
             if st>end: st,end = end,st
             ports=[str(x) for x in range(st,end+1)]
         else:
             ports=[]
             for x in port.split(","):
-                try: ports.append(str(int(x.strip())))
+                try:
+                    x = int(x.strip())
+                    if     1>=x: raise ValueError
+                    if 65536<=x: raise ValueError
+                    ports.append(str(x))
                 except:
-                    print("[CFG_FILE]: PORTS MUST BE A NUMBER")
+                    print("[CFG_FILE]: THE PORT IS NOT VALID")
                     error_exit = True
     else: ports=["80"]
 

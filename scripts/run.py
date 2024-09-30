@@ -30,7 +30,10 @@ def init():
     if not is_valid_ip(args.bind):
         print("THE IP IS NOT VALID")
         exit_err = True   
-    try: int(args.port)
+    try:
+        x = int(args.port)
+        if     1>=x: raise ValueError
+        if 65536<=x: raise ValueError
     except:
         print("THE PORT IS NOT VALID")
         exit_err = True     
