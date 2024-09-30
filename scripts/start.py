@@ -116,10 +116,8 @@ def respawn_msg(txt):
     print(msg,file=stderr)
 
 def wait4child(cmd):
-    child = Popen(cmd)
     while True:
-        child.wait()
-        child = Popen(cmd)
+        Popen(cmd).wait()
         respawn_msg(cmd)
 
 def main():
