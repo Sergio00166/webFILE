@@ -59,6 +59,7 @@ body {
     font-family: sans-serif;
     background-color: #000000;
     word-break: break-all;
+    user-select: none;
 }
 h2 { 
     background-color: #666666;
