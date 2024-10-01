@@ -73,16 +73,17 @@ function selectDiv(divId) {
     }
 }
 
-function handleDivClick(event) {
+function handleDivClick(div) {
     if (selectMode) {
-        selectDiv(event.currentTarget.id);
+        selectDiv(div.id); // Use div.id here
     } else {
-        const url = event.currentTarget.getAttribute('data-value');
-        if (url) { 
-            const div = document.getElementById(event.currentTarget.id);
+        const url = div.getAttribute('data-value');
+        if (url) {
             if (div.hasAttribute('dir')) {
                 window.location.href = url;
-            } else { window.open(url, '_blank'); }    
+            } else {
+                window.open(url, '_blank');
+            }
         }
     }
 }
@@ -155,7 +156,7 @@ function invertSelection() {
     }
 }
 
-// Bind click handling to the container
+// Bind click handling to divs
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('div.container');
     container.addEventListener('click', (event) => {
@@ -163,4 +164,3 @@ document.addEventListener('DOMContentLoaded', () => {
         if (div) { handleDivClick(div); }
     });
 });
-
