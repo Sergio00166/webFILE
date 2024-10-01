@@ -149,7 +149,7 @@ def main():
 
     try: # Wait until Ctrl+C
         while True: delay(1)
-    except KeyboardInterrupt: exit(1)
+    except KeyboardInterrupt: exit()
 
 
 if __name__=="__main__": main()
