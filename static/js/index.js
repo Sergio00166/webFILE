@@ -155,9 +155,12 @@ function invertSelection() {
     }
 }
 
-// Bind click handling to divs
+// Bind click handling to the container
 document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('div.filename').forEach(div => {
-        div.addEventListener('click', handleDivClick);
+    const container = document.querySelector('div.container');
+    container.addEventListener('click', (event) => {
+        const div = event.target.closest('div.filename');
+        if (div) { handleDivClick(div); }
     });
 });
+
