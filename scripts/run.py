@@ -50,12 +50,18 @@ if __name__ == "__main__":
         environ['SHOWSIZE'] = str(folder_size).upper()
         path[0] = abspath(path[0]+sep+".."+sep+"app")
         from app import *  # Import main flask app
+    
         # Disable every shit that flask prints
-        log = getLogger('werkzeug'); log.setLevel(WARNING)
-        # Hide the banner that flask prints
-        modules['flask.cli'].show_server_banner = lambda *x: print(end="")
-        # Change logging to default after app is running
-        Thread(target=lambda: (delay(0.1), log.setLevel(INFO))).start()
+        flask_msg = modules['flask.cli']
+        nothing = lambda *x: print(end="")
+        flask_msg.show_server_banner = nothing
+        log = getLogger('werkzeug')
+        log.setLevel(WARNING)
+        @app.before_request
+        def reset_logging():
+            app.before_request_funcs.clear()
+            log.setLevel(INFO) # Reset logging
+    
         # Run the main app with the custom args
         app.run(host=listen, port=int(port), debug=False)
 
