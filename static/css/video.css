@@ -52,7 +52,6 @@ body {
   height: 100vh;
   background: #000000;
   -webkit-tap-highlight-color: transparent;
-  user-select: none;
 }
 .video-container {
   position: relative;
@@ -62,6 +61,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none !important;
 }
 video {
     max-height: 90vh;
