@@ -59,7 +59,7 @@ img {
   height: 0px;
   background: #62626274;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 5px;
   transition: all 0.2s;
   padding: 8px;
 }
