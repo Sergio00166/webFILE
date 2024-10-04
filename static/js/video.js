@@ -610,7 +610,7 @@ speedSelect.addEventListener('change', function() {
 liD.addEventListener("click", ()=> {
     downloadLink.click();
     handleSettingMenu();
-}
+});
 
 function split_timeline_chapters() {
     const divLength = video.duration;
