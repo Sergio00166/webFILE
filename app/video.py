@@ -140,9 +140,7 @@ def convert(cmd,ret):
     # Pass to the object the values
     subs.events = unique_subs
     del unique_subs # Free memory
-    out=subs.to_string("vtt")
-    del subs  # Free memory
-    ret.put(out) # Return values
+    ret.put(subs.to_string("vtt"))
 
 
 def get_track(file,index):
@@ -163,11 +161,9 @@ def get_track(file,index):
         ret = Queue()
         proc = Process(target=convert, args=(cmd,ret,))
         proc.start(); out = ret.get(); proc.join()
-        del proc, ret # Free memory
         return out
 
     else: # Convert direcly with ffmpeg
         proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        source, _ = process.communicate(); del proc
-        return source.decode("UTF-8")
+        return process.communicate()[0].decode("UTF-8")
 
