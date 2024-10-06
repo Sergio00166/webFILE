@@ -329,7 +329,7 @@ function toggleMuteUnmute() {
     } localStorage.setItem("videoMuted", muted);
 }
 
-function hideControls(delay=1500) {
+function hideControls(delay=2000) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
@@ -638,7 +638,7 @@ video.addEventListener("click", (e) => {
 videoContainer.addEventListener('touchmove', () => { 
     touchFix=true;
     controls.classList.add("show-controls");
-    hideControls(2500);
+    hideControls(3000);
 });
 
 let lastTouchTime = 0;
