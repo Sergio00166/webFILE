@@ -70,8 +70,7 @@ def index_func(folder_path,root,folder_size,sort):
     folder_path="/"+folder_path.replace(sep,"/")
     parent_directory=parent_directory.replace(sep,"/")
     folder_content = sort_contents(folder_content, sort)
-    par_root = (parent_directory=="")
-    return folder_content,folder_path,parent_directory,is_root,par_root
+    return folder_content,folder_path,parent_directory,is_root
 
 
 def video(path,root,mode,file_type):
@@ -106,7 +105,7 @@ def directory(path,root,folder_size,mode):
     # Get the sort value if it is on the list else set default value
     sort = mode if mode in ["np","nd","sp","sd","dp","dd"] else "np"
     # Get all the data from that directry and its contents
-    folder_content,folder_path,parent_directory,is_root,par_root = index_func(path,root,folder_size,sort)
+    folder_content,folder_path,parent_directory,is_root = index_func(path,root,folder_size,sort)
     return stream_template('index.html',folder_content=folder_content,folder_path=folder_path,\
-           parent_directory=parent_directory,is_root=is_root,par_root=par_root,sort=sort)   
+                           parent_directory=parent_directory,is_root=is_root,sort=sort)   
 

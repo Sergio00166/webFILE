@@ -35,26 +35,20 @@
                 <button onclick="executeDownloads()">DOWNLOAD</button>
             </div>
         </div>
-        <div class="container">
-            <br>
+        <div class="container"> <br>
             {% if not is_root %}
-            {% if not par_root %}
-            <a class="backdir" href="{{ url_for('explorer', path=parent_directory) }}">
-                {% else %}
-                <a class="backdir" href="{{ url_for('index') }}">
-                    {% endif %}
+                <a class="backdir" href="{{ url_for('explorer', path=parent_directory) }}">
                     <img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback">&nbsp;</img>
                     <span class="first">Parent Directory</span>
                 </a>
-                {% endif %}
-                {% for item in folder_content %}
-                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"
-                    {% if item['description']=='DIR' %}dir{% endif %}>
+            {% endif %}
+            {% for item in folder_content %}
+                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}" {% if item['description']=='DIR' %}dir{% endif %}>
                     {% if item['description'] == 'DIR' %}
-                    <span class="image">
-                        <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}"
+                        <span class="image">
+                            <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}"
                             class="folder">&nbsp;</img>
-                        {% else %}
+                    {% else %}
                         <span class="image">
                             {% if item['description'] == 'SRC' %}
                             <img src="{{ url_for('index', static='svg/index/file-code-solid.svg') }}"
@@ -95,21 +89,21 @@
                             <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}"
                                 class="files">&nbsp;</img>
                             {% endif %}
-                            {% endif %}
-                        </span>
-                        <span class="first">
-                            {{ item['name'] }}
-                            {% if item['description'] == 'DIR' %}
+                    {% endif %}
+                    </span>
+                    <span class="first">
+                        {{ item['name'] }}
+                        {% if item['description'] == 'DIR' %}
                             <t class="small">/</t>
-                            {% endif %}
-                        </span>
-                        <span class="no_overflow">
-                            <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ item['size'] }}</t>
-                            <t class="notime">&nbsp;&nbsp; {{ item['mtime'] }}</t>
-                        </span>
+                        {% endif %}
+                    </span>
+                    <span class="no_overflow">
+                        <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ item['size'] }}</t>
+                        <t class="notime">&nbsp;&nbsp; {{ item['mtime'] }}</t>
+                    </span>
                 </div>
-                {% endfor %}
-                <br>
+            {% endfor %}
+            <br>
         </div>
         <br><br>
     </div>

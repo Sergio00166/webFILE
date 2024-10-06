@@ -34,6 +34,7 @@ const sh_fulla = document.querySelector(".sh_fulla");
 const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
+const liD = document.getElementById("liD");
 
 
 var mode = document.getElementById("mode");
@@ -96,7 +97,6 @@ function next() {
 	} else { location.reload(); }
 }
 function prev() { window.location.href = prevUrl; }
-function download() { downloadLink.click(); }
 
 function chMode() {
     const modes = ["1", "»", "↻"];
@@ -329,7 +329,7 @@ function toggleMuteUnmute() {
     } localStorage.setItem("videoMuted", muted);
 }
 
-function hideControls(delay=1500) {
+function hideControls(delay=2000) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
@@ -571,6 +571,7 @@ audioTracksSelect.addEventListener('change', function() {
     changeTrack(selectedIndex);
     text = audioTracksSelect[selectedIndex].text
     localStorage.setItem("videoAudio", text);
+     handleSettingMenu();
 });
 
 function changeSubs(value){
@@ -597,17 +598,19 @@ subtitleSelect.addEventListener('change', function() {
     } else { 
         text = subtitleSelect.options[value+1].text;
         localStorage.setItem("videoSubs", text);
-    }
+    }  handleSettingMenu();
 });
 
 speedSelect.addEventListener('change', function() {
     video.playbackRate = parseFloat(this.value);
     localStorage.setItem("videoSpeed", video.playbackRate);
+     handleSettingMenu();
 });
 
-const liD = document.getElementById("liD");
-liD.addEventListener("click", download);
-
+liD.addEventListener("click", ()=> {
+    downloadLink.click();
+    handleSettingMenu();
+});
 
 function split_timeline_chapters() {
     const divLength = video.duration;
@@ -635,7 +638,7 @@ video.addEventListener("click", (e) => {
 videoContainer.addEventListener('touchmove', () => { 
     touchFix=true;
     controls.classList.add("show-controls");
-    hideControls(2500);
+    hideControls(3000);
 });
 
 let lastTouchTime = 0;

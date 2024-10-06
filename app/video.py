@@ -34,33 +34,6 @@ def get_codec(source, index):
     return Popen(cmd, stdout=PIPE).communicate()[0].decode('UTF8').strip()
 
 
-def convert(src, ret):
-    subs = pysubs2.SSAFile.from_string(src.decode('UTF8'))
-    del src # Free memory
-    with StringIO() as tmp:
-        # Here we convert to webVTT without
-        # styles bc it show a some weird stuff
-        subs.to_file(tmp, "vtt", apply_styles=False)
-        del subs # Free memory 
-        out = tmp.getvalue() 
-    subs = pysubs2.SSAFile.from_string(out)
-    del out # Free memory
-    # Remove duplicated webVTT entries
-    unique_subs,seen = [],set()
-    for line in subs:
-        key = (line.text, line.start, line.end)
-        if key not in seen:
-            seen.add(key)
-            unique_subs.append(line)
-    del subs.events, seen  # Free memory
-    # Pass to the object the values
-    subs.events = unique_subs
-    del unique_subs # Free memory
-    out=subs.to_string("vtt")
-    del subs  # Free memory
-    ret.put(out) # Return values
-
-
 def get_chapters(file_path):
     try:
         result = run([
@@ -141,6 +114,35 @@ def random_str():
     return random_string
 
 
+def convert(cmd,ret):
+    # Extract raw subtitles with ffmpeg
+    proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    source, _ = proc.communicate(); del proc
+    # Load the raw thing onto an object
+    subs = pysubs2.SSAFile.from_string(source.decode('UTF8'))
+    del source # Free memory
+    with StringIO() as tmp:
+        # Here we convert to webVTT without
+        # styles bc it show a some weird stuff
+        subs.to_file(tmp, "vtt", apply_styles=False)
+        del subs # Free memory 
+        out = tmp.getvalue() 
+    subs = pysubs2.SSAFile.from_string(out)
+    del out # Free memory
+    # Remove duplicated webVTT entries
+    unique_subs,seen = [],set()
+    for line in subs:
+        key = (line.text, line.start, line.end)
+        if key not in seen:
+            seen.add(key)
+            unique_subs.append(line)
+    del subs.events, seen  # Free memory
+    # Pass to the object the values
+    subs.events = unique_subs
+    del unique_subs # Free memory
+    ret.put(subs.to_string("vtt"))
+
+
 def get_track(file,index):
     # Here we extract [and corvert] a
     # subtitle track from a video file
@@ -153,18 +155,15 @@ def get_track(file,index):
         '-map', f'0:s:{index}',
         '-f', codec, '-'
     ]
-    process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-    source, _ = process.communicate(); del process
-    # To convert ass/ssa subtitles
-    # Yes ffmpeg can do it but id does it
-    # in a weird way. This cleans all
-    # incompatible stuff and cleans the output
+    # To convert ass/ssa subtitles to webVTT,
+    # Clean all incompatible stuff and output
     if not codec=="webvtt":
         ret = Queue()
-        proc = Process(target=convert, args=(source,ret,))
-        del source # Free memory
+        proc = Process(target=convert, args=(cmd,ret,))
         proc.start(); out = ret.get(); proc.join()
-        del proc, ret # Free memory
         return out
 
-    else: return source.decode("UTF-8")
+    else: # Convert direcly with ffmpeg
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        return process.communicate()[0].decode("UTF-8")
+
