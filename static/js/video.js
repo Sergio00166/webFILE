@@ -1,5 +1,7 @@
 /* Code by Sergio00166 */
 
+let mouse_ctrl_delay = 1500;
+
 const downloadLink = document.querySelector("a");
 const video = document.querySelector("video");
 const volume = document.querySelector(".volume");
@@ -154,7 +156,7 @@ duration.addEventListener("click", navigate);
 
 controls.addEventListener("click", () => {
     controls.classList.add("show-controls");
-    showCursor();  hideControls();
+    showCursor();  hideControls(mouse_ctrl_delay);
 });
 
 duration.addEventListener("mousedown", (e) => {
@@ -177,7 +179,7 @@ videoContainer.addEventListener("mousemove", (e) => {
     controls.classList.add("show-controls");
     showCursor();
     handleMousemove(e);
-    hideControls();
+    hideControls(mouse_ctrl_delay);
 });
 
 duration.addEventListener("mouseenter", () => {
@@ -218,7 +220,7 @@ function showCursor() {
     if (!video.paused) {
         cursorTimeout = setTimeout(function() {
             if (!video.paused) { document.body.style.cursor = 'none'; }
-        }, 1250);
+        }, mouse_ctrl_delay);
     }
 }
 
@@ -253,7 +255,7 @@ function play() {
     sh_pause.classList.remove("sh_pause");
     sh_play.classList.add("sh_play");
     show_main_animation("");
-    hideControls();
+    hideControls(mouse_ctrl_delay);
 }
 function pause() {
     video.pause();
@@ -329,7 +331,7 @@ function toggleMuteUnmute() {
     } localStorage.setItem("videoMuted", muted);
 }
 
-function hideControls(delay=2000) {
+function hideControls(delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
@@ -638,7 +640,7 @@ video.addEventListener("click", (e) => {
 videoContainer.addEventListener('touchmove', () => { 
     touchFix=true;
     controls.classList.add("show-controls");
-    hideControls(3000);
+    hideControls(2500);
 });
 
 let lastTouchTime = 0;
