@@ -117,32 +117,34 @@ def random_str():
 
 
 def convert(cmd,ret):
-    # Extract raw subtitles with ffmpeg
-    proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
-    source, _ = proc.communicate()
-    # Load the raw thing onto an object
-    subs = pysubs2.SSAFile.from_string(source.decode('UTF8'))
-    del source; free()
-    with StringIO() as tmp:
-        # Here we convert to webVTT without
-        # styles bc it show a some weird stuff
-        subs.to_file(tmp, "vtt", apply_styles=False)
-        del subs; free()
-        out = tmp.getvalue() 
-    subs = pysubs2.SSAFile.from_string(out)
-    del out; free()
-    # Remove duplicated webVTT entries
-    unique_subs,seen = [],set()
-    for line in subs:
-        key = (line.text, line.start, line.end)
-        if key not in seen:
-            seen.add(key)
-            unique_subs.append(line)
-    del subs.events,seen; free()
-    # Pass to the object the values
-    subs.events = unique_subs
-    del unique_sub; free()
-    ret.put(subs.to_string("vtt"))
+    try:
+        # Extract raw subtitles with ffmpeg
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        source, _ = proc.communicate()
+        # Load the raw thing onto an object
+        subs = pysubs2.SSAFile.from_string(source.decode('UTF8'))
+        del source; free()
+        with StringIO() as tmp:
+            # Here we convert to webVTT without
+            # styles bc it show a some weird stuff
+            subs.to_file(tmp, "vtt", apply_styles=False)
+            del subs; free()
+            out = tmp.getvalue() 
+        subs = pysubs2.SSAFile.from_string(out)
+        del out; free()
+        # Remove duplicated webVTT entries
+        unique_subs,seen = [],set()
+        for line in subs:
+            key = (line.text, line.start, line.end)
+            if key not in seen:
+                seen.add(key)
+                unique_subs.append(line)
+        del subs.events,seen; free()
+        # Pass to the object the values
+        subs.events = unique_subs
+        del unique_subs; free()
+        ret.put([True,subs.to_string("vtt")])
+    except Exception as e: ret.put([False,e])
 
 
 def get_track(file,index):
@@ -163,7 +165,8 @@ def get_track(file,index):
         ret = Queue()
         proc = Process(target=convert, args=(cmd,ret,))
         proc.start(); out = ret.get(); proc.join()
-        return out
+        if not out[0]: raise out[1]
+        return out[1]
 
     else: # Convert direcly with ffmpeg
         proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
