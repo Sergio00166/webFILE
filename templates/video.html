@@ -1,4 +1,5 @@
 <!-- Code by Sergio00166 -->
+
 <!DOCTYPE html>
 <html>
 
@@ -13,7 +14,7 @@
 <body>
   <a href="{{ request.path }}/?mode=raw" download="{{ name }}"></a>
   <div class="video-container">
-    <video autoplay onended="handleVideoEnded()">
+    <video autoplay playsinline onended="handleVideoEnded()">
       <source src="{{ request.path }}/?mode=raw" type="video/mp4">
     </video>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
@@ -102,12 +103,11 @@
   </div>
 
   <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
-
   <script>
     const nextUrl = '{{ nxt }}';
     const prevUrl = '{{ prev }}';
     const chapters = {{ chapters | tojson}}
   </script>
-</body>
 
+</body>
 </html>
