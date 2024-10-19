@@ -22,7 +22,7 @@ def explorer(path):
         # If we have args get them else set blank
         mode = request.args["mode"] if cmp else ""
         # If the mode is raw send the file in raw mode
-        if mode=="raw": return send_file(isornot(path,root),conditional=True)
+        if mode=="raw": return send_file(isornot(path,root))
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
     
@@ -32,12 +32,11 @@ def explorer(path):
             return directory(path,root,folder_size,mode,cli)
     
         elif file_type in ["Text","SRC"]:
-            return send_file(isornot(path,root),\
-            mimetype='text/plain',conditional=True)
+            return send_file(isornot(path,root),mimetype='text/plain')
     
         elif file_type=="Video": return video(path,root,mode,file_type)
         elif file_type=="Audio": return audio(path,root,file_type)
-        else: return send_file(isornot(path,root),conditional=True)
+        else: return send_file(isornot(path,root))
         
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
@@ -57,7 +56,7 @@ def index():
         # Check if static page is requested
         if "static" in request.args:
             path=request.args["static"].replace("/",sep)
-            return send_file(isornot(path,sroot),conditional=True)
+            return send_file(isornot(path,sroot))
         # Else show the root directory
         cli = is_cli_browser(request)
         return directory("/",root,folder_size,mode,cli)
