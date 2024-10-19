@@ -22,7 +22,7 @@
         {% endif %}
         {% for item in folder_content %}
             <tr>
-                <td><a href="{{ url_for('explorer', path=item['path']) }}{% if item['description']!='DIR' %}/?mode=raw{% endif %}">{{ item['name'] }}</a></td>
+                <td><a href="{{ url_for('explorer', path=item['path']) }}{% if item['description']!='DIR' %}/?mode=raw{% endif %}">{{ item['name'] }}{% if item['description'] == 'DIR' %}/{% endif %}</a></td>
                 <td align="right"> {{ item['size'] }} </td><td align="right"> {{ item['mtime'] }} </td>
             </tr>
         {% endfor %}
