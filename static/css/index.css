@@ -113,12 +113,12 @@ h2 {
 }
 
 @media (max-width: 730px) {
-	.controls { flex-direction: column; }
-	button { margin: 2px; }
+    .controls { flex-direction: column; }
+    button { margin: 2px; }
 }
 @media (max-width: 360px) {
-	.ctrl_flex { flex-direction: column; }
-	button { margin: 1px; }
+    .ctrl_flex { flex-direction: column; }
+     button { margin: 1px; }
 }
 
 @media (max-width: 650px) {
