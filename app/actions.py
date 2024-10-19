@@ -99,13 +99,14 @@ def audio(path,root,file_type):
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 
-def directory(path,root,folder_size,mode):
+def directory(path,root,folder_size,mode,cli):
     # Check if sending the dir is requested
     if mode=="dir": return send_dir(isornot(path,root))
     # Get the sort value if it is on the list else set default value
     sort = mode if mode in ["np","nd","sp","sd","dp","dd"] else "np"
     # Get all the data from that directry and its contents
     folder_content,folder_path,parent_directory,is_root = index_func(path,root,folder_size,sort)
-    return stream_template('index.html',folder_content=folder_content,folder_path=folder_path,\
-                           parent_directory=parent_directory,is_root=is_root,sort=sort)   
+    file = "index_cli.html" if cli else "index.html"
+    html = stream_template(file,folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,sort=sort)
+    return html if cli else minify(html) # reduce size
 

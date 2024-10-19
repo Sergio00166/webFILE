@@ -13,18 +13,18 @@
 </head>
 
 <body>
-    <div class="list-group">
+    <div class="list-group" style="display: none;">
         <h2>Index of {{ folder_path }}</h2>
         <div class="controls">
             <div class="ctrl_flex">
-                <button onclick="sortNameBT()"> NAME
-                    {% if sort=="np" %} ↑ {% elif sort=="nd" %} ↓ {% endif %}
+                <button onclick="changeURL({% if sort=="np" %} 'nd' {% else %} 'np' {% endif %})">
+                    NAME {% if sort=="np" %} ↑ {% elif sort=="nd" %} ↓ {% endif %}
                 </button>
-                <button onclick="sortSizeBT()"> SIZE
-                    {% if sort=="sp" %} ↑ {% elif sort=="sd" %} ↓ {% endif %}
+                <button onclick="changeURL({% if sort=="sp" %} 'sd' {% else %} 'sp' {% endif %})">
+                    SIZE {% if sort=="sp" %} ↑ {% elif sort=="sd" %} ↓ {% endif %}
                 </button>
-                <button onclick="sortDateBT()"> DATE
-                    {% if sort=="dp" %} ↑ {% elif sort=="dd" %} ↓ {% endif %}
+                <button onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
+                    DATE {% if sort=="dp" %} ↑ {% elif sort=="dd" %} ↓ {% endif %}
                 </button>
             </div>
             <div class="ctrl_flex">

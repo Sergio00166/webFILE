@@ -6,7 +6,7 @@
 from sys import path
 from os import sep
 path.append(sep.join([path[0],"data","pysubs2.zip"]))
-from functions import printerr, get_file_type
+from functions import printerr, get_file_type, is_cli_browser
 from actions import *
 
 app,folder_size,root,sroot = init()
@@ -26,7 +26,9 @@ def explorer(path):
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
         # Check file type and send appropiate response
-        if file_type=="DIR": return directory(path,root,folder_size,mode)
+        if file_type=="DIR":
+            cli = is_cli_browser(request)
+            return directory(path,root,folder_size,mode,cli)
         elif file_type in ["Text","SRC"]: return send_file(isornot(path,root), mimetype='text')       
         elif file_type=="Video": return video(path,root,mode,file_type)
         elif file_type=="Audio": return audio(path,root,file_type)
@@ -51,7 +53,8 @@ def index():
             path=request.args["static"].replace("/",sep)
             return send_file(isornot(path,sroot))
         # Else show the root directory
-        return directory("/",root,folder_size,mode)
+        cli = is_cli_browser(request)
+        return directory("/",root,folder_size,mode,cli)
                 
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404

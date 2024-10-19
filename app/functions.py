@@ -23,6 +23,16 @@ is_binary = lambda path: bool(open(path, mode="rb").read(1024).translate(None, t
 fix_pth_url = lambda path: "/"+path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
 
 
+# That shit reduces too much the size for the file
+# explorer stream by minifying it (460KB -> 170KB)
+def minify(stream):
+    for x in stream: yield x.replace('\n','').replace('  ','')
+
+def is_cli_browser(request):
+    user_agent = request.headers.get('User-Agent', '').lower()
+    return any(cli_browser in user_agent for cli_browser in ['links','lynx','w3m',"wget","curl"])
+
+
 def sort_results(paths,folder_path):
     # Here we sort the folder contents
     # First dirs and secondly files
