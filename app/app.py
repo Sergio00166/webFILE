@@ -33,11 +33,11 @@ def explorer(path):
     
         elif file_type in ["Text","SRC"]:
             return send_file(isornot(path,root),\
-            mimetype='text/plain',etags=True,conditional=True)
+            mimetype='text/plain',conditional=True)
     
         elif file_type=="Video": return video(path,root,mode,file_type)
         elif file_type=="Audio": return audio(path,root,file_type)
-        else: return send_file(isornot(path,root),etags=True,conditional=True)
+        else: return send_file(isornot(path,root),conditional=True)
         
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
