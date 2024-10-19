@@ -29,7 +29,7 @@ def explorer(path):
         if file_type=="DIR":
             cli = is_cli_browser(request)
             return directory(path,root,folder_size,mode,cli)
-        elif file_type in ["Text","SRC"]: return send_file(isornot(path,root), mimetype='text')       
+        elif file_type in ["Text","SRC"]: return send_file(isornot(path,root), mimetype='text/plain')       
         elif file_type=="Video": return video(path,root,mode,file_type)
         elif file_type=="Audio": return audio(path,root,file_type)
         else: return send_file(isornot(path,root))
