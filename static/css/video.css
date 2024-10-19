@@ -67,7 +67,6 @@ video {
     width: 100%;
     height: 100%;
     object-fit: contain !important;
-    z-index: -1 !important;
 }
 .video-container:fullscreen video {
     max-height: 100vh;
