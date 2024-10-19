@@ -22,7 +22,7 @@ def explorer(path):
         # If we have args get them else set blank
         mode = request.args["mode"] if cmp else ""
         # If the mode is raw send the file in raw mode
-        if mode=="raw": return send_file(isornot(path,root))
+        if mode=="raw": return send_file(isornot(path,root),conditional=True)
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
     
@@ -57,7 +57,7 @@ def index():
         # Check if static page is requested
         if "static" in request.args:
             path=request.args["static"].replace("/",sep)
-            return send_file(isornot(path,sroot))
+            return send_file(isornot(path,sroot),conditional=True)
         # Else show the root directory
         cli = is_cli_browser(request)
         return directory("/",root,folder_size,mode,cli)
