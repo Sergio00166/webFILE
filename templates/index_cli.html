@@ -17,13 +17,13 @@
             <td><a href="{{ request.path }}?mode={% if sort=="sp" %}sd{% else %}sp{% endif %}">SIZE</a></td>
             <td><a href="{{ request.path }}?mode={% if sort=="dp" %}dd{% else %}dp{% endif %}">MTIME</a>
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="{{ request.path }}?mode=dir">DL</a></td>
+            <a href="{{ request.path }}?mode=dir">DLthisDIR</a></td>
         </tr>
         {% if not is_root %}
             <tr><td><a href="{{ url_for('explorer', path=parent_directory) }}"> <- Parent Directory </a></td></tr>
         {% endif %}{% for item in folder_content %}
             <tr>
-                <td><a href="{{ url_for('explorer', path=item['path']) }}{% if item['description']!='DIR' %}/?mode=raw{% endif %}">{{ item['name'] }}{% if item['description'] == 'DIR' %}/{% endif %}</a></td>
+                <td><a href="{{ url_for('explorer', path=item['path']) }}">{{ item['name'] }}{% if item['description'] == 'DIR' %}/{% endif %}</a></td>
                 <td align="right"> {{ item['size'] }} </td><td align="right"> {{ item['mtime'] }} </td>
             </tr>
         {% endfor %}

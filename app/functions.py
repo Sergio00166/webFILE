@@ -28,9 +28,13 @@ fix_pth_url = lambda path: "/"+path.replace("'","%27").replace("&","%26").replac
 def minify(stream):
     for x in stream: yield x.replace('\n','').replace('  ','')
 
-def is_cli_browser(request):
+def getclient(request):
     user_agent = request.headers.get('User-Agent', '').lower()
-    return any(cli_browser in user_agent for cli_browser in ['links','lynx','w3m',"wget","curl"])
+    accept_header = request.headers.get('Accept', '').lower()
+    cli = any(x in user_agent for x in ['links','lynx','w3m','elinks'])
+    curl = any(x in user_agent for x in ["wget","curl","fetch","aria2"])
+    if 'application/json' in accept_header or curl: return "json"
+    else: return "cli" if cli else "normal"
 
 
 def sort_results(paths,folder_path):

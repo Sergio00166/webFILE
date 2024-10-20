@@ -6,7 +6,7 @@
 from sys import path
 from os import sep
 path.append(sep.join([path[0],"data","pysubs2.zip"]))
-from functions import printerr, get_file_type, is_cli_browser
+from functions import printerr,get_file_type,getclient
 from actions import *
 
 app,folder_size,root,sroot = init()
@@ -21,23 +21,27 @@ def explorer(path):
         cmp = "mode" in request.args
         # If we have args get them else set blank
         mode = request.args["mode"] if cmp else ""
-        # If the mode is raw send the file in raw mode
-        if mode=="raw": return send_file(isornot(path,root))
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
-    
-        # Check file type and send appropiate response
-        if file_type=="DIR":
-            cli = is_cli_browser(request)
-            return directory(path,root,folder_size,mode,cli)
-    
-        elif file_type in ["Text","SRC"]:
-            return send_file(isornot(path,root),mimetype='text/plain')
-    
-        elif file_type=="Video": return video(path,root,mode,file_type)
-        elif file_type=="Audio": return audio(path,root,file_type)
-        else: return send_file(isornot(path,root))
-        
+        # Check if explorer is cli based
+        client = getclient(request)
+        # Check if the path is not a dir
+        if not file_type=="DIR":
+            # If it have the raw arg or is requested
+            # from a cli browser return the file 
+            if mode=="raw" or client!="normal":
+                return send_file(isornot(path,root))
+            # If the text is plain text send it as plain text
+            elif file_type in ["Text","SRC"]:
+                return send_file(isornot(path,root),mimetype='text/plain')
+            # Custom player for each multimedia format
+            elif file_type=="Video": return video(path,root,mode,file_type)  
+            elif file_type=="Audio": return audio(path,root,file_type)
+            # Else send it and let flask autodetect the mime
+            else: return send_file(isornot(path,root))
+        # Return the directory explorer
+        else: return directory(path,root,folder_size,mode,client)
+  
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
     except Exception as e: printerr(e); return render_template('500.html'), 500
@@ -58,8 +62,8 @@ def index():
             path=request.args["static"].replace("/",sep)
             return send_file(isornot(path,sroot))
         # Else show the root directory
-        cli = is_cli_browser(request)
-        return directory("/",root,folder_size,mode,cli)
+        client = getclient(request)
+        return directory("/",root,folder_size,mode,client)
                 
     except PermissionError: return render_template('403.html'), 403
     except FileNotFoundError: return render_template('404.html'), 404
