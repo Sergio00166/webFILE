@@ -12,7 +12,10 @@
 </head>
 
 <body>
-  <a href="{{ request.path }}/?mode=raw" download="{{ name }}"></a>
+  <a href="{{ request.path }}/?mode=raw" download="{{ name }}" id="download"></a>
+  <a href='{{ nxt }}' id="next"></a>
+  <a href='{{ prev }}' id="prev"></a>
+ 
   <div class="video-container">
     <video autoplay playsinline onended="handleVideoEnded()">
       <source src="{{ request.path }}/?mode=raw" type="video/mp4">
@@ -104,8 +107,6 @@
 
   <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
   <script>
-    const nextUrl = '{{ nxt }}';
-    const prevUrl = '{{ prev }}';
     const chapters = {{ chapters | tojson}}
   </script>
 

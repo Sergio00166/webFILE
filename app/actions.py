@@ -24,7 +24,7 @@ def init():
     return app,folder_size,root,sroot
 
 
-def filepage_func(path,root,filetype,random=False,no_next=False):
+def filepage_func(path,root,filetype,random=False,fixrng=False):
     # Get relative path from the root dir
     path=relpath(isornot(path,root), start=root)
     # Get the name of the folder
@@ -38,16 +38,17 @@ def filepage_func(path,root,filetype,random=False,no_next=False):
     lst = [x["path"] for x in out if x["description"] == filetype]
     # Get next one
     try: nxt = lst[lst.index(path)+1]
-    except: nxt = "" if no_next else lst[0]
+    except: nxt = "" if fixrng else lst[0]
     # Get previous one
-    if lst.index(path)==0: prev=lst[-1]
+    if lst.index(path)==0:
+        prev = "" if fixrng else lst[-1]
     else: prev=lst[lst.index(path)-1]
-    # Fix url strings
-    if nxt!="": nxt = fix_pth_url(nxt) 
-    prev = fix_pth_url(prev)
+    # All should start with /
+    prev = "/"+prev if prev!="" else ""
+    nxt = "/"+nxt if nxt!="" else ""
     # Return random flag
     if random:
-        rnd = fix_pth_url(choice(lst))
+        rnd = "/"+choice(lst)
         return prev,nxt,name,path,rnd
     else: return prev,nxt,name,path
 
@@ -90,13 +91,13 @@ def video(path,root,mode,file_type):
         return Response(out,mimetype="text/plain",headers=header)
 
     # Else we send the video page
-    prev, nxt, name, path = filepage_func(path,root,file_type,no_next=True)
+    prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)
     tracks,chapters = get_info(root+sep+path),get_chapters(root+sep+path)
     return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks,chapters=chapters)
 
 
 def audio(path,root,file_type):
-    prev,nxt,name,path,rnd = filepage_func(path,root,file_type,True)
+    prev,nxt,name,path,rnd = filepage_func(path,root,file_type,random=True)
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 

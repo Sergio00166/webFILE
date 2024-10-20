@@ -1,6 +1,5 @@
 /* Code by Sergio00166 */
 
-const downloadLink = document.querySelector("a");
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const currentDuration = document.querySelector(".current-duration");
@@ -19,6 +18,11 @@ const sh_noa = document.querySelector(".sh_noa");
 const settingMenu = document.querySelector(".setting-menu");
 const speedButtons = document.querySelectorAll(".setting-menu li");
 const volume = document.querySelector(".volume");
+const downloadLink = document.getElementById("download");
+const prevLink = document.getElementById("prev");
+const nextLink = document.getElementById("next");
+const randomLink = document.getElementById("random");
+
 
 var audio = document.querySelector("audio");
 var mode = document.getElementById("mode");
@@ -73,15 +77,15 @@ canPlayInit();
 
 function prev() { 
     if (random) { window.history.go(-1); }
-    else { window.location.href = prevUrl; }
+    else { prevLink.click(); }
 }
 function next() {
     if (random) {
         window.history.forward();
         setTimeout(() => {
-            window.location.href = rndURL;
+            randomLink.click();
         }, 250 );
-    } else { window.location.href = nextUrl; } 
+    } else { nextLink.click(); } 
 }
 
 function download() { downloadLink.click(); }
