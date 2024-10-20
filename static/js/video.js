@@ -2,7 +2,6 @@
 
 let mouse_ctrl_delay = 1500;
 
-const downloadLink = document.querySelector("a");
 const video = document.querySelector("video");
 const volume = document.querySelector(".volume");
 const currentTime = document.querySelector(".current-time");
@@ -37,6 +36,9 @@ const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
 const liD = document.getElementById("liD");
+const downloadLink = document.getElementById("download");
+const prevLink = document.getElementById("prev");
+const nextLink = document.getElementById("next");
 
 
 var mode = document.getElementById("mode");
@@ -93,12 +95,8 @@ let mouseDownProgress = false,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
 
-function next() {
-	if (nextUrl!==""){
-		window.location.href = nextUrl;
-	} else { location.reload(); }
-}
-function prev() { window.location.href = prevUrl; }
+function next() { nextLink.click(); }
+function prev() { prevLink.click(); }
 
 function chMode() {
     const modes = ["1", "»", "↻"];

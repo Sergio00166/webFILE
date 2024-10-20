@@ -11,6 +11,7 @@ from sys import path
 from glob import glob
 from os.path import exists
 from json import loads as jsload
+from gc import collect as free
 
 cache_dir = sep.join([path[0],"data","subtitles"])+sep
 database = sep.join([path[0],"data","subtitles.db"])
@@ -41,7 +42,7 @@ def get_chapters(file_path):
             'json', '-show_entries', 'chapters', file_path
         ], stdout=PIPE, stderr=PIPE, text=True)
         ffprobe_output = jsload(result.stdout)
-        del result # Free memory
+        del result; free()
         filtered_chapters = [
             {
                 'title': chapter['tags'].get('title', 'Untitled'),
@@ -49,7 +50,7 @@ def get_chapters(file_path):
             }
             for chapter in ffprobe_output['chapters']
         ]
-        del ffprobe_output # Free memory
+        del ffprobe_output; free()
         return filtered_chapters
     except: return ""
 
@@ -62,13 +63,13 @@ def get_info(file_path):
         '-of', 'json', file_path
     ], stdout=PIPE, stderr=PIPE, text=True) 
     ffprobe_output,subtitles_list = jsload(result.stdout),[]
-    del result # Free memory
+    del result; free()
     for stream in ffprobe_output.get('streams', []):
         tags = stream.get('tags', {})
         title = tags.get('title')
         language = tags.get('language')
         subtitles_list.append(title if title else language)
-    del ffprobe_output # Free memory
+    del ffprobe_output; free()
     return subtitles_list
 
 
@@ -87,7 +88,8 @@ def get_subs_cache():
         open(file,"w").close()
         files = glob(cache_dir+"*", recursive=False)
         for x in files: remove(x)
-        del files; file = []    
+        del files; free()
+        file = []    
     dic = {}
     for x in file:
         x=x.split("\n")
@@ -104,7 +106,7 @@ def save_subs_cache(dic):
        out+=dic[x][0]+"\n"+dic[x][1]
        out+="\n\n"
     open(database,"w").write(out)
-    del out # Free memory
+    del out; free()
 
 
 def random_str():
@@ -115,32 +117,34 @@ def random_str():
 
 
 def convert(cmd,ret):
-    # Extract raw subtitles with ffmpeg
-    proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
-    source, _ = proc.communicate(); del proc
-    # Load the raw thing onto an object
-    subs = pysubs2.SSAFile.from_string(source.decode('UTF8'))
-    del source # Free memory
-    with StringIO() as tmp:
-        # Here we convert to webVTT without
-        # styles bc it show a some weird stuff
-        subs.to_file(tmp, "vtt", apply_styles=False)
-        del subs # Free memory 
-        out = tmp.getvalue() 
-    subs = pysubs2.SSAFile.from_string(out)
-    del out # Free memory
-    # Remove duplicated webVTT entries
-    unique_subs,seen = [],set()
-    for line in subs:
-        key = (line.text, line.start, line.end)
-        if key not in seen:
-            seen.add(key)
-            unique_subs.append(line)
-    del subs.events, seen  # Free memory
-    # Pass to the object the values
-    subs.events = unique_subs
-    del unique_subs # Free memory
-    ret.put(subs.to_string("vtt"))
+    try:
+        # Extract raw subtitles with ffmpeg
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        source, _ = proc.communicate()
+        # Load the raw thing onto an object
+        subs = pysubs2.SSAFile.from_string(source.decode('UTF8'))
+        del source; free()
+        with StringIO() as tmp:
+            # Here we convert to webVTT without
+            # styles bc it show a some weird stuff
+            subs.to_file(tmp, "vtt", apply_styles=False)
+            del subs; free()
+            out = tmp.getvalue() 
+        subs = pysubs2.SSAFile.from_string(out)
+        del out; free()
+        # Remove duplicated webVTT entries
+        unique_subs,seen = [],set()
+        for line in subs:
+            key = (line.text, line.start, line.end)
+            if key not in seen:
+                seen.add(key)
+                unique_subs.append(line)
+        del subs.events,seen; free()
+        # Pass to the object the values
+        subs.events = unique_subs
+        del unique_subs; free()
+        ret.put([True,subs.to_string("vtt")])
+    except Exception as e: ret.put([False,e])
 
 
 def get_track(file,index):
@@ -161,7 +165,8 @@ def get_track(file,index):
         ret = Queue()
         proc = Process(target=convert, args=(cmd,ret,))
         proc.start(); out = ret.get(); proc.join()
-        return out
+        if not out[0]: raise out[1]
+        return out[1]
 
     else: # Convert direcly with ffmpeg
         proc = Popen(cmd, stdout=PIPE, stderr=PIPE)

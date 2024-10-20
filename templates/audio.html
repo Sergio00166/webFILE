@@ -1,4 +1,5 @@
 <!-- Code by Sergio00166 -->
+
 <!DOCTYPE html>
 <html>
 
@@ -11,7 +12,11 @@
 </head>
 
 <body>
-    <a href="{{ request.path }}/?mode=raw" download="{{ name }}"></a>
+    <a href="{{ request.path }}/?mode=raw" download="{{ name }}" id="download"></a>
+	<a href='{{ nxt }}' id="next"></a>
+	<a href='{{ prev }}' id="prev"></a>
+	<a href='{{ rnd }}' id="random"></a>
+
     <div class="audio-container">
         <h2>{{ name }}</h2><br>
         <audio autoplay onended="handleAudioEnded()">
@@ -73,12 +78,8 @@
         </div>
         <br>
     </div>
-    <script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
-    <script>
-        const nextUrl = '{{ nxt }}';
-        const prevUrl = '{{ prev }}';
-        const rndURL = '{{ rnd }}';
-    </script>
-</body>
 
+    <script src="{{ url_for('index', static='js/audio.js') }}"></script>
+
+</body>
 </html>

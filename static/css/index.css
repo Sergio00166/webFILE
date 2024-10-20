@@ -25,6 +25,7 @@ a:hover { background-color: #111111; }
 .controls { display: flex; }
 .ctrl_flex { flex: 1; display: flex; }
 .tools { flex: 1; display: flex; }
+table { display: none; }
 
 button:hover { 
     background-color: #111111;
@@ -81,6 +82,7 @@ h2 {
     position: absolute;
     width: 90%; left: 50%;
     transform: translate(-50%);
+    display: block !important;
 }
 .filename { 
     cursor: pointer;
@@ -111,12 +113,12 @@ h2 {
 }
 
 @media (max-width: 730px) {
-	.controls { flex-direction: column; }
-	button { margin: 2px; }
+    .controls { flex-direction: column; }
+    button { margin: 2px; }
 }
 @media (max-width: 360px) {
-	.ctrl_flex { flex-direction: column; }
-	button { margin: 1px; }
+    .ctrl_flex { flex-direction: column; }
+     button { margin: 1px; }
 }
 
 @media (max-width: 650px) {

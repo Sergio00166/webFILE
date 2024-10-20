@@ -3,6 +3,7 @@
 from os.path import join,relpath,pardir,abspath,getsize,isfile
 from flask import render_template, stream_template
 from flask import Flask,request,send_file,Response
+from urllib.parse import quote as encurl
 from os import sep, getenv
 from random import choice
 from functions import *
@@ -23,7 +24,7 @@ def init():
     return app,folder_size,root,sroot
 
 
-def filepage_func(path,root,filetype,random=False,no_next=False):
+def filepage_func(path,root,filetype,random=False,fixrng=False):
     # Get relative path from the root dir
     path=relpath(isornot(path,root), start=root)
     # Get the name of the folder
@@ -37,16 +38,17 @@ def filepage_func(path,root,filetype,random=False,no_next=False):
     lst = [x["path"] for x in out if x["description"] == filetype]
     # Get next one
     try: nxt = lst[lst.index(path)+1]
-    except: nxt = "" if no_next else lst[0]
+    except: nxt = "" if fixrng else lst[0]
     # Get previous one
-    if lst.index(path)==0: prev=lst[-1]
+    if lst.index(path)==0:
+        prev = "" if fixrng else lst[-1]
     else: prev=lst[lst.index(path)-1]
-    # Fix url strings
-    if nxt!="": nxt = fix_pth_url(nxt) 
-    prev = fix_pth_url(prev)
+    # All should start with /
+    prev = "/"+prev if prev!="" else ""
+    nxt = "/"+nxt if nxt!="" else ""
     # Return random flag
     if random:
-        rnd = fix_pth_url(choice(lst))
+        rnd = "/"+choice(lst)
         return prev,nxt,name,path,rnd
     else: return prev,nxt,name,path
 
@@ -89,23 +91,27 @@ def video(path,root,mode,file_type):
         return Response(out,mimetype="text/plain",headers=header)
 
     # Else we send the video page
-    prev, nxt, name, path = filepage_func(path,root,file_type,no_next=True)
+    prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)
     tracks,chapters = get_info(root+sep+path),get_chapters(root+sep+path)
     return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks,chapters=chapters)
 
 
 def audio(path,root,file_type):
-    prev,nxt,name,path,rnd = filepage_func(path,root,file_type,True)
+    prev,nxt,name,path,rnd = filepage_func(path,root,file_type,random=True)
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 
-def directory(path,root,folder_size,mode):
+def directory(path,root,folder_size,mode,client):
     # Check if sending the dir is requested
     if mode=="dir": return send_dir(isornot(path,root))
     # Get the sort value if it is on the list else set default value
     sort = mode if mode in ["np","nd","sp","sd","dp","dd"] else "np"
     # Get all the data from that directry and its contents
     folder_content,folder_path,parent_directory,is_root = index_func(path,root,folder_size,sort)
-    return stream_template('index.html',folder_content=folder_content,folder_path=folder_path,\
-                           parent_directory=parent_directory,is_root=is_root,sort=sort)   
+    if not client=="json":
+        cli = client=="cli"
+        file = "index_cli.html" if cli else "index.html"
+        html = stream_template(file,folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,sort=sort)
+        return html if cli else minify(html) # reduce size
+    else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
 

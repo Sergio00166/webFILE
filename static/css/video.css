@@ -1,6 +1,5 @@
 /* Code by Sergio00166 */
 
-
 video::cue {
   background: none !important;
   line-height: 1 !important;
@@ -160,7 +159,7 @@ video {
   height: 100%;
   position: absolute;
   background-color: #ff6a0045;
-  z-index: 9;
+  z-index: 9 !important;
   width: 0;
 }
 .hover-time {
@@ -169,7 +168,7 @@ video {
   position: absolute;
   inset: 0;
   background: #ffffff9a;
-  z-index: 99;
+  z-index: 99 !important;;
   display: flex;
   align-items: center;
   width: 0;
@@ -199,7 +198,7 @@ video {
   position: absolute;
   inset: 0;
   background: #ff6a00;
-  z-index: 999;
+  z-index: 999 !important;;
   display: flex;
   align-items: center;
   width: 0;

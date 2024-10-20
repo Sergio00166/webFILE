@@ -19,8 +19,20 @@ file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Check if the file is a binary file or not
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary = lambda path: bool(open(path, mode="rb").read(1024).translate(None, textchars))
-# This replaced buggy chars with the HTML replacement
-fix_pth_url = lambda path: "/"+path.replace("'","%27").replace("&","%26").replace(chr(92),"%5C").replace("#","%23")
+
+
+# That shit reduces too much the size for the file
+# explorer stream by minifying it (460KB -> 170KB)
+def minify(stream):
+    for x in stream: yield x.replace('\n','').replace('  ','')
+
+def getclient(request):
+    user_agent = request.headers.get('User-Agent', '').lower()
+    accept_header = request.headers.get('Accept', '').lower()
+    cli = any(x in user_agent for x in ['links','lynx','w3m','elinks'])
+    curl = any(x in user_agent for x in ["wget","curl","fetch"])
+    if 'application/json' in accept_header or curl: return "json"
+    else: return "cli" if cli else "normal"
 
 
 def sort_results(paths,folder_path):
