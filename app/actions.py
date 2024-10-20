@@ -113,5 +113,5 @@ def directory(path,root,folder_size,mode,client):
         file = "index_cli.html" if cli else "index.html"
         html = stream_template(file,folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,sort=sort)
         return html if cli else minify(html) # reduce size
-    else: return [{**item, "path": encurl(item["path"])} for item in folder_content]
+    else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
 
