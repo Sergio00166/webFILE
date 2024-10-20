@@ -32,7 +32,7 @@ def getclient(request):
     user_agent = request.headers.get('User-Agent', '').lower()
     accept_header = request.headers.get('Accept', '').lower()
     cli = any(x in user_agent for x in ['links','lynx','w3m','elinks'])
-    curl = any(x in user_agent for x in ["wget","curl","fetch","aria2"])
+    curl = any(x in user_agent for x in ["wget","curl","fetch"])
     if 'application/json' in accept_header or curl: return "json"
     else: return "cli" if cli else "normal"
 
