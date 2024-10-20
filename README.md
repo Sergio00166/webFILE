@@ -25,6 +25,7 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 **API usage**
 
 To get the JSON you need to use curl or wget or send a request asking for a JSON.
+
 For the cli text browsers there is a custom html for better browsing (for lynx, links, elinks and w3m).
 
 ---------------------------------------------------
