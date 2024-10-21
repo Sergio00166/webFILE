@@ -17,11 +17,13 @@ app,folder_size,root,sroot = init()
 # or send in raw mode (or stream) files or send the dir as .tar
 def explorer(path):
     client = getclient(request)
+    # Paths must not end on slash
+    if path.endswith("/"): path = path[:-1]
+    # Check if we have extra args
+    cmp = "mode" in request.args
+    # If we have args get them else set blank
+    mode = request.args["mode"] if cmp else ""
     try:
-        # Check if we have extra args
-        cmp = "mode" in request.args
-        # If we have args get them else set blank
-        mode = request.args["mode"] if cmp else ""
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
         # Check if the path is not a dir
