@@ -42,14 +42,14 @@ def explorer(path):
         else: return directory(path,root,folder_size,mode,client)
   
     except PermissionError:
-        if client == "json": return "", 403
+        if client == "json": return "[]", 403
         return render_template('403.html'), 403
     except FileNotFoundError:
-        if client == "json": return "", 404
+        if client == "json": return "[]", 404
         return render_template('404.html'), 404
     except Exception as e:
         printerr(e)
-        if client == "json": return "", 500
+        if client == "json": return "[]", 500
         return render_template('500.html'), 500
 
 
@@ -72,13 +72,13 @@ def index():
         return directory("/",root,folder_size,mode,client)
                 
     except PermissionError:
-        if client == "json": return "", 403
+        if client == "json": return "[]", 403
         return render_template('403.html'), 403
     except FileNotFoundError:
-        if client == "json": return "", 404
+        if client == "json": return "[]", 404
         return render_template('404.html'), 404
     except Exception as e:
         printerr(e)
-        if client == "json": return "", 500
+        if client == "json": return "[]", 500
         return render_template('500.html'), 500
 
