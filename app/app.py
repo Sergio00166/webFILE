@@ -16,6 +16,7 @@ app,folder_size,root,sroot = init()
 # For showing a directory, launching the custom media players
 # or send in raw mode (or stream) files or send the dir as .tar
 def explorer(path):
+    client = getclient(request)
     try:
         # Check if we have extra args
         cmp = "mode" in request.args
@@ -23,8 +24,6 @@ def explorer(path):
         mode = request.args["mode"] if cmp else ""
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
-        # Check if explorer is cli based
-        client = getclient(request)
         # Check if the path is not a dir
         if not file_type=="DIR":
             # If it have the raw arg or is requested
@@ -42,9 +41,16 @@ def explorer(path):
         # Return the directory explorer
         else: return directory(path,root,folder_size,mode,client)
   
-    except PermissionError: return render_template('403.html'), 403
-    except FileNotFoundError: return render_template('404.html'), 404
-    except Exception as e: printerr(e); return render_template('500.html'), 500
+    except PermissionError:
+        if client == "json": return "", 403
+        return render_template('403.html'), 403
+    except FileNotFoundError:
+        if client == "json": return "", 404
+        return render_template('404.html'), 404
+    except Exception as e:
+        printerr(e)
+        if client == "json": return "", 500
+        return render_template('500.html'), 500
 
 
 
@@ -52,6 +58,7 @@ def explorer(path):
 # Here we show the root dir, serve the static files
 # or send the root dir as .tar
 def index():
+    client = getclient(request)
     try:
         # Check if we have extra args
         cmp = "mode" in request.args
@@ -62,10 +69,16 @@ def index():
             path=request.args["static"].replace("/",sep)
             return send_file(isornot(path,sroot))
         # Else show the root directory
-        client = getclient(request)
         return directory("/",root,folder_size,mode,client)
                 
-    except PermissionError: return render_template('403.html'), 403
-    except FileNotFoundError: return render_template('404.html'), 404
-    except Exception as e: printerr(e); return render_template('500.html'), 500
+    except PermissionError:
+        if client == "json": return "", 403
+        return render_template('403.html'), 403
+    except FileNotFoundError:
+        if client == "json": return "", 404
+        return render_template('404.html'), 404
+    except Exception as e:
+        printerr(e)
+        if client == "json": return "", 500
+        return render_template('500.html'), 500
 

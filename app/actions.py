@@ -109,9 +109,8 @@ def directory(path,root,folder_size,mode,client):
     # Get all the data from that directry and its contents
     folder_content,folder_path,parent_directory,is_root = index_func(path,root,folder_size,sort)
     if not client=="json":
-        cli = client=="cli"
-        file = "index_cli.html" if cli else "index.html"
+        file = "index_cli.html" if client=="cli" else "index.html"
         html = stream_template(file,folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,sort=sort)
-        return html if cli else minify(html) # reduce size
+        return minify(html) # reduce size
     else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
 
