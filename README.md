@@ -23,7 +23,7 @@ To get the JSON you need to use curl or wget or send a request asking for a JSON
 
 For the cli text browsers there is a custom html for better browsing (for lynx, links, elinks and w3m).
 
-**To donwload a folder you must pass at the end of the dir path /?mode=dir to download it as tar.**
+**To download a folder you must pass at the end of the dir path /?mode=dir to download it as tar.**
 
 ### To sort directory contents, add /?mode= followed by: ###
 
