@@ -28,13 +28,13 @@ def explorer(path):
         file_type = get_file_type(root+sep+path)
         # Check if the path is not a dir
         if not file_type=="directory":
-            # If it have the raw arg or is requested
-            # from a cli browser return the file 
-            if mode=="raw" or client!="normal":
-                return send_file(isornot(path,root))
             # If the text is plain text send it as plain text
-            elif file_type in ["text","source"]:
+            if file_type in ["text","source"]:
                 return send_file(isornot(path,root),mimetype='text/plain')
+            # If it have the raw arg or is requested
+            # from a cli browser return the file
+            elif mode=="raw" or client!="normal":
+                return send_file(isornot(path,root))
             # Custom player for each multimedia format
             elif file_type=="video": return video(path,root,mode,file_type)  
             elif file_type=="audio": return audio(path,root,file_type)
