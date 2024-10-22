@@ -27,7 +27,7 @@ def explorer(path):
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
         # Check if the path is not a dir
-        if not file_type=="DIR":
+        if not file_type=="directory":
             # If it have the raw arg or is requested
             # from a cli browser return the file 
             if mode=="raw" or client!="normal":
