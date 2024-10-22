@@ -1,10 +1,10 @@
 #Code by Sergio00166
 
-from os.path import join,relpath,pardir,abspath,getsize,isfile
-from flask import render_template, stream_template
-from flask import Flask,request,send_file,Response
+from os.path import join,relpath,pardir,abspath
+from flask import render_template,stream_template
 from urllib.parse import quote as encurl
-from os import sep, getenv
+from flask import Flask,Response,request
+from os import sep,getenv
 from random import choice
 from functions import *
 from actions1 import *
@@ -20,8 +20,8 @@ def init():
     folder_size = getenv('SHOWSIZE',"FALSE")
     folder_size = folder_size.upper()=="TRUE"
     # Create the main app flask
-    app = Flask(__name__,static_folder=None,template_folder=templates)
-    return app,folder_size,root,sroot
+    app = Flask(__name__,static_folder=sroot,template_folder=templates)
+    return app,folder_size,root
 
 
 def filepage_func(path,root,filetype,random=False,fixrng=False):

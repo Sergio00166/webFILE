@@ -7,9 +7,10 @@ from sys import path
 from os import sep
 path.append(sep.join([path[0],"data","pysubs2.zip"]))
 from functions import printerr,get_file_type,getclient
+from flask import send_file
 from actions import *
 
-app,folder_size,root,sroot = init()
+app,folder_size,root = init()
 
 
 @app.route('/<path:path>', methods=['GET'])
@@ -17,13 +18,13 @@ app,folder_size,root,sroot = init()
 # or send in raw mode (or stream) files or send the dir as .tar
 def explorer(path):
     client = getclient(request)
-    # Paths must not end on slash
-    if path.endswith("/"): path = path[:-1]
-    # Check if we have extra args
-    cmp = "mode" in request.args
-    # If we have args get them else set blank
-    mode = request.args["mode"] if cmp else ""
     try:
+        # Paths must not end on slash
+        if path.endswith("/"): path = path[:-1]
+        # Check if we have extra args
+        cmp = "mode" in request.args
+        # If we have args get them else set blank
+        mode = request.args["mode"] if cmp else ""
         # Get the file type of the file
         file_type = get_file_type(root+sep+path)
         # Check if the path is not a dir
@@ -68,8 +69,8 @@ def index():
         mode = request.args["mode"] if cmp else ""
         # Check if static page is requested
         if "static" in request.args:
-            path=request.args["static"].replace("/",sep)
-            return send_file(isornot(path,sroot))
+            path = request.args["static"]
+            return app.send_static_file(path)
         # Else show the root directory
         return directory("/",root,folder_size,mode,client)
                 
