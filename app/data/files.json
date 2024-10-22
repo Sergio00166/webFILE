@@ -2,10 +2,10 @@
     "SRC": [
         ".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", 
         ".rb", ".go", ".xml", ".ini", ".json", ".bat", ".cmd", ".sh", 
-        ".md", ".xmls", ".yml", ".yaml", ".asm", ".cfg", ".sql", 
-        ".htm", ".config", ".reg", ".log", ".ps1", ".csv", ".ts", ".rs", ".kt"
+        ".md", ".xmls", ".yml", ".yaml", ".asm", ".cfg", ".sql", ".htm",
+        ".config", ".reg", ".log", ".ps1", ".csv", ".ts", ".rs", ".kt"
     ],
-    "IMG": [
+    "Photo": [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".tiff", 
         ".ico", ".webp", ".raw", ".heic", ".psd"
     ],
@@ -20,7 +20,7 @@
         ".xls", ".xlsx", ".ods", ".csv", ".tsv", ".db", ".odb", 
         ".mdb", ".sql", ".sqlite"
     ],
-    "PP": [
+    "Presentation": [
         ".ppt", ".pptx", ".odp", ".key", ".pps", ".ppsx"
     ],
     "Video": [
@@ -30,10 +30,10 @@
     "PDF": [
         ".pdf"
     ],
-    "HdImg": [
+    "VirtualDisk": [
         ".iso", ".img", ".vdi", ".vmdk", ".vhd", ".dmg"
     ],
-    "Compress": [
+    "Compressed": [
         ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
         ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz", ".zst"
     ],
