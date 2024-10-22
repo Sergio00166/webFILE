@@ -80,7 +80,7 @@ def get_directory_size(directory):
     return total
 
 
-def get_folder_content(folder_path,root,folder_size):
+def get_folder_content(folder_path, root, folder_size):
     # Gets folder content and get size, modified time values
     # the name, the path and the type of the elements and
     # returns a list containing one dict for each element
@@ -88,7 +88,7 @@ def get_folder_content(folder_path,root,folder_size):
     content = []
     for item in items:
         try:
-            item_path = join(folder_path,item)
+            item_path = join(folder_path, item)
             description = get_file_type(item_path)
             if not description=="DIR": size=readable(getsize(item_path))
             elif folder_size: size=readable(get_directory_size(item_path))
@@ -96,7 +96,7 @@ def get_folder_content(folder_path,root,folder_size):
             try: mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
             except: mtime="##-##-#### ##:##:##"          
             item_path= relpath(item_path, start=root).replace(sep,"/")
-            content.append({'name': item,'path': "/"+item_path,
+            content.append({'name': item,'path': item_path,
             'description': description, "size": size,"mtime": mtime})
         except: pass
     return content
@@ -112,7 +112,6 @@ def isornot(path,root):
         if not access(path, R_OK): raise PermissionError
     else: raise PermissionError
     return path
-
 
 def sort_contents(folder_content,sort,root):
     # Separe in dirs and files

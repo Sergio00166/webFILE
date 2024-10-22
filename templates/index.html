@@ -44,7 +44,7 @@
                 </a>
             {% endif %}
             {% for item in folder_content %}
-                <div id="{{ loop.index0 }}" class="filename" data-value="{{ item['path'] }}" {% if item['description']=='directory' %} dir {% endif %}>
+                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}" {% if item['description']=='directory' %} dir {% endif %}>
                     <span class="image">
                      {% if item['description'] == 'directory' %}
                         <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">&nbsp;</img>
