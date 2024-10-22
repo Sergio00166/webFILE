@@ -118,7 +118,7 @@ def sort_contents(folder_content,sort,root):
     dirs=[]; files=[]
     for x in folder_content:
         path = x["path"].replace("/",sep)
-        if isdir(root+path): dirs.append(x)
+        if isdir(root+sep+path): dirs.append(x)
         else: files.append(x)
     # Sorts the folder content with several modes
     if sort[0]=="d":
