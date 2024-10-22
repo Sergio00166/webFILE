@@ -43,7 +43,7 @@ if (saved_speed != null) {
 
 if (currentMode != null) {
     currentMode = parseInt(currentMode);
-    mode.innerHTML = ["1", "»", "↻"][currentMode] || "1";
+    mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
 } else { currentMode = 0; }
 
 if (volumeVal === null) { volumeVal = 1; }
@@ -315,7 +315,7 @@ mode.addEventListener("mouseup",()=>{clearTimeout(mber);});
 mode.addEventListener("touchend",()=>{clearTimeout(mber);});
 
 function chMode() {
-    const modes = ["1", "»", "↻"];
+    const modes = ["1", "»", "&orarr;"];
     currentMode = (currentMode + 1) % 3;
     mode.innerHTML = modes[currentMode];
     localStorage.setItem("audioMode", currentMode);

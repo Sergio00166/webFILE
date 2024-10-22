@@ -66,7 +66,7 @@ var muted = localStorage.getItem("videoMuted");
 
 if (currentMode != null) {
     currentMode = parseInt(currentMode);
-    mode.innerHTML = ["1", "»", "↻"][currentMode] || "1";
+    mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
 } else { currentMode = 0; }
 
 var volumeVal = localStorage.getItem("videoVolume");
@@ -99,7 +99,7 @@ function next() { nextLink.click(); }
 function prev() { prevLink.click(); }
 
 function chMode() {
-    const modes = ["1", "»", "↻"];
+    const modes = ["1", "»", "&orarr;"];
     currentMode = (currentMode + 1) % 3;
     mode.innerHTML = modes[currentMode];
     localStorage.setItem("videoMode", currentMode);

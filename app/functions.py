@@ -26,26 +26,19 @@ is_binary = lambda path: bool(open(path, mode="rb").read(1024).translate(None, t
 def minify(stream):
     for x in stream: yield x.replace('\n','').replace('  ','')
 
+
 def getclient(request):
+    # Get user agent and accept header
     user_agent = request.headers.get('User-Agent', '').lower()
     accept_header = request.headers.get('Accept', '').lower()
-    cli = any(x in user_agent for x in ['links','lynx','w3m','elinks'])
+    # Check if the browser have modern features
+    modern = user_agent.startswith("mozilla/5.0")
+    # Check if request was made using cli
     curl = any(x in user_agent for x in ["wget","curl","fetch"])
+    # Return value depending of the request and user agent
     if 'application/json' in accept_header or curl: return "json"
-    else: return "cli" if cli else "normal"
+    else: return "normal" if modern else "legacy"
 
-
-def sort_results(paths,folder_path):
-    # Here we sort the folder contents
-    # First dirs and secondly files
-    # both in alphabetial order
-    dirs=[]; files=[]
-    for x in paths:
-        fix = join(folder_path, x)
-        if isdir(fix): dirs.append(x)
-        else: files.append(x)
-    dirs.sort(); files.sort()
-    return dirs+files
 
 def readable(num, suffix="B"):
     # Connverts byte values to a human readable format
@@ -74,6 +67,7 @@ def get_file_type(path):
     if file_type is not None: return file_type
     return "File" if is_binary(path) else "Text"
 
+
 def get_directory_size(directory):
     # Get the dir size recursively
     total = 0
@@ -85,16 +79,16 @@ def get_directory_size(directory):
     except PermissionError: return 0
     return total
 
-def get_folder_content(folder_path, root, folder_size):
+
+def get_folder_content(folder_path,root,folder_size):
     # Gets folder content and get size, modified time values
     # the name, the path and the type of the elements and
     # returns a list containing one dict for each element
     items = listdir(folder_path)
-    items=sort_results(items,folder_path)
     content = []
     for item in items:
         try:
-            item_path = join(folder_path, item)
+            item_path = join(folder_path,item)
             description = get_file_type(item_path)
             if not description=="DIR": size=readable(getsize(item_path))
             elif folder_size: size=readable(get_directory_size(item_path))
@@ -102,10 +96,11 @@ def get_folder_content(folder_path, root, folder_size):
             try: mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
             except: mtime="##-##-#### ##:##:##"          
             item_path= relpath(item_path, start=root).replace(sep,"/")
-            content.append({'name': item,'path': item_path,
+            content.append({'name': item,'path': "/"+item_path,
             'description': description, "size": size,"mtime": mtime})
         except: pass
     return content
+
 
 def isornot(path,root):
     # Checks if the path is inside the root dir
@@ -118,30 +113,29 @@ def isornot(path,root):
     else: raise PermissionError
     return path
 
-def sort_contents(folder_content,sort):
-    # Sorts the folder content with several modes 
-    # The first char (sort var) indicates the mode 
-    #    n = sorts by name 
-    #    s = sorts by size 
-    #    d = sorts by date 
-    # The second char indicates the order 
-    #    d = sorts downwards 
-    #    p = sorts upwards
-    if sort=="nd":
-        dirs = []; files = []
-        for d in folder_content:
-            if d['description']=='DIR': dirs.append(d)
-            else: files.append(d)
-        return files[::-1]+dirs[::-1]
-    elif sort=="sp" or sort=="sd":
-        out=sorted(folder_content,key=lambda x:unreadable(x['size']))
-        if sort=="sp": return out[::-1]
-        else: return out
-    elif sort=="dp" or sort=="dd":
-        out=sorted(folder_content,key=lambda x:unreadable_date(x['mtime']))
-        if sort=="dp": return out[::-1]
-        else: return out
-    else: return folder_content
+
+def sort_contents(folder_content,sort,root):
+    # Separe in dirs and files
+    dirs=[]; files=[]
+    for x in folder_content:
+        path = x["path"].replace("/",sep)
+        if isdir(root+path): dirs.append(x)
+        else: files.append(x)
+    # Sorts the folder content with several modes
+    if sort[0]=="d":
+        dirs  = sorted(dirs, key=lambda x:unreadable_date(x["mtime"]))
+        files = sorted(files,key=lambda x:unreadable_date(x["mtime"]))
+        if sort[1]=="p": dirs,files = dirs[::-1],files[::-1]
+    elif sort[0]=="s":
+        dirs  = sorted(dirs, key=lambda x:unreadable(x["size"]))
+        files = sorted(files,key=lambda x:unreadable(x["size"]))
+        if sort[1]=="p": dirs,files = dirs[::-1],files[::-1]
+    else:
+        dirs  = sorted(dirs, key=lambda x:x["name"])
+        files = sorted(files,key=lambda x:x["name"])
+        if sort[1]=="d": dirs,files = dirs[::-1],files[::-1]
+
+    return dirs+files
 
 
 def printerr(e):  
