@@ -21,7 +21,7 @@
             </a></td>
             <td></td>
             <td><a href="{{ request.path }}?mode={% if sort=='dp' %}dd{% else %}dp{% endif %}">
-                MTIME{% if sort=="dp" %}^{% elif sort=="dd" %}v{% endif %}
+                MTIME{% if sort=="dp" %} ^ {% elif sort=="dd" %} v {% endif %}
             </a>
             &nbsp;&nbsp;&nbsp; <a href="{{ request.path }}?mode=dir">DLthisDIR</a></td>
         </tr>
