@@ -12,7 +12,6 @@ from actions import *
 
 app,folder_size,root = init()
 
-
 @app.route('/<path:path>', methods=['GET'])
 # For showing a directory, launching the custom media players
 # or send in raw mode (or stream) files or send the dir as .tar
@@ -34,11 +33,11 @@ def explorer(path):
             if mode=="raw" or client!="normal":
                 return send_file(isornot(path,root))
             # If the text is plain text send it as plain text
-            elif file_type in ["Text","SRC"]:
+            elif file_type in ["text","source"]:
                 return send_file(isornot(path,root),mimetype='text/plain')
             # Custom player for each multimedia format
-            elif file_type=="Video": return video(path,root,mode,file_type)  
-            elif file_type=="Audio": return audio(path,root,file_type)
+            elif file_type=="video": return video(path,root,mode,file_type)  
+            elif file_type=="audio": return audio(path,root,file_type)
             # Else send it and let flask autodetect the mime
             else: return send_file(isornot(path,root))
         # Return the directory explorer
@@ -54,7 +53,6 @@ def explorer(path):
         printerr(e)
         if client == "json": return "[]", 500
         return render_template('500.html'), 500
-
 
 
 @app.route('/', methods=['GET'])

@@ -62,10 +62,10 @@ def unreadable_date(date_str):
     return dt.strptime(date_str, '%d-%m-%Y %H:%M:%S').timestamp()
 
 def get_file_type(path):
-    if isdir(path): return "DIR"
+    if isdir(path): return "directory"
     file_type = file_type_map.get(Path(path).suffix)
     if file_type is not None: return file_type
-    return "File" if is_binary(path) else "Text"
+    return "file" if is_binary(path) else "text"
 
 
 def get_directory_size(directory):
