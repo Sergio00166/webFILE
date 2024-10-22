@@ -13,15 +13,15 @@
     <table>
         <tr>
             <td><a href="{{ request.path }}?mode={% if sort=='np' %}nd{% else %}np{% endif %}">
-                NAME{% if sort=="np" %}&uarr;{% elif sort=="nd" %}&darr;{% endif %}
+                NAME {% if sort=="np" %} ^ {% elif sort=="nd" %} v {% endif %}
             </a></td>
             <td>&nbsp;&nbsp;</td>
             <td><a href="{{ request.path }}?mode={% if sort=='sp' %}sd{% else %}sp{% endif %}">
-                SIZE{% if sort=="sp" %}&uarr;{% elif sort=="sd" %}&darr;{% endif %}
+                SIZE {% if sort=="sp" %} ^ {% elif sort=="sd" %} v {% endif %}
             </a></td>
             <td></td>
             <td><a href="{{ request.path }}?mode={% if sort=='dp' %}dd{% else %}dp{% endif %}">
-                MTIME{% if sort=="dp" %}&uarr;{% elif sort=="dd" %}&darr;{% endif %}
+                MTIME{% if sort=="dp" %}^{% elif sort=="dd" %}v{% endif %}
             </a>
             &nbsp;&nbsp;&nbsp; <a href="{{ request.path }}?mode=dir">DLthisDIR</a></td>
         </tr>
