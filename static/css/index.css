@@ -25,7 +25,6 @@ a:hover { background-color: #111111; }
 .controls { display: flex; }
 .ctrl_flex { flex: 1; display: flex; }
 .tools { flex: 1; display: flex; }
-table { display: none; }
 
 button:hover { 
     background-color: #111111;
@@ -90,6 +89,7 @@ h2 {
     color: #FFFFFF;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding-top: 5px;
     padding-bottom: 3px;
     padding-left: 8px;
