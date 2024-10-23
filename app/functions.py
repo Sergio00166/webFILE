@@ -90,7 +90,7 @@ def get_folder_content(folder_path, root, folder_size):
         try:
             item_path = join(folder_path, item)
             description = get_file_type(item_path)
-            if not description=="DIR": size=readable(getsize(item_path))
+            if not description=="directory": size=readable(getsize(item_path))
             elif folder_size: size=readable(get_directory_size(item_path))
             else: size="0"
             try: mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
