@@ -580,7 +580,7 @@ function changeSubs(value){
         existingTrack.parentNode.removeChild(existingTrack);
     }
     if (value > -1) {
-        url = window.location.pathname+"/?mode=subs"+value;
+        url = window.location.pathname+"?mode=subs"+value;
         var track = document.createElement('track');
         track.kind = 'subtitles';
         track.src = url;

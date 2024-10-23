@@ -95,6 +95,7 @@ def get_folder_content(folder_path, root, folder_size):
             try: mtime=dt.fromtimestamp(getmtime(item_path)).strftime("%d-%m-%Y %H:%M:%S")
             except: mtime="##-##-#### ##:##:##"          
             item_path= relpath(item_path, start=root).replace(sep,"/")
+            if description=="directory": item_path+="/"
             content.append({'name': item,'path': item_path,
             'description': description, "size": size,"mtime": mtime})
         except: pass

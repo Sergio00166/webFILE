@@ -7,7 +7,7 @@ from sys import path
 from os import sep
 path.append(sep.join([path[0],"data","pysubs2.zip"]))
 from functions import printerr,get_file_type,getclient
-from flask import send_file
+from flask import send_file,redirect
 from actions import *
 
 app,folder_size,root = init()
@@ -41,7 +41,10 @@ def explorer(path):
             # Else send it and let flask autodetect the mime
             else: return send_file(isornot(path,root))
         # Return the directory explorer
-        else: return directory(path,root,folder_size,mode,client)
+        else:
+            if not request.path.endswith('/'):
+                return redirect(request.path+'/',code=301)
+            return directory(path,root,folder_size,mode,client)
   
     except PermissionError:
         if client == "json": return "[]", 403

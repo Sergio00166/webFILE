@@ -64,13 +64,13 @@ def index_func(folder_path,root,folder_size,sort):
     parent_directory = abspath(join(folder_path,pardir))
     # Check if the parent directory if root
     if parent_directory==root: parent_directory=""
-    else: parent_directory= relpath(parent_directory,start=root)
+    else: parent_directory= relpath(parent_directory,start=root)+"/"
     # Get relative path from root
     folder_path = relpath(folder_path,start=root)
     # Fix and check some things with the paths
     if folder_path==".": folder_path=""
-    folder_path="/"+folder_path.replace(sep,"/")
-    parent_directory=parent_directory.replace(sep,"/")
+    folder_path = "/"+folder_path.replace(sep,"/")
+    parent_directory = parent_directory.replace(sep,"/")
     folder_content = sort_contents(folder_content,sort,root)
     return folder_content,folder_path,parent_directory,is_root
 
