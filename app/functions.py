@@ -5,15 +5,14 @@ from os import listdir,pardir,sep,scandir,access,R_OK
 from os.path import getmtime,getsize,exists
 from datetime import datetime as dt
 from json import load as jsload
+from sys import path as pypath
 from pathlib import Path
 from sys import stderr
-from sys import path
-import logging
 
 
 is_subdirectory = lambda parent, child: commonpath([parent]) == commonpath([parent, child])
 # Load database of file type and extensions
-file_types = jsload(open(sep.join([path[0],"data","files.json"])))
+file_types = jsload(open(sep.join([pypath[0],"data","files.json"])))
 # Convert it to a lookup table to get file type as O(1)
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Check if the file is a binary file or not
@@ -75,7 +74,7 @@ def get_directory_size(directory):
         for entry in scandir(directory):
             if entry.is_file(): total += entry.stat().st_size
             elif entry.is_dir(): total += get_directory_size(entry.path)
-    except NotADirectoryError: return path.getsize(directory)
+    except NotADirectoryError: return getsize(directory)
     except PermissionError: return 0
     return total
 
@@ -113,6 +112,7 @@ def isornot(path,root):
     else: raise PermissionError
     return path
 
+
 def sort_contents(folder_content,sort,root):
     # Separe in dirs and files
     dirs=[]; files=[]
@@ -144,12 +144,11 @@ def printerr(e):
     e_file = tb.tb_frame.f_code.co_filename
     e_line = tb.tb_lineno
     e_message = str(e)
-    logger = logging.getLogger(__name__)
     msg = (
         "[SERVER ERROR]\n"+
         f"   [line {e_line}] '{e_file}'\n"+
         f"   [{e_type}] {e_message}\n"+
         "[END ERROR]"
     )
-    logger.critical(msg)
+    print(msg,file=stderr)
 
