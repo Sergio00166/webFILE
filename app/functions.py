@@ -18,26 +18,16 @@ file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Check if the file is a binary file or not
 textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary = lambda path: bool(open(path, mode="rb").read(1024).translate(None, textchars))
-
-
-# That shit reduces too much the size for the file
-# explorer stream by minifying it (460KB -> 170KB)
-def minify(stream):
-    for x in stream: yield x.replace('\n','').replace('  ','')
+# Function to compress HTML output (460KB to 180KB)
+minify = lambda stream: (x.replace('\n', '').replace('  ', '') for x in stream)
 
 
 def getclient(request):
-    # Get user agent and accept header
-    user_agent = request.headers.get('User-Agent', '').lower()
-    accept_header = request.headers.get('Accept', '').lower()
-    # Check if the browser have modern features
-    modern = user_agent.startswith("mozilla/5.0")
-    # Check if request was made using cli
-    curl = any(x in user_agent for x in ["wget","curl","fetch"])
-    # Return value depending of the request and user agent
-    if 'application/json' in accept_header or curl: return "json"
-    else: return "normal" if modern else "legacy"
-
+    ua = request.headers.get('User-Agent', '').lower()   
+    ah = request.headers.get('Accept', '').lower()
+    json = any(x in ua for x in ["wget","curl","fetch"]) or 'application/json' in ah
+    normal = ua.startswith("mozilla/5.0") and not any(x in ua for x in ["msie","trident"])
+    return "normal" if normal else "json" if json else "legacy"
 
 def readable(num, suffix="B"):
     # Connverts byte values to a human readable format
