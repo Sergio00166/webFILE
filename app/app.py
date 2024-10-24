@@ -28,7 +28,7 @@ def explorer(path):
         file_type = get_file_type(root+sep+path)
         # Check if the path is not a dir
         if not file_type=="directory":
-            if request.path.endswith('/'):
+            if request.path.endswith('/') and client!="json":
                 return redirect(request.path[:-1])
             # If the text is plain text send it as plain text
             if file_type in ["text","source"]:
@@ -44,7 +44,7 @@ def explorer(path):
             else: return send_file(isornot(path,root))
         # Return the directory explorer
         else:
-            if not request.path.endswith('/'):
+            if not request.path.endswith('/') and client!="json":
                 return redirect(request.path+'/')
             return directory(path,root,folder_size,mode,client)
   
