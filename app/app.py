@@ -28,6 +28,8 @@ def explorer(path):
         file_type = get_file_type(root+sep+path)
         # Check if the path is not a dir
         if not file_type=="directory":
+            if request.path.endswith('/'):
+                return redirect(request.path[:-1])
             # If the text is plain text send it as plain text
             if file_type in ["text","source"]:
                 return send_file(isornot(path,root),mimetype='text/plain')
@@ -43,7 +45,7 @@ def explorer(path):
         # Return the directory explorer
         else:
             if not request.path.endswith('/'):
-                return redirect(request.path+'/',code=301)
+                return redirect(request.path+'/')
             return directory(path,root,folder_size,mode,client)
   
     except PermissionError:
