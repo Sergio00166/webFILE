@@ -21,7 +21,7 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 To get the JSON you need to use curl or wget or send a request asking for a JSON.
 
-For the cli text browsers there is a custom html for better browsing (for lynx, links, elinks and w3m).
+For the text browsers and legacy browsers there is a custom html for better browsing (for lynx, links, w3m, ie explorer).
 
 **To download a folder you must pass at the end of the dir path /?mode=dir to download it as tar.**
 
