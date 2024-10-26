@@ -73,7 +73,8 @@ def index():
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
-            return app.send_static_file(path)
+            try: return app.send_static_file(path)
+            except: raise FileNotFoundError
         # Else show the root directory
         return directory("/",root,folder_size,mode,client)
                 
