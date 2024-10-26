@@ -170,5 +170,5 @@ def get_track(file,index):
 
     else: # Convert direcly with ffmpeg
         proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
-        return process.communicate()[0].decode("UTF-8")
+        return proc.communicate()[0].decode("UTF-8")
 

@@ -1,43 +1,43 @@
 {
-    "SRC": [
+    "source": [
         ".c", ".cpp", ".java", ".py", ".html", ".css", ".js", ".php", 
         ".rb", ".go", ".xml", ".ini", ".json", ".bat", ".cmd", ".sh", 
-        ".md", ".xmls", ".yml", ".yaml", ".asm", ".cfg", ".sql", 
-        ".htm", ".config", ".reg", ".log", ".ps1", ".csv", ".ts", ".rs", ".kt"
+        ".md", ".xmls", ".yml", ".yaml", ".asm", ".cfg", ".sql", ".htm",
+        ".config", ".reg", ".log", ".ps1", ".csv", ".ts", ".rs", ".kt"
     ],
-    "IMG": [
+    "photo": [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".tiff", 
         ".ico", ".webp", ".raw", ".heic", ".psd"
     ],
-    "Audio": [
+    "audio": [
         ".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a", ".wma", 
         ".alac", ".opus", ".aiff"
     ],
-    "DOC": [
+    "document": [
         ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
     ],
-    "DB": [
+    "database": [
         ".xls", ".xlsx", ".ods", ".csv", ".tsv", ".db", ".odb", 
         ".mdb", ".sql", ".sqlite"
     ],
-    "PP": [
+    "presentation": [
         ".ppt", ".pptx", ".odp", ".key", ".pps", ".ppsx"
     ],
-    "Video": [
+    "video": [
         ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", 
         ".webm", ".mpeg", ".mpg", ".3gp", ".m4v"
     ],
-    "PDF": [
+    "pdf": [
         ".pdf"
     ],
-    "HdImg": [
-        ".iso", ".img", ".vdi", ".vmdk", ".vhd", ".dmg"
+    "virtualdisk": [
+        ".iso", ".img", ".vdi", ".vmdk", ".vhd", ".dmg", ".raw", ".qcow2"
     ],
-    "Compress": [
+    "compressed": [
         ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
         ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz", ".zst"
     ],
-    "BIN": [
+    "binary": [
         ".exe", ".dll", ".bin", ".sys", ".so", ".apk", ".jar", ".app", ".deb", ".rpm"
     ]
 }

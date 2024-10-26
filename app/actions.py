@@ -1,10 +1,10 @@
 #Code by Sergio00166
 
-from os.path import join,relpath,pardir,abspath,getsize,isfile
-from flask import render_template, stream_template
-from flask import Flask,request,send_file,Response
+from os.path import join,relpath,pardir,abspath
+from flask import render_template,stream_template
 from urllib.parse import quote as encurl
-from os import sep, getenv
+from flask import Flask,Response,request
+from os import sep,getenv
 from random import choice
 from functions import *
 from actions1 import *
@@ -20,8 +20,8 @@ def init():
     folder_size = getenv('SHOWSIZE',"FALSE")
     folder_size = folder_size.upper()=="TRUE"
     # Create the main app flask
-    app = Flask(__name__, static_folder=None, template_folder=templates)
-    return app,folder_size,root,sroot
+    app = Flask(__name__,static_folder=sroot,template_folder=templates)
+    return app,folder_size,root
 
 
 def filepage_func(path,root,filetype,random=False,fixrng=False):
@@ -35,7 +35,7 @@ def filepage_func(path,root,filetype,random=False,fixrng=False):
     # Convert the dir sep to UNIX if contains windows sep
     path=path.replace(sep,"/")
     # Get all folder contents that has the same filetype
-    lst = [x["path"] for x in out if x["description"] == filetype]
+    lst = [x["path"] for x in out if x["description"]==filetype]
     # Get next one
     try: nxt = lst[lst.index(path)+1]
     except: nxt = "" if fixrng else lst[0]
@@ -61,17 +61,17 @@ def index_func(folder_path,root,folder_size,sort):
     # Get all folder contents
     folder_content = get_folder_content(folder_path,root,folder_size)
     # Get the parent dir from the folder_path
-    parent_directory = abspath(join(folder_path, pardir))
+    parent_directory = abspath(join(folder_path,pardir))
     # Check if the parent directory if root
     if parent_directory==root: parent_directory=""
-    else: parent_directory= relpath(parent_directory, start=root)
+    else: parent_directory= relpath(parent_directory,start=root)+"/"
     # Get relative path from root
-    folder_path = relpath(folder_path, start=root)
+    folder_path = relpath(folder_path,start=root)
     # Fix and check some things with the paths
     if folder_path==".": folder_path=""
-    folder_path="/"+folder_path.replace(sep,"/")
-    parent_directory=parent_directory.replace(sep,"/")
-    folder_content = sort_contents(folder_content, sort)
+    folder_path = "/"+folder_path.replace(sep,"/")
+    parent_directory = parent_directory.replace(sep,"/")
+    folder_content = sort_contents(folder_content,sort,root)
     return folder_content,folder_path,parent_directory,is_root
 
 
@@ -108,10 +108,11 @@ def directory(path,root,folder_size,mode,client):
     sort = mode if mode in ["np","nd","sp","sd","dp","dd"] else "np"
     # Get all the data from that directry and its contents
     folder_content,folder_path,parent_directory,is_root = index_func(path,root,folder_size,sort)
+    # Return appropiate response depending on the client
     if not client=="json":
-        cli = client=="cli"
-        file = "index_cli.html" if cli else "index.html"
-        html = stream_template(file,folder_content=folder_content,folder_path=folder_path,parent_directory=parent_directory,is_root=is_root,sort=sort)
-        return html if cli else minify(html) # reduce size
+        file = "index_cli.html" if client=="legacy" else "index.html"
+        html = stream_template(file,folder_content=folder_content,folder_path=folder_path,\
+                               parent_directory=parent_directory,is_root=is_root,sort=sort)
+        return minify(html) # reduce size
     else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
 

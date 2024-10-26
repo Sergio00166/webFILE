@@ -12,22 +12,29 @@
 <body>
     <table>
         <tr>
-            <td><a href="{{ request.path }}?mode={% if sort=='np' %}nd{% else %}np{% endif %}">NAME</a></td>
-			<td>&nbsp;&nbsp;</td>
-            <td><a href="{{ request.path }}?mode={% if sort=='sp' %}sd{% else %}sp{% endif %}">SIZE</a></td>
-			<td></td>
-            <td><a href="{{ request.path }}?mode={% if sort=='dp' %}dd{% else %}dp{% endif %}">MTIME</a>
+            <td><a href="{{ request.path }}?mode={% if sort=='np' %}nd{% else %}np{% endif %}">
+                NAME {% if sort=="np" %} ^ {% elif sort=="nd" %} v {% endif %}
+            </a></td>
+            <td>&nbsp;&nbsp;</td>
+            <td><a href="{{ request.path }}?mode={% if sort=='sp' %}sd{% else %}sp{% endif %}">
+                SIZE {% if sort=="sp" %} ^ {% elif sort=="sd" %} v {% endif %}
+            </a></td>
+            <td></td>
+            <td><a href="{{ request.path }}?mode={% if sort=='dp' %}dd{% else %}dp{% endif %}">
+                MTIME{% if sort=="dp" %} ^ {% elif sort=="dd" %} v {% endif %}
+            </a>
             &nbsp;&nbsp;&nbsp; <a href="{{ request.path }}?mode=dir">DLthisDIR</a></td>
         </tr>
         {% if not is_root %}
             <tr><td><a href="{{ url_for('explorer', path=parent_directory) }}">&larr; Parent Directory</a></td></tr>
         {% endif %}{% for item in folder_content %}
             <tr>
-                <td><a href="{{ url_for('explorer', path=item['path']) }}">{{ item['name'] }}{% if item['description'] == 'DIR' %}/{% endif %}</a></td>
-				<td>&nbsp;&nbsp;</td>
-				<td align="right">{{ item['size'] }}</td>
-				<td></td>
-				<td align="right">{{ item['mtime'] }}</td>
+                <td><a href="{{ url_for('explorer', path=item['path']) }}">
+                {{ item['name'] }}{% if item['description']=='directory' %}/{% endif %}</a></td>
+                <td>&nbsp;&nbsp;</td>
+                <td align="right">{{ item['size'] }}</td>
+                <td></td>
+                <td align="right">{{ item['mtime'] }}</td>
             </tr>
         {% endfor %}
     </table>
