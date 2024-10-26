@@ -70,12 +70,15 @@ def get_directory_size(directory):
 
 
 def get_folder_content(folder_path, root, folder_size):
-    # Gets folder content and get size, modified time values
-    # the name, the path and the type of the elements and
-    # returns a list containing one dict for each element
-    items = listdir(folder_path)
-    content = []
-    for item in items:
+    # Get contents and sort them
+    dirs,files,content = [],[],[]
+    for x in listdir(folder_path):
+        fix = join(folder_path, x)
+        if isdir(fix): dirs.append(x)
+        else: files.append(x)
+    dirs.sort(); files.sort()
+    # Create a list with dicts with the values
+    for item in dirs+files:
         try:
             item_path = join(folder_path, item)
             description = get_file_type(item_path)
@@ -105,7 +108,7 @@ def isornot(path,root):
 
 
 def sort_contents(folder_content,sort,root):
-    # Separe in dirs and files
+    # Separate in dirs and files
     dirs=[]; files=[]
     for x in folder_content:
         path = x["path"].replace("/",sep)
@@ -120,11 +123,7 @@ def sort_contents(folder_content,sort,root):
         dirs  = sorted(dirs, key=lambda x:unreadable(x["size"]))
         files = sorted(files,key=lambda x:unreadable(x["size"]))
         if sort[1]=="p": dirs,files = dirs[::-1],files[::-1]
-    else:
-        dirs  = sorted(dirs, key=lambda x:x["name"])
-        files = sorted(files,key=lambda x:x["name"])
-        if sort[1]=="d": dirs,files = dirs[::-1],files[::-1]
-
+    elif sort[1]=="d": dirs,files = dirs[::-1],files[::-1]
     return dirs+files
 
 
