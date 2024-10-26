@@ -31,7 +31,7 @@
         ".pdf"
     ],
     "virtualdisk": [
-        ".iso", ".img", ".vdi", ".vmdk", ".vhd", ".dmg"
+        ".iso", ".img", ".vdi", ".vmdk", ".vhd", ".dmg", ".raw", ".qcow2"
     ],
     "compressed": [
         ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
