@@ -85,10 +85,12 @@
                      {% endif %}
                     </span>
                     <span class="first">
-                        <pre> {{ item['name'] }} </pre>
-                        {% if item['description'] == 'directory' %}
-                            <t class="small">/</t>
-                        {% endif %}
+                        <pre>
+                            {{ item['name'] }}
+                            {% if item['description'] == 'directory' %}
+                                <t class="small">/</t>
+                            {% endif %}
+                        </pre>
                     </span>
                     <span class="no_overflow">
                         <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ item['size'] }}</t>
