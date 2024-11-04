@@ -37,6 +37,12 @@ button:disabled {
     background-color: #111111;
     color: gray;
 }
+pre {
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+}
 .backdir {
     display: flex;
     justify-content: space-between;
