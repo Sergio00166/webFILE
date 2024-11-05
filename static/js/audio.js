@@ -103,7 +103,7 @@ function setAudioTime() {
 function canPlayInit() {
     handleAudioIcon(); audio.play();
     if (random) { mode.classList.add('lmbsl'); }
-    if (video.paused) { pause(); } 
+    if (audio.paused) { pause(); } 
     setAudioTime();
 }
 
