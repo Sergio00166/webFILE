@@ -93,16 +93,20 @@ document.addEventListener("keydown", handleShorthand);
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
 
-function canPlayInit() {
-    handleAudioIcon();
-    if (random) { mode.classList.add('lmbsl'); }
-    audio.paused ? sh_play.classList.remove("sh_play") : sh_pause.classList.remove("sh_pause");
-    function setAudioTime() {
-        if (!(isNaN(audio.duration) || audio.duration === 0)) {
-            totalDuration.innerHTML = showDuration(audio.duration);
-        } else { setTimeout(setAudioTime, 25); }
-    } setAudioTime();
+
+function setAudioTime() {
+    if (!(isNaN(audio.duration) || audio.duration === 0)) {
+        totalDuration.innerHTML = showDuration(audio.duration);
+    } else { setTimeout(setAudioTime, 25); }
 }
+
+function canPlayInit() {
+    handleAudioIcon(); audio.play();
+    if (random) { mode.classList.add('lmbsl'); }
+    if (video.paused) { pause(); } 
+    setAudioTime();
+}
+
 
 function play() {
     audio.play();

@@ -124,11 +124,10 @@ function setVideoTime() {
 }
 
 function canPlayInit() {
-    handleAudioIcon();
-    video.play();
-    if (video.paused) {
-        pause();
-    } setVideoTime();
+    handleVideoIcon();
+     video.play();
+    if (video.paused) { pause(); } 
+    setVideoTime();
 }
 
 function handleVideoEnded() {
@@ -259,7 +258,7 @@ function pause() {
     video.pause();
     controls.classList.add("show-controls");
     show_main_animation("play");
-    handleAudioIcon();
+    handleVideoIcon();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
     if (video.ended) { currentTime.style.width = 100+"%"; }
@@ -319,12 +318,12 @@ function toggleMuteUnmute() {
     if (!muted) {
         video.volume = 0;
         muted = true;
-        handleAudioIcon();
+        handleVideoIcon();
         show_main_animation("mute");
     } else {
         video.volume = volumeVal;
         muted = false;
-        handleAudioIcon();
+        handleVideoIcon();
         show_main_animation("unmute");
     } localStorage.setItem("videoMuted", muted);
 }
@@ -348,7 +347,7 @@ function handleVolume(e) {
     currentVol.style.width = volumeVal * 100 + "%";
     saveVolume();
     video.volume = volumeVal;
-    handleAudioIcon();
+    handleVideoIcon();
 }
 
 function handleProgress() {
@@ -455,7 +454,7 @@ function handleMainSateAnimationEnd() {
         sh_fordward_st.classList.add("sh_fordward_st");
     }
 }
-function handleAudioIcon() {
+function handleVideoIcon() {
     if (!muted) {
         if (volumeVal == 0.0) {
             sh_mute.classList.add("sh_mute");
@@ -520,7 +519,7 @@ function handleShorthand(e) {
                 volumeVal = parseFloat(volumeVal + 0.05);
                 if (volumeVal > 1) { volumeVal = 1; }
                 video.volume = volumeVal;
-                handleAudioIcon();
+                handleVideoIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
                 saveVolume();
             } break;
@@ -529,7 +528,7 @@ function handleShorthand(e) {
                 volumeVal = parseFloat(volumeVal - 0.05);
                 if (volumeVal < 0) { volumeVal = 0; }
                 video.volume = volumeVal;
-                handleAudioIcon();
+                handleVideoIcon();
                 currentVol.style.width = volumeVal * 100 + "%";
                 saveVolume();
             } break;
