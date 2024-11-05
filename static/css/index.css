@@ -38,6 +38,7 @@ button:disabled {
     color: gray;
 }
 pre {
+    display: inline;
     white-space: pre-wrap;
     font-family: inherit;
     font-size: inherit;
