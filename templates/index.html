@@ -18,13 +18,13 @@
         <div class="controls">
             <div class="ctrl_flex">
                 <button onclick="changeURL({% if sort=="np" %} 'nd' {% else %} 'np' {% endif %})">
-                    NAME {% if sort=="np" %} &uarr; {% elif sort=="nd" %} &darr; {% endif %}
+                    NAME {% if sort=="np" %} &nbsp;&uarr; {% elif sort=="nd" %} &nbsp;&darr; {% endif %}
                 </button>
                 <button onclick="changeURL({% if sort=="sp" %} 'sd' {% else %} 'sp' {% endif %})">
-                    SIZE {% if sort=="sp" %} &uarr; {% elif sort=="sd" %} &darr; {% endif %}
+                    SIZE {% if sort=="sp" %} &nbsp;&uarr; {% elif sort=="sd" %} &nbsp;&darr; {% endif %}
                 </button>
                 <button class="h_small" onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
-                    DATE {% if sort=="dp" %} &uarr; {% elif sort=="dd" %} &darr; {% endif %}
+                    DATE {% if sort=="dp" %} &nbsp;&uarr; {% elif sort=="dd" %} &nbsp;&darr; {% endif %}
                 </button>
             </div>
             <div class="flex_small_h">
