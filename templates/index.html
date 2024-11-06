@@ -91,8 +91,9 @@
                         {% endif %}
                     </span>
                     <span class="no_overflow">
-                        <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ item['size'] }}</t>
-                        <t class="notime">&nbsp;&nbsp; {{ item['mtime'] }}</t>
+                        <t class="nosize">{{ item['size'] }}</t>
+                        <t class="notime">&nbsp;&nbsp;</t>
+                        <t class="notime">{{ item['mtime'] }}</t>
                     </span>
                 </div>
             {% endfor %}
