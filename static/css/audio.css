@@ -33,6 +33,7 @@ h2 {
   color: #FFFFFF;
   user-select: text;
   word-break: break-all;
+  white-space: pre-wrap;
 }
 img {
   width: 20px;

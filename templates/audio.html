@@ -18,7 +18,7 @@
     <a href='{{ rnd }}' id="random"></a>
 
     <div class="audio-container">
-        <h2 style="white-space: pre-wrap;">{{ name }}</h2><br>
+        <h2> {{ name }} </h2> <br>
         <audio onended="handleAudioEnded()">
             <source src="{{ request.path }}?mode=raw" type="audio/mp3">
         </audio>
