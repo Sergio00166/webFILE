@@ -492,12 +492,18 @@ function handleVideoIcon() {
 
 function handleShorthand(e) {
     e.preventDefault();
-    if (e.code==='F5') { location.reload(true); return; }
-    const tagName = document.activeElement.tagName.toLowerCase();
-    if (tagName === "input") return;
+    if (e.code==='F5') {
+        location.reload(true);
+        return;
+    }
+    if (e.code==='F11') {
+        document.documentElement.requestFullscreen();
+        return;
+    }
     if (e.key.match(/[0-9]/gi)) {
         video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
         currentTime.style.width = parseInt(e.key) * 10 + "%";
+        return;
     } 
     switch (e.key.toLowerCase()) {
         case " ": video.paused ? play() : pause(); break;
