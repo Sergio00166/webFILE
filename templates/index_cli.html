@@ -6,12 +6,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>webFILE server</title>
+    <title>Sergio's Server</title>
 </head>
 
 <body>
     <table>
-        <tr><td> <pre>Index of&nbsp;{{ folder_path }}</pre> </td></tr>
+        <tr><td colspan="6">
+            Index of&nbsp;{{ folder_path }}
+        </td></tr>
         <tr><td>&nbsp;</td></tr>
         <tr>
             <td><a href="{{ request.path }}?mode={% if sort=='np' %}nd{% else %}np{% endif %}">
