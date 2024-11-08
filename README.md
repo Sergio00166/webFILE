@@ -38,10 +38,10 @@ For the text browsers and legacy browsers there is a custom html for better brow
 
 
 ## Basic Usage: ##
-  - To run via flask internal HTTP server via CLI
-  python3 run.py -b IP_addr -p port -d directory [--dirsize]
+  - To run via flask internal HTTP server via CLI  
+    ```python3 run.py -b IP_addr -p port -d directory [--dirsize]```
 
-  - To use a WSGI for deployment -> (for example gunicorn)
-  cd app; gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app
+  - To use a WSGI for deployment -> (for example gunicorn)  
+    ```gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app```
 
 
