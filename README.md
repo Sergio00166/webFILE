@@ -10,11 +10,21 @@ To change the audio track from a video you must need to enable "Experimental Web
 Because of the limitations of HTLM5 it can only play webVTT subs but dont worry it will convert it automatically.
 
 
+
 ## Requirements: ##
  Python3, Windows/Linux, Flask, ffmpeg
 
  This software includes pysubs2 module under the MIT license
  you can find the complete LICENSE inside the zip file in app/data/pysubs2.zip
+
+
+## To run the web server: ##
+  - To run via flask internal HTTP server via CLI  
+    ```python3 run.py -b IP_addr -p port -d directory [--dirsize]```
+
+  - To use a WSGI for deployment -> (for example gunicorn)  
+    ```gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app```
+
 
 
 ## API usage ##
@@ -35,13 +45,4 @@ For the text browsers and legacy browsers there is a custom html for better brow
 - *Sort direction*
   - *p* for ascending
   - *d* for descending
-
-
-## Basic Usage: ##
-  - To run via flask internal HTTP server via CLI  
-    ```python3 run.py -b IP_addr -p port -d directory [--dirsize]```
-
-  - To use a WSGI for deployment -> (for example gunicorn)  
-    ```gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app```
-
 
