@@ -46,7 +46,7 @@ For the text browsers and legacy browsers there is a custom html for better brow
     - you can specify the ports with a range like 8000-8007 to spawn 8 workers and distribute the load with nginx
 
   - To use a WSGI for deployment -> (for example gunicorn)
-  cd app; gunicorn -R --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app
+  cd app; gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app
 
-  ***WARNING: Slow video streaming with gunicorn***
+  ***WARNING: Gunicorn can be slow with video streamming***
 
