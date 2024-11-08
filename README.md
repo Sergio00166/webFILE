@@ -48,5 +48,5 @@ For the text browsers and legacy browsers there is a custom html for better brow
   - To use a WSGI for deployment -> (for example gunicorn)
   cd app; gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app
 
-  ***WARNING: Gunicorn can be slow with video streamming***
+  ***WARNING: Gunicorn can be slow with video streaming***
 
