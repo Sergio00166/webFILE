@@ -23,7 +23,7 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
     ```python3 run.py -b IP_addr -p port -d directory [--dirsize]```
 
   - To use a WSGI for deployment -> (for example gunicorn)  
-    ```gunicorn --env FOLDER=/PATH --env SHOWSIZE=True -b 127.0.0.1 app:app```
+    ```gunicorn --env FOLDER=directory [--env SHOWSIZE=True] -b IP_addr app:app```
 
 
 
