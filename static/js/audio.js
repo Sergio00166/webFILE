@@ -93,16 +93,20 @@ document.addEventListener("keydown", handleShorthand);
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
 
-function canPlayInit() {
-    handleAudioIcon();
-    if (random) { mode.classList.add('lmbsl'); }
-    audio.paused ? sh_play.classList.remove("sh_play") : sh_pause.classList.remove("sh_pause");
-    function setAudioTime() {
-        if (!(isNaN(audio.duration) || audio.duration === 0)) {
-            totalDuration.innerHTML = showDuration(audio.duration);
-        } else { setTimeout(setAudioTime, 25); }
-    } setAudioTime();
+
+function setAudioTime() {
+    if (!(isNaN(audio.duration) || audio.duration === 0)) {
+        totalDuration.innerHTML = showDuration(audio.duration);
+    } else { setTimeout(setAudioTime, 25); }
 }
+
+function canPlayInit() {
+    handleAudioIcon(); audio.play();
+    if (random) { mode.classList.add('lmbsl'); }
+    if (audio.paused) { pause(); } 
+    setAudioTime();
+}
+
 
 function play() {
     audio.play();
@@ -401,14 +405,21 @@ function handleAudioIcon() {
     }
 }
 
+
 function handleShorthand(e) {
     e.preventDefault();
-    if (e.code==='F5') { location.reload(true); return; }
-    const tagName = document.activeElement.tagName.toLowerCase();
-    if (tagName === "input") return;
+    if (e.code==='F5') {
+        location.reload(true);
+        return;
+    }
+    if (e.code==='F11') {
+        document.documentElement.requestFullscreen();
+        return;
+    }
     if (e.key.match(/[0-9]/gi)) {
         audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
         currentTime.style.width = parseInt(e.key) * 10 + "%";
+        return;
     }
     switch (e.key.toLowerCase()) {
         case " ": audio.paused ? play(): pause(); break;

@@ -33,6 +33,7 @@ h2 {
   color: #FFFFFF;
   user-select: text;
   word-break: break-all;
+  white-space: pre-wrap;
 }
 img {
   width: 20px;
@@ -222,21 +223,26 @@ button:focus { outline: none; }
 .sh_lowa { display: none; }
 .sh_noa { display: none; }
 
+
+
+
+/* RESPONSIVE (pain) ZONE */
+
 @media only screen and (max-width: 1200px) {
    .duration { width: 50%; }
 }
 @media only screen and (max-width: 960px) {
    .duration { width: 67%; }
 }
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 520px) {
    .duration { width: 85%; }
 }
-@media only screen and (max-width: 500px) {
-   .download { display: none; }
+@media only screen and (max-width: 430px) {
+   .volume { display: none; }
    .setting-menu { margin-left: -8.2rem; }
 }
 @media only screen and (max-width: 300px) {
-   .volume { display: none; }
+   .download { display: none; }
    .setting-menu { margin-left: -6.67rem; }
 }
 @media only screen and (max-width: 260px) {

@@ -13,13 +13,13 @@
 
 <body>
     <a href="{{ request.path }}?mode=raw" download="{{ name }}" id="download"></a>
-	<a href='{{ nxt }}' id="next"></a>
-	<a href='{{ prev }}' id="prev"></a>
-	<a href='{{ rnd }}' id="random"></a>
+    <a href='{{ nxt }}' id="next"></a>
+    <a href='{{ prev }}' id="prev"></a>
+    <a href='{{ rnd }}' id="random"></a>
 
     <div class="audio-container">
-        <h2>{{ name }}</h2><br>
-        <audio autoplay onended="handleAudioEnded()">
+        <h2> {{ name }} </h2> <br>
+        <audio onended="handleAudioEnded()">
             <source src="{{ request.path }}?mode=raw" type="audio/mp3">
         </audio>
         <div class="duration">

@@ -13,22 +13,28 @@
 </head>
 
 <body>
-    <div class="list-group" style="display: none;">
-        <h2>Index of {{ folder_path }}</h2>
+    <div class="list-group">
+        <h2><pre>Index of&nbsp;{{ folder_path }}</pre></h2>
         <div class="controls">
             <div class="ctrl_flex">
                 <button onclick="changeURL({% if sort=="np" %} 'nd' {% else %} 'np' {% endif %})">
-                    NAME {% if sort=="np" %} &uarr; {% elif sort=="nd" %} &darr; {% endif %}
+                    NAME {% if sort=="np" %} &nbsp;&uarr; {% elif sort=="nd" %} &nbsp;&darr; {% endif %}
                 </button>
                 <button onclick="changeURL({% if sort=="sp" %} 'sd' {% else %} 'sp' {% endif %})">
-                    SIZE {% if sort=="sp" %} &uarr; {% elif sort=="sd" %} &darr; {% endif %}
+                    SIZE {% if sort=="sp" %} &nbsp;&uarr; {% elif sort=="sd" %} &nbsp;&darr; {% endif %}
                 </button>
+                <button class="h_small" onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
+                    DATE {% if sort=="dp" %} &nbsp;&uarr; {% elif sort=="dd" %} &nbsp;&darr; {% endif %}
+                </button>
+            </div>
+            <div class="flex_small_h">
                 <button onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
                     DATE {% if sort=="dp" %} &uarr; {% elif sort=="dd" %} &darr; {% endif %}
                 </button>
-            </div>
-            <div class="ctrl_flex">
                 <button id="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
+            </div>
+            <div class="ctrl_flex_1">
+                <button id="toggleSelectMode" class="h_small" onclick="toggleSelectMode()">SELECT</button>
                 <div class="tools">
                     <button id="toggleAllNone" onclick="toggleSelectAll()" disabled>A/N</button>
                     <button id="invertSelection" onclick="invertSelection()" disabled>INV</button>
@@ -79,14 +85,15 @@
                      {% endif %}
                     </span>
                     <span class="first">
-                        {{ item['name'] }}
-                        {% if item['description'] == 'DIR' %}
+                        <pre>{{ item['name'] }}</pre>
+                        {% if item['description'] == 'directory' %}
                             <t class="small">/</t>
                         {% endif %}
                     </span>
                     <span class="no_overflow">
-                        <t class="nosize">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {{ item['size'] }}</t>
-                        <t class="notime">&nbsp;&nbsp; {{ item['mtime'] }}</t>
+                        <t class="nosize">{{ item['size'] }}</t>
+                        <t class="notime">&nbsp;&nbsp;</t>
+                        <t class="notime">{{ item['mtime'] }}</t>
                     </span>
                 </div>
             {% endfor %}

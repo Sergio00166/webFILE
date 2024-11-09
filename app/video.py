@@ -64,11 +64,14 @@ def get_info(file_path):
     ], stdout=PIPE, stderr=PIPE, text=True) 
     ffprobe_output,subtitles_list = jsload(result.stdout),[]
     del result; free()
-    for stream in ffprobe_output.get('streams', []):
+    for p,stream in enumerate( ffprobe_output.get('streams',[]) ):
         tags = stream.get('tags', {})
         title = tags.get('title')
-        language = tags.get('language')
-        subtitles_list.append(title if title else language)
+        lang = tags.get('language')
+        subtitles_list.append(
+            f"{title} - [{lang}]" if title
+            else f"Track {p} - [{lang}]"
+        )
     del ffprobe_output; free()
     return subtitles_list
 

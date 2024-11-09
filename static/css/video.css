@@ -14,7 +14,7 @@ video::cue {
       0 -0.04em 0.025em black
       !important;
 }
-video::-webkit-media-text-track-display { 
+video::-webkit-media-text-track-display {
     padding-bottom: 0.25em !important;
 }
 img {
@@ -25,8 +25,8 @@ img {
   filter: brightness(0) invert(1);
 }
 .fullimg {
-  width: 48px;
-  height: 48px;
+  width: 60%;
+  height: 60%;
 }
 .round-button {
   width: 2.2rem;
@@ -92,7 +92,7 @@ video {
 .state-btn {
   margin-bottom: 2rem;
   font-size: 2.3rem;
-  width: 80px;
+  aspect-ratio: 1 / 1;
   height: 80px;
   cursor: pointer;
   border-radius: 50%;
@@ -401,71 +401,76 @@ select option {
 .text { color: #ffffff; }
 
 .transition { transition: opacity 0.25s ease; }
-
 button:focus { outline: none; }
 
+
+
+/* RESPONSIVE (pain) ZONE */
+
 @media only screen and (max-width: 500px) {
+  .state-btn { height: 25%; }
   .play-pause { display: none; }
 }
-@media only screen and (max-width: 420px) {
-  .btn-controls {
-    padding-top: 1rem;
+@media only screen and (max-width: 320px) {
+  .duration { width: 100%; }
+  .volume, .text { display: none; }
+}
+@media only screen and (max-width: 200px) {
+  .settings { display: none; }
+}
+
+@media (max-aspect-ratio: 1/1) {
+  body { height: 90vh; }
+  @media (max-width: 650px) {
+    .video-container { padding-bottom: 86px; margin-top: 86px; }
+  }
+  @media (max-width: 420px) {
+    .state-btn { margin-bottom: 0; }
+    .btn-controls {
+      padding-top: 0.67rem;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+    .setting-menu { margin-left: 2rem; margin-bottom: 2rem; }
+  }
+  @media (max-width: 320px) {
+    .setting-menu { margin-left: 0.5rem; margin-bottom: 0; }
+  }
+  @media (max-width: 260px) {
+    .setting-menu { margin-left: 0.5rem; margin-bottom: -1rem; }
+  }
+}
+@media (min-aspect-ratio: 1/1) and (max-width: 430px) {
+  body { height: 90vh; }
+  .video-container { padding-bottom: 64px; margin-top: 64px; }
+  .time-container { display: none; }
+  .controls {
+    padding: 1rem;
     font-size: 1.2rem;
     display: flex;
     align-items: center;
     flex-direction: column;
   }
-  .setting-menu { margin-left: 2rem; margin-bottom: 2.25rem; }
-}
-@media only screen and (max-width: 340px) {
-  .controls { padding: 0px; }
-  .volume { display: none; }
-  .setting-menu { margin-left: -4rem; margin-bottom: 2.25rem;}
-  .settings { display: none; }
-}
-@media only screen and (max-width: 240px) {
-  .text { display: none; }
-  .duration { width: calc((100% - 36px)); }
-  .state-btn { width: 35vw; height: 35vw; }
-  .fullimg { width: 21vw; height: 21vw; }
-}
-@media only screen and (max-width: 140px) {
-    .video-container { display: none; }
-}
-@media only screen and (max-height: 290px) {
-  .controls {
-       padding: 0px;
-       padding-top: 1rem;
-       margin-bottom: -0.6rem;
-   }
-  .state-btn {
-      margin-bottom: 10vh;
-      width: 25vh;
-      height: 25vh;
-  }
-  .fullimg { width: 16vh; height: 16vh; }
-  .side-controls { display: none; }
-}
-@media only screen and (max-height: 140px) {
-   .video-container { display: none; }
+  .setting-menu { margin-left: 1rem; margin-bottom: 1rem; }
+  .state-btn { margin-bottom: 0; }
 }
 
-@media (max-aspect-ratio: 1/1) {
-   body { height: 90vh; }
-   .video-container {
-      padding-bottom: 86px;
-      margin-top: 57px;
-   } .state-btn { margin-bottom: 0px; }
+@media (max-aspect-ratio: 1/1) and (max-height: 320px) {
+  body { height: 100vh; }
+  .video-container { padding-bottom: 48px; margin-top: 48px; }
+  .side-controls { display: none; }
 }
-@media (max-aspect-ratio: 1/1) and (max-width: 420px) {
-   .video-container {
-      padding-bottom: 120px;
-      margin-top: 80px;
-   } .state-btn { margin-bottom: 0px; }
+@media (min-aspect-ratio: 1/1) and (max-height: 320px) {
+  body { height: 100vh; }
+  .video-container { padding-bottom: 12px; margin-top: 12px; }
+  .side-controls { display: none; }
 }
-@media (max-aspect-ratio: 1/1) and (max-width: 340px) {
-   .video-container {
-      padding-bottom: 98px;
-      margin-top: 65px;
-   } .state-btn { margin-bottom: 0px; }
+
+/* Hide everything if screen is so fucking small */
+@media only screen {
+  @media (max-width: 160px) or (max-height: 160px) {
+    .video-container { display: none; }
+  }
 }

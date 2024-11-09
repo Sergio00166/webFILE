@@ -17,7 +17,7 @@
   <a href='{{ prev }}' id="prev"></a>
  
   <div class="video-container">
-    <video autoplay playsinline onended="handleVideoEnded()">
+    <video playsinline onended="handleVideoEnded()">
       <source src="{{ request.path }}?mode=raw" type="video/mp4">
     </video>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
