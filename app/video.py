@@ -70,7 +70,7 @@ def get_info(file_path):
         lang = tags.get('language')
         subtitles_list.append(
             f"{title} - [{lang}]" if title
-            else f"{Track} {p} - [{lang}]"
+            else f"Track {p} - [{lang}]"
         )
     del ffprobe_output; free()
     return subtitles_list
