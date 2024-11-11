@@ -130,6 +130,7 @@ video {
   visibility: hidden;
   transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
+
 .duration {
   position: relative;
   margin-left: auto;
@@ -138,15 +139,23 @@ video {
   height: 15px;
   background: #62626274;
   cursor: pointer;
-  transition: all 0.2s;
   border-radius: 4px;
 }
+
+/* This weird shit is only to let the */
+/* user select easily the start and end */
+.duration::before {
+  position: absolute;
+  content: '\00a0';
+  left: calc(96px/2*-1);
+  width: calc(100% + 128px);
+}
+
 .chapter-container {
-    position: relative;
-    height: 100%;
-    width: 100%;
-    border-radius: 6px;
-    overflow: hidden;
+  position: relative;
+  height: 100%;
+  border-radius: 4px;
+  overflow: hidden;
 }
 .chapter {
     position: absolute;
@@ -176,23 +185,15 @@ video {
 }
 .hover-time .hover-duration {
   position: absolute;
-  right: 0%;
-  top: -35px;
   background: #3c3c3ca7;
   padding: 0.2rem;
   border-radius: 5px;
   font-size: 0.7rem;
   visibility: hidden;
   font-weight: bold;
-  opacity: 0;
   text-align: center;
 }
-.duration:hover .hover-time .hover-duration {
-  visibility: visible;
-  opacity: 1;
-  transition: all 0.2s;
-  transform: scale(1);
-}
+
 .duration .current-time {
   height: 100%;
   position: absolute;

@@ -125,7 +125,7 @@ function setVideoTime() {
 
 function canPlayInit() {
     handleVideoIcon();
-     video.play();
+    video.play();
     if (video.paused) { pause(); } 
     setVideoTime();
 }
@@ -157,7 +157,7 @@ controls.addEventListener("click", () => {
 });
 
 duration.addEventListener("mousedown", (e) => {
-    mouseDownProgress = true; 
+    mouseDownProgress = true;
     navigate(e);
 });
 
@@ -169,7 +169,7 @@ document.addEventListener("mouseup", () => {
 videoContainer.addEventListener("mouseleave", () => {
     clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
-	hideControls(50);
+    hideControls(50);
 });
 
 videoContainer.addEventListener("mousemove", (e) => {
@@ -189,26 +189,8 @@ duration.addEventListener("mouseleave", () => {
     hoverDuration.style.display = 'none';
 });
 
-let hideHoverTimeout;
-function hideHoverDuration() {
-    clearTimeout(hideHoverTimeout);
-    hoverDuration.style.left = "-9999px";
-    hoverDuration.style.width = "0px";
-    hideHoverTimeout = setTimeout(function() {
-        hoverDuration.style.left = "";
-        hoverDuration.style.width = "";
-        hoverTime.style.width = 0;
-        hoverDuration.style.display = 'none';
-        mouseOverDuration = false;
-    }, 250);
-}
-
-// Magic tricks to hide the time when using touchscreen
 duration.addEventListener("touchmove", handleTouchNavigate);
-duration.addEventListener("touchstart", () => {
-    setTimeout(function() { hideHoverDuration(); },250);
-}); // Fix showing the time when hoving
-duration.addEventListener("touchend", hideHoverDuration);
+
 
 let cursorTimeout;
 function showCursor() {
@@ -390,34 +372,39 @@ function getchptname(timeInSeconds) {
     }
 }
 
+
+// Prevent mouse events from triggering after a touch event
+touchActive = false;
+document.addEventListener('touchstart',()=> {
+    touchActive = true;
+}); let fixtouch;
+document.addEventListener('touchend', ()=> {
+    clearTimeout(fixtouch);
+    fixtouch = setTimeout(()=>{touchActive = false},500);
+});
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
         e.preventDefault();
         navigate(e);
-    } else if (mouseDownVol) {
-        handleVolume(e);
+    } else if (mouseDownVol) { handleVolume(e);
     } else if (mouseOverDuration) {
-        hoverDuration.style.display = 'block';
         const rect = duration.getBoundingClientRect();
-        const width = Math.min(Math.max(0,e.clientX-rect.x),rect.width);
-        const percent = (width/rect.width)*100;
-        hoverTime.style.width = percent+"%";
-        hovtime = (video.duration/100)*percent;
-        ctime = showDuration(hovtime);
-        const title = getchptname(hovtime);
-        if (!title) { 
-            hoverDuration.innerHTML = ctime;
-            hoverDuration.style.top = "-25px";
-        } else { 
-            hoverDuration.innerHTML = ctime+"<br>"+title;
-            hoverDuration.style.top = "-35px";
-        }
-        const size = hoverDuration.offsetWidth;
-        hoverDuration.style.right = "-"+size/2+"px";    
+        hoverDuration.style.bottom = `${rect.height+8}px`;
+        const width = Math.min( Math.max(0,e.clientX-rect.x) ,rect.width);
+        if (!touchActive) {
+            const percent = (width/rect.width)*100;
+            hoverTime.style.width = `${percent}%`;
+            const hovtime = (video.duration*percent)/100;
+            hoverDuration.innerHTML = showDuration(hovtime)+(getchptname(hovtime)?`<br>${getchptname(hovtime)}`:"");
+            hoverDuration.style.left = `${width-hoverDuration.offsetWidth/2}px`;
+            hoverDuration.style.display = 'block';
+            hoverDuration.style.visibility = "visible";
+        } else { e.preventDefault(); }
     }
 }
+
 
 function show_main_animation(mode) {
     sh_play_st.classList.add("sh_play_st");
