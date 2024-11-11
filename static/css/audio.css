@@ -84,23 +84,15 @@ img {
 }
 .hover-time .hover-duration {
   position: absolute;
-  top: -26px;
-  background: #555555;
-  color: #FFFFFF;
+  background: #3c3c3ca7;
   padding: 0.2rem;
+  border-radius: 5px;
   font-size: 0.7rem;
   visibility: hidden;
   font-weight: bold;
-  opacity: 0;
-  transform: scale(0);
+  text-align: center;
 }
-.duration:hover .hover-time .hover-duration {
-  visibility: visible;
-  opacity: 1;
-  transition: all 0.2s;
-  transform: scale(1);
-  border-radius: 5px;
-}
+
 .duration .current-time {
   height: 100%;
   position: absolute;

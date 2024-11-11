@@ -190,6 +190,16 @@ duration.addEventListener("mousedown", (e) => {
     navigate(e);
 });
 
+
+// Prevent mouse events from triggering after a touch event
+touchActive = false;
+document.addEventListener('touchstart',()=> {
+    touchActive = true;
+}); let fixtouch;
+document.addEventListener('touchend', ()=> {
+    clearTimeout(fixtouch);
+    fixtouch = setTimeout(()=>{touchActive = false},500);
+});
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
@@ -199,14 +209,18 @@ function handleMousemove(e) {
     } else if (mouseDownVol) {
         handleVolume(e);
     } else if (mouseOverDuration) {
-        hoverDuration.style.display = 'block';
         const rect = duration.getBoundingClientRect();
-        const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
-        const percent = (width / rect.width) * 100;
-        hoverTime.style.width = width + "px";
-        hoverDuration.innerHTML = showDuration((audio.duration / 100) * percent);
-        const size = hoverDuration.offsetWidth;
-        hoverDuration.style.right = "-"+size/2+"px"; 
+        hoverDuration.style.bottom = `${rect.height+8}px`;
+        const width = Math.min( Math.max(0,e.clientX-rect.x) ,rect.width);
+        if (!touchActive) {
+            const percent = (width/rect.width)*100;
+            hoverTime.style.width = `${percent}%`;
+            const hovtime = (audio.duration*percent)/100;
+            hoverDuration.innerHTML = showDuration(hovtime);
+            hoverDuration.style.left = `${width-hoverDuration.offsetWidth/2}px`;
+            hoverDuration.style.display = 'block';
+            hoverDuration.style.visibility = "visible";
+        } else { e.preventDefault(); }
     }
 }
 
@@ -232,14 +246,7 @@ duration.addEventListener("mouseleave", () => {
     hoverDuration.style.display = 'none';
 });
 
-// Magic tricks to hide the time when using touchscreen
 duration.addEventListener("touchmove", handleTouchNavigate);
-duration.addEventListener("touchstart", () => {
-    setTimeout(function() {
-        hideHoverDuration();
-    }, 250);
-}); // Fix showing the time when hoving
-duration.addEventListener("touchend", hideHoverDuration);
 
 let hideHoverTimeout;
 
