@@ -82,6 +82,7 @@ img {
   width: 0;
   border-radius: 5px;
 }
+
 .hover-time .hover-duration {
   position: absolute;
   background: #3c3c3ca7;
@@ -91,6 +92,18 @@ img {
   visibility: hidden;
   font-weight: bold;
   text-align: center;
+}
+/* This weird shit is only to let the */
+/* user select easily the start and end */
+/* and also try to fix one bug */
+.duration::before {
+  position: absolute;
+  content: '\00a0';
+  height: 100%;
+  left: -24px;
+  width: calc((100% + 50px));
+  height: 150%;
+  top: -25%;
 }
 
 .duration .current-time {

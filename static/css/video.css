@@ -1,5 +1,6 @@
 /* Code by Sergio00166 */
 
+/* Just to add a border to the subtitles */
 video::cue {
   background: none !important;
   line-height: 1 !important;
@@ -14,8 +15,9 @@ video::cue {
       0 -0.04em 0.025em black
       !important;
 }
+/* Dont cut the bottom of the bottom subtitles */
 video::-webkit-media-text-track-display {
-    padding-bottom: 0.25em !important;
+  padding-bottom: 0.25em !important;
 }
 img {
   width: 20px;
@@ -63,13 +65,13 @@ body {
   user-select: none !important;
 }
 video {
-    max-height: 90vh;
-    width: 100%;
-    height: 100%;
-    object-fit: contain !important;
+  max-height: 90vh;
+  width: 100%;
+  height: 100%;
+  object-fit: contain !important;
 }
 .video-container:fullscreen video {
-    max-height: 100vh;
+  max-height: 100vh;
 }
 .loader {
   width: 108px;
@@ -141,14 +143,17 @@ video {
   cursor: pointer;
   border-radius: 4px;
 }
-
 /* This weird shit is only to let the */
 /* user select easily the start and end */
+/* and also try to fix one bug */
 .duration::before {
   position: absolute;
   content: '\00a0';
-  left: calc(96px/2*-1);
-  width: calc(100% + 128px);
+  height: 100%;
+  left: -48px;
+  width: calc((100% + 98px));
+  height: 150%;
+  top: -25%;
 }
 
 .chapter-container {
@@ -158,11 +163,11 @@ video {
   overflow: hidden;
 }
 .chapter {
-    position: absolute;
-    height: 100%;
-    width: 2px;
-    margin-left: -1px;
-    background-color: #0F0F0F;
+  position: absolute;
+  height: 100%;
+  width: 2px;
+  margin-left: -1px;
+  background-color: #0F0F0F;
 }
 .duration .buffer {
   height: 100%;
@@ -188,12 +193,11 @@ video {
   background: #3c3c3ca7;
   padding: 0.2rem;
   border-radius: 5px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   visibility: hidden;
   font-weight: bold;
   text-align: center;
 }
-
 .duration .current-time {
   height: 100%;
   position: absolute;
@@ -386,6 +390,8 @@ select option {
     transform: scale(1);
   }
 }
+
+/* Define default values */
 .sh_mute { display: none; }
 .sh_unmute { display: none; }
 .sh_pause { display: none; }
@@ -400,7 +406,6 @@ select option {
 .sh_lowa { display: none; }
 .sh_noa { display: none; }
 .text { color: #ffffff; }
-
 .transition { transition: opacity 0.25s ease; }
 button:focus { outline: none; }
 
@@ -413,7 +418,7 @@ button:focus { outline: none; }
   .play-pause { display: none; }
 }
 @media only screen and (max-width: 320px) {
-  .duration { width: 100%; }
+  .duration { width: 90%; }
   .volume, .text { display: none; }
 }
 @media only screen and (max-width: 200px) {
@@ -459,12 +464,14 @@ button:focus { outline: none; }
 }
 
 @media (max-aspect-ratio: 1/1) and (max-height: 320px) {
-  body { height: 100vh; }
+   body { height: 100vh; }
+  .hover-time .hover-duration { font-size: 0.5rem; }
   .video-container { padding-bottom: 48px; margin-top: 48px; }
   .side-controls { display: none; }
 }
 @media (min-aspect-ratio: 1/1) and (max-height: 320px) {
-  body { height: 100vh; }
+   body { height: 100vh; }
+  .hover-time .hover-duration { font-size: 0.5rem; }
   .video-container { padding-bottom: 12px; margin-top: 12px; }
   .side-controls { display: none; }
 }

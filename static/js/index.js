@@ -1,5 +1,6 @@
 /* Code by Sergio00166 */
 
+
 function changeURL(mode) {
     var url = window.location.href;
     var urlObj = new URL(url);
@@ -15,9 +16,12 @@ const selectedElements = {};
 function toggleSelectMode() {
     selectMode = !selectMode;
     const buttonText = selectMode ? 'CANCEL' : 'SELECT';
-    document.getElementById('toggleSelectMode').textContent = buttonText;
+    document.querySelectorAll(".toggleSelectMode")
+    .forEach(button => {
+        button.textContent = buttonText;
+    });
     document.getElementById('toggleAllNone').disabled = !selectMode;
-	document.getElementById('invertSelection').disabled = !selectMode;
+    document.getElementById('invertSelection').disabled = !selectMode;
     if (!selectMode) { deselectAll(); }
 
 }

@@ -31,10 +31,10 @@
                 <button onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
                     DATE {% if sort=="dp" %} &uarr; {% elif sort=="dd" %} &darr; {% endif %}
                 </button>
-                <button id="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
+                <button class="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
             </div>
             <div class="ctrl_flex_1">
-                <button id="toggleSelectMode" class="h_small" onclick="toggleSelectMode()">SELECT</button>
+                <button class="toggleSelectMode" class="h_small" onclick="toggleSelectMode()">SELECT</button>
                 <div class="tools">
                     <button id="toggleAllNone" onclick="toggleSelectAll()" disabled>A/N</button>
                     <button id="invertSelection" onclick="invertSelection()" disabled>INV</button>
