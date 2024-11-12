@@ -197,6 +197,7 @@ video {
   visibility: hidden;
   font-weight: bold;
   text-align: center;
+  pointer-events: none;
 }
 .duration .current-time {
   height: 100%;
