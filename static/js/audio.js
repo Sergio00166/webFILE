@@ -139,6 +139,7 @@ function handleProgressBar() {
     if ('mediaSession' in navigator) {
         navigator.mediaSession.setPositionState({
           position: audio.currentTime,
+          playbackRate: audio.playbackRate,
           duration: audio.duration
         });
     }
