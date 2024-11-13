@@ -620,7 +620,7 @@ function split_timeline_chapters() {
     });
 }
 
-video.addEventListener("click", (e) => {
+videoContainer.addEventListener("click", (e) => {
     e.preventDefault();
     toggleMainState();
     showCursor();    
