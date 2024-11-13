@@ -30,7 +30,7 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 ## API usage ##
 
-To get the JSON you need to use curl or wget or send a request asking for a JSON.
+To get the JSON you need to use curl or wget or send a request asking for a JSON (set in headers ACCEPT:"application/json").
 
 For the text browsers and legacy browsers there is a custom html for better browsing (for lynx, links, w3m, ie explorer).
 
