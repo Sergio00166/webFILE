@@ -212,6 +212,7 @@ videoContainer.addEventListener("fullscreenchange", () => {
     }
 });
 
+mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 video.addEventListener("animationend", handleMainSateAnimationEnd);
 
@@ -619,7 +620,7 @@ function split_timeline_chapters() {
     });
 }
 
-videoContainer.addEventListener("click", (e) => {
+video.addEventListener("click", (e) => {
     e.preventDefault();
     toggleMainState();
     showCursor();    
