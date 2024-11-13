@@ -212,7 +212,6 @@ videoContainer.addEventListener("fullscreenchange", () => {
     }
 });
 
-mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 video.addEventListener("animationend", handleMainSateAnimationEnd);
 
