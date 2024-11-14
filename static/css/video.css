@@ -1,5 +1,6 @@
 /* Code by Sergio00166 */
 
+canvas { position: absolute; }
 /* Just to add a border to the subtitles */
 video::cue {
   background: none !important;

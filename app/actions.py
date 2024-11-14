@@ -3,7 +3,7 @@
 from os.path import join,relpath,pardir,abspath
 from flask import render_template,stream_template
 from urllib.parse import quote as encurl
-from flask import Flask,Response,request
+from flask import Flask,request
 from os import sep,getenv
 from random import choice
 from functions import *
@@ -83,12 +83,11 @@ def video(path,root,mode,file_type):
         # Check if the provided data is valid
         try: arg = str(int(mode[4:]))+"/"+path
         except: raise FileNotFoundError
-        # Get subtitle content as string
-        out = sub_cache_handler(arg,root)
-        # Create the http header
-        header = {"Content-disposition":"attachment; filename=subs.vtt"}
-        # Send the raw data
-        return Response(out,mimetype="text/plain",headers=header)
+        # Return subtitles to the client
+        text = sub_cache_handler(arg,root)
+        # Get if is webVTT or not and send the response with the sub type
+        is_vtt = text[:128].split("\n")[0].strip().lower().startswith("webvtt")
+        return Response(text,mimetype="text/"+"vtt" if is_vtt else "ssa")
 
     # Else we send the video page
     prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)

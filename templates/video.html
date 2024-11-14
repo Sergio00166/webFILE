@@ -20,6 +20,7 @@
     <video playsinline onended="handleVideoEnded()">
       <source src="{{ request.path }}?mode=raw" type="video/mp4">
     </video>
+    <canvas></canvas>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
     <span class="main-state state-btn">
       <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
@@ -106,6 +107,7 @@
   </div>
 
   <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
+  <script src="{{ url_for('index', static='jassub/jassub.umd.js') }}"></script>
   <script>
     const chapters = {{ chapters | tojson}}
   </script>

@@ -39,13 +39,62 @@ const liD = document.getElementById("liD");
 const downloadLink = document.getElementById("download");
 const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
+const canvas = document.querySelector("canvas");
 
 
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 
-// Inicialitate everything
+
+/* Subtittles Zone */
+
+let ass_worker;
+function crate_ass_worker(url) {
+    if (ass_worker) { ass_worker.destroy(); }
+    return new JASSUB({
+        video: video, canvas: canvas, subUrl: url,
+        workerUrl: '/?static=jassub/jassub.worker.js',
+        useLocalFonts: true, fallbackFont: "arial",
+        availableFonts: {'arial': '/?static=jassub/arial.ttf'}
+    });
+}
+function webvtt_subs(url){
+    var existingTrack = video.querySelector('track[kind="subtitles"]');
+    if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
+    var track = document.createElement('track');
+    track.kind = 'subtitles';
+    track.src = url;
+    track.default = true;
+    track.mode = 'showing';
+    video.appendChild(track);
+}
+function is_SSA_subs(url) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('HEAD', url, false);
+    try {
+        xhr.send();
+        const mimeType = xhr.getResponseHeader("Content-Type");
+        return mimeType === "ssa";
+    } catch (e) {
+        return false;
+    }
+}
+function changeSubs(value){
+    if (value > -1) {
+        url = window.location.pathname+"?mode=subs"+value;
+        if (!is_SSA_subs(url)) { webvtt_subs(url); }
+        else { ass_worker = crate_ass_worker(url); }
+    } else {
+        var existingTrack = video.querySelector('track[kind="subtitles"]');
+        if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
+        if (ass_worker) { ass_worker.destroy(); }
+    }
+}
+/* End Subtittles Zone */
+
+
+/* Inicialitate everything */
 {
     text = localStorage.getItem("videoSubs");
     selectedIndex = 0;
@@ -566,22 +615,6 @@ audioTracksSelect.addEventListener('change', function() {
      handleSettingMenu();
 });
 
-function changeSubs(value){
-    var existingTrack = video.querySelector('track[kind="subtitles"]');
-    if (existingTrack) {
-        existingTrack.parentNode.removeChild(existingTrack);
-    }
-    if (value > -1) {
-        url = window.location.pathname+"?mode=subs"+value;
-        var track = document.createElement('track');
-        track.kind = 'subtitles';
-        track.src = url;
-        track.default = true;
-        track.mode = 'showing';
-        video.appendChild(track);
-    }
-}
-
 subtitleSelect.addEventListener('change', function() {
     const value = parseInt(this.value);
     changeSubs(value);
@@ -620,11 +653,18 @@ function split_timeline_chapters() {
     });
 }
 
-video.addEventListener("click", (e) => {
+
+canvas.addEventListener("click", (e) => {
     e.preventDefault();
     toggleMainState();
     showCursor();    
 });
+video.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleMainState();
+    showCursor();
+});
+
 
 // Show menu if screen movement (touch)
 videoContainer.addEventListener('touchmove', () => { 
