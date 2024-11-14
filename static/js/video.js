@@ -263,7 +263,6 @@ videoContainer.addEventListener("fullscreenchange", () => {
 
 mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
-video.addEventListener("animationend", handleMainSateAnimationEnd);
 
 volume.addEventListener("mouseenter", () => {
     muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
@@ -657,14 +656,13 @@ function split_timeline_chapters() {
 canvas.addEventListener("click", (e) => {
     e.preventDefault();
     toggleMainState();
-    showCursor();    
+    showCursor();
 });
 video.addEventListener("click", (e) => {
     e.preventDefault();
     toggleMainState();
     showCursor();
 });
-
 
 // Show menu if screen movement (touch)
 videoContainer.addEventListener('touchmove', () => { 
@@ -677,7 +675,7 @@ let lastTouchTime = 0;
 let touchTimeout;
 let touchFix;
 
-video.addEventListener('touchend', (e) => {
+function double_touch(e) {
     e.preventDefault();
     clearTimeout(touchTimeout);
     if (touchFix) { touchFix=false; return; }
@@ -688,13 +686,15 @@ video.addEventListener('touchend', (e) => {
         const touchX = event.changedTouches[0].clientX;
         const centerX = divRect.left+(divRect.width/2);
         const p = touchX < centerX;
-        if (p) { 
+        if (p) {
             video.currentTime -= 5;
             show_main_animation("back");
-        } else { 
+        } else {
             video.currentTime += 5;
             show_main_animation("fordward");
         }
     } else { touchTimeout=setTimeout(toggleMainState,250); }
     lastTouchTime = now;
-});   
+}
+video.addEventListener('touchend', double_touch);
+canvas.addEventListener('touchend', double_touch);
