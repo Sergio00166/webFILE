@@ -55,7 +55,7 @@ function crate_ass_worker(url) {
     return new JASSUB({
         video: video, canvas: canvas, subUrl: url,
         workerUrl: '/?static=jassub/jassub.worker.js',
-        useLocalFonts: true, fallbackFont: "arial",
+        useLocalFonts: false, fallbackFont: "arial",
         availableFonts: {'arial': '/?static=jassub/arial.ttf'}
     });
 }
