@@ -17,7 +17,7 @@
   <a href='{{ prev }}' id="prev"></a>
  
   <div class="video-container">
-    <video playsinline onended="handleVideoEnded()">
+    <video onended="handleVideoEnded()">
       <source src="{{ request.path }}?mode=raw" type="video/mp4">
     </video>
     <canvas></canvas>
@@ -107,7 +107,7 @@
   </div>
 
   <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
-  <script src="{{ url_for('index', static='jassub/jassub.umd.js') }}"></script>
+  <script src="{{ url_for('index', static='jassub/jassub.js') }}"></script>
   <script>
     const chapters = {{ chapters | tojson}}
   </script>

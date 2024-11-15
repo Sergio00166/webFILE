@@ -54,8 +54,9 @@ function crate_ass_worker(url) {
     if (ass_worker) { ass_worker.destroy(); }
     return new JASSUB({
         video: video, canvas: canvas, subUrl: url,
-        workerUrl: '/?static=jassub/jassub.worker.js',
-        useLocalFonts: false, fallbackFont: "arial",
+        workerUrl: '/?static=jassub/worker.js',
+        wasmUrl: '/?static=jassub/worker.wasm',
+        useLocalFonts: true, fallbackFont: "arial",
         availableFonts: {'arial': '/?static=jassub/arial.ttf'}
     });
 }
