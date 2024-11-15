@@ -257,9 +257,8 @@ videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
     if (video.videoWidth>=video.videoHeight) {
         screen.orientation.lock('landscape').catch(() => {});
-    } else {
-        screen.orientation.lock('portrait').catch(() => {});
-    }
+    } else { screen.orientation.lock('portrait').catch(() => {}); }
+    if (ass_worker) { setTimeout(()=> {ass_worker.resize(force=true); },1000); }
 });
 
 mainState.addEventListener("click", toggleMainState);
