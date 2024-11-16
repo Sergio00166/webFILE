@@ -23,7 +23,6 @@ const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
 const randomLink = document.getElementById("random");
 
-
 var audio = document.querySelector("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
@@ -31,6 +30,7 @@ var currentMode = localStorage.getItem("audioMode");
 var muted = localStorage.getItem("audioMuted");
 var saved_speed = localStorage.getItem("audioSpeed");
 var random = localStorage.getItem("audioRandom");
+
 
 if (saved_speed != null) {
     audio.playbackRate = parseFloat(saved_speed);
@@ -323,8 +323,14 @@ speedButtons.forEach((btn) => {
 
 var mber = undefined;
 var mdbtnpress = false;
-mode.addEventListener("mouseup",()=>{clearTimeout(mber);});
-mode.addEventListener("touchend",()=>{clearTimeout(mber);});
+mode.addEventListener("mouseup",()=>{
+    mdbtnpress = false;
+    clearTimeout(mber);
+});
+mode.addEventListener("touchend",()=>{
+    mdbtnpress = false;
+    clearTimeout(mber);
+});
 
 function chMode() {
     const modes = ["1", "»", "&orarr;"];
@@ -334,6 +340,7 @@ function chMode() {
 }
 
 function addrmMLcl() {
+    mdbtnpress = true;
     if (mode.classList.contains('lmbsl')) {
         random = false;
         mode.classList.remove('lmbsl');
@@ -345,17 +352,11 @@ function addrmMLcl() {
 }
 mode.addEventListener("mousedown", (e) => {
     e.preventDefault();
-    mber = setTimeout(() => {
-        addrmMLcl();
-        mdbtnpress = true;
-    }, 600);
+    mber = setTimeout(addrmMLcl, 600);
 });
 mode.addEventListener("touchstart", (e) => {
     e.preventDefault();
-    mber = setTimeout(() => {
-        addrmMLcl();
-        mdbtnpress = true;
-    }, 600);
+    mber = setTimeout(addrmMLcl, 600);
 });
 mode.addEventListener("click", (e) => {
     if (mdbtnpress) {

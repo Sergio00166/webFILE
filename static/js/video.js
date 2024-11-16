@@ -17,6 +17,7 @@ const mainState = document.querySelector(".main-state");
 const hoverTime = document.querySelector(".hover-time");
 const hoverDuration = document.querySelector(".hover-duration");
 const settingMenu = document.querySelector(".setting-menu");
+const settingsBtn = document.getElementById("settings");
 const menuButtons = document.querySelectorAll(".setting-menu li");
 const loader = document.querySelector(".custom-loader");
 const subtitleSelect = document.getElementById('s0');
@@ -41,17 +42,16 @@ const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 
-
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
+var subs_legacy = localStorage.getItem("subsLegacy");
 
 
 /* Subtittles Zone */
 
 let ass_worker;
 function crate_ass_worker(url) {
-    if (ass_worker) { ass_worker.destroy(); }
     return new JASSUB({
         video: video, canvas: canvas, subUrl: url,
         workerUrl: '/?static=jassub/worker.js',
@@ -61,8 +61,6 @@ function crate_ass_worker(url) {
     });
 }
 function webvtt_subs(url){
-    var existingTrack = video.querySelector('track[kind="subtitles"]');
-    if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
     var track = document.createElement('track');
     track.kind = 'subtitles';
     track.src = url;
@@ -82,14 +80,15 @@ function is_SSA_subs(url) {
     }
 }
 function changeSubs(value){
+    var existingTrack = video.querySelector('track[kind="subtitles"]');
+    if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
+    if (ass_worker) { ass_worker.destroy(); }
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (value > -1) {
         url = window.location.pathname+"?mode=subs"+value;
         if (!is_SSA_subs(url)) { webvtt_subs(url); }
+        else if (subs_legacy) { webvtt_subs(url+"legacy"); }
         else { ass_worker = crate_ass_worker(url); }
-    } else {
-        var existingTrack = video.querySelector('track[kind="subtitles"]');
-        if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
-        if (ass_worker) { ass_worker.destroy(); }
     }
 }
 /* End Subtittles Zone */
@@ -97,6 +96,14 @@ function changeSubs(value){
 
 /* Inicialitate everything */
 {
+    // Cast value
+    if (subs_legacy != null) {
+        if (subs_legacy == "true") {
+            subs_legacy = true;
+            settingsBtn.classList.add('lmbsl');
+        } else { subs_legacy = false; }
+    } else { subs_legacy = false; }
+
     text = localStorage.getItem("videoSubs");
     selectedIndex = 0;
     for (var i = 0; i < subtitleSelect.options.length; i++) {
@@ -159,8 +166,13 @@ function toggleMainState() {
     video.paused ? play() : pause();
 }
 function handleSettingMenu() {
-    settingMenu.classList.toggle("show-setting-menu");
-    isCursorOnControls = !isCursorOnControls;
+    console.log(sttbtnpress);
+    if (sttbtnpress) {
+        sttbtnpress = false;
+    } else {
+        settingMenu.classList.toggle("show-setting-menu");
+        isCursorOnControls = !isCursorOnControls;
+    }
 }
 function saveVolume() {
     localStorage.setItem("videoVolume", volumeVal);
@@ -174,9 +186,8 @@ function setVideoTime() {
 }
 
 function canPlayInit() {
-    handleVideoIcon();
-    video.play();
-    if (video.paused) { pause(); } 
+    handleVideoIcon(); video.play();
+    if (video.paused) { pause(); }
     setVideoTime();
 }
 
@@ -698,3 +709,43 @@ function double_touch(e) {
 }
 video.addEventListener('touchend', double_touch);
 canvas.addEventListener('touchend', double_touch);
+
+
+var mber = undefined;
+var sttbtnpress = false;
+settingsBtn.addEventListener("mouseup",(e)=>{clearTimeout(mber);});
+settingsBtn.addEventListener("touchend",(e)=>{clearTimeout(mber);});
+
+function addrmMLcl() {
+    sttbtnpress = true;
+    if (settingsBtn.classList.contains('lmbsl')) {
+        subs_legacy = false;
+        settingsBtn.classList.remove('lmbsl');
+    } else {
+        subs_legacy = true;
+        settingsBtn.classList.add('lmbsl');
+    }
+    localStorage.setItem("subsLegacy",subs_legacy);
+}
+settingsBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    mber = setTimeout(addrmMLcl, 600);
+});
+settingsBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    mber = setTimeout(addrmMLcl, 600);
+});
+
+settingsBtn.addEventListener("click", (e) => {
+    if (sttbtnpress) {
+        e.preventDefault();
+        sttbtnpress = false;
+    } else { handleSettingMenu(); }
+});
+settingsBtn.addEventListener("touchend", (e) => {
+    if (sttbtnpress) {
+        e.preventDefault();
+        sttbtnpress = false;
+    } else { handleSettingMenu(); }
+});
+

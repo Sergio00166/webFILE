@@ -8,10 +8,12 @@ from random import choice
 from glob import glob
 from sys import path
 
+
 pdir = sep.join(path[0].split(sep)[:-1])
 pdir += sep+"cache"+sep
 cache_dir = pdir+"subtitles"+sep
 database = pdir+"subtitles.db"
+path.append(sep.join([path[0],"pysubs2.zip"]))
 
 
 def check_ffmpeg_installed():
@@ -70,49 +72,6 @@ def get_info(file_path):
     return subtitles_list
 
 
-def get_subs_cache():
-    # Returns a dict wiht the values from a file
-    # Also it checks if it exists both dir and index file
-    # If they are missing it creates them again
-    file = database
-    if not exists(pdir): mkdir(pdir)
-    if exists(file):
-        file = open(file,"r").read()
-        file = file.split("\n\n")
-        file.pop()
-    else:
-        if not exists(cache_dir[:-1]):
-            mkdir(cache_dir[:-1])
-        open(file,"w").close()
-        files = glob(cache_dir+"*", recursive=False)
-        for x in files: remove(x)
-        file = []    
-    dic = {}
-    for x in file:
-        x=x.split("\n")
-        if len(x)==3: dic[x[0]]=[x[1],x[2]]
-    return dic
-
-
-def save_subs_cache(dic):
-    # Here we write the dict to a
-    # file with custom syntax
-    out=""
-    for x in dic:
-       out+=x+"\n"
-       out+=dic[x][0]+"\n"+dic[x][1]
-       out+="\n\n"
-    open(database,"w").write(out)
-
-
-def random_str():
-    lenght=24 # Generate a random name for the file cache
-    characters = [chr(i) for i in range(48, 58)] + [chr(i) for i in range(65, 91)]
-    random_string = ''.join(choice(characters) for _ in range(lenght))
-    return random_string
-
-
-
 def get_track(file,index):
     # Here we extract [and corvert] a
     # subtitle track from a video file
@@ -127,4 +86,37 @@ def get_track(file,index):
     ]
     proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
     return proc.communicate()[0].decode("UTF-8")
+
+
+
+def convert_ass(source,ret):
+    try:
+        from gc import collect as free
+        from io import StringIO
+        import pysubs2
+        # Load the raw thing onto an object
+        subs = pysubs2.SSAFile.from_string(source)
+        del source; free()
+        with StringIO() as tmp:
+            # Here we convert to webVTT without
+            # styles bc it show a some weird stuff
+            subs.to_file(tmp, "vtt", apply_styles=False)
+            del subs; free()
+            out = tmp.getvalue() 
+        subs = pysubs2.SSAFile.from_string(out)
+        del out; free()
+        # Remove duplicated webVTT entries
+        unique_subs,seen = [],set()
+        for line in subs:
+            key = (line.text, line.start, line.end)
+            if key not in seen:
+                seen.add(key)
+                unique_subs.append(line)
+        del subs.events,seen; free()
+        # Pass to the object the values
+        subs.events = unique_subs
+        del unique_subs; free()
+        ret.put([True,subs.to_string("vtt")])
+    except Exception as e: ret.put([False,e])
+
 

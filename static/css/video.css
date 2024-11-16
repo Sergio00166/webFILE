@@ -45,6 +45,9 @@ img {
   margin-right: 0.5rem;
   cursor: pointer;
 }
+.lmbsl {
+  background: rgba(160, 192, 64, 0.667) !important;
+}
 body {
   margin: 0;
   font-family: sans-serif;
