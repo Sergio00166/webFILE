@@ -9,7 +9,9 @@ Some browsers cannot play some video formats because this project is not using t
 To change the audio track from a video you must need to enable "Experimental Web Platform features" in your browser.
 
 ~~Because of the limitations of HTLM5 it can only play webVTT subs but dont worry it will convert it automatically.~~  
-It supports natively ASS/SSA subtitles by using jassub to render the subtitles and also webVTT
+### It supports natively ASS/SSA subtitles by using JASSUB to render the subtitles and also webVTT ###  
+If the browser does not support JASSUB or does not show any subtitles or in a weird way you can fallback to webVTT  
+by holding the click on the setting icon until it changes the color.
 
 
 ## Requirements: ##
