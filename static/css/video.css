@@ -1,9 +1,6 @@
 /* Code by Sergio00166 */
 
-canvas {
-  position: absolute;
-  width: 100% !important;
-}
+
 /* Just to add a border to the subtitles */
 video::cue {
   background: none !important;
@@ -74,7 +71,12 @@ video {
   height: 100%;
   object-fit: contain !important;
 }
-.video-container:fullscreen video {
+canvas {
+  position: absolute;
+  width: 100% !important;
+  object-fit: contain !important;
+}
+.video-container:fullscreen video,canvas {
   max-height: 100vh;
 }
 .loader {
