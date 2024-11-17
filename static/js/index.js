@@ -1,5 +1,6 @@
 /* Code by Sergio00166 */
 
+
 function changeURL(mode) {
     var url = window.location.href;
     var urlObj = new URL(url);
@@ -15,10 +16,15 @@ const selectedElements = {};
 function toggleSelectMode() {
     selectMode = !selectMode;
     const buttonText = selectMode ? 'CANCEL' : 'SELECT';
-    document.getElementById('toggleSelectMode').textContent = buttonText;
+    document.querySelectorAll(".toggleSelectMode")
+        .forEach(button => {
+            button.textContent = buttonText;
+        });
     document.getElementById('toggleAllNone').disabled = !selectMode;
-	document.getElementById('invertSelection').disabled = !selectMode;
-    if (!selectMode) { deselectAll(); }
+    document.getElementById('invertSelection').disabled = !selectMode;
+    if (!selectMode) {
+        deselectAll();
+    }
 
 }
 
@@ -68,11 +74,13 @@ function downloadURL(downloadUrl) {
     tempLink.style.display = 'none';
     document.body.appendChild(tempLink);
     tempLink.click();
-    document.body.removeChild(tempLink);    
+    document.body.removeChild(tempLink);
 }
 
 // Function to delay execution
-function delay(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 // Function to execute downloads for selected divs
 async function executeDownloads() {
@@ -83,15 +91,19 @@ async function executeDownloads() {
             if (url) {
                 if (div.hasAttribute('dir')) {
                     mode = '?mode=dir';
-                } else { mode = '?mode=raw'; }
-                downloadURL(url+mode);
+                } else {
+                    mode = '?mode=raw';
+                }
+                downloadURL(url + mode);
                 await delay(100);
             }
         }
     } else {
         var url = new URL(window.location.href).pathname;
-        if ( url==="/" ) { url=''; }
-        const newURL = url+'?mode=dir';
+        if (url === "/") {
+            url = '';
+        }
+        const newURL = url + '?mode=dir';
         downloadURL(newURL);
     }
 }
@@ -101,7 +113,8 @@ function toggleSelectAll() {
     if (selectMode) {
         const allDivs = document.querySelectorAll('.filename');
         const allSelected = allDivs.length === Object.keys(selectedElements).length;
-        if (allSelected) { deselectAll();
+        if (allSelected) {
+            deselectAll();
         } else {
             allDivs.forEach(div => {
                 if (!selectedElements[div.id]) {
@@ -134,6 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('div.container');
     container.addEventListener('click', (event) => {
         const div = event.target.closest('div.filename');
-        if (div) { handleDivClick(div); }
+        if (div) {
+            handleDivClick(div);
+        }
     });
 });

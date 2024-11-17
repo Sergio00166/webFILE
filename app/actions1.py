@@ -1,11 +1,29 @@
 #Code by Sergio00166
 
-from os import access, R_OK, sep, listdir, remove, stat, walk
-from os.path import join, relpath, exists, getsize, isfile, getsize, getmtime, basename
+from os.path import join,relpath,exists,getsize
+from os.path import getmtime,basename,abspath
+from multiprocessing import Queue, Process
+from os import sep, stat, walk
 from functions import isornot
 from flask import Response
+from flask import Flask
+from os import getenv
 from video import *
 import tarfile
+
+
+def init():
+    # Set the paths of templates and static
+    templates=abspath(path[0]+sep+".."+sep+"templates")
+    sroot=abspath(path[0]+sep+".."+sep+"static"+sep)
+    # Get all the args from the Enviorment
+    root = getenv('FOLDER',None)
+    if root is None: exit()
+    folder_size = getenv('SHOWSIZE',"FALSE")
+    folder_size = folder_size.upper()=="TRUE"
+    # Create the main app flask
+    app = Flask(__name__,static_folder=sroot,template_folder=templates)
+    return app,folder_size,root
 
 
 def create_tar_header(file_path, arcname):
@@ -48,59 +66,26 @@ def send_dir(directory):
     headers={'Content-Disposition': 'attachment;filename='+folder+'.tar'})
 
 
-def sub_cache_handler(arg,root):
-    # Set some values
+
+def get_subtitles(arg,root,legacy):
     separator = arg.find("/")
     index = arg[:separator]
-    file = arg[separator + 1:]
+    file = arg[separator+1:]
     file = isornot(file, root)
-    # Get the index table of the cache
-    dic = get_subs_cache()
-    # Generate a map of used values
-    available = [x[0] for x in dic.values()]
-    # Get map to delete shit
-    try:
-        todelete = [x for x in listdir(cache_dir) if x not in available and isfile(cache_dir+x)]
-        if "index.txt" in todelete: todelete.remove("index.txt")
-        for x in todelete: remove(cache_dir+x) 
-    except: pass
-    # Get filesize as str
-    filesize = str(getsize(file))
-    # If the file is not in the index table
-    if not arg in dic:
-        # Extract and convert the subs
-        out = get_track(file,index)
-        # Refresh index table
-        dic = get_subs_cache()
-        # If other process did not add to the index table
-        # the same subs as this proc has generated
-        # then write an new entry and a new cache file
-        if not arg in dic:
-            # Generate a new one until not used
-            cache=random_str()
-            while cache in available:
-                cache=random_str()
-            # Do the rest stuff to save the cache
-            dic[arg] = [cache,filesize]
-            file = open(cache_dir+cache,"w",newline='')
-            file.write(out); file.close()
-            del file; save_subs_cache(dic)
-    else:
-        # Checks if the size of this file is the
-        # same as the one is in the index table
-        # It works like a shitty checksum
-        fix = (filesize == dic[arg][1])
-        # If the checksum is not equal or the cache file
-        # is missing then we create a new cache file with
-        # the name in the index table (dont change index table)
-        # Else we simply read the cache file
-        if not fix or not exists(cache_dir+dic[arg][0]):
-            out = get_track(file,index)
-            cache = dic[arg][0]
-            dic[arg] = [cache,filesize]
-            file = open(cache_dir+cache,"w",newline='')
-            file.write(out); file.close()
-            del file; save_subs_cache(dic)
-        else: out=open(cache_dir+dic[arg][0],"r").read()            
-    
+    out = get_track(file,index)
+    # Legacy option (convert ASS to webVTT)
+    if legacy:
+        # Cache it firstly
+        out = get_subtitles(arg,root,False)
+        # Check if already is webVTT
+        is_webVTT = out[:32].split("\n")[0].strip()
+        is_webVTT = is_webVTT.lower().startswith("webvtt")
+        if is_webVTT: return out
+        else:
+            # Create a process to convert the subtitles
+            ret = Queue()
+            proc = Process(target=convert_ass, args=(out,ret,))
+            proc.start(); converted = ret.get(); proc.join()
+            if not converted[0]: raise converted[1]
+            return converted[1] 
     return out

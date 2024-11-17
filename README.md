@@ -3,19 +3,17 @@
 
 The video player supports subtittles and changing the audio track
 
-Some browsers cannot play some video formats because this project is not using transcoding to convert in realtime the video/sound, it only converts the subtitles.
+Some browsers cannot play some video formats because this project is not using transcoding to convert in realtime the video/sound.
 
 To change the audio track from a video you must need to enable "Experimental Web Platform features" in your browser.
 
-Because of the limitations of HTLM5 it can only play webVTT subs but dont worry it will convert it automatically.
-
+### It supports natively ASS/SSA subtitles by using JASSUB to render the subtitles and also other codecs (will be converted to webVTT) ###  
+If the browser does not support JASSUB or does not show any subtitles or in a weird way you can fallback to webVTT  
+by holding the click on the setting icon until it changes the color.
 
 
 ## Requirements: ##
  Python3, Windows/Linux, Flask, ffmpeg
-
- This software includes pysubs2 module under the MIT license
- you can find the complete LICENSE inside the zip file in app/data/pysubs2.zip
 
 
 ## To run the web server: ##
@@ -29,11 +27,12 @@ Because of the limitations of HTLM5 it can only play webVTT subs but dont worry 
 
 ## API usage ##
 
-To get the JSON you need to use curl or wget or send a request asking for a JSON.
+To get the JSON you need to use curl or wget or send a request asking for a JSON (set in headers ACCEPT:"application/json").
 
 For the text browsers and legacy browsers there is a custom html for better browsing (for lynx, links, w3m, ie explorer).
 
-**To download a folder you must pass at the end of the dir path /?mode=dir to download it as tar.**
+**To download a folder you must pass at the end of the dir path /?mode=dir to download it as tar.**  
+Or click the donwload option when there is nothing selected (modern browsers) or in basic html mode just click the button "dl dir"
 
 ### To sort directory contents, add /?mode= followed by: ###
 

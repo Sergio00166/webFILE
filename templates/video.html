@@ -15,11 +15,12 @@
   <a href="{{ request.path }}?mode=raw" download="{{ name }}" id="download"></a>
   <a href='{{ nxt }}' id="next"></a>
   <a href='{{ prev }}' id="prev"></a>
- 
+
   <div class="video-container">
-    <video playsinline onended="handleVideoEnded()">
-      <source src="{{ request.path }}?mode=raw" type="video/mp4">
+    <video onended="handleVideoEnded()">
+      <source src="{{ request.path }}?mode=raw">
     </video>
+    <canvas></canvas>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
     <span class="main-state state-btn">
       <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
@@ -70,7 +71,7 @@
               src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
           <button class="round-button text" id="mode" onclick="chMode()">1</button>
           <span class="settings">
-            <button class="round-button" onclick="handleSettingMenu()">
+            <button class="round-button" id="settings">
               <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
             </button>
             <ul class="setting-menu">
@@ -106,6 +107,7 @@
   </div>
 
   <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
+  <script src="{{ url_for('index', static='jassub/jassub.js') }}"></script>
   <script>
     const chapters = {{ chapters | tojson}}
   </script>

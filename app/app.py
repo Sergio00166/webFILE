@@ -7,10 +7,11 @@ from sys import path
 from os import sep
 path.append(sep.join([path[0],"data","pysubs2.zip"]))
 from functions import printerr,get_file_type,getclient
-from flask import send_file,redirect
+from flask import send_file,redirect,request
 from actions import *
 
 app,folder_size,root = init()
+
 
 @app.route('/<path:path>', methods=['GET'])
 # For showing a directory, launching the custom media players
