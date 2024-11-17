@@ -1,5 +1,6 @@
 /* Code by Sergio00166 */
 
+
 let mouse_ctrl_delay = 1500;
 
 const video = document.querySelector("video");
@@ -165,7 +166,6 @@ function toggleMainState() {
     video.paused ? play() : pause();
 }
 function handleSettingMenu() {
-    console.log(sttbtnpress);
     if (sttbtnpress) {
         sttbtnpress = false;
     } else {
