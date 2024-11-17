@@ -1,6 +1,5 @@
 /* Code by Sergio00166 */
 
-
 let mouse_ctrl_delay = 1500;
 
 const video = document.querySelector("video");
@@ -53,16 +52,23 @@ var subtitleId = 0;
 /* Subtittles Zone */
 
 let ass_worker;
+
 function crate_ass_worker(url) {
     return new JASSUB({
-        video: video, canvas: canvas, subUrl: url,
+        video: video,
+        canvas: canvas,
+        subUrl: url,
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
-        useLocalFonts: true, fallbackFont: "arial",
-        availableFonts: {'arial': '/?static=jassub/arial.ttf'}
+        useLocalFonts: true,
+        fallbackFont: "arial",
+        availableFonts: {
+            'arial': '/?static=jassub/arial.ttf'
+        }
     });
 }
-function webvtt_subs(url){
+
+function webvtt_subs(url) {
     var track = document.createElement('track');
     track.kind = 'subtitles';
     track.src = url;
@@ -70,6 +76,7 @@ function webvtt_subs(url){
     track.mode = 'showing';
     video.appendChild(track);
 }
+
 function is_SSA_subs(url) {
     const xhr = new XMLHttpRequest();
     xhr.open('HEAD', url, false);
@@ -81,62 +88,91 @@ function is_SSA_subs(url) {
         return false;
     }
 }
-function changeSubs(value){
+
+function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
-    if (existingTrack) { existingTrack.parentNode.removeChild(existingTrack); }
-    if (ass_worker) { ass_worker.destroy(); }
+    if (existingTrack) {
+        existingTrack.parentNode.removeChild(existingTrack);
+    }
+    if (ass_worker) {
+        ass_worker.destroy();
+    }
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (value > -1) {
-        url = window.location.pathname+"?mode=subs"+value;
-        if (!is_SSA_subs(url)) { webvtt_subs(url); }
-        else if (subs_legacy) { webvtt_subs(url+"legacy"); }
-        else { ass_worker = crate_ass_worker(url); }
+        url = window.location.pathname + "?mode=subs" + value;
+        if (!is_SSA_subs(url)) {
+            webvtt_subs(url);
+        } else if (subs_legacy) {
+            webvtt_subs(url + "legacy");
+        } else {
+            ass_worker = crate_ass_worker(url);
+        }
     }
 }
 
 /* Inicialitate everything */
 {
-	if (subs_legacy != null) {
-		if (subs_legacy == "true") {
-			subs_legacy = true;
-			settingsBtn.classList.add('lmbsl');
-		} else { subs_legacy = false; }
-	} else { subs_legacy = false; }
+    if (subs_legacy != null) {
+        if (subs_legacy == "true") {
+            subs_legacy = true;
+            settingsBtn.classList.add('lmbsl');
+        } else {
+            subs_legacy = false;
+        }
+    } else {
+        subs_legacy = false;
+    }
 
-	const text = localStorage.getItem("videoSubs");
+    const text = localStorage.getItem("videoSubs");
 
-	for (var i = 0; i < subtitleSelect.options.length; i++) {
-		if (subtitleSelect.options[i].text === text) {
-		  subtitleId = i; break; }
-	}  subtitleSelect.selectedIndex = subtitleId;
-	subtitleId = subtitleId-1;
-	changeSubs(subtitleId);
+    for (var i = 0; i < subtitleSelect.options.length; i++) {
+        if (subtitleSelect.options[i].text === text) {
+            subtitleId = i;
+            break;
+        }
+    }
+    subtitleSelect.selectedIndex = subtitleId;
+    subtitleId = subtitleId - 1;
+    changeSubs(subtitleId);
 
-	var saved_speed = localStorage.getItem("videoSpeed");
-	if (saved_speed != null) {
-		video.playbackRate = parseFloat(saved_speed);
-		for (let i = 0; i < speedSelect.options.length; i++) {
-			if (speedSelect.options[i].value === saved_speed) {
-				speedSelect.selectedIndex = i; break; } }
-	} else { speedSelect.selectedIndex = 3; }
+    var saved_speed = localStorage.getItem("videoSpeed");
+    if (saved_speed != null) {
+        video.playbackRate = parseFloat(saved_speed);
+        for (let i = 0; i < speedSelect.options.length; i++) {
+            if (speedSelect.options[i].value === saved_speed) {
+                speedSelect.selectedIndex = i;
+                break;
+            }
+        }
+    } else {
+        speedSelect.selectedIndex = 3;
+    }
 
-	if (currentMode != null) {
-		currentMode = parseInt(currentMode);
-		mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
-	} else { currentMode = 0; }
+    if (currentMode != null) {
+        currentMode = parseInt(currentMode);
+        mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
+    } else {
+        currentMode = 0;
+    }
 
-	var volumeVal = localStorage.getItem("videoVolume");
-	if (volumeVal === null) { volumeVal = 1; }
-	video.volume = parseFloat(volumeVal);
-	currentVol.style.width = volumeVal * 100 + "%";
+    var volumeVal = localStorage.getItem("videoVolume");
+    if (volumeVal === null) {
+        volumeVal = 1;
+    }
+    video.volume = parseFloat(volumeVal);
+    currentVol.style.width = volumeVal * 100 + "%";
 
-	// Cast value
-	if (muted != null) {
-		if (muted == "true") {
-			muted = true;
-			video.volume = 0;
-		} else { muted = false; }
-	} else { muted = false; }
+    // Cast value
+    if (muted != null) {
+        if (muted == "true") {
+            muted = true;
+            video.volume = 0;
+        } else {
+            muted = false;
+        }
+    } else {
+        muted = false;
+    }
 }
 
 canPlayInit();
@@ -152,8 +188,13 @@ let mouseDownProgress = false,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
 
-function next() { nextLink.click(); }
-function prev() { prevLink.click(); }
+function next() {
+    nextLink.click();
+}
+
+function prev() {
+    prevLink.click();
+}
 
 function chMode() {
     const modes = ["1", "»", "&orarr;"];
@@ -162,9 +203,10 @@ function chMode() {
     localStorage.setItem("videoMode", currentMode);
 }
 
-function toggleMainState() { 
+function toggleMainState() {
     video.paused ? play() : pause();
 }
+
 function handleSettingMenu() {
     if (sttbtnpress) {
         sttbtnpress = false;
@@ -173,6 +215,7 @@ function handleSettingMenu() {
         isCursorOnControls = !isCursorOnControls;
     }
 }
+
 function saveVolume() {
     localStorage.setItem("videoVolume", volumeVal);
 }
@@ -180,20 +223,30 @@ function saveVolume() {
 function setVideoTime() {
     if (!(isNaN(video.duration) || video.duration === 0)) {
         totalDuration.innerHTML = showDuration(video.duration);
-        split_timeline_chapters(); loadTracks();
-    } else { setTimeout(setVideoTime, 25); }
+        split_timeline_chapters();
+        loadTracks();
+    } else {
+        setTimeout(setVideoTime, 25);
+    }
 }
 
 function canPlayInit() {
-    handleVideoIcon(); video.play();
-    if (video.paused) { pause(); }
+    handleVideoIcon();
+    video.play();
+    if (video.paused) {
+        pause();
+    }
     setVideoTime();
 }
 
 function handleVideoEnded() {
-    if (currentMode === 1) { next(); }
-    else if (currentMode === 2) { video.play(); }
-    else { pause(); }
+    if (currentMode === 1) {
+        next();
+    } else if (currentMode === 2) {
+        video.play();
+    } else {
+        pause();
+    }
 }
 
 // Video Event Listeners
@@ -202,10 +255,10 @@ video.addEventListener("pause", pause);
 // Disable the video buffered representation due to weird bugs
 //video.addEventListener("progress", handleProgress);
 
-video.addEventListener("waiting", function() {
-    loader.classList.add("show-state");    
+video.addEventListener("waiting", function () {
+    loader.classList.add("show-state");
 });
-video.addEventListener("playing", function() {
+video.addEventListener("playing", function () {
     loader.classList.remove("show-state");
 });
 document.addEventListener("keydown", handleShorthand);
@@ -213,7 +266,8 @@ duration.addEventListener("click", navigate);
 
 controls.addEventListener("click", () => {
     controls.classList.add("show-controls");
-    showCursor();  hideControls(mouse_ctrl_delay);
+    showCursor();
+    hideControls(mouse_ctrl_delay);
 });
 
 duration.addEventListener("mousedown", (e) => {
@@ -253,22 +307,31 @@ duration.addEventListener("touchmove", handleTouchNavigate);
 
 
 let cursorTimeout;
+
 function showCursor() {
     clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
     if (!video.paused) {
-        cursorTimeout = setTimeout(function() {
-            if (!video.paused) { document.body.style.cursor = 'none'; }
+        cursorTimeout = setTimeout(function () {
+            if (!video.paused) {
+                document.body.style.cursor = 'none';
+            }
         }, mouse_ctrl_delay);
     }
 }
 
 videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
-    if (video.videoWidth>=video.videoHeight) {
+    if (video.videoWidth >= video.videoHeight) {
         screen.orientation.lock('landscape').catch(() => {});
-    } else { screen.orientation.lock('portrait').catch(() => {}); }
-    if (ass_worker) { setTimeout(()=> {ass_worker.resize(force=true); },1000); }
+    } else {
+        screen.orientation.lock('portrait').catch(() => {});
+    }
+    if (ass_worker) {
+        setTimeout(() => {
+            ass_worker.resize(force = true);
+        }, 1000);
+    }
 });
 
 mainState.addEventListener("click", toggleMainState);
@@ -294,6 +357,7 @@ function play() {
     show_main_animation("");
     hideControls(mouse_ctrl_delay);
 }
+
 function pause() {
     video.pause();
     controls.classList.add("show-controls");
@@ -301,13 +365,16 @@ function pause() {
     handleVideoIcon();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
-    if (video.ended) { currentTime.style.width = 100+"%"; }
+    if (video.ended) {
+        currentTime.style.width = 100 + "%";
+    }
 }
 
 function handleProgressBar() {
     currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentDuration.innerHTML = showDuration(video.currentTime);
-} video.ontimeupdate = handleProgressBar;
+}
+video.ontimeupdate = handleProgressBar;
 
 function navigate(e) {
     try {
@@ -365,7 +432,8 @@ function toggleMuteUnmute() {
         muted = false;
         handleVideoIcon();
         show_main_animation("unmute");
-    } localStorage.setItem("videoMuted", muted);
+    }
+    localStorage.setItem("videoMuted", muted);
 }
 
 function hideControls(delay) {
@@ -422,10 +490,12 @@ function getchptname(timeInSeconds) {
     for (let i = 0; i < chapters.length; i++) {
         if (timeInSeconds >= chapters[i].start_time) {
             try {
-                if (timeInSeconds < chapters[i+1].start_time) { 
+                if (timeInSeconds < chapters[i + 1].start_time) {
                     return chapters[i].title;
                 }
-            } catch { return chapters[i].title; }
+            } catch {
+                return chapters[i].title;
+            }
         }
     }
 }
@@ -433,33 +503,40 @@ function getchptname(timeInSeconds) {
 
 // Prevent mouse events from triggering after a touch event
 touchActive = false;
-document.addEventListener('touchstart',()=> {
+document.addEventListener('touchstart', () => {
     touchActive = true;
-}); let fixtouch;
-document.addEventListener('touchend', ()=> {
-    clearTimeout(fixtouch);
-    fixtouch = setTimeout(()=>{touchActive = false},500);
 });
+let fixtouch;
+document.addEventListener('touchend', () => {
+    clearTimeout(fixtouch);
+    fixtouch = setTimeout(() => {
+        touchActive = false
+    }, 500);
+});
+
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
         hoverDuration.style.display = 'none';
         e.preventDefault();
         navigate(e);
-    } else if (mouseDownVol) { handleVolume(e);
+    } else if (mouseDownVol) {
+        handleVolume(e);
     } else if (mouseOverDuration) {
         const rect = duration.getBoundingClientRect();
         hoverDuration.style.bottom = `${rect.height+8}px`;
-        const width = Math.min( Math.max(0,e.clientX-rect.x) ,rect.width);
+        const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
         if (!touchActive) {
-            const percent = (width/rect.width)*100;
+            const percent = (width / rect.width) * 100;
             hoverTime.style.width = `${percent}%`;
-            const hovtime = (video.duration*percent)/100;
-            hoverDuration.innerHTML = showDuration(hovtime)+(getchptname(hovtime)?`<br>${getchptname(hovtime)}`:"");
+            const hovtime = (video.duration * percent) / 100;
+            hoverDuration.innerHTML = showDuration(hovtime) + (getchptname(hovtime) ? `<br>${getchptname(hovtime)}` : "");
             hoverDuration.style.left = `${width-hoverDuration.offsetWidth/2}px`;
             hoverDuration.style.display = 'block';
             hoverDuration.style.visibility = "visible";
-        } else { e.preventDefault(); }
+        } else {
+            e.preventDefault();
+        }
     }
 }
 
@@ -471,24 +548,32 @@ function show_main_animation(mode) {
     sh_back_st.classList.add("sh_back_st");
     sh_fordward_st.classList.add("sh_fordward_st");
     switch (mode) {
-        case "play":
-            mainState.classList.add("show-state");
-            sh_play_st.classList.remove("sh_play_st"); break;
-        case "mute": 
-            sh_mute_st.classList.remove("sh_mute_st");
-            mainState.classList.add("animate-state"); break;
-        case "unmute": 
-            sh_unmute_st.classList.remove("sh_unmute_st");
-            mainState.classList.add("animate-state"); break;
-        case "back": 
-            sh_back_st.classList.remove("sh_back_st");
-            mainState.classList.add("animate-state"); break;
-        case "fordward": 
-            sh_fordward_st.classList.remove("sh_fordward_st");
-            mainState.classList.add("animate-state"); break;
-        default: mainState.classList.remove("show-state"); break;
-    } 
+    case "play":
+        mainState.classList.add("show-state");
+        sh_play_st.classList.remove("sh_play_st");
+        break;
+    case "mute":
+        sh_mute_st.classList.remove("sh_mute_st");
+        mainState.classList.add("animate-state");
+        break;
+    case "unmute":
+        sh_unmute_st.classList.remove("sh_unmute_st");
+        mainState.classList.add("animate-state");
+        break;
+    case "back":
+        sh_back_st.classList.remove("sh_back_st");
+        mainState.classList.add("animate-state");
+        break;
+    case "fordward":
+        sh_fordward_st.classList.remove("sh_fordward_st");
+        mainState.classList.add("animate-state");
+        break;
+    default:
+        mainState.classList.remove("show-state");
+        break;
+    }
 }
+
 function handleMainSateAnimationEnd() {
     mainState.classList.remove("animate-state");
     if (video.paused) {
@@ -499,6 +584,7 @@ function handleMainSateAnimationEnd() {
         sh_fordward_st.classList.add("sh_fordward_st");
     }
 }
+
 function handleVideoIcon() {
     if (!muted) {
         if (volumeVal == 0.0) {
@@ -537,11 +623,11 @@ function handleVideoIcon() {
 
 function handleShorthand(e) {
     e.preventDefault();
-    if (e.code==='F5') {
+    if (e.code === 'F5') {
         location.reload(true);
         return;
     }
-    if (e.code==='F11') {
+    if (e.code === 'F11') {
         document.documentElement.requestFullscreen();
         return;
     }
@@ -549,41 +635,60 @@ function handleShorthand(e) {
         video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
         currentTime.style.width = parseInt(e.key) * 10 + "%";
         return;
-    } 
+    }
     switch (e.key.toLowerCase()) {
-        case " ": video.paused ? play() : pause(); break;
-        case "f": toggleFullscreen(); break;
-        case "arrowright":
-            video.currentTime += 5;
-            show_main_animation("fordward");
-            break;
-        case "arrowleft": 
-            video.currentTime -= 5;
-            show_main_animation("back");
-            break;
-        case "arrowup": prev(); break;
-        case "arrowdown": next(); break;
-        case "r": chMode(); break;
-        case "q": toggleMuteUnmute(); break;
-        case "+":
-            if (volumeVal < 1 && !muted) {
-                volumeVal = parseFloat(volumeVal + 0.05);
-                if (volumeVal > 1) { volumeVal = 1; }
-                video.volume = volumeVal;
-                handleVideoIcon();
-                currentVol.style.width = volumeVal * 100 + "%";
-                saveVolume();
-            } break;
-        case "-":
-            if (volumeVal > 0 && !muted) {
-                volumeVal = parseFloat(volumeVal - 0.05);
-                if (volumeVal < 0) { volumeVal = 0; }
-                video.volume = volumeVal;
-                handleVideoIcon();
-                currentVol.style.width = volumeVal * 100 + "%";
-                saveVolume();
-            } break;
-        default: break;
+    case " ":
+        video.paused ? play() : pause();
+        break;
+    case "f":
+        toggleFullscreen();
+        break;
+    case "arrowright":
+        video.currentTime += 5;
+        show_main_animation("fordward");
+        break;
+    case "arrowleft":
+        video.currentTime -= 5;
+        show_main_animation("back");
+        break;
+    case "arrowup":
+        prev();
+        break;
+    case "arrowdown":
+        next();
+        break;
+    case "r":
+        chMode();
+        break;
+    case "q":
+        toggleMuteUnmute();
+        break;
+    case "+":
+        if (volumeVal < 1 && !muted) {
+            volumeVal = parseFloat(volumeVal + 0.05);
+            if (volumeVal > 1) {
+                volumeVal = 1;
+            }
+            video.volume = volumeVal;
+            handleVideoIcon();
+            currentVol.style.width = volumeVal * 100 + "%";
+            saveVolume();
+        }
+        break;
+    case "-":
+        if (volumeVal > 0 && !muted) {
+            volumeVal = parseFloat(volumeVal - 0.05);
+            if (volumeVal < 0) {
+                volumeVal = 0;
+            }
+            video.volume = volumeVal;
+            handleVideoIcon();
+            currentVol.style.width = volumeVal * 100 + "%";
+            saveVolume();
+        }
+        break;
+    default:
+        break;
     }
 }
 
@@ -595,53 +700,58 @@ function loadTracks() {
             const track = audioTracks[i];
             const option = document.createElement('option');
             option.value = i;
-            name = (track.label || track.language || "Track "+(i+1));
+            name = (track.label || track.language || "Track " + (i + 1));
             option.textContent = name;
             audioTracksSelect.appendChild(option);
-            if (name === saved) { 
+            if (name === saved) {
                 audioTracksSelect.selectedIndex = i;
                 changeTrack();
-            } else { audioTracksSelect.selectedIndex = 0; }
+            } else {
+                audioTracksSelect.selectedIndex = 0;
+            }
         }
     } catch {}
 }
 
 let originalTime = 0;
+
 function changeTrack(selectedIndex) {
     if (!isNaN(selectedIndex)) {
         originalTime = video.currentTime;
         for (let i = 0; i < audioTracks.length; i++) {
             audioTracks[i].enabled = (i === selectedIndex);
-        } video.currentTime = originalTime;
-    }    
+        }
+        video.currentTime = originalTime;
+    }
 }
 
-audioTracksSelect.addEventListener('change', function() {
+audioTracksSelect.addEventListener('change', function () {
     selectedIndex = parseInt(this.value, 10);
     changeTrack(selectedIndex);
     text = audioTracksSelect[selectedIndex].text
     localStorage.setItem("videoAudio", text);
-     handleSettingMenu();
+    handleSettingMenu();
 });
 
-subtitleSelect.addEventListener('change', function() {
+subtitleSelect.addEventListener('change', function () {
     subtitleId = parseInt(this.value);
     changeSubs(subtitleId);
-    if (subtitleId == -1) { 
+    if (subtitleId == -1) {
         localStorage.removeItem("videoSubs");
-    } else { 
-        text = subtitleSelect.options[subtitleId+1].text;
+    } else {
+        text = subtitleSelect.options[subtitleId + 1].text;
         localStorage.setItem("videoSubs", text);
-    }  handleSettingMenu();
+    }
+    handleSettingMenu();
 });
 
-speedSelect.addEventListener('change', function() {
+speedSelect.addEventListener('change', function () {
     video.playbackRate = parseFloat(this.value);
     localStorage.setItem("videoSpeed", video.playbackRate);
-     handleSettingMenu();
+    handleSettingMenu();
 });
 
-liD.addEventListener("click", ()=> {
+liD.addEventListener("click", () => {
     downloadLink.click();
     handleSettingMenu();
 });
@@ -654,7 +764,7 @@ function split_timeline_chapters() {
     // Create sections within the div
     chptdata.slice(0, -1).forEach((time, index) => {
         const nextTime = chptdata[index + 1];
-        const startPercent = Math.min((time/divLength)*100,100)
+        const startPercent = Math.min((time / divLength) * 100, 100)
         const section = document.createElement('div');
         section.classList.add("chapter");
         section.style.left = `${startPercent}%`;
@@ -675,8 +785,8 @@ video.addEventListener("click", (e) => {
 });
 
 // Show menu if screen movement (touch)
-videoContainer.addEventListener('touchmove', () => { 
-    touchFix=true;
+videoContainer.addEventListener('touchmove', () => {
+    touchFix = true;
     controls.classList.add("show-controls");
     hideControls(2500);
 });
@@ -688,13 +798,16 @@ let touchFix;
 function double_touch(e) {
     e.preventDefault();
     clearTimeout(touchTimeout);
-    if (touchFix) { touchFix=false; return; }
+    if (touchFix) {
+        touchFix = false;
+        return;
+    }
     const now = Date.now();
-    const touchInterval = now-lastTouchTime;
+    const touchInterval = now - lastTouchTime;
     const divRect = video.getBoundingClientRect();
     if (touchInterval < 250) {
         const touchX = event.changedTouches[0].clientX;
-        const centerX = divRect.left+(divRect.width/2);
+        const centerX = divRect.left + (divRect.width / 2);
         const p = touchX < centerX;
         if (p) {
             video.currentTime -= 5;
@@ -703,7 +816,9 @@ function double_touch(e) {
             video.currentTime += 5;
             show_main_animation("fordward");
         }
-    } else { touchTimeout=setTimeout(toggleMainState,250); }
+    } else {
+        touchTimeout = setTimeout(toggleMainState, 250);
+    }
     lastTouchTime = now;
 }
 video.addEventListener('touchend', double_touch);
@@ -712,21 +827,25 @@ canvas.addEventListener('touchend', double_touch);
 
 var mber = undefined;
 var sttbtnpress = false;
-settingsBtn.addEventListener("mouseup",(e)=>{clearTimeout(mber);});
-settingsBtn.addEventListener("touchend",(e)=>{clearTimeout(mber);});
+settingsBtn.addEventListener("mouseup", (e) => {
+    clearTimeout(mber);
+});
+settingsBtn.addEventListener("touchend", (e) => {
+    clearTimeout(mber);
+});
 
 function addrmMLcl() {
     sttbtnpress = true;
     if (settingsBtn.classList.contains('lmbsl')) {
         subs_legacy = false;
-		changeSubs(subtitleId);
+        changeSubs(subtitleId);
         settingsBtn.classList.remove('lmbsl');
     } else {
         subs_legacy = true;
-		changeSubs(subtitleId);
+        changeSubs(subtitleId);
         settingsBtn.classList.add('lmbsl');
     }
-    localStorage.setItem("subsLegacy",subs_legacy);
+    localStorage.setItem("subsLegacy", subs_legacy);
 }
 settingsBtn.addEventListener("mousedown", (e) => {
     e.preventDefault();
@@ -741,12 +860,15 @@ settingsBtn.addEventListener("click", (e) => {
     if (sttbtnpress) {
         e.preventDefault();
         sttbtnpress = false;
-    } else { handleSettingMenu(); }
+    } else {
+        handleSettingMenu();
+    }
 });
 settingsBtn.addEventListener("touchend", (e) => {
     if (sttbtnpress) {
         e.preventDefault();
         sttbtnpress = false;
-    } else { handleSettingMenu(); }
+    } else {
+        handleSettingMenu();
+    }
 });
-
