@@ -18,7 +18,7 @@
 
   <div class="video-container">
     <video onended="handleVideoEnded()">
-      <source src="{{ request.path }}?mode=raw" type="video/mp4">
+      <source src="{{ request.path }}?mode=raw">
     </video>
     <canvas></canvas>
     <span class="custom-loader"><img class="loader" src="{{ url_for('index', static='svg/load.gif') }}"></span>
