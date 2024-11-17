@@ -1,6 +1,5 @@
 # Web Server with custom video and audio player #
 
-Im not a web developer, Im only a system administrator that knowns Python and some JS, and I struggle  with CSS, any suggestion/help to improve the frontend is welcome.
 
 The video player supports subtittles and changing the audio track
 
