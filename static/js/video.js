@@ -46,6 +46,7 @@ var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 var subs_legacy = localStorage.getItem("subsLegacy");
+var subtitleId = 0;
 
 
 /* Subtittles Zone */
@@ -91,53 +92,51 @@ function changeSubs(value){
         else { ass_worker = crate_ass_worker(url); }
     }
 }
-/* End Subtittles Zone */
-
 
 /* Inicialitate everything */
 {
-    // Cast value
-    if (subs_legacy != null) {
-        if (subs_legacy == "true") {
-            subs_legacy = true;
-            settingsBtn.classList.add('lmbsl');
-        } else { subs_legacy = false; }
-    } else { subs_legacy = false; }
+	if (subs_legacy != null) {
+		if (subs_legacy == "true") {
+			subs_legacy = true;
+			settingsBtn.classList.add('lmbsl');
+		} else { subs_legacy = false; }
+	} else { subs_legacy = false; }
 
-    text = localStorage.getItem("videoSubs");
-    selectedIndex = 0;
-    for (var i = 0; i < subtitleSelect.options.length; i++) {
-        if (subtitleSelect.options[i].text === text) {
-          selectedIndex = i; break; }
-    }  subtitleSelect.selectedIndex = selectedIndex;
-    changeSubs(selectedIndex-1);
-    
-    var saved_speed = localStorage.getItem("videoSpeed");
-    if (saved_speed != null) {
-        video.playbackRate = parseFloat(saved_speed);
-        for (let i = 0; i < speedSelect.options.length; i++) {
-            if (speedSelect.options[i].value === saved_speed) {
-                speedSelect.selectedIndex = i; break; } }
-    } else { speedSelect.selectedIndex = 3; }
+	const text = localStorage.getItem("videoSubs");
+
+	for (var i = 0; i < subtitleSelect.options.length; i++) {
+		if (subtitleSelect.options[i].text === text) {
+		  subtitleId = i; break; }
+	}  subtitleSelect.selectedIndex = subtitleId;
+	subtitleId = subtitleId-1;
+	changeSubs(subtitleId);
+
+	var saved_speed = localStorage.getItem("videoSpeed");
+	if (saved_speed != null) {
+		video.playbackRate = parseFloat(saved_speed);
+		for (let i = 0; i < speedSelect.options.length; i++) {
+			if (speedSelect.options[i].value === saved_speed) {
+				speedSelect.selectedIndex = i; break; } }
+	} else { speedSelect.selectedIndex = 3; }
+
+	if (currentMode != null) {
+		currentMode = parseInt(currentMode);
+		mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
+	} else { currentMode = 0; }
+
+	var volumeVal = localStorage.getItem("videoVolume");
+	if (volumeVal === null) { volumeVal = 1; }
+	video.volume = parseFloat(volumeVal);
+	currentVol.style.width = volumeVal * 100 + "%";
+
+	// Cast value
+	if (muted != null) {
+		if (muted == "true") {
+			muted = true;
+			video.volume = 0;
+		} else { muted = false; }
+	} else { muted = false; }
 }
-
-if (currentMode != null) {
-    currentMode = parseInt(currentMode);
-    mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
-} else { currentMode = 0; }
-
-var volumeVal = localStorage.getItem("videoVolume");
-if (volumeVal === null) { volumeVal = 1; }
-video.volume = parseFloat(volumeVal);
-currentVol.style.width = volumeVal * 100 + "%";
-
-// Cast value
-if (muted != null) {
-    if (muted == "true") {
-        muted = true;
-        video.volume = 0;
-    } else { muted = false; }
-} else { muted = false; }
 
 canPlayInit();
 
@@ -626,12 +625,12 @@ audioTracksSelect.addEventListener('change', function() {
 });
 
 subtitleSelect.addEventListener('change', function() {
-    const value = parseInt(this.value);
-    changeSubs(value);
-    if (value == -1) { 
+    subtitleId = parseInt(this.value);
+    changeSubs(subtitleId);
+    if (subtitleId == -1) { 
         localStorage.removeItem("videoSubs");
     } else { 
-        text = subtitleSelect.options[value+1].text;
+        text = subtitleSelect.options[subtitleId+1].text;
         localStorage.setItem("videoSubs", text);
     }  handleSettingMenu();
 });
@@ -720,9 +719,11 @@ function addrmMLcl() {
     sttbtnpress = true;
     if (settingsBtn.classList.contains('lmbsl')) {
         subs_legacy = false;
+		changeSubs(subtitleId);
         settingsBtn.classList.remove('lmbsl');
     } else {
         subs_legacy = true;
+		changeSubs(subtitleId);
         settingsBtn.classList.add('lmbsl');
     }
     localStorage.setItem("subsLegacy",subs_legacy);
