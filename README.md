@@ -4,7 +4,7 @@ Im not a web developer, Im only a system administrator that knowns Python and so
 
 The video player supports subtittles and changing the audio track
 
-Some browsers cannot play some video formats because this project is not using transcoding to convert in realtime the video/sound, it only converts the subtitles.
+Some browsers cannot play some video formats because this project is not using transcoding to convert in realtime the video/sound.
 
 To change the audio track from a video you must need to enable "Experimental Web Platform features" in your browser.
 
