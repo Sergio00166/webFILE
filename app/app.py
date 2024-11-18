@@ -39,7 +39,9 @@ def explorer(path):
             elif mode=="raw" or client!="normal":
                 return send_file(isornot(path,root))
             # Custom player for each multimedia format
-            elif file_type=="video": return video(path,root,mode,file_type)  
+            elif file_type=="video":
+                info = (request.method.lower()=="head")
+                return video(path,root,mode,file_type,info)  
             elif file_type=="audio": return audio(path,root,file_type)
             # Else send it and let flask autodetect the mime
             else: return send_file(isornot(path,root))

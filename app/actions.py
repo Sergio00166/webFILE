@@ -9,6 +9,12 @@ from actions1 import *
 from os import sep
 
 
+subsmimes = {
+    "ssa":"application/x-substation-alpha",
+    "ass":"application/x-substation-alpha",
+    "webvtt":"text/vtt",
+}
+
 def filepage_func(path,root,filetype,random=False,fixrng=False):
     # Get relative path from the root dir
     path=relpath(isornot(path,root), start=root)
@@ -60,7 +66,7 @@ def index_func(folder_path,root,folder_size,sort):
     return folder_content,folder_path,parent_directory,is_root
 
 
-def video(path,root,mode,file_type):
+def video(path,root,mode,file_type,info):
     check_ffmpeg_installed()
     # Check if subtitles are requested
     if mode.endswith("legacy"):
@@ -73,11 +79,8 @@ def video(path,root,mode,file_type):
         # Check if the provided data is valid
         try: arg = str(int(mode[4:]))+"/"+path
         except: raise FileNotFoundError
-        # Return subtitles to the client
-        text = get_subtitles(arg,root,legacy)
-        # Get if is webVTT or not and send the response with the sub type
-        is_vtt = text[:32].split("\n")[0].strip().lower().startswith("webvtt")
-        return Response(text,mimetype="text/"+"vtt" if is_vtt else "ssa")
+        codec,text = get_subtitles(arg,root,legacy,info)
+        return Response(text,mimetype=subsmimes[codec])
 
     # Else we send the video page
     prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)

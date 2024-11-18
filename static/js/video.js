@@ -83,7 +83,7 @@ function is_SSA_subs(url) {
     try {
         xhr.send();
         const mimeType = xhr.getResponseHeader("Content-Type");
-        return mimeType === "ssa";
+        return mimeType==="application/x-substation-alpha";
     } catch (e) {
         return false;
     }

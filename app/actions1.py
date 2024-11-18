@@ -66,26 +66,16 @@ def send_dir(directory):
     headers={'Content-Disposition': 'attachment;filename='+folder+'.tar'})
 
 
-
-def get_subtitles(arg,root,legacy):
+def get_subtitles(arg,root,legacy,info):
     separator = arg.find("/")
     index = arg[:separator]
     file = arg[separator+1:]
     file = isornot(file, root)
-    out = get_track(file,index)
-    # Legacy option (convert ASS to webVTT)
-    if legacy:
-        # Cache it firstly
-        out = get_subtitles(arg,root,False)
-        # Check if already is webVTT
-        is_webVTT = out[:32].split("\n")[0].strip()
-        is_webVTT = is_webVTT.lower().startswith("webvtt")
-        if is_webVTT: return out
-        else:
-            # Create a process to convert the subtitles
-            ret = Queue()
-            proc = Process(target=convert_ass, args=(out,ret,))
-            proc.start(); converted = ret.get(); proc.join()
-            if not converted[0]: raise converted[1]
-            return converted[1] 
-    return out
+    codec,out = get_track(file,index,info)
+    if legacy and not (codec=="webvtt" or info):
+        ret = Queue() # Convert the subtitles on a proc
+        proc = Process(target=convert_ass, args=(out,ret,))
+        proc.start(); converted = ret.get(); proc.join()
+        if not converted[0]: raise converted[1]
+        out = converted[1] 
+    return codec,out
