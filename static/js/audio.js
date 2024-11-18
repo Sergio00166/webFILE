@@ -364,11 +364,9 @@ speedButtons.forEach((btn) => {
 var mber = undefined;
 var mdbtnpress = false;
 mode.addEventListener("mouseup", () => {
-    mdbtnpress = false;
     clearTimeout(mber);
 });
 mode.addEventListener("touchend", () => {
-    mdbtnpress = false;
     clearTimeout(mber);
 });
 
