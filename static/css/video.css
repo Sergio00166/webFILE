@@ -472,6 +472,9 @@ button:focus {
 }
 
 @media (max-aspect-ratio: 1/1) {
+    body {
+        height: 90vh;
+    }
     @media (max-width: 650px) {
         .video-container {
             padding-bottom: 86px;
@@ -508,6 +511,9 @@ button:focus {
     }
 }
 @media (min-aspect-ratio: 1/1) and (max-width: 430px) {
+    body {
+        height: 90vh;
+    }
     .video-container {
         padding-bottom: 64px;
         margin-top: 64px;
@@ -532,6 +538,9 @@ button:focus {
 }
 
 @media (max-aspect-ratio: 1/1) and (max-height: 320px) {
+    body {
+        height: 100vh;
+    }
     .hover-time .hover-duration {
         font-size: 0.5rem;
     }
@@ -544,6 +553,9 @@ button:focus {
     }
 }
 @media (min-aspect-ratio: 1/1) and (max-height: 320px) {
+    body {
+        height: 100vh;
+    }
     .hover-time .hover-duration {
         font-size: 0.5rem;
     }
