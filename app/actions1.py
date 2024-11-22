@@ -12,6 +12,12 @@ from video import *
 import tarfile
 
 
+subsmimes = {
+    "ssa":"application/x-substation-alpha",
+    "ass":"application/x-substation-alpha",
+    "webvtt":"text/vtt",
+}
+
 def init():
     # Set the paths of templates and static
     templates=abspath(path[0]+sep+".."+sep+"templates")
@@ -66,16 +72,22 @@ def send_dir(directory):
     headers={'Content-Disposition': 'attachment;filename='+folder+'.tar'})
 
 
-def get_subtitles(arg,root,legacy,info):
-    separator = arg.find("/")
-    index = arg[:separator]
-    file = arg[separator+1:]
-    file = isornot(file, root)
+
+def get_subtitles(index,path,root,legacy,info):
+    file = isornot(path, root)
     codec,out = get_track(file,index,info)
+    # Convert or extract the subtitles
     if legacy and not (codec=="webvtt" or info):
         ret = Queue() # Convert the subtitles on a proc
         proc = Process(target=convert_ass, args=(out,ret,))
         proc.start(); converted = ret.get(); proc.join()
         if not converted[0]: raise converted[1]
-        out = converted[1] 
-    return codec,out
+        out = converted[1]
+    # Get filename and for downloading the subtitles
+    codec = "webvtt" if legacy else codec
+    subsname = path.split("/")[-1]+f".track{str(index)}."
+    subsname += "vtt" if codec=="webvtt" else codec
+    # Return the subtittle track
+    return Response(out,mimetype=subsmimes[codec], headers=\
+    {'Content-Disposition': 'attachment;filename='+subsname})
+

@@ -9,12 +9,6 @@ from actions1 import *
 from os import sep
 
 
-subsmimes = {
-    "ssa":"application/x-substation-alpha",
-    "ass":"application/x-substation-alpha",
-    "webvtt":"text/vtt",
-}
-
 def filepage_func(path,root,filetype,random=False,fixrng=False):
     # Get relative path from the root dir
     path=relpath(isornot(path,root), start=root)
@@ -76,11 +70,9 @@ def video(path,root,mode,file_type,info):
 
     if mode!="" and mode[:4]=="subs":
         if path.endswith("/"): path=path[:-1]
-        # Check if the provided data is valid
-        try: arg = str(int(mode[4:]))+"/"+path
+        try: index = int(mode[4:])
         except: raise FileNotFoundError
-        codec,text = get_subtitles(arg,root,legacy,info)
-        return Response(text,mimetype=subsmimes[codec])
+        return get_subtitles(index,path,root,legacy,info)
 
     # Else we send the video page
     prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)
