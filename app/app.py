@@ -3,9 +3,6 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
-from sys import path
-from os import sep
-path.append(sep.join([path[0],"data","pysubs2.zip"]))
 from functions import printerr,get_file_type,getclient
 from flask import send_file,redirect,request
 from actions import *
