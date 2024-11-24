@@ -3,9 +3,6 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
-from sys import path
-from os import sep
-path.append(sep.join([path[0],"data","pysubs2.zip"]))
 from functions import printerr,get_file_type,getclient
 from flask import send_file,redirect,request
 from actions import *
@@ -39,7 +36,9 @@ def explorer(path):
             elif mode=="raw" or client!="normal":
                 return send_file(isornot(path,root))
             # Custom player for each multimedia format
-            elif file_type=="video": return video(path,root,mode,file_type)  
+            elif file_type=="video":
+                info = (request.method.lower()=="head")
+                return video(path,root,mode,file_type,info)  
             elif file_type=="audio": return audio(path,root,file_type)
             # Else send it and let flask autodetect the mime
             else: return send_file(isornot(path,root))

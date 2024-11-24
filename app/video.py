@@ -72,21 +72,24 @@ def get_info(file_path):
     return subtitles_list
 
 
-def get_track(file,index):
+def get_track(file,index,info):
     # Here we extract [and corvert] a
     # subtitle track from a video file
     codec = get_codec(file, index)
     # If the codec is not ssa or ass simply let
     # Fmmpeg to convert it directly
     if not codec in ["ssa", "ass"]: codec="webvtt"
-    cmd = [
-        'ffmpeg', '-i', file,
-        '-map', f'0:s:{index}',
-        '-f', codec, '-'
-    ]
-    proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
-    return proc.communicate()[0].decode("UTF-8")
-
+    if not info:
+        cmd = [
+            'ffmpeg', '-i', file,
+            '-map', f'0:s:{index}',
+            '-f', codec, '-'
+        ]
+        proc = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        out = proc.communicate()[0].decode("UTF-8")
+    else: out = ""
+    return codec, out
+    
 
 
 def convert_ass(source,ret):

@@ -228,16 +228,18 @@ duration.addEventListener("mousedown", (e) => {
 
 // Prevent mouse events from triggering after a touch event
 touchActive = false;
-document.addEventListener('touchstart', () => {
-    touchActive = true;
-});
 let fixtouch;
-document.addEventListener('touchend', () => {
+document.addEventListener('touchstart', ()=> {
+	clearTimeout(fixtouch);
+	touchActive = true;
+});
+document.addEventListener('touchend', ()=> {
     clearTimeout(fixtouch);
     fixtouch = setTimeout(() => {
         touchActive = false
     }, 500);
 });
+
 
 function handleMousemove(e) {
     if (mouseDownProgress) {
@@ -364,11 +366,9 @@ speedButtons.forEach((btn) => {
 var mber = undefined;
 var mdbtnpress = false;
 mode.addEventListener("mouseup", () => {
-    mdbtnpress = false;
     clearTimeout(mber);
 });
 mode.addEventListener("touchend", () => {
-    mdbtnpress = false;
     clearTimeout(mber);
 });
 

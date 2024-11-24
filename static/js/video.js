@@ -83,7 +83,7 @@ function is_SSA_subs(url) {
     try {
         xhr.send();
         const mimeType = xhr.getResponseHeader("Content-Type");
-        return mimeType === "ssa";
+        return mimeType==="application/x-substation-alpha";
     } catch (e) {
         return false;
     }
@@ -503,16 +503,19 @@ function getchptname(timeInSeconds) {
 
 // Prevent mouse events from triggering after a touch event
 touchActive = false;
-document.addEventListener('touchstart', () => {
-    touchActive = true;
-});
 let fixtouch;
-document.addEventListener('touchend', () => {
+document.addEventListener('touchstart', ()=> {
+	clearTimeout(fixtouch);
+	touchActive = true;
+});
+document.addEventListener('touchend', ()=> {
     clearTimeout(fixtouch);
     fixtouch = setTimeout(() => {
         touchActive = false
     }, 500);
 });
+
+
 
 function handleMousemove(e) {
     if (mouseDownProgress) {

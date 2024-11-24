@@ -12,6 +12,12 @@ from video import *
 import tarfile
 
 
+subsmimes = {
+    "ssa":"application/x-substation-alpha",
+    "ass":"application/x-substation-alpha",
+    "webvtt":"text/vtt",
+}
+
 def init():
     # Set the paths of templates and static
     templates=abspath(path[0]+sep+".."+sep+"templates")
@@ -67,25 +73,21 @@ def send_dir(directory):
 
 
 
-def get_subtitles(arg,root,legacy):
-    separator = arg.find("/")
-    index = arg[:separator]
-    file = arg[separator+1:]
-    file = isornot(file, root)
-    out = get_track(file,index)
-    # Legacy option (convert ASS to webVTT)
-    if legacy:
-        # Cache it firstly
-        out = get_subtitles(arg,root,False)
-        # Check if already is webVTT
-        is_webVTT = out[:32].split("\n")[0].strip()
-        is_webVTT = is_webVTT.lower().startswith("webvtt")
-        if is_webVTT: return out
-        else:
-            # Create a process to convert the subtitles
-            ret = Queue()
-            proc = Process(target=convert_ass, args=(out,ret,))
-            proc.start(); converted = ret.get(); proc.join()
-            if not converted[0]: raise converted[1]
-            return converted[1] 
-    return out
+def get_subtitles(index,path,root,legacy,info):
+    file = isornot(path, root)
+    codec,out = get_track(file,index,info)
+    # Convert or extract the subtitles
+    if legacy and not (codec=="webvtt" or info):
+        ret = Queue() # Convert the subtitles on a proc
+        proc = Process(target=convert_ass, args=(out,ret,))
+        proc.start(); converted = ret.get(); proc.join()
+        if not converted[0]: raise converted[1]
+        out = converted[1]
+    # Get filename and for downloading the subtitles
+    codec = "webvtt" if legacy else codec
+    subsname = path.split("/")[-1]+f".track{str(index)}."
+    subsname += "vtt" if codec=="webvtt" else codec
+    # Return the subtittle track
+    return Response(out,mimetype=subsmimes[codec], headers=\
+    {'Content-Disposition': 'attachment;filename='+subsname})
+

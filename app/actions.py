@@ -60,7 +60,7 @@ def index_func(folder_path,root,folder_size,sort):
     return folder_content,folder_path,parent_directory,is_root
 
 
-def video(path,root,mode,file_type):
+def video(path,root,mode,file_type,info):
     check_ffmpeg_installed()
     # Check if subtitles are requested
     if mode.endswith("legacy"):
@@ -70,14 +70,9 @@ def video(path,root,mode,file_type):
 
     if mode!="" and mode[:4]=="subs":
         if path.endswith("/"): path=path[:-1]
-        # Check if the provided data is valid
-        try: arg = str(int(mode[4:]))+"/"+path
+        try: index = int(mode[4:])
         except: raise FileNotFoundError
-        # Return subtitles to the client
-        text = get_subtitles(arg,root,legacy)
-        # Get if is webVTT or not and send the response with the sub type
-        is_vtt = text[:32].split("\n")[0].strip().lower().startswith("webvtt")
-        return Response(text,mimetype="text/"+"vtt" if is_vtt else "ssa")
+        return get_subtitles(index,path,root,legacy,info)
 
     # Else we send the video page
     prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)

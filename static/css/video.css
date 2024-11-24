@@ -396,54 +396,23 @@ select option {
 }
 
 /* Define default values */
-.sh_mute {
-    display: none;
-}
-.sh_unmute {
-    display: none;
-}
-.sh_pause {
-    display: none;
-}
-.sh_play {
-    display: none;
-}
-.sh_play_st {
-    display: none;
-}
-.sh_mute_st {
-    display: none;
-}
-.sh_unmute_st {
-    display: none;
-}
-.sh_fordward_st {
-    display: none;
-}
-.sh_back_st {
-    display: none;
-}
-.sh_fulla {
-    display: none;
-}
-.sh_meda {
-    display: none;
-}
-.sh_lowa {
-    display: none;
-}
-.sh_noa {
-    display: none;
-}
-.text {
-    color: #ffffff;
-}
-.transition {
-    transition: opacity 0.25s ease;
-}
-button:focus {
-    outline: none;
-}
+.sh_mute { display: none; }
+.sh_unmute { display: none; }
+.sh_pause { display: none; }
+.sh_play { display: none; }
+.sh_play_st { display: none; }
+.sh_mute_st { display: none; }
+.sh_unmute_st { display: none; }
+.sh_fordward_st { display: none; }
+.sh_back_st { display: none; }
+.sh_fulla { display: none; }
+.sh_meda { display: none; }
+.sh_lowa { display: none; }
+.sh_noa { display: none; }
+.text { color: #ffffff; }
+button:focus { outline: none; }
+.transition { transition: opacity 0.25s ease; }
+
 
 /* RESPONSIVE (pain) ZONE */
 
@@ -459,8 +428,7 @@ button:focus {
     .duration {
         width: 90%;
     }
-    .volume,
-    .text {
+    .volume, .text {
         display: none;
     }
 }
@@ -471,13 +439,13 @@ button:focus {
 }
 
 @media (max-aspect-ratio: 1/1) {
-    body {
-        height: 90vh;
-    }
     @media (max-width: 650px) {
+        body {
+            height: 90vh;
+        }
         .video-container {
             padding-bottom: 86px;
-            margin-top: 86px;
+            margin-top: 64px;
         }
     }
     @media (max-width: 420px) {
@@ -515,7 +483,7 @@ button:focus {
     }
     .video-container {
         padding-bottom: 64px;
-        margin-top: 64px;
+        margin-top: 48px;
     }
     .time-container {
         display: none;
@@ -545,7 +513,7 @@ button:focus {
     }
     .video-container {
         padding-bottom: 48px;
-        margin-top: 48px;
+        margin-top: 36px;
     }
     .side-controls {
         display: none;
@@ -553,14 +521,14 @@ button:focus {
 }
 @media (min-aspect-ratio: 1/1) and (max-height: 320px) {
     body {
-        height: 100vh;
+        height: 90vh;
     }
     .hover-time .hover-duration {
         font-size: 0.5rem;
     }
     .video-container {
-        padding-bottom: 12px;
-        margin-top: 12px;
+        padding-bottom: 0px;
+        margin-top: 30px;
     }
     .side-controls {
         display: none;
