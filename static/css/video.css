@@ -95,7 +95,6 @@ canvas {
     justify-content: center;
 }
 .state-btn {
-    margin-bottom: 2rem;
     font-size: 2.3rem;
     aspect-ratio: 1 / 1;
     height: 80px;
@@ -449,9 +448,6 @@ button:focus { outline: none; }
         }
     }
     @media (max-width: 420px) {
-        .state-btn {
-            margin-bottom: 0;
-        }
         .btn-controls {
             padding-top: 0.67rem;
             font-size: 1.2rem;
@@ -498,9 +494,6 @@ button:focus { outline: none; }
     .setting-menu {
         margin-left: 1rem;
         margin-bottom: 1rem;
-    }
-    .state-btn {
-        margin-bottom: 0;
     }
 }
 
