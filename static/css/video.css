@@ -416,9 +416,6 @@ button:focus { outline: none; }
 /* RESPONSIVE (pain) ZONE */
 
 @media (max-width: 500px) {
-    .state-btn {
-        height: 25%;
-    }
     .play-pause {
         display: none;
     }
@@ -444,7 +441,7 @@ button:focus { outline: none; }
         }
         .video-container {
             padding-bottom: 86px;
-            margin-top: 64px;
+            margin-top: 86px;
         }
     }
     @media (max-width: 420px) {
@@ -479,7 +476,7 @@ button:focus { outline: none; }
     }
     .video-container {
         padding-bottom: 64px;
-        margin-top: 48px;
+        margin-top: 64px;
     }
     .time-container {
         display: none;
@@ -506,7 +503,7 @@ button:focus { outline: none; }
     }
     .video-container {
         padding-bottom: 48px;
-        margin-top: 36px;
+        margin-top: 48px;
     }
     .side-controls {
         display: none;
@@ -520,8 +517,8 @@ button:focus { outline: none; }
         font-size: 0.5rem;
     }
     .video-container {
-        padding-bottom: 0px;
-        margin-top: 30px;
+        padding-bottom: 0;
+        margin-top: 0;
     }
     .side-controls {
         display: none;
