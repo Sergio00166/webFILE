@@ -40,7 +40,7 @@ def filepage_func(path,root,filetype,random=False,fixrng=False):
 
 def index_func(folder_path,root,folder_size,sort):
     # Check if the folder_path is valid
-    folder_path=isornot(folder_path,root)
+    folder_path = isornot(folder_path,root)
     # Check if the folder path is the same as the root dir
     is_root = folder_path==root
     # Get all folder contents
@@ -48,15 +48,16 @@ def index_func(folder_path,root,folder_size,sort):
     # Get the parent dir from the folder_path
     parent_directory = abspath(join(folder_path,pardir))
     # Check if the parent directory if root
-    if parent_directory==root: parent_directory=""
-    else: parent_directory= relpath(parent_directory,start=root)+"/"
+    if parent_directory==root: parent_directory = ""
+    else: parent_directory = relpath(parent_directory,start=root)+"/"
     # Get relative path from root
     folder_path = relpath(folder_path,start=root)
     # Fix and check some things with the paths
-    if folder_path==".": folder_path=""
+    if folder_path==".": folder_path = ""
     folder_path = "/"+folder_path.replace(sep,"/")
     parent_directory = parent_directory.replace(sep,"/")
     folder_content = sort_contents(folder_content,sort,root)
+    folder_content = humanize_content(folder_content)
     return folder_content,folder_path,parent_directory,is_root
 
 
@@ -67,13 +68,11 @@ def video(path,root,mode,file_type,info):
         legacy = True
         mode = mode[:mode.find("legacy")]
     else: legacy = False
-
     if mode!="" and mode[:4]=="subs":
         if path.endswith("/"): path=path[:-1]
         try: index = int(mode[4:])
         except: raise FileNotFoundError
         return get_subtitles(index,path,root,legacy,info)
-
     # Else we send the video page
     prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)
     tracks,chapters = get_info(root+sep+path),get_chapters(root+sep+path)

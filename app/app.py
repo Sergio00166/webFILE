@@ -3,11 +3,12 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
-from functions import printerr,get_file_type,getclient
+from functions import get_file_type,getclient
 from flask import send_file,redirect,request
 from actions import *
 
 app,folder_size,root = init()
+sroot = app.static_folder
 
 
 @app.route('/<path:path>', methods=['GET'])
@@ -48,16 +49,7 @@ def explorer(path):
                 return redirect(request.path+'/')
             return directory(path,root,folder_size,mode,client)
   
-    except PermissionError:
-        if client == "json": return "[]", 403
-        return render_template('403.html'), 403
-    except FileNotFoundError:
-        if client == "json": return "[]", 404
-        return render_template('404.html'), 404
-    except Exception as e:
-        printerr(e)
-        if client == "json": return "[]", 500
-        return render_template('500.html'), 500
+    except Exception as e: return error(e,client)
 
 
 @app.route('/', methods=['GET'])
@@ -73,19 +65,9 @@ def index():
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
-            try: return app.send_static_file(path)
-            except: raise FileNotFoundError
+            return send_file( isornot(path,sroot) )
         # Else show the root directory
         return directory("/",root,folder_size,mode,client)
-                
-    except PermissionError:
-        if client == "json": return "[]", 403
-        return render_template('403.html'), 403
-    except FileNotFoundError:
-        if client == "json": return "[]", 404
-        return render_template('404.html'), 404
-    except Exception as e:
-        printerr(e)
-        if client == "json": return "[]", 500
-        return render_template('500.html'), 500
+
+    except Exception as e: return error(e,client)
 
