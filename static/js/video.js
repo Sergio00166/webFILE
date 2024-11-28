@@ -235,8 +235,13 @@ function canPlayInit() {
     video.play();
     if (video.paused) {
         pause();
+    } setVideoTime();
+    // Dont allow the responsive put the controls outside the
+    // video container if aspect ration of the video is <1:1
+    if (video.videoWidth < video.videoHeight) {
+        videoContainer.styles.marginTop = "0 !important";
+        videoContainer.styles.paddingBottom = "0 !important";
     }
-    setVideoTime();
 }
 
 function handleVideoEnded() {

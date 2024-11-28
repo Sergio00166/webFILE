@@ -47,13 +47,13 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 100dvh;
     background: #000000;
     -webkit-tap-highlight-color: transparent;
 }
 .video-container {
     position: relative;
-    width: calc((16 / 9) * 90vh);
+    width: calc((16/9)*90dvh);
     color: #fff;
     overflow: hidden;
     display: flex;
@@ -62,7 +62,7 @@ body {
     user-select: none !important;
 }
 video {
-    max-height: 90vh;
+    max-height: 90dvh;
     width: 100%;
     height: 100%;
     object-fit: contain !important;
@@ -436,12 +436,8 @@ button:focus { outline: none; }
 
 @media (max-aspect-ratio: 1/1) {
     @media (max-width: 650px) {
-        body {
-            height: 90vh;
-        }
         .video-container {
             padding-bottom: 86px;
-            margin-top: 86px;
         }
     }
     @media (max-width: 420px) {
@@ -471,12 +467,8 @@ button:focus { outline: none; }
     }
 }
 @media (min-aspect-ratio: 1/1) and (max-width: 430px) {
-    body {
-        height: 90vh;
-    }
     .video-container {
         padding-bottom: 64px;
-        margin-top: 64px;
     }
     .time-container {
         display: none;
@@ -495,30 +487,22 @@ button:focus { outline: none; }
 }
 
 @media (max-aspect-ratio: 1/1) and (max-height: 320px) {
-    body {
-        height: 100vh;
-    }
     .hover-time .hover-duration {
         font-size: 0.5rem;
     }
     .video-container {
         padding-bottom: 48px;
-        margin-top: 48px;
     }
     .side-controls {
         display: none;
     }
 }
 @media (min-aspect-ratio: 1/1) and (max-height: 320px) {
-    body {
-        height: 90vh;
-    }
     .hover-time .hover-duration {
         font-size: 0.5rem;
     }
     .video-container {
         padding-bottom: 0;
-        margin-top: 0;
     }
     .side-controls {
         display: none;
