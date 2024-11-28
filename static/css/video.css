@@ -373,8 +373,7 @@ select option {
     display: flex;
     align-items: center;
 }
-.full,
-.contract {
+.full,.contract {
     display: none;
 }
 .video-container:not(.fullscreen) .full {
