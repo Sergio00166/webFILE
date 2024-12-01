@@ -6,7 +6,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 100dvh;
     background: #000000;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
@@ -329,11 +329,5 @@ button:focus {
     }
     .settings {
         display: none;
-    }
-}
-
-@media (max-aspect-ratio: 1/1) {
-    body {
-        height: 90vh;
     }
 }
