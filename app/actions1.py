@@ -1,13 +1,12 @@
 #Code by Sergio00166
 
+from flask import Response,Flask,render_template
 from os.path import join,relpath,exists,getsize
 from os.path import getmtime,basename,abspath
 from multiprocessing import Queue, Process
-from os import sep, stat, walk
+from os import sep,stat,walk,getenv
 from functions import isornot
-from flask import Response
-from flask import Flask
-from os import getenv
+from sys import stderr
 from video import *
 import tarfile
 
@@ -90,4 +89,33 @@ def get_subtitles(index,path,root,legacy,info):
     # Return the subtittle track
     return Response(out,mimetype=subsmimes[codec], headers=\
     {'Content-Disposition': 'attachment;filename='+subsname})
+
+
+
+def printerr(e):  
+    tb = e.__traceback__
+    while tb.tb_next: tb = tb.tb_next
+    e_type = type(e).__name__
+    e_file = tb.tb_frame.f_code.co_filename
+    e_line = tb.tb_lineno
+    e_message = str(e)
+    msg = (
+        "[SERVER ERROR]\n"+
+        f"   [line {e_line}] '{e_file}'\n"+
+        f"   [{e_type}] {e_message}\n"+
+        "[END ERROR]"
+    )
+    print(msg,file=stderr)
+
+def error(e, client):
+    if isinstance(e, PermissionError):
+        if client == "json": return "[]", 403
+        return render_template('403.html'), 403
+    elif isinstance(e, FileNotFoundError):
+        if client == "json": return "[]", 404
+        return render_template('404.html'), 404
+    else:
+        printerr(e) # Log the error to cli
+        if client == "json": return "[]", 500
+        return render_template('500.html'), 500
 

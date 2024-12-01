@@ -6,7 +6,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: 100dvh;
     background: #000000;
     -webkit-tap-highlight-color: transparent;
     user-select: none;
@@ -100,7 +100,7 @@ img {
     background: #3c3c3ca7;
     padding: 0.2rem;
     border-radius: 5px;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     visibility: hidden;
     font-weight: bold;
     text-align: center;
@@ -329,11 +329,5 @@ button:focus {
     }
     .settings {
         display: none;
-    }
-}
-
-@media (max-aspect-ratio: 1/1) {
-    body {
-        height: 90vh;
     }
 }

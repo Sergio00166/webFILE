@@ -37,7 +37,7 @@
                 <td><a href="{{ url_for('explorer', path=item['path']) }}">
                     {{ item['name'] }}{% if item['description']=='directory' %}/{% endif %}
                 </a></td>
-                <td>&nbsp;&nbsp;</td>
+                <td>&nbsp;&nbsp;&nbsp;</td>
                 <td align="right">{{ item['size'] }}</td>
                 <td></td>
                 <td align="right" colspan="2">{{ item['mtime'] }}</td>

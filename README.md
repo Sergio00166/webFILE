@@ -17,10 +17,12 @@ by holding the click on the setting icon until it changes the color.
 
 
 ## To run the web server: ##
-  - To run via flask internal HTTP server via CLI  
+  - To run via flask internal HTTP server via CLI (in the /scripts folder)
     ```python3 run.py -b IP_addr -p port -d directory [--dirsize]```
+  - Or with with multiple workers (in the /scripts folder)
+    ```python3 start.py [config_file]```
 
-  - To use a WSGI for deployment -> (for example gunicorn)  
+  - To use a WSGI for deployment -> (for example gunicorn)
     ```gunicorn --env FOLDER=directory [--env SHOWSIZE=True] -b IP_addr app:app```
 
 
