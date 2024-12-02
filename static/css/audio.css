@@ -331,3 +331,9 @@ button:focus {
         display: none;
     }
 }
+
+@media (max-aspect-ratio: 1/1){
+    body {
+        height: 95dvh;
+    }
+}
