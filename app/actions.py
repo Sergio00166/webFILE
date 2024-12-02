@@ -84,7 +84,7 @@ def audio(path,root,file_type):
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 
-def directory(path,root,folder_size,mode,client):
+def directory(path,root,folder_size,mode,client,hostname):
     # Check if sending the dir is requested
     if mode=="dir": return send_dir(isornot(path,root))
     # Get the sort value if it is on the list else set default value
@@ -97,5 +97,5 @@ def directory(path,root,folder_size,mode,client):
         html = stream_template(file,folder_content=folder_content,folder_path=folder_path,\
                                parent_directory=parent_directory,is_root=is_root,sort=sort)
         return minify(html) # reduce size
-    else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
+    else: return [{**item, "path": hostname+encurl(item["path"])} for item in folder_content]
 

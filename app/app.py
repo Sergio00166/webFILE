@@ -47,7 +47,9 @@ def explorer(path):
         else:
             if not request.path.endswith('/') and client!="json":
                 return redirect(request.path+'/')
-            return directory(path,root,folder_size,mode,client)
+            proto = request.headers.get('X-Forwarded-Proto', request.scheme)
+            hostname = proto+"://"+request.host+"/"
+            return directory(path,root,folder_size,mode,client,request.host,hostname)
   
     except Exception as e: return error(e,client)
 
@@ -67,7 +69,9 @@ def index():
             path = request.args["static"]
             return send_file( isornot(path,sroot) )
         # Else show the root directory
-        return directory("/",root,folder_size,mode,client)
+        proto = request.headers.get('X-Forwarded-Proto', request.scheme)
+        hostname = proto+"://"+request.host+"/"
+        return directory("/",root,folder_size,mode,client,hostname)
 
     except Exception as e: return error(e,client)
 
