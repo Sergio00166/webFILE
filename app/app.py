@@ -49,7 +49,7 @@ def explorer(path):
                 return redirect(request.path+'/')
             proto = request.headers.get('X-Forwarded-Proto', request.scheme)
             hostname = proto+"://"+request.host+"/"
-            return directory(path,root,folder_size,mode,client,request.host,hostname)
+            return directory(path,root,folder_size,mode,client,hostname)
   
     except Exception as e: return error(e,client)
 
