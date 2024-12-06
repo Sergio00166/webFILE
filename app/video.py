@@ -8,11 +8,6 @@ from random import choice
 from glob import glob
 from sys import path
 
-
-pdir = sep.join(path[0].split(sep)[:-1])
-pdir += sep+"cache"+sep
-cache_dir = pdir+"subtitles"+sep
-database = pdir+"subtitles.db"
 path.append(sep.join([path[0],"pysubs2.zip"]))
 
 
