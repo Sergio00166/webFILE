@@ -180,6 +180,7 @@ def script_func(args):
     match = onlytext_directive.match(arg)
     if match:
         arg = match.groups()[0]
+        script = ""
         try:
             with open(arg, 'r') as file:
                 script = ""
