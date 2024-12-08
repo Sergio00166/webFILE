@@ -6,9 +6,13 @@
 from functions import get_file_type,getclient
 from flask import send_file,redirect,request
 from actions import *
+from secrets import token_hex
 
 app,folder_size,root = init()
 sroot = app.static_folder
+USERS,ACL = {},{}
+update_rules(USERS,ACL)
+app.secret_key = token_hex(16)
 
 
 @app.route('/<path:path>', methods=['GET'])
@@ -23,7 +27,9 @@ def explorer(path):
         mode = request.args["mode"]\
         if "mode" in request.args else ""
         # Check if we can access it
+        req_path = path
         path = isornot(path,root)
+        validate_acl(req_path,ACL,write=False)
         # Get the file type of the file
         file_type = get_file_type(path)
         # Check if the path is not a dir
@@ -40,8 +46,8 @@ def explorer(path):
             # Custom player for each multimedia format
             elif file_type=="video":
                 info = (request.method.lower()=="head")
-                return video(path,root,mode,file_type,info)  
-            elif file_type=="audio": return audio(path,root,file_type)
+                return video(path,root,mode,file_type,info,ACL)  
+            elif file_type=="audio": return audio(path,root,file_type,ACL)
             # Else send it and let flask autodetect the mime
             else: return send_file(path)
         # Return the directory explorer
@@ -50,12 +56,12 @@ def explorer(path):
                 return redirect(request.path+'/')
             proto = request.headers.get('X-Forwarded-Proto', request.scheme)
             hostname = proto+"://"+request.host+"/"
-            return directory(path,root,folder_size,mode,client,hostname)
+            return directory(path,root,folder_size,mode,client,hostname,ACL)
   
     except Exception as e: return error(e,client)
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET','POST'])
 # Here we show the root dir, serve the static files
 # or send the root dir as .tar
 def index():
@@ -64,16 +70,21 @@ def index():
         # If we have args get them else set blank
         mode = request.args["mode"]\
         if "mode" in request.args else ""
+        # User login/logout stuff
+        if "logout" in request.args:
+            return logout(request)
+        if "login" in request.args:
+            return login(request,USERS)
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
             return send_file( isornot(path,sroot) )
         # Else show the root directory
-        proto = request.headers.get('X-Forwarded-Proto', request.scheme)
+        proto = request.headers.get('X-Forwarded-Proto',request.scheme)
         hostname = proto+"://"+request.host+"/"
         # Check if we can access it
         path = isornot("/",root)
-        return directory(path,root,folder_size,mode,client,hostname)
+        return directory(path,root,folder_size,mode,client,hostname,ACL)
 
     except Exception as e: return error(e,client)
 

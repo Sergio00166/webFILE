@@ -7,11 +7,12 @@ from datetime import datetime as dt
 from json import load as jsload
 from sys import path as pypath
 from pathlib import Path
+from flask import session
 
 
 is_subdirectory = lambda parent, child: commonpath([parent]) == commonpath([parent, child])
 # Load database of file type and extensions
-file_types = jsload(open(sep.join([pypath[0],"files.json"])))
+file_types = jsload(open(sep.join([pypath[0],"extra","files.json"])))
 # Convert it to a lookup table to get file type as O(1)
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Check if the file is a binary file or not
@@ -55,7 +56,7 @@ def get_directory_size(directory):
     return total
 
 
-def get_folder_content(folder_path, root, folder_size):
+def get_folder_content(folder_path, root, folder_size, ACL):
     dirs,files,content = [],[],[]
     for x in listdir(folder_path):
         fix = join(folder_path, x)
@@ -65,6 +66,8 @@ def get_folder_content(folder_path, root, folder_size):
     for item in dirs+files:
         try:
             item_path = join(folder_path, item)
+            item_full_path = relpath(item_path,start=root).replace(sep,"/")
+            validate_acl(item_full_path,ACL)
             description = get_file_type(item_path)
             if description == "directory" and folder_size:
                 size = get_directory_size(item_path)
@@ -73,10 +76,9 @@ def get_folder_content(folder_path, root, folder_size):
             else: size = 0
             try: mtime = getmtime(item_path)
             except: mtime = None
-            item_path = relpath(item_path,start=root).replace(sep,"/")
             if description == "directory": item_path += "/"
             content.append({
-                'name': item, 'path': item_path,
+                'name': item, 'path': item_full_path,
                 'description': description,
                 "size": size, "mtime": mtime
             })
@@ -128,3 +130,30 @@ def isornot(path,root):
     else: raise PermissionError
     return path
 
+
+def update_rules(USERS,ACL):
+    """ LOAD DATA FROM DISK """
+    path = sep.join([pypath[0],"extra",""])
+    try:
+        tmp = jsload(open(path+"users.json"))
+        USERS.clear(); USERS.update(tmp)
+    except: pass
+    try:
+        tmp = jsload(open(path+"acl.json"))
+        ACL.clear(); ACL.update(tmp)
+    except: pass
+
+
+# args (path,user)
+def validate_acl(path,ACL,write=False):
+    path = "/"+path
+    askd_perm = 2 if write else 1
+    user = session.get("user","DEFAULT")
+    while True:
+        if path in ACL and user in ACL[path]:
+            perm = ACL[path][user]
+            if perm==0: break
+            if perm>=askd_perm: return
+        if path=="/": break
+        path = "/"+"/".join(path.split("/")[:-1])
+    raise PermissionError
