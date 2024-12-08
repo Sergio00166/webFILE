@@ -72,8 +72,7 @@ def send_dir(directory):
 
 
 
-def get_subtitles(index,path,root,legacy,info):
-    file = isornot(path, root)
+def get_subtitles(index,file,legacy,info):
     codec,out = get_track(file,index,info)
     # Convert or extract the subtitles
     if legacy and not (codec=="webvtt" or info):
@@ -84,7 +83,7 @@ def get_subtitles(index,path,root,legacy,info):
         out = converted[1]
     # Get filename and for downloading the subtitles
     codec = "webvtt" if legacy else codec
-    subsname = path.split("/")[-1]+f".track{str(index)}."
+    subsname = file.split("/")[-1]+f".track{str(index)}."
     subsname += "vtt" if codec=="webvtt" else codec
     # Return the subtittle track
     return Response(out,mimetype=subsmimes[codec], headers=\
@@ -106,6 +105,7 @@ def printerr(e):
         "[END ERROR]"
     )
     print(msg,file=stderr)
+
 
 def error(e, client):
     if isinstance(e, PermissionError):

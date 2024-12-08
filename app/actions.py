@@ -9,16 +9,14 @@ from actions1 import *
 from os import sep
 
 
-def filepage_func(path,root,filetype,random=False,fixrng=False):
+def filepage_func(file_path,root,filetype,random=False,fixrng=False):
     # Get relative path from the root dir
-    path=relpath(isornot(path,root), start=root)
+    path = relpath(file_path,start=root).replace(sep,"/")
     # Get the name of the folder
-    folder=sep.join(path.split(sep)[:-1])
-    name=path.split(sep)[-1]
+    folder = sep.join(file_path.split(sep)[:-1])
+    name = path.split("/")[-1]
     # Get all folder contents
-    out=get_folder_content(root+sep+folder,root,False)
-    # Convert the dir sep to UNIX if contains windows sep
-    path=path.replace(sep,"/")
+    out = get_folder_content(folder,root,False)
     # Get all folder contents that has the same filetype
     lst = [x["path"] for x in out if x["description"]==filetype]
     # Get next one
@@ -34,13 +32,11 @@ def filepage_func(path,root,filetype,random=False,fixrng=False):
     # Return random flag
     if random:
         rnd = "/"+choice(lst)
-        return prev,nxt,name,path,rnd
-    else: return prev,nxt,name,path
+        return prev,nxt,name,rnd
+    else: return prev,nxt,name
 
 
 def index_func(folder_path,root,folder_size,sort):
-    # Check if the folder_path is valid
-    folder_path = isornot(folder_path,root)
     # Check if the folder path is the same as the root dir
     is_root = folder_path==root
     # Get all folder contents
@@ -72,21 +68,21 @@ def video(path,root,mode,file_type,info):
         if path.endswith("/"): path=path[:-1]
         try: index = int(mode[4:])
         except: raise FileNotFoundError
-        return get_subtitles(index,path,root,legacy,info)
+        return get_subtitles(index,path,legacy,info)
     # Else we send the video page
-    prev, nxt, name, path = filepage_func(path,root,file_type,fixrng=True)
-    tracks,chapters = get_info(root+sep+path),get_chapters(root+sep+path)
+    prev, nxt, name = filepage_func(path,root,file_type,fixrng=True)
+    tracks,chapters = get_info(path),get_chapters(path)
     return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks,chapters=chapters)
 
 
 def audio(path,root,file_type):
-    prev,nxt,name,path,rnd = filepage_func(path,root,file_type,random=True)
+    prev,nxt,name,rnd = filepage_func(path,root,file_type,random=True)
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 
 def directory(path,root,folder_size,mode,client,hostname):
     # Check if sending the dir is requested
-    if mode=="dir": return send_dir(isornot(path,root))
+    if mode=="dir": return send_dir(path)
     # Get the sort value if it is on the list else set default value
     sort = mode if mode in ["np","nd","sp","sd","dp","dd"] else "np"
     # Get all the data from that directry and its contents

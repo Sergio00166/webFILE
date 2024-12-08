@@ -19,30 +19,31 @@ def explorer(path):
     try:
         # Paths must not end on slash
         if path.endswith("/"): path = path[:-1]
-        # Check if we have extra args
-        cmp = "mode" in request.args
         # If we have args get them else set blank
-        mode = request.args["mode"] if cmp else ""
+        mode = request.args["mode"]\
+        if "mode" in request.args else ""
+        # Check if we can access it
+        path = isornot(path,root)
         # Get the file type of the file
-        file_type = get_file_type(root+sep+path)
+        file_type = get_file_type(path)
         # Check if the path is not a dir
         if not file_type=="directory":
             if request.path.endswith('/') and client!="json":
                 return redirect(request.path[:-1])
             # If the text is plain text send it as plain text
             if file_type in ["text","source"]:
-                return send_file(isornot(path,root),mimetype='text/plain')
+                return send_file(path,mimetype='text/plain')
             # If it have the raw arg or is requested
             # from a cli browser return the file
             elif mode=="raw" or client!="normal":
-                return send_file(isornot(path,root))
+                return send_file(path)
             # Custom player for each multimedia format
             elif file_type=="video":
                 info = (request.method.lower()=="head")
                 return video(path,root,mode,file_type,info)  
             elif file_type=="audio": return audio(path,root,file_type)
             # Else send it and let flask autodetect the mime
-            else: return send_file(isornot(path,root))
+            else: return send_file(path)
         # Return the directory explorer
         else:
             if not request.path.endswith('/') and client!="json":
@@ -60,10 +61,9 @@ def explorer(path):
 def index():
     client = getclient(request)
     try:
-        # Check if we have extra args
-        cmp = "mode" in request.args
         # If we have args get them else set blank
-        mode = request.args["mode"] if cmp else ""
+        mode = request.args["mode"]\
+        if "mode" in request.args else ""
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
@@ -71,7 +71,9 @@ def index():
         # Else show the root directory
         proto = request.headers.get('X-Forwarded-Proto', request.scheme)
         hostname = proto+"://"+request.host+"/"
-        return directory("/",root,folder_size,mode,client,hostname)
+        # Check if we can access it
+        path = isornot("/",root)
+        return directory(path,root,folder_size,mode,client,hostname)
 
     except Exception as e: return error(e,client)
 
