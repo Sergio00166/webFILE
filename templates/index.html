@@ -13,6 +13,11 @@
 </head>
 
 <body>
+	{% if 'user' in session %}
+		<a href="/?logout">LOGOUT</a>
+	{% else %}
+		<a href="/?login">LOGIN</a>
+	{% endif %}
     <div class="list-group">
         <h2><pre>Index of&nbsp;{{ folder_path }}</pre></h2>
         <div class="controls">
