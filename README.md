@@ -1,5 +1,8 @@
 # Web Server with custom video and audio player #
 
+THIS BRANCH IS AN EXPERIMENTAL VERSION FOR USER BASED ACLs
+WITH ITS OWN MANAGER AND SCRIPTING LANGUAGE FOR MANAGING ITS ACL
+
 
 The video player supports subtittles and changing the audio track
 
