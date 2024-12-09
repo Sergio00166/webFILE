@@ -5,7 +5,7 @@ from os.path import join,relpath,exists,getsize
 from os.path import getmtime,basename,abspath
 from multiprocessing import Queue, Process
 from os import sep,stat,walk,getenv
-from sys import stderr
+from sys import stderr,path
 from video import *
 import tarfile
 
