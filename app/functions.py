@@ -1,7 +1,7 @@
 #Code by Sergio00166
 
 from os.path import commonpath,join,isdir,relpath,abspath
-from os import listdir,pardir,sep,scandir,access,R_OK
+from os import listdir,sep,scandir,access,R_OK
 from os.path import getmtime,getsize,exists
 from datetime import datetime as dt
 from json import load as jsload
