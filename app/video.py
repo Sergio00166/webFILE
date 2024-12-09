@@ -6,9 +6,6 @@ from json import loads as jsload
 from os.path import exists
 from random import choice
 from glob import glob
-from sys import path
-
-path.append(sep.join([path[0],"pysubs2.zip"]))
 
 
 def check_ffmpeg_installed():
