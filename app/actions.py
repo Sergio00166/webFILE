@@ -1,14 +1,14 @@
 #Code by Sergio00166
 
+from flask import render_template,stream_template,redirect
 from os.path import join,relpath,pardir,abspath
-from flask import render_template,stream_template
+from urllib.parse import urlparse,urlunparse
 from urllib.parse import quote as encurl
+from hashlib import sha256
 from random import choice
 from functions import *
 from actions1 import *
 from os import sep
-from hashlib import sha256
-from urllib.parse import urlparse, urlunparse
 
 
 def filepage_func(file_path,root,filetype,ACL,random=False,fixrng=False):
