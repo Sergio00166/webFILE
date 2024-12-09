@@ -1,12 +1,7 @@
 # Code by Sergio00166
 
 from subprocess import Popen, PIPE, run, DEVNULL
-from os import sep, linesep, remove, mkdir
 from json import loads as jsload
-from os.path import exists
-from random import choice
-from glob import glob
-from sys import path
 
 
 def check_ffmpeg_installed():
