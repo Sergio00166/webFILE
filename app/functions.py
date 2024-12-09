@@ -1,13 +1,14 @@
 #Code by Sergio00166
 
 from os.path import commonpath,join,isdir,relpath,abspath
-from os import listdir,pardir,sep,scandir,access,R_OK
+from os import listdir,sep,scandir,access,R_OK
 from os.path import getmtime,getsize,exists
 from datetime import datetime as dt
 from json import load as jsload
+from time import sleep as delay
 from sys import path as pypath
-from pathlib import Path
 from flask import session
+from pathlib import Path
 
 
 is_subdirectory = lambda parent, child: commonpath([parent]) == commonpath([parent, child])
@@ -132,28 +133,38 @@ def isornot(path,root):
 
 
 def update_rules(USERS,ACL):
-    """ LOAD DATA FROM DISK """
     path = sep.join([pypath[0],"extra",""])
-    try:
-        tmp = jsload(open(path+"users.json"))
-        USERS.clear(); USERS.update(tmp)
-    except: pass
-    try:
-        tmp = jsload(open(path+"acl.json"))
-        ACL.clear(); ACL.update(tmp)
-    except: pass
+    users_db = path+"users.json"
+    acl_db = path+"acl.json"
+    old_mtimes = (0,0)
+    while True:
+        mtimes = (
+            getmtime(users_db),
+            getmtime(acl_db)
+        )
+        if mtimes > old_mtimes:
+            try:
+                tmp = jsload(open(users_db))
+                USERS.clear(); USERS.update(tmp)
+            except: pass
+            try:
+                tmp = jsload(open(acl_db))
+                ACL.clear(); ACL.update(tmp)
+            except: pass
+        else: delay(1)
+        old_mtimes = mtimes
 
 
 # args (path,user)
 def validate_acl(path,ACL,write=False):
-    path = "/"+path
     askd_perm = 2 if write else 1
     user = session.get("user","DEFAULT")
     while True:
-        if path in ACL and user in ACL[path]:
-            perm = ACL[path][user]
+        fpath = "/"+path
+        if fpath in ACL and user in ACL[fpath]:
+            perm = ACL[fpath][user]
             if perm==0: break
             if perm>=askd_perm: return
-        if path=="/": break
-        path = "/"+"/".join(path.split("/")[:-1])
+        if path=="": break
+        path = "/".join(path.split("/")[:-1])
     raise PermissionError

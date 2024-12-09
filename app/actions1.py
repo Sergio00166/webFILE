@@ -5,11 +5,9 @@ from os.path import join,relpath,exists,getsize
 from os.path import getmtime,basename,abspath
 from multiprocessing import Queue, Process
 from os import sep,stat,walk,getenv
-from functions import isornot
-from sys import stderr
+from sys import stderr,path
 from video import *
 import tarfile
-
 
 subsmimes = {
     "ssa":"application/x-substation-alpha",
@@ -118,4 +116,3 @@ def error(e, client):
         printerr(e) # Log the error to cli
         if client == "json": return "[]", 500
         return render_template('500.html'), 500
-

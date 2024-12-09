@@ -90,6 +90,10 @@ a:hover {
     flex: 1;
     display: flex;
 }
+.ctrl_flex_2 {
+    flex: 1;
+    display: flex;
+}
 .tools {
     flex: 1;
     display: flex;
@@ -109,6 +113,15 @@ pre {
     font-family: inherit;
     font-size: inherit;
     margin: 0;
+}
+.logiobtn {
+    background-color: #666666;
+    text-decoration: none;
+    color: #ffffff;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 4px;
+    padding-right: 4px;
 }
 .backdir {
     display: flex;
@@ -140,10 +153,10 @@ body {
 h2 {
     background-color: #666666;
     color: #eeeeee;
-    margin-top: 25px;
+    margin-top: 8px;
     text-align: center;
     padding: 15px 25px 15px 25px;
-    margin-bottom: 21px;
+    margin-bottom: 16px;
     user-select: text;
 }
 .container {
@@ -215,9 +228,6 @@ h2 {
     }
     .small {
         display: inline;
-    }
-    .ctrl_flex_1 {
-        flex-direction: column;
     }
     .filename {
         border-bottom: 2px solid black;

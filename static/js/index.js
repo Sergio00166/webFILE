@@ -4,7 +4,7 @@
 function changeURL(mode) {
     var url = window.location.href;
     var urlObj = new URL(url);
-    urlObj.searchParams.set("mode", mode);
+    urlObj.searchParams.set("sort", mode);
     window.history.replaceState({}, document.title, urlObj.href);
     location.reload();
 }
@@ -90,9 +90,9 @@ async function executeDownloads() {
             const url = div.getAttribute('data-value');
             if (url) {
                 if (div.hasAttribute('dir')) {
-                    mode = '?mode=dir';
+                    mode = '?dir';
                 } else {
-                    mode = '?mode=raw';
+                    mode = '?raw';
                 }
                 downloadURL(url + mode);
                 await delay(100);
@@ -103,7 +103,7 @@ async function executeDownloads() {
         if (url === "/") {
             url = '';
         }
-        const newURL = url + '?mode=dir';
+        const newURL = url + '?dir';
         downloadURL(newURL);
     }
 }
