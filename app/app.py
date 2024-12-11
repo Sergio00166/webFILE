@@ -19,6 +19,9 @@ def explorer(path):
         if "add" in request.args:
             validate_acl(path,ACL,True)
             return addfile(request,path,ACL,root)
+        if "delete" in request.args:
+            validate_acl(path,ACL,True)
+            return delfile(request,path,ACL,root)
         # Paths must not end on slash
         if path.endswith("/"): path = path[:-1]
         # Check if we can access it

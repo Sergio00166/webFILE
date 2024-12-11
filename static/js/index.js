@@ -108,6 +108,33 @@ async function executeDownloads() {
     }
 }
 
+// Function to execute downloads for selected divs
+async function executeDeletes() {
+    if (selectMode) {
+        const sure = confirm("Are you sure to delete?");
+        if (sure) {
+            for (const id in selectedElements) {
+                const div = selectedElements[id];
+                const url = div.getAttribute('data-value');
+                if (url) {
+                    const response = await fetch(url + "?delete");
+                    if (response.status === 403) {
+                        alert('You dont have permission to do that');
+                    } else if (response.status === 404) {
+                        alert('That file/folder does not exist');
+                    } else if (response.status === 500) {
+                        alert('Something went wrong on the server.');
+                    }
+                    await delay(100);
+                }
+            } window.location.reload();
+        }
+    }
+}
+
+
+
+
 // Function to select or deselect all divs
 function toggleSelectAll() {
     if (selectMode) {

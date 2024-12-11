@@ -9,7 +9,7 @@ from flask_session import Session
 from os import sep,getenv
 from flask_sqlalchemy import SQLAlchemy
 from sys import path
-from addfile import addfile
+from files import addfile,delfile
 
 def init():
     # Set the paths of templates and static
