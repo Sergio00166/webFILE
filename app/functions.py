@@ -1,8 +1,8 @@
 #Code by Sergio00166
 
-from os.path import commonpath,join,isdir,relpath,abspath
-from os import listdir,sep,scandir,access,R_OK
-from os.path import getmtime,getsize,exists
+from os.path import commonpath, join, isdir, relpath, abspath
+from os import listdir, sep, scandir, access, R_OK
+from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
 from json import load as jsload
 from time import sleep as delay
@@ -154,8 +154,6 @@ def update_rules(USERS,ACL):
         else: delay(1)
         old_mtimes = mtimes
 
-
-# args (path,user)
 def validate_acl(path,ACL,write=False):
     askd_perm = 2 if write else 1
     user = session.get("user","DEFAULT")
@@ -168,3 +166,4 @@ def validate_acl(path,ACL,write=False):
         if path=="": break
         path = "/".join(path.split("/")[:-1])
     raise PermissionError
+

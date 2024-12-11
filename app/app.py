@@ -3,18 +3,7 @@
 # BASIC WEB-file-sharing-server with a basic interface
 # Allows you to share a folder across the LAN (READ-ONLY mode)
 
-from functions import get_file_type,getclient
-from flask import send_file,redirect,request
-from actions import *
-from secrets import token_hex
-from threading import Thread
-
-app,folder_size,root = init()
-sroot = app.static_folder
-app.secret_key = token_hex(16)
-USERS,ACL = {},{}
-thr = Thread(target=update_rules, args=(USERS,ACL,))
-thr.daemon = True;  thr.start()
+from init import *
 
 
 @app.route('/<path:path>', methods=['GET','POST'])

@@ -1,14 +1,12 @@
 #Code by Sergio00166
 
-from flask import render_template,stream_template,redirect
-from os.path import join,relpath,pardir,abspath
-from urllib.parse import urlparse,urlunparse
-from urllib.parse import quote as encurl
+from flask import render_template, stream_template, redirect
+from os.path import join, relpath, pardir, abspath
+from urllib.parse import urlparse, urlunparse, quote as encurl
 from hashlib import sha256
 from random import choice
 from functions import *
 from actions1 import *
-from os import sep
 
 
 def filepage_func(file_path,root,filetype,ACL,random=False,fixrng=False):
@@ -94,26 +92,3 @@ def directory(path,root,folder_size,sort,client,hostname,ACL):
                                parent_directory=parent_directory,is_root=is_root,sort=sort)
         return minify(html) # reduce size
     else: return [{**item, "path": hostname+encurl(item["path"])} for item in folder_content]
-
-
-def login(request,USERS):
-    if request.method == "POST":
-        user = request.form.get('user')
-        password = request.form.get('password')
-        hashed_password = sha256(password.encode()).hexdigest()
-        if USERS.get(user) == hashed_password:
-            session["user"] = user
-            parsed_url = urlparse(request.url)
-            return redirect(urlunparse(
-                (parsed_url.scheme,parsed_url.netloc,parsed_url.path,'','','')
-            ))
-        else:
-            return render_template('login.html', error="Invalid username or password.")
-    else: return render_template("login.html")
-
-def logout(request):
-    session.pop("user", None)
-    parsed_url = urlparse(request.url)
-    return redirect(urlunparse(
-        (parsed_url.scheme,parsed_url.netloc,parsed_url.path,'','','')
-    ))
