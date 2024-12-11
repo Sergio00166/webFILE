@@ -21,6 +21,7 @@ function toggleSelectMode() {
             button.textContent = buttonText;
         });
     document.getElementById('toggleAllNone').disabled = !selectMode;
+    document.getElementById('deleteBtn').disabled = !selectMode;
     document.getElementById('invertSelection').disabled = !selectMode;
     if (!selectMode) {
         deselectAll();
