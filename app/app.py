@@ -15,6 +15,10 @@ def explorer(path):
         # User login/logout stuff
         if "logout" in request.args: return logout(request)
         if "login" in request.args:  return login(request,USERS)
+        # Files management stuff for users
+        if "add" in request.args:
+            validate_acl(path,ACL,True)
+            return addfile(request,path,ACL,root)
         # Paths must not end on slash
         if path.endswith("/"): path = path[:-1]
         # Check if we can access it

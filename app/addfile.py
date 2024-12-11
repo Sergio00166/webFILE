@@ -8,13 +8,12 @@ from os.path import exists
 # Mode 0 = create file, 1 = create dir, 2 = upload
 def do_job(ACL,r_path,filename,root,mode=0,file=None):
     try: path = isornot(r_path+sep+filename,root,True)
-    except PermissionError:
-        return "Unable to create outside the server parent path"
+    except PermissionError: return "FORBIDDEN"
     except: pass
     else:
         if not exists(sep.join(path.split(sep)[:-1])):
-            return "The subdirectory does not exist"
-        elif exists(path): return "It already exists"
+            return "Subdirectory does not exist"
+        elif exists(path): return 'Already exists'
         else:
             validate_acl(r_path,ACL,True)
             try:
@@ -41,10 +40,13 @@ def addfile(request,r_path,ACL,root):
             else: error = do_job(ACL,r_path,foldername,root,1)
         
         elif action == "upload":
-            file = request.files.get("file")
-            if not file or file.filename == "":
-                error = "Please select a file to upload."
-            else: error = do_job(ACL,r_path,file.filename,root,2,file)
+            files = request.files.getlist('files')
+            if not files or len(files)==1 and files[0].filename=="":
+                error="Please select file(s) to upload."
+            else:
+                for file in files:
+                    error_new = do_job(ACL,r_path,file.filename,root,2,file)
+                    if not error_new is None: error = error_new
                 
         if error:
             return render_template(
