@@ -36,14 +36,14 @@
                 <button onclick="executeDownloads()">DOWNLOAD</button>
             </div>
             <div class="ctrl_flex_2">
-                <button>UPLOAD</button>
                 {% if 'user' in session %}
                     <button onclick='window.location.href="?logout"'>LOGOUT</button>
                 {% else %}
                     <button onclick='window.location.href="?login"'>LOGIN</button>
                 {% endif %}
-                <button>MOV</button>
+                <button onclick='window.location.href="?add"'>ADD</button>
                 <button>DEL</button>
+                <button>MOV</button>
             </div>
         </div>
         <div class="container"> <br>

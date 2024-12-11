@@ -20,7 +20,7 @@ def explorer(path):
         # Check if we can access it
         req_path = path
         path = isornot(path,root)
-        validate_acl(req_path,ACL,write=False)
+        validate_acl(req_path,ACL)
         # Get the file type of the file
         file_type = get_file_type(path)
         # Check if the path is not a dir
@@ -64,6 +64,10 @@ def index():
         # User login/logout stuff
         if "logout" in request.args: return logout(request)
         if "login" in request.args:  return login(request,USERS)
+        # Files management stuff for users
+        if "add" in request.args:
+            validate_acl("",ACL,True)
+            return addfile(request,"",ACL,root)
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]

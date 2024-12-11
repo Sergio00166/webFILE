@@ -120,12 +120,13 @@ def humanize_content(folder_content):
     return folder_content
 
 
-def isornot(path,root):
+def isornot(path,root,igntf=False):
     # Checks if the path is inside the root dir
     # else raise an exception depending on the case
     path = path.replace("/",sep)
     path = abspath(root+sep+path)
     if is_subdirectory(root, path):
+        if igntf: return path
         if not exists(path): raise FileNotFoundError
         if not access(path, R_OK): raise PermissionError
     else: raise PermissionError

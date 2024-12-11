@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ADD FILES</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <script>
+        function handleOptionChange(skipdel=false) {
+            if (!skipdel) {
+                const h1 = document.querySelector('h1')
+                if (h1) { h1.remove(); }
+            }
+            const selection = document.getElementById("actionSelect").value;
+            document.getElementById("createFileForm").style.display = selection === "mkfile" ? "block" : "none";
+            document.getElementById("createDirForm").style.display = selection === "mkdir" ? "block" : "none";
+            document.getElementById("uploadForm").style.display = selection === "upload" ? "block" : "none";
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+            const selectedAction = "{{ action|default('') }}";
+            if (selectedAction) {
+                const selectElement = document.getElementById("actionSelect");
+                selectElement.value = selectedAction;
+                handleOptionChange(true);
+            }
+        });
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const fileName = this.files.length > 0 ? this.files[0].name : 'Choose a file...';
+            document.getElementById('fileLabel').textContent = fileName;
+        });
+    </script>
+</head>
+
+<body>
+    <section class="hero is-primary is-fullheight">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="column is-4 is-offset-4">
+                    {% if error %}
+                        <h1 class="title has-text-danger">{{ error }}</h1>
+                    {% endif %}
+                    <div class="box">
+                        <div class="field">
+                            <div class="control">
+                                <div class="select is-large">
+                                    <select id="actionSelect" onchange="handleOptionChange()">
+                                        <option value="" selected>Select an option</option>
+                                        <option value="mkfile">Create File</option>
+                                        <option value="mkdir">Create Dir</option>
+                                        <option value="upload">Upload File</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <form id="createFileForm" method="POST" action="?add" style="display: none;">
+                            <input type="hidden" name="action" value="mkfile">
+                            <div class="field">
+                                <div class="control">
+                                    <input
+                                        class="input is-large"
+                                        type="text"
+                                        name="filename"
+                                        placeholder="Enter file name"
+                                        value="{{ filename|default('') }}">
+                                </div>
+                            </div>
+                            <button class="button is-block is-info is-large is-fullwidth">Create File</button>
+                        </form>
+
+                        <form id="createDirForm" method="POST" action="?add" style="display: none;">
+                            <input type="hidden" name="action" value="mkdir">
+                            <div class="field">
+                                <div class="control">
+                                    <input
+                                        class="input is-large"
+                                        type="text"
+                                        name="foldername"
+                                        placeholder="Enter folder name"
+                                        value="{{ filename|default('') }}">
+                                </div>
+                            </div>
+                            <button class="button is-block is-info is-large is-fullwidth">Create Folder</button>
+                        </form>
+                        <form id="uploadForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
+                            <input type="hidden" name="action" value="upload">
+                            <div class="field">
+                                <div class="file is-large">
+                                    <label class="file-label">
+                                        <input class="file-input" type="file" name="file" id="fileInput">
+                                        <span class="file-cta">
+                                            <span class="file-label" id="fileLabel">Choose a file...</span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="button is-block is-info is-large is-fullwidth">Upload File</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br><br>
+    </section>
+</body>
+
+</html>
+
