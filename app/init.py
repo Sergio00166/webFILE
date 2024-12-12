@@ -3,7 +3,6 @@
 from functions import get_file_type,getclient
 from flask import send_file,redirect,request,Flask
 from actions import *
-from secrets import token_hex
 from threading import Thread
 from flask_session import Session
 from os import sep,getenv
@@ -26,6 +25,7 @@ def init():
 
 
 app,folder_size,root = init()
+# I just spammed the keyboard to get it :)
 app.secret_key = "321847374897fd7sf7e7fes"
 
 # Configure SQLite for session storage
