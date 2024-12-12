@@ -16,7 +16,9 @@ by holding the click on the setting icon until it changes the color.
 
 
 ## Requirements: ##
- Python3, Windows/Linux, Flask, ffmpeg
+ Install all requirements with
+ ```pip install -r requirements.txt```    
+ Optional for video streaming: ```ffmpeg``` (as system package)
 
 
 ## To run the web server: ##
