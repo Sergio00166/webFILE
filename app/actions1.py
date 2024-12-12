@@ -81,7 +81,7 @@ def get_subtitles(index,file,legacy,info):
 
 def login(request,USERS):
     if request.method == "POST":
-        user = request.form.get('user')
+        user = request.form.get('username')
         password = request.form.get('password')
         hashed_password = sha256(password.encode()).hexdigest()
         if USERS.get(user) == hashed_password:

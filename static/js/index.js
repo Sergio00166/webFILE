@@ -104,7 +104,7 @@ async function executeDownloads() {
         if (url === "/") {
             url = '';
         }
-        const newURL = url + '?dir';
+        const newURL = url+'?tar';
         downloadURL(newURL);
     }
 }

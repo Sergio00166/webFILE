@@ -3,24 +3,24 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ADD FILES</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+    <title>ADD-UPLOAD</title>
+    <link rel="stylesheet" href="{{ url_for('index', static='css/forms.css') }}">
     <script>
         function ResetUploadMsg() {
-            document.getElementById('fileLabel').textContent = "Choose file(s)...";
+            document.getElementById('fileLabel').textContent = "File(s)";
+            document.getElementById('dirLabel').textContent  = "Dir(s)";
         }
-        function handleOptionChange(skipdel=false) {
-            if (!skipdel) {
-                ResetUploadMsg();
+        function handleOptionChange(dnrem=false) {
+            ResetUploadMsg();
+            if (dnrem===false) {
                 const h1 = document.querySelector('h1')
                 if (h1) { h1.remove(); }
             }
             const selection = document.getElementById("actionSelect").value;
             document.getElementById("backButton").style.display = selection === "" ? "block" : "none";
-            document.getElementById("createFileForm").style.display = selection === "mkfile" ? "block" : "none";
-            document.getElementById("createFileForm").style.display = selection === "mkfile" ? "block" : "none";
             document.getElementById("createDirForm").style.display = selection === "mkdir" ? "block" : "none";
-            document.getElementById("uploadForm").style.display = selection === "upload" ? "block" : "none";
+            document.getElementById("uploadFileForm").style.display = selection === "upFile" ? "block" : "none";
+            document.getElementById("uploadDirForm").style.display = selection === "upDir" ? "block" : "none";
         }
         function goBack() {
             window.location.href = window.location.origin+window.location.pathname;
@@ -30,12 +30,17 @@
             const selectedAction = "{{ action|default('') }}";
             const selectElement = document.getElementById("actionSelect");
             selectElement.value = selectedAction;
-            handleOptionChange(true);
+            setTimeout(()=>{ handleOptionChange(true); },25);
+
             document.getElementById('fileInput').addEventListener('change', function() {
                 document.getElementById('fileLabel').textContent = "...";
             });
+            document.getElementById('dirInput').addEventListener('change', function() {
+                document.getElementById('dirLabel').textContent = "...";
+            });
         });
     </script>
+
 </head>
 
 <body>
@@ -52,32 +57,17 @@
                                 <div class="select is-large" style="width: 100%;">
                                     <select id="actionSelect" style="width: 100%;" onchange="handleOptionChange()">
                                         <option value="" selected>Select an option</option>
-                                        <option value="mkfile">Create File</option>
                                         <option value="mkdir">Create Dir</option>
-                                        <option value="upload">Upload File</option>
+                                        <option value="upFile">Upload File(s)</option>
+                                        <option value="upDir">Upload Dir(s)</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         <div id="backButton" style="display: none;">
-                            <button class="button is-block is-info is-large is-fullwidth" onclick="goBack()">Back</button>
+                            <button class="button is-block is-danger is-large is-fullwidth" onclick="goBack()">Cancel</button>
                         </div>
-
-                        <form id="createFileForm" method="POST" action="?add" style="display: none;">
-                            <input type="hidden" name="action" value="mkfile">
-                            <div class="field">
-                                <div class="control">
-                                    <input
-                                        class="input is-large"
-                                        type="text"
-                                        name="filename"
-                                        placeholder="Enter file name"
-                                        value="{{ filename|default('') }}">
-                                </div>
-                            </div>
-                            <button class="button is-block is-info is-large is-fullwidth">Create File</button>
-                        </form>
 
                         <form id="createDirForm" method="POST" action="?add" style="display: none;">
                             <input type="hidden" name="action" value="mkdir">
@@ -93,8 +83,9 @@
                             </div>
                             <button class="button is-block is-info is-large is-fullwidth">Create Folder</button>
                         </form>
-                        <form id="uploadForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
-                            <input type="hidden" name="action" value="upload">
+
+                        <form id="uploadFileForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
+                            <input type="hidden" name="action" value="upFile">
                             <div class="field">
                                 <div class="file is-large">
                                     <label class="file-label" style="width: 100%;">
@@ -105,7 +96,22 @@
                                     </label>
                                 </div>
                             </div>
-                            <button class="button is-block is-info is-large is-fullwidth">Upload File</button>
+                            <button class="button is-block is-info is-large is-fullwidth">Upload Files(s)</button>
+                        </form>
+
+                        <form id="uploadDirForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
+                            <input type="hidden" name="action" value="upDir">
+                            <div class="field">
+                                <div class="file is-large">
+                                    <label class="file-label" style="width: 100%;">
+                                        <input class="file-input" type="file" name="files" id="dirInput" multiple webkitdirectory>
+                                        <span class="file-cta" style="width: 100%;">
+                                            <span class="file-label" id="dirLabel"></span>
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="button is-block is-info is-large is-fullwidth">Upload Dir(s)</button>
                         </form>
                     </div>
                 </div>
