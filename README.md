@@ -3,18 +3,6 @@
 THIS BRANCH IS AN EXPERIMENTAL VERSION FOR USER BASED ACLs
 WITH ITS OWN MANAGER AND SCRIPTING LANGUAGE FOR MANAGING ITS ACL
 
-
-The video player supports subtittles and changing the audio track
-
-Some browsers cannot play some video formats because this project is not using transcoding to convert in realtime the video/sound.
-
-To change the audio track from a video you must need to enable "Experimental Web Platform features" in your browser.
-
-### It supports natively ASS/SSA subtitles by using JASSUB to render the subtitles and also other codecs (will be converted to webVTT) ###  
-If the browser does not support JASSUB or does not show any subtitles or in a weird way you can fallback to webVTT
-by holding the click on the setting icon until it changes the color.
-
-
 ## Requirements: ##
  Install all requirements with
  ```pip install -r requirements.txt```    
