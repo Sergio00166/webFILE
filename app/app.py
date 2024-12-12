@@ -70,7 +70,6 @@ def index():
         if "login" in request.args:  return login(request,USERS)
         # Files management stuff for users
         if "add" in request.args:
-            validate_acl("",ACL,True)
             return addfile(request,"",ACL,root)
         # Check if static page is requested
         if "static" in request.args:

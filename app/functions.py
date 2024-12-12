@@ -159,13 +159,17 @@ def validate_acl(path,ACL,write=False):
     askd_perm = 2 if write else 1
     user = session.get("user","DEFAULT")
     while True:
+        # Always start on /
         if not path.startswith("/"):
             path = "/"+path
+        # Check if there is a rule for it
         if path in ACL and user in ACL[path]:
             perm = ACL[path][user]
             if perm==0: break
             if perm>=askd_perm: return
-        if path=="": break
+        # Check if on top and break loop
+        if path=="/": break
+        # Go to parent directory
         path = "/".join(path.split("/")[:-1])
     raise PermissionError
 
