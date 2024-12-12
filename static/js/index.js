@@ -55,7 +55,7 @@ function selectDiv(divId) {
 
 function handleDivClick(div) {
     if (selectMode) {
-        selectDiv(div.id); // Use div.id here
+        selectDiv(div.id);
     } else {
         const url = div.getAttribute('data-value');
         if (url) {
@@ -111,7 +111,8 @@ async function executeDownloads() {
 
 // Function to execute downloads for selected divs
 async function executeDeletes() {
-    if (selectMode) {
+    if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
+        msg = null;
         const sure = confirm("Are you sure to delete?");
         if (sure) {
             for (const id in selectedElements) {
@@ -120,15 +121,17 @@ async function executeDeletes() {
                 if (url) {
                     const response = await fetch(url + "?delete");
                     if (response.status === 403) {
-                        alert('You dont have permission to do that');
+                        msg = 'You dont have permission to do that';
                     } else if (response.status === 404) {
-                        alert('That file/folder does not exist');
+                        msg = 'That file/folder does not exist';
                     } else if (response.status === 500) {
-                        alert('Something went wrong on the server.');
+                        msg = 'Something went wrong on the server.';
                     }
                     await delay(100);
                 }
-            } window.location.reload();
+            }
+            if (msg!==null) { alert(msg); }
+            window.location.reload();
         }
     }
 }
