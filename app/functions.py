@@ -159,9 +159,10 @@ def validate_acl(path,ACL,write=False):
     askd_perm = 2 if write else 1
     user = session.get("user","DEFAULT")
     while True:
-        fpath = "/"+path
-        if fpath in ACL and user in ACL[fpath]:
-            perm = ACL[fpath][user]
+        if not path.startswith("/"):
+            path = "/"+path
+        if path in ACL and user in ACL[path]:
+            perm = ACL[path][user]
             if perm==0: break
             if perm>=askd_perm: return
         if path=="": break

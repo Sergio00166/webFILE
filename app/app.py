@@ -1,7 +1,7 @@
 #Code by Sergio00166
 
 # BASIC WEB-file-sharing-server with a basic interface
-# Allows you to share a folder across the LAN (READ-ONLY mode)
+# Allows you to share a folder across the LAN
 
 from init import *
 
@@ -23,9 +23,8 @@ def explorer(path):
         if "delete" in request.args:
             return delfile(request,path,ACL,root)
         # Check if we can access it
-        req_path = path
+        validate_acl(path,ACL)
         path = isornot(path,root)
-        validate_acl(req_path,ACL)
         # Get the file type of the file
         file_type = get_file_type(path)
         # Check if the path is not a dir

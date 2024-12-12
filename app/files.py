@@ -1,3 +1,5 @@
+#Code by Sergio00166
+
 from flask import render_template, redirect
 from urllib.parse import urlparse, urlunparse
 from functions import validate_acl,isornot
@@ -6,10 +8,17 @@ from os.path import exists,isdir,dirname,relpath
 from shutil import rmtree
 
 
+def check_recursive(path,ACL,root,write=False):
+    for fulldir,d,f in walk(path):
+        for item in d+f:
+            item = fulldir+sep+item
+            item = relpath(item,start=root)
+            item = item.replace(sep,"/")
+            validate_acl(item,ACL,write)
+
+
 def do_job(ACL,r_path,filename,root,file=None,dupmkd=False):
-    try:
-        path = isornot(r_path+sep+filename,root,True)
-        validate_acl(r_path,ACL,True)
+    try: path = isornot(r_path+sep+filename,root,True)
     except PermissionError: return "FORBIDDEN"
     except: pass
     else:
@@ -19,9 +28,12 @@ def do_job(ACL,r_path,filename,root,file=None,dupmkd=False):
             if file is None: return 'Already exists'
             else: return '(Some) File(s) already exist'
         else:
-            try: validate_acl(r_path,ACL,True)
+            try:
+                chkpth = r_path+"/"+filename
+                validate_acl(r_path,ACL,True)
+                validate_acl(chkpth,ACL,True)
             except PermissionError:
-                return "You dont have permission to do that"
+                return "Permission denied for (some) item(s)"
             try:
                 if file is None: makedirs(path)
                 else:
@@ -70,16 +82,11 @@ def addfile(request,path,ACL,root):
 
 
 def delfile(request,path,ACL,root):
-    req_path = path
+    validate_acl(path,ACL,True)
     path = isornot(path,root)
-    validate_acl(req_path,ACL,True)
     if isdir(path):
         try:
-            for _,d,f in walk(path):
-                for item in d+f:
-                    item = relpath(item,start=root)
-                    item = item.replace(sep,"/")
-                    validate_acl(item,ACL,True)           
+            check_recursive(path,ACL,root,True)
             rmtree(path)
         except: return "Unable to delete dir",403
     else:
