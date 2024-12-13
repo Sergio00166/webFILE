@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="{{ url_for('index', static='css/forms.css') }}">
     <script>
         function ResetUploadMsg() {
-            document.getElementById('fileLabel').textContent = "File(s)";
-            document.getElementById('dirLabel').textContent  = "Dir(s)";
+            document.getElementById('fileLabel').textContent = "Select File(s)";
+            document.getElementById('dirLabel').textContent  = "Select Folder";
         }
         function handleOptionChange(dnrem=false) {
             ResetUploadMsg();
@@ -59,7 +59,7 @@
                                         <option value="" selected>Select an option</option>
                                         <option value="mkdir">Create Dir</option>
                                         <option value="upFile">Upload File(s)</option>
-                                        <option value="upDir">Upload Dir(s)</option>
+                                        <option value="upDir">Upload Folder</option>
                                     </select>
                                 </div>
                             </div>
@@ -104,14 +104,14 @@
                             <div class="field">
                                 <div class="file is-large">
                                     <label class="file-label" style="width: 100%;">
-                                        <input class="file-input" type="file" name="files" id="dirInput" multiple webkitdirectory>
+                                        <input class="file-input" type="file" name="files" id="dirInput" webkitdirectory>
                                         <span class="file-cta" style="width: 100%;">
                                             <span class="file-label" id="dirLabel"></span>
                                         </span>
                                     </label>
                                 </div>
                             </div>
-                            <button class="button is-block is-info is-large is-fullwidth">Upload Dir(s)</button>
+                            <button class="button is-block is-info is-large is-fullwidth">Upload Folder</button>
                         </form>
                     </div>
                 </div>

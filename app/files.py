@@ -60,7 +60,7 @@ def addfile(request,path,ACL,root):
             updir = action=="upDir"
             files = request.files.getlist('files')
             if not files or len(files)==1 and files[0].filename=="":
-                if updir: error="Please select dir(s) to upload."
+                if updir: error="Please select a folder to upload."
                 else: error="Please select file(s) to upload."
             else:
                 for file in files:
