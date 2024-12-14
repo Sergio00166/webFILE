@@ -34,6 +34,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///sessions.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 
 # Initialize database and session
 db = SQLAlchemy(app)

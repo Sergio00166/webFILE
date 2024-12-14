@@ -70,7 +70,7 @@ def addfile(request,path,ACL,root):
         else: error = "That mehtod does not exist"
         if error:
             return render_template(
-                "create_add.html", error=error, action=action,
+                "upload.html", error=error, action=action,
                 filename=request.form.get("filename", ""),
             )
         # Redirect to the same path but without the query
@@ -78,7 +78,7 @@ def addfile(request,path,ACL,root):
         return redirect(urlunparse(
             (parsed_url.scheme,parsed_url.netloc,parsed_url.path,'','','')
         ))
-    return render_template("create_add.html", error=error)
+    return render_template("upload.html", error=error)
 
 
 def delfile(request,path,ACL,root):
