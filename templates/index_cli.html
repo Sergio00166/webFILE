@@ -16,18 +16,18 @@
         </td></tr>
         <tr><td>&nbsp;</td></tr>
         <tr>
-            <td><a href="{{ request.path }}?mode={% if sort=='np' %}nd{% else %}np{% endif %}">
+            <td><a href="{{ request.path }}?sort={% if sort=='np' %}nd{% else %}np{% endif %}">
                 NAME {% if sort=="np" %} ^ {% elif sort=="nd" %} v {% endif %}
             </a></td>
             <td>&nbsp;&nbsp;</td>
-            <td><a href="{{ request.path }}?mode={% if sort=='sp' %}sd{% else %}sp{% endif %}">
+            <td><a href="{{ request.path }}?sort={% if sort=='sp' %}sd{% else %}sp{% endif %}">
                 SIZE {% if sort=="sp" %} ^ {% elif sort=="sd" %} v {% endif %}
             </a></td>
             <td></td>
-            <td><a href="{{ request.path }}?mode={% if sort=='dp' %}dd{% else %}dp{% endif %}">
+            <td><a href="{{ request.path }}?sort={% if sort=='dp' %}dd{% else %}dp{% endif %}">
                 DATE{% if sort=="dp" %} ^ {% elif sort=="dd" %} v {% endif %}
             </a></td>
-            <td align="right"><a href="{{ request.path }}?mode=dir">DL·DIR</a></td>
+            <td align="right"><a href="{{ request.path }}?tar">DL·DIR</a></td>
         </tr>
         <tr><td>&nbsp;</td></tr>
         {% if not is_root %}

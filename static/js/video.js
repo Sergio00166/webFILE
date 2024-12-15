@@ -99,11 +99,11 @@ function changeSubs(value) {
     }
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (value > -1) {
-        url = window.location.pathname + "?mode=subs" + value;
+        url = window.location.pathname+"?subs="+value;
         if (!is_SSA_subs(url)) {
             webvtt_subs(url);
         } else if (subs_legacy) {
-            webvtt_subs(url + "legacy");
+            webvtt_subs(url+"legacy");
         } else {
             ass_worker = crate_ass_worker(url);
         }

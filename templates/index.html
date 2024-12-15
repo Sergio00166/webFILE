@@ -13,11 +13,6 @@
 </head>
 
 <body>
-	{% if 'user' in session %}
-		<a href="/?logout">LOGOUT</a>
-	{% else %}
-		<a href="/?login">LOGIN</a>
-	{% endif %}
     <div class="list-group">
         <h2><pre>Index of&nbsp;{{ folder_path }}</pre></h2>
         <div class="controls">
@@ -28,15 +23,9 @@
                 <button onclick="changeURL({% if sort=="sp" %} 'sd' {% else %} 'sp' {% endif %})">
                     SIZE {% if sort=="sp" %} &nbsp;&uarr; {% elif sort=="sd" %} &nbsp;&darr; {% endif %}
                 </button>
-                <button class="h_small" onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
+                <button onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
                     DATE {% if sort=="dp" %} &nbsp;&uarr; {% elif sort=="dd" %} &nbsp;&darr; {% endif %}
                 </button>
-            </div>
-            <div class="flex_small_h">
-                <button onclick="changeURL({% if sort=="dp" %} 'dd' {% else %} 'dp' {% endif %})">
-                    DATE {% if sort=="dp" %} &uarr; {% elif sort=="dd" %} &darr; {% endif %}
-                </button>
-                <button class="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
             </div>
             <div class="ctrl_flex_1">
                 <button class="toggleSelectMode" class="h_small" onclick="toggleSelectMode()">SELECT</button>
@@ -45,6 +34,16 @@
                     <button id="invertSelection" onclick="invertSelection()" disabled>INV</button>
                 </div>
                 <button onclick="executeDownloads()">DOWNLOAD</button>
+            </div>
+            <div class="ctrl_flex_2">
+                {% if 'user' in session %}
+                    <button onclick='window.location.href="?logout"'>LOGOUT</button>
+                {% else %}
+                    <button onclick='window.location.href="?login"'>LOGIN</button>
+                {% endif %}
+                <button onclick='window.location.href="?add"'>ADD</button>
+                <button id="deleteBtn" onclick="executeDeletes()" disabled>DEL</button>
+                <button disabled>MOV</button>
             </div>
         </div>
         <div class="container"> <br>

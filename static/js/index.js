@@ -4,7 +4,7 @@
 function changeURL(mode) {
     var url = window.location.href;
     var urlObj = new URL(url);
-    urlObj.searchParams.set("mode", mode);
+    urlObj.searchParams.set("sort", mode);
     window.history.replaceState({}, document.title, urlObj.href);
     location.reload();
 }
@@ -21,6 +21,7 @@ function toggleSelectMode() {
             button.textContent = buttonText;
         });
     document.getElementById('toggleAllNone').disabled = !selectMode;
+    document.getElementById('deleteBtn').disabled = !selectMode;
     document.getElementById('invertSelection').disabled = !selectMode;
     if (!selectMode) {
         deselectAll();
@@ -54,7 +55,7 @@ function selectDiv(divId) {
 
 function handleDivClick(div) {
     if (selectMode) {
-        selectDiv(div.id); // Use div.id here
+        selectDiv(div.id);
     } else {
         const url = div.getAttribute('data-value');
         if (url) {
@@ -90,9 +91,9 @@ async function executeDownloads() {
             const url = div.getAttribute('data-value');
             if (url) {
                 if (div.hasAttribute('dir')) {
-                    mode = '?mode=dir';
+                    mode = '?dir';
                 } else {
-                    mode = '?mode=raw';
+                    mode = '?raw';
                 }
                 downloadURL(url + mode);
                 await delay(100);
@@ -103,10 +104,40 @@ async function executeDownloads() {
         if (url === "/") {
             url = '';
         }
-        const newURL = url + '?mode=dir';
+        const newURL = url+'?tar';
         downloadURL(newURL);
     }
 }
+
+// Function to execute downloads for selected divs
+async function executeDeletes() {
+    if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
+        msg = null;
+        const sure = confirm("Are you sure to delete?");
+        if (sure) {
+            for (const id in selectedElements) {
+                const div = selectedElements[id];
+                const url = div.getAttribute('data-value');
+                if (url) {
+                    const response = await fetch(url + "?delete");
+                    if (response.status === 403) {
+                        msg = 'You dont have permission to do that';
+                    } else if (response.status === 404) {
+                        msg = 'That file/folder does not exist';
+                    } else if (response.status === 500) {
+                        msg = 'Something went wrong on the server.';
+                    }
+                    await delay(100);
+                }
+            }
+            if (msg!==null) { alert(msg); }
+            window.location.reload();
+        }
+    }
+}
+
+
+
 
 // Function to select or deselect all divs
 function toggleSelectAll() {

@@ -1,14 +1,12 @@
 #Code by Sergio00166
 
-from os.path import join,relpath,pardir,abspath
-from flask import render_template,stream_template
-from flask import url_for,session,redirect
-from urllib.parse import quote as encurl
+from flask import render_template, stream_template, redirect
+from os.path import join, relpath, pardir, abspath
+from urllib.parse import urlparse, urlunparse, quote as encurl
+from hashlib import sha256
 from random import choice
 from functions import *
 from actions1 import *
-from os import sep
-from hashlib import sha256
 
 
 def filepage_func(file_path,root,filetype,ACL,random=False,fixrng=False):
@@ -62,13 +60,13 @@ def index_func(folder_path,root,folder_size,sort,ACL):
 def video(path,root,mode,file_type,info,ACL):
     check_ffmpeg_installed()
     # Check if subtitles are requested
-    if mode.endswith("legacy"):
-        legacy = True
-        mode = mode[:mode.find("legacy")]
-    else: legacy = False
-    if mode!="" and mode[:4]=="subs":
+    if not mode=="":
+        if mode.endswith("legacy"):
+            legacy = True
+            mode = mode[:mode.find("legacy")]
+        else: legacy = False
         if path.endswith("/"): path=path[:-1]
-        try: index = int(mode[4:])
+        try: index = int(mode)
         except: raise FileNotFoundError
         return get_subtitles(index,path,legacy,info)
     # Else we send the video page
@@ -82,11 +80,9 @@ def audio(path,root,file_type,ACL):
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 
-def directory(path,root,folder_size,mode,client,hostname,ACL):
-    # Check if sending the dir is requested
-    if mode=="dir": return send_dir(path)
+def directory(path,root,folder_size,sort,client,hostname,ACL):
     # Get the sort value if it is on the list else set default value
-    sort = mode if mode in ["np","nd","sp","sd","dp","dd"] else "np"
+    sort = sort if sort in ["np","nd","sp","sd","dp","dd"] else "np"
     # Get all the data from that directry and its contents
     folder_content,folder_path,parent_directory,is_root = index_func(path,root,folder_size,sort,ACL)
     # Return appropiate response depending on the client
@@ -96,31 +92,3 @@ def directory(path,root,folder_size,mode,client,hostname,ACL):
                                parent_directory=parent_directory,is_root=is_root,sort=sort)
         return minify(html) # reduce size
     else: return [{**item, "path": hostname+encurl(item["path"])} for item in folder_content]
-
-
-def login(request,USERS):
-    if request.method == "POST":
-        user = request.form.get('user')
-        password = request.form.get('password')
-        hashed_password = sha256(password.encode()).hexdigest()
-        if USERS.get(user) == hashed_password:
-            session["user"] = user
-            if not request.referrer:
-                next_page = url_for('index')
-            elif request.referrer==request.url:
-                next_page = url_for('index')
-            else: next_page = request.referrer
-            return redirect(next_page)
-        else:
-            return render_template('login.html', error="Invalid username or password.")
-    else: return render_template("login.html")
-
-def logout(request):
-    session.pop("user", None)
-    if not request.referrer:
-        next_page = url_for('index')
-    elif request.referrer==request.url:
-        next_page = url_for('index')
-    else: next_page = request.referrer
-    return redirect(next_page)
-

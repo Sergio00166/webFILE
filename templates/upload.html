@@ -1,0 +1,73 @@
+<!-- Code by Sergio00166 -->
+
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UPLOAD</title>
+    <link rel="stylesheet" href="{{ url_for('index', static='css/forms.css') }}">
+  </head>
+
+  <body>
+    <section class="hero is-primary is-fullheight">
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <div class="column is-4 is-offset-4"> {% if error %} <h1 class="title has-text-danger">{{ error }}</h1> {% endif %} <div class="box">
+              <div class="field">
+                <div class="control">
+                  <div class="select is-large" style="width: 100%;">
+                    <select id="actionSelect" style="width: 100%;" onchange="handleOptionChange()">
+                      <option value="" selected>Select an option</option>
+                      <option value="mkdir">Create Dir</option>
+                      <option value="upFile">Upload File(s)</option>
+                      <option value="upDir">Upload Folder</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div id="backButton" style="display: none;">
+                <button class="button is-block is-danger is-large is-fullwidth" onclick="window.location.href = window.location.origin + window.location.pathname;">Cancel</button>
+              </div>
+              <form id="createDirForm" method="POST" action="?add" style="display: none;">
+                <input type="hidden" name="action" value="mkdir">
+                <div class="field">
+                  <div class="control">
+                    <input class="input is-large" type="text" name="foldername" placeholder="Enter folder name" value="{{ filename|default('') }}">
+                  </div>
+                </div>
+                <button class="button is-block is-info is-large is-fullwidth">Create Folder</button>
+              </form>
+              <form id="uploadFileForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
+                <input type="hidden" name="action" value="upFile">
+                <div class="field file-dropzone" style="border: 2px dashed #00d1b2; padding: 20px; cursor: pointer;" onclick="document.getElementById('fileInput').click();">
+                  <span class="file-label" id="fileLabel">Drag here or click to open menu</span>
+                  <input class="file-input" type="file" name="files" id="fileInput" multiple style="display: none;" onchange="updateFileLabel('fileInput', 'fileLabel')">
+                </div>
+                <button class="button is-block is-info is-large is-fullwidth">Upload File(s)</button>
+              </form>
+              <form id="uploadDirForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
+                <input type="hidden" name="action" value="upDir">
+                <div class="field">
+                  <div class="file is-large">
+                    <label class="file-label" style="width: 100%;">
+                      <input class="file-input" type="file" name="files" id="dirInput" webkitdirectory>
+                      <span class="file-cta" style="width: 100%;">
+                        <span class="file-label" id="dirLabel"></span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <button class="button is-block is-info is-large is-fullwidth">Upload Folder</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <br>
+    </section>
+    <script defer src="{{ url_for('index', static='js/upload.js') }}"></script>
+    <script> const selectedAction = "{{ action|default('') }}"; </script>
+  </body>
+</html>

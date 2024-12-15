@@ -1,13 +1,14 @@
 #Code by Sergio00166
 
-from os.path import commonpath,join,isdir,relpath,abspath
-from os import listdir,pardir,sep,scandir,access,R_OK
-from os.path import getmtime,getsize,exists
+from os.path import commonpath, join, isdir, relpath, abspath
+from os import listdir, sep, scandir, access, R_OK
+from os.path import getmtime, getsize, exists
 from datetime import datetime as dt
 from json import load as jsload
+from time import sleep as delay
 from sys import path as pypath
-from pathlib import Path
 from flask import session
+from pathlib import Path
 
 
 is_subdirectory = lambda parent, child: commonpath([parent]) == commonpath([parent, child])
@@ -119,12 +120,13 @@ def humanize_content(folder_content):
     return folder_content
 
 
-def isornot(path,root):
+def isornot(path,root,igntf=False):
     # Checks if the path is inside the root dir
     # else raise an exception depending on the case
     path = path.replace("/",sep)
     path = abspath(root+sep+path)
     if is_subdirectory(root, path):
+        if igntf: return path
         if not exists(path): raise FileNotFoundError
         if not access(path, R_OK): raise PermissionError
     else: raise PermissionError
@@ -132,28 +134,40 @@ def isornot(path,root):
 
 
 def update_rules(USERS,ACL):
-    """ LOAD DATA FROM DISK """
     path = sep.join([pypath[0],"extra",""])
-    try:
-        tmp = jsload(open(path+"users.json"))
-        USERS.clear(); USERS.update(tmp)
-    except: pass
-    try:
-        tmp = jsload(open(path+"acl.json"))
-        ACL.clear(); ACL.update(tmp)
-    except: pass
+    users_db = path+"users.json"
+    acl_db = path+"acl.json"
+    old_mtimes = (0,0)
+    while True:
+        try:
+            mtimes = (
+                getmtime(users_db),
+                getmtime(acl_db)
+            )
+            if mtimes > old_mtimes:
+                tmp = jsload(open(users_db))
+                USERS.clear(); USERS.update(tmp)
+                tmp = jsload(open(acl_db))
+                ACL.clear(); ACL.update(tmp)
+            old_mtimes = mtimes
+        except: pass
+        delay(1)
 
-
-# args (path,user)
 def validate_acl(path,ACL,write=False):
-    path = "/"+path
     askd_perm = 2 if write else 1
     user = session.get("user","DEFAULT")
     while True:
+        # Always start on /
+        if not path.startswith("/"):
+            path = "/"+path
+        # Check if there is a rule for it
         if path in ACL and user in ACL[path]:
             perm = ACL[path][user]
             if perm==0: break
             if perm>=askd_perm: return
+        # Check if on top and break loop
         if path=="/": break
-        path = "/"+"/".join(path.split("/")[:-1])
+        # Go to parent directory
+        path = "/".join(path.split("/")[:-1])
     raise PermissionError
+

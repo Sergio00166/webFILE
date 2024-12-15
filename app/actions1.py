@@ -1,11 +1,13 @@
 #Code by Sergio00166
 
-from flask import Response,Flask,render_template
-from os.path import join,relpath,exists,getsize
-from os.path import getmtime,basename,abspath
+from flask import Response, render_template, redirect, session
+from os.path import join, relpath, exists, getsize
+from os.path import getmtime, basename, abspath
+from urllib.parse import urlparse, urlunparse
 from multiprocessing import Queue, Process
-from os import sep,stat,walk,getenv
-from functions import isornot
+from os import sep, stat, walk
+from hashlib import sha256
+from flask import session
 from sys import stderr
 from video import *
 import tarfile
@@ -16,20 +18,6 @@ subsmimes = {
     "ass":"application/x-substation-alpha",
     "webvtt":"text/vtt",
 }
-
-def init():
-    # Set the paths of templates and static
-    templates=abspath(path[0]+sep+".."+sep+"templates")
-    sroot=abspath(path[0]+sep+".."+sep+"static"+sep)
-    # Get all the args from the Enviorment
-    root = getenv('FOLDER',None)
-    if root is None: exit()
-    folder_size = getenv('SHOWSIZE',"FALSE")
-    folder_size = folder_size.upper()=="TRUE"
-    # Create the main app flask
-    app = Flask(__name__,static_folder=sroot,template_folder=templates)
-    return app,folder_size,root
-
 
 def create_tar_header(file_path, arcname):
     tarinfo = tarfile.TarInfo(name=arcname)
@@ -91,6 +79,29 @@ def get_subtitles(index,file,legacy,info):
 
 
 
+def login(request,USERS):
+    if request.method == "POST":
+        user = request.form.get('username')
+        password = request.form.get('password')
+        hashed_password = sha256(password.encode()).hexdigest()
+        if USERS.get(user) == hashed_password:
+            session["user"] = user
+            parsed_url = urlparse(request.url)
+            return redirect(urlunparse(
+                (parsed_url.scheme,parsed_url.netloc,parsed_url.path,'','','')
+            ))
+        else:
+            return render_template('login.html', error="Invalid username or password.")
+    else: return render_template("login.html")
+
+def logout(request):
+    session.pop("user")
+    parsed_url = urlparse(request.url)
+    return redirect(urlunparse(
+        (parsed_url.scheme,parsed_url.netloc,parsed_url.path,'','','')
+    ))
+
+
 def printerr(e):  
     tb = e.__traceback__
     while tb.tb_next: tb = tb.tb_next
@@ -106,7 +117,6 @@ def printerr(e):
     )
     print(msg,file=stderr)
 
-
 def error(e, client):
     if isinstance(e, PermissionError):
         if client == "json": return "[]", 403
@@ -118,4 +128,3 @@ def error(e, client):
         printerr(e) # Log the error to cli
         if client == "json": return "[]", 500
         return render_template('500.html'), 500
-

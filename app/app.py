@@ -1,35 +1,30 @@
 #Code by Sergio00166
 
 # BASIC WEB-file-sharing-server with a basic interface
-# Allows you to share a folder across the LAN (READ-ONLY mode)
+# Allows you to share a folder across the LAN
 
-from functions import get_file_type,getclient
-from flask import send_file,redirect,request
-from actions import *
-from secrets import token_hex
-
-app,folder_size,root = init()
-sroot = app.static_folder
-USERS,ACL = {},{}
-update_rules(USERS,ACL)
-app.secret_key = token_hex(16)
+from init import *
 
 
-@app.route('/<path:path>', methods=['GET'])
+@app.route('/<path:path>', methods=['GET','POST'])
 # For showing a directory, launching the custom media players
 # or send in raw mode (or stream) files or send the dir as .tar
 def explorer(path):
     client = getclient(request)
     try:
+        # User login/logout stuff
+        if "logout" in request.args: return logout(request)
+        if "login" in request.args:  return login(request,USERS)
         # Paths must not end on slash
         if path.endswith("/"): path = path[:-1]
-        # If we have args get them else set blank
-        mode = request.args["mode"]\
-        if "mode" in request.args else ""
+        # Files management stuff for users
+        if "add" in request.args:
+            return addfile(request,path,ACL,root)
+        if "delete" in request.args:
+            return delfile(request,path,ACL,root)
         # Check if we can access it
-        req_path = path
+        validate_acl(path,ACL)
         path = isornot(path,root)
-        validate_acl(req_path,ACL,write=False)
         # Get the file type of the file
         file_type = get_file_type(path)
         # Check if the path is not a dir
@@ -41,12 +36,13 @@ def explorer(path):
                 return send_file(path,mimetype='text/plain')
             # If it have the raw arg or is requested
             # from a cli browser return the file
-            elif mode=="raw" or client!="normal":
+            elif "raw" in request.args or client!="normal":
                 return send_file(path)
             # Custom player for each multimedia format
             elif file_type=="video":
                 info = (request.method.lower()=="head")
-                return video(path,root,mode,file_type,info,ACL)  
+                subs = request.args["subs"] if "subs" in request.args else ""
+                return video(path,root,subs,file_type,info,ACL)  
             elif file_type=="audio": return audio(path,root,file_type,ACL)
             # Else send it and let flask autodetect the mime
             else: return send_file(path)
@@ -56,7 +52,9 @@ def explorer(path):
                 return redirect(request.path+'/')
             proto = request.headers.get('X-Forwarded-Proto', request.scheme)
             hostname = proto+"://"+request.host+"/"
-            return directory(path,root,folder_size,mode,client,hostname,ACL)
+            sort = request.args["sort"] if "sort" in request.args else ""
+            if "tar" in request.args: return send_dir(path)
+            return directory(path,root,folder_size,sort,client,hostname,ACL)
   
     except Exception as e: return error(e,client)
 
@@ -67,14 +65,12 @@ def explorer(path):
 def index():
     client = getclient(request)
     try:
-        # If we have args get them else set blank
-        mode = request.args["mode"]\
-        if "mode" in request.args else ""
         # User login/logout stuff
-        if "logout" in request.args:
-            return logout(request)
-        if "login" in request.args:
-            return login(request,USERS)
+        if "logout" in request.args: return logout(request)
+        if "login" in request.args:  return login(request,USERS)
+        # Files management stuff for users
+        if "add" in request.args:
+            return addfile(request,"",ACL,root)
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
@@ -82,9 +78,10 @@ def index():
         # Else show the root directory
         proto = request.headers.get('X-Forwarded-Proto',request.scheme)
         hostname = proto+"://"+request.host+"/"
-        # Check if we can access it
-        path = isornot("/",root)
-        return directory(path,root,folder_size,mode,client,hostname,ACL)
+        path = isornot("/",root) # Check if we can access it
+        sort = request.args["sort"] if "sort" in request.args else ""
+        if "tar" in request.args: return send_dir(path)
+        return directory(path,root,folder_size,sort,client,hostname,ACL)
 
     except Exception as e: return error(e,client)
 
