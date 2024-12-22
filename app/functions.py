@@ -120,7 +120,7 @@ def humanize_content(folder_content):
     return folder_content
 
 
-def isornot(path,root,igntf=False):
+def safe_path(path,root,igntf=False):
     # Checks if the path is inside the root dir
     # else raise an exception depending on the case
     path = path.replace("/",sep)

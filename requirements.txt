@@ -1,4 +1,5 @@
 Flask>=3.1.0
 Flask-SQLAlchemy>=3.1.1
-msgspec @ git+https://github.com/jcrist/msgspec.git
+# Uncomment this if Flask-Session does not install
+# msgspec @ git+https://github.com/jcrist/msgspec.git
 Flask-Session>=0.8.0

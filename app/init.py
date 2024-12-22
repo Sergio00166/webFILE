@@ -1,3 +1,4 @@
+
 # Code by Sergio00166
 
 from functions import get_file_type,getclient
@@ -6,7 +7,7 @@ from actions import *
 from secrets import token_hex
 from threading import Thread
 from flask_session import Session
-from os import sep,getenv
+from os import sep,getenv,urandom
 from flask_sqlalchemy import SQLAlchemy
 from sys import path
 from files import addfile,delfile
@@ -26,7 +27,8 @@ def init():
 
 
 app,folder_size,root = init()
-app.secret_key = "321847374897fd7sf7e7fes"
+# Change this to an static value for multi-worker scenarios
+app.secret_key = urandom(24).hex()
 
 # Configure SQLite for session storage
 app.config['SESSION_TYPE'] = 'sqlalchemy'

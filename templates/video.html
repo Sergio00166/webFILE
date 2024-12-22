@@ -14,10 +14,12 @@
     <a href='{{ nxt }}' id="next"></a>
     <a href='{{ prev }}' id="prev"></a>
     <div class="video-container">
-      <video onended="handleVideoEnded()">
-        <source src="{{ request.path }}?raw">
-      </video>
-      <canvas></canvas>
+	  <div class="video-box">
+		  <video onended="handleVideoEnded()">
+			<source src="{{ request.path }}?raw">
+		  </video>
+		  <canvas></canvas>
+	  </div>
       <span class="custom-loader">
         <img class="loader" src="{{ url_for('index', static='svg/load.gif') }}">
       </span>

@@ -87,7 +87,8 @@ Clears the users/ACL database or both.
 ```
 SOURCE 'script_path';
 ```
-Executes a script from the specified path.
+Executes a script from the specified path.    
+I recommend to use the extension .aqs (Acl Query Script)
 
 ---
 

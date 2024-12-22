@@ -1,11 +1,21 @@
 # Code by Sergio00166
 
 from subprocess import Popen,PIPE,run,DEVNULL
+from multiprocessing import Queue, Process
 from json import loads as jsload
+from os.path import getsize
+from functools import cache
+from flask import Response
 from sys import path
 from os import sep
 
 path.append(sep.join([path[0],"extra","pysubs2.zip"]))
+
+subsmimes = {
+    "ssa":"application/x-substation-alpha",
+    "ass":"application/x-substation-alpha",
+    "webvtt":"text/vtt",
+}
 
 
 def check_ffmpeg_installed():
@@ -64,7 +74,7 @@ def get_info(file_path):
     return subtitles_list
 
 
-def get_track(file,index,info):
+def get_track(file,index,info=False):
     # Here we extract [and corvert] a
     # subtitle track from a video file
     codec = get_codec(file, index)
@@ -114,4 +124,31 @@ def convert_ass(source,ret):
         ret.put([True,subs.to_string("vtt")])
     except Exception as e: ret.put([False,e])
 
+
+@cache # Create a cache to dont overload the server
+def extract_subtitles(index,file,legacy,filesize):
+    codec,out = get_track(file,index)
+    # Convert or extract the subtitles
+    if legacy and codec!="webvtt":
+        ret = Queue() # Convert the subtitles on a proc
+        proc = Process(target=convert_ass, args=(out,ret,))
+        proc.start(); converted = ret.get(); proc.join()
+        if not converted[0]: raise converted[1]
+        out = converted[1]
+    return codec,out
+    
+
+def get_subtitles(index,file,legacy,info):
+    if info: codec,out = get_track(file,index,True)
+    else:
+        filesize = getsize(file)
+        args = (index,file,legacy,filesize)
+        codec,out = extract_subtitles(*args)
+    # Get filename and for downloading the subtitles
+    codec = "webvtt" if legacy else codec
+    subsname = file.split(sep)[-1]+f".track{str(index)}."
+    subsname += "vtt" if codec=="webvtt" else codec 
+    # Return the subtittle track
+    return Response(out,mimetype=subsmimes[codec], headers=\
+    {'Content-Disposition': 'attachment;filename='+subsname})
 

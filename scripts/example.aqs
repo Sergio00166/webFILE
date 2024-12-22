@@ -1,0 +1,7 @@
+FLUSH ALL;
+ADD-DF-USR;
+ADD-USER 'admin' PWD '1234';
+ALLOW 'DEFAULT' TO READ ON '/';
+REJECT 'DEFAULT' ON '/private';
+ALLOW 'admin' TO DOALL ON '/';
+COMMIT;

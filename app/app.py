@@ -24,7 +24,7 @@ def explorer(path):
             return delfile(request,path,ACL,root)
         # Check if we can access it
         validate_acl(path,ACL)
-        path = isornot(path,root)
+        path = safe_path(path,root)
         # Get the file type of the file
         file_type = get_file_type(path)
         # Check if the path is not a dir
@@ -74,11 +74,11 @@ def index():
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
-            return send_file( isornot(path,sroot) )
+            return send_file( safe_path(path,sroot) )
         # Else show the root directory
         proto = request.headers.get('X-Forwarded-Proto',request.scheme)
         hostname = proto+"://"+request.host+"/"
-        path = isornot("/",root) # Check if we can access it
+        path = safe_path("/",root) # Check if we can access it
         sort = request.args["sort"] if "sort" in request.args else ""
         if "tar" in request.args: return send_dir(path)
         return directory(path,root,folder_size,sort,client,hostname,ACL)

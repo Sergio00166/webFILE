@@ -2,7 +2,7 @@
 
 from flask import render_template, redirect
 from urllib.parse import urlparse, urlunparse
-from functions import validate_acl,isornot
+from functions import validate_acl,safe_path
 from os import sep,makedirs,remove,walk
 from os.path import exists,isdir,dirname,relpath
 from shutil import rmtree
@@ -18,7 +18,7 @@ def check_recursive(path,ACL,root,write=False):
 
 
 def do_job(ACL,r_path,filename,root,file=None,dupmkd=False):
-    try: path = isornot(r_path+sep+filename,root,True)
+    try: path = safe_path(r_path+sep+filename,root,True)
     except PermissionError: return "FORBIDDEN"
     except: pass
     else:
@@ -45,7 +45,7 @@ def do_job(ACL,r_path,filename,root,file=None,dupmkd=False):
 
 def addfile(request,path,ACL,root):
     error = None
-    _ = isornot(path,root)
+    _ = safe_path(path,root)
     validate_acl(path,ACL,True)
 
     if request.method == "POST":
@@ -83,7 +83,7 @@ def addfile(request,path,ACL,root):
 
 def delfile(request,path,ACL,root):
     validate_acl(path,ACL,True)
-    path = isornot(path,root)
+    path = safe_path(path,root)
     if isdir(path):
         try:
             check_recursive(path,ACL,root,True)
