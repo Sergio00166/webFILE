@@ -482,12 +482,8 @@ function handleProgress() {
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         videoContainer.requestFullscreen();
-        video.style.width = '100vw';
-        video.style.objectFit = 'cover';
     } else {
         document.exitFullscreen();
-        video.style.width = '';
-        video.style.objectFit = '';
     }
 }
 

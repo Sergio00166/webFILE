@@ -1,10 +1,10 @@
 #Code by Sergio00166
 
-from flask import render_template, redirect
+from flask import render_template,redirect,request
+from os.path import exists,isdir,dirname,relpath
 from urllib.parse import urlparse, urlunparse
 from functions import validate_acl,safe_path
 from os import sep,makedirs,remove,walk
-from os.path import exists,isdir,dirname,relpath
 from shutil import rmtree
 
 
@@ -43,7 +43,7 @@ def do_job(ACL,r_path,filename,root,file=None,dupmkd=False):
     return None
 
 
-def addfile(request,path,ACL,root):
+def addfile(path,ACL,root):
     error = None
     _ = safe_path(path,root)
     validate_acl(path,ACL,True)
@@ -81,7 +81,7 @@ def addfile(request,path,ACL,root):
     return render_template("upload.html", error=error)
 
 
-def delfile(request,path,ACL,root):
+def delfile(path,ACL,root):
     validate_acl(path,ACL,True)
     path = safe_path(path,root)
     if isdir(path):

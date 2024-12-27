@@ -2,7 +2,7 @@
 # Code by Sergio00166
 
 from functions import get_file_type,getclient
-from flask import send_file,redirect,request,Flask
+from flask import redirect,request,Flask
 from actions import *
 from secrets import token_hex
 from threading import Thread
@@ -11,6 +11,8 @@ from os import sep,getenv,urandom
 from flask_sqlalchemy import SQLAlchemy
 from sys import path
 from files import addfile,delfile
+from send_file import send_file,send_dir
+
 
 def init():
     # Set the paths of templates and static

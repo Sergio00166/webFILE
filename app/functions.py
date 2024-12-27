@@ -1,15 +1,16 @@
 #Code by Sergio00166
 
-from os.path import commonpath, join, isdir, relpath, abspath
-from os import listdir, sep, scandir, access, R_OK
-from os.path import getmtime, getsize, exists
+from os.path import commonpath,join,isdir,relpath,abspath
+from os import listdir,sep,scandir,access,R_OK
+from os.path import getmtime,getsize,exists
 from datetime import datetime as dt
+from flask import render_template
 from json import load as jsload
 from time import sleep as delay
 from sys import path as pypath
 from flask import session
 from pathlib import Path
-
+from sys import stderr
 
 is_subdirectory = lambda parent, child: commonpath([parent]) == commonpath([parent, child])
 # Load database of file type and extensions
@@ -171,3 +172,30 @@ def validate_acl(path,ACL,write=False):
         path = "/".join(path.split("/")[:-1])
     raise PermissionError
 
+
+def printerr(e):  
+    tb = e.__traceback__
+    while tb.tb_next: tb = tb.tb_next
+    e_type = type(e).__name__
+    e_file = tb.tb_frame.f_code.co_filename
+    e_line = tb.tb_lineno
+    e_message = str(e)
+    msg = (
+        "[SERVER ERROR]\n"+
+        f"   [line {e_line}] '{e_file}'\n"+
+        f"   [{e_type}] {e_message}\n"+
+        "[END ERROR]"
+    )
+    print(msg,file=stderr)
+
+def error(e, client):
+    if isinstance(e, PermissionError):
+        if client == "json": return "[]", 403
+        return render_template('403.html'), 403
+    elif isinstance(e, FileNotFoundError):
+        if client == "json": return "[]", 404
+        return render_template('404.html'), 404
+    else:
+        printerr(e) # Log the error to cli
+        if client == "json": return "[]", 500
+        return render_template('500.html'), 500
