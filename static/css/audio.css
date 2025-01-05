@@ -6,6 +6,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100vh;
     height: 100dvh;
     background: #000000;
     -webkit-tap-highlight-color: transparent;
@@ -55,13 +56,12 @@ img {
 
 .duration {
     position: relative;
-    width: 33%;
-    height: 0px;
+    width: 36%;
+    height: 16px;
     background: #62626274;
     cursor: pointer;
     border-radius: 5px;
     transition: all 0.2s;
-    padding: 8px;
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */

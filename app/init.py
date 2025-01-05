@@ -1,7 +1,7 @@
 
 # Code by Sergio00166
 
-from functions import get_file_type,getclient
+from functions import get_file_type,getclient,update_rules
 from flask import redirect,request,Flask
 from actions import *
 from secrets import token_hex
@@ -10,7 +10,7 @@ from flask_session import Session
 from os import sep,getenv,urandom
 from flask_sqlalchemy import SQLAlchemy
 from sys import path
-from files import addfile,delfile
+from files import addfile,delfile,move_copy
 from send_file import send_file,send_dir
 
 

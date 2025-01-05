@@ -230,8 +230,8 @@ duration.addEventListener("mousedown", (e) => {
 touchActive = false;
 let fixtouch;
 document.addEventListener('touchstart', ()=> {
-	clearTimeout(fixtouch);
-	touchActive = true;
+    clearTimeout(fixtouch);
+    touchActive = true;
 });
 document.addEventListener('touchend', ()=> {
     clearTimeout(fixtouch);
@@ -258,9 +258,11 @@ function handleMousemove(e) {
             hoverTime.style.width = `${percent}%`;
             const hovtime = (audio.duration * percent) / 100;
             hoverDuration.innerHTML = showDuration(hovtime);
-            hoverDuration.style.left = `${width-hoverDuration.offsetWidth/2}px`;
-            hoverDuration.style.display = 'block';
-            hoverDuration.style.visibility = "visible";
+            const offset = hoverDuration.offsetWidth/2;
+            var hvs = hoverDuration.style;
+            hvs.left = (width-offset)+"px";
+            hvs.display = 'block';
+            hvs.visibility = offset===0 ? "hidden":"visible";
         } else {
             e.preventDefault();
         }

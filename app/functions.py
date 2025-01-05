@@ -1,8 +1,8 @@
 #Code by Sergio00166
 
 from os.path import commonpath,join,isdir,relpath,abspath
+from os.path import getmtime,getsize,exists,normpath
 from os import listdir,sep,scandir,access,R_OK
-from os.path import getmtime,getsize,exists
 from datetime import datetime as dt
 from flask import render_template
 from json import load as jsload
@@ -157,6 +157,7 @@ def update_rules(USERS,ACL):
 def validate_acl(path,ACL,write=False):
     askd_perm = 2 if write else 1
     user = session.get("user","DEFAULT")
+    path = normpath(path)
     while True:
         # Always start on /
         if not path.startswith("/"):

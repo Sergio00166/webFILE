@@ -6,6 +6,7 @@ from os.path import basename,getmtime
 from re import compile as re_compile
 from flask import Response,request
 from os import sep, stat, walk
+from functions import validate_acl
 import tarfile
 
 RANGE_REGEX = re_compile(r"bytes=(\d+)-(\d*)")
@@ -63,11 +64,20 @@ def generate(file_path, ranges):
 
 """ TO SEND FOLDER AS TAR FILES IN REALTIME """
 
-def send_dir(directory):
-    folder = basename(directory)
-    if folder=="": folder="index"
+def send_dir(directory,root,ACL,name=None):
+    folder = name if name else basename(directory)
+    validate_directory_tree(directory,root,ACL)
     return Response(generate_tar(directory),mimetype='application/x-tar',
     headers={'Content-Disposition': 'attachment;filename='+folder+'.tar'})
+
+def validate_directory_tree(directory_path,web_root,ACL):
+    for root, _, files in walk(directory_path,followlinks=True):
+        for file in files:
+            file_path = join(root, file)
+            with open(file_path, 'rb'): pass
+            file_path = relpath(file_path,start=web_root)
+            file_path = file_path.replace(sep,"/")
+            validate_acl(file_path,ACL)
 
 def create_tar_header(file_path, arcname):
     tarinfo = tarfile.TarInfo(name=arcname)
@@ -93,8 +103,9 @@ def stream_tar_file(file_path, arcname):
     padding_size = (512-(file_size%512))%512
     yield b'\0' * padding_size
 
+
 def generate_tar(directory_path):
-    for root, _, files in walk(directory_path):
+    for root, _, files in walk(directory_path,followlinks=True):
         for file in files:
             file_path = join(root, file)
             arcname = relpath(file_path, directory_path)
