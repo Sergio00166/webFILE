@@ -12,10 +12,10 @@ import tarfile
 RANGE_REGEX = re_compile(r"bytes=(\d+)-(\d*)")
 
 
-def send_file(file_path,mimetype=None):
+def send_file(file_path,mimetype=None,cache=False):
     file_size = getsize(file_path)
     range_header = request.headers.get('Range')
-    
+
     if range_header:
         ranges = parse_ranges(range_header, file_size)
         if not ranges: return Response("Invalid Range", status=416)
@@ -26,14 +26,18 @@ def send_file(file_path,mimetype=None):
 
         headers = {
             'Content-Range': content_range, 'Accept-Ranges': 'bytes',
-            'Content-Length': str(sum([end - start + 1 for start, end in ranges])) 
+            'Content-Length': str(sum([end - start + 1 for start, end in ranges]))
         }
+
         if not mimetype is None: headers['Content-Type'] = mimetype
-        
+
         return Response(generate(file_path,ranges), status=206, headers=headers)
 
-    if mimetype is None: return df_send_file(file_path)
-    else: return df_send_file(file_path,mimetype=mimetype)
+    if mimetype is None: response =  df_send_file(file_path)
+    else: response = df_send_file(file_path,mimetype=mimetype)
+
+    if cache: response.headers['Cache-Control'] = 'public, max-age=3600'
+    return response
 
 
 def parse_ranges(range_header, file_size):

@@ -16,13 +16,15 @@ def check_recursive(path, ACL, root, write=False):
             validate_acl(item_path, ACL, write)
 
 def check_rec_chg_parent(path, ACL, root, new_parent):
+    parent = len(path.split("/"))
+    new_parent = new_parent.split("/")
     for fulldir, dirs, files in walk(path):
         for item in dirs + files:
-            item_path = relpath(fulldir + sep + item, start=root)
+            item_path = relpath(fulldir+sep+item, start=root)
             item_path = item_path.replace(sep, "/")
             path_parts = item_path.split("/")
-            if path_parts[0] == "prueba":
-                path_parts[0] = new_parent
+            path_parts = path_parts[parent:]
+            path_parts = new_parent+path_parts
             item_path = "/".join(path_parts)
             validate_acl(item_path, ACL, True)
 
@@ -143,7 +145,7 @@ def mvcp_worker(ACL, path, destination, root, mv):
         path = safe_path(path, root)
 
         if isdir(path):
-            check_recursive(path, ACL, root)
+            check_recursive(path, ACL, root, mv)
             check_rec_chg_parent(path, ACL, root, destination)
         
         destination = safe_path(destination, root, True)

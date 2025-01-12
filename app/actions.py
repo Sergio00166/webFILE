@@ -81,7 +81,7 @@ def audio(path,root,file_type,ACL):
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 
-def directory(path,root,folder_size,sort,client,hostname,ACL):
+def directory(path,root,folder_size,sort,client,ACL):
     # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np","nd","sp","sd","dp","dd"] else "np"
     # Get all the data from that directry and its contents
@@ -92,7 +92,7 @@ def directory(path,root,folder_size,sort,client,hostname,ACL):
         html = stream_template(file,folder_content=folder_content,folder_path=folder_path,\
                                parent_directory=parent_directory,is_root=is_root,sort=sort)
         return minify(html) # reduce size
-    else: return [{**item, "path": hostname+encurl(item["path"])} for item in folder_content]
+    else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
 
 
 
