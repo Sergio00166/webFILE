@@ -21,7 +21,17 @@ def explorer(path):
         
         # Files management stuff for users
         if "add" in request.args:
-            return addfile(path,ACL,root)
+            validate_acl(path, ACL, True)
+            return render_template("upload.html")
+
+        if "upfile" in request.args:
+            return upfile(dps,path,ACL,root)
+        
+        if "updir" in request.args:
+            return updir(dps,path,ACL,root)
+
+        if "mkdir" in request.args:
+            return mkdir(path,ACL,root)
 
         if "delete" in request.args:
             return delfile(path,ACL,root)
@@ -67,10 +77,12 @@ def explorer(path):
             if not request.path.endswith('/') and client!="json":
                 return redirect(request.path+'/')
             
+            proto = request.headers.get('X-Forwarded-Proto', request.scheme)
+            hostname = proto+"://"+request.host+"/"
             sort = request.args["sort"] if "sort" in request.args else ""
             
             if "tar" in request.args: return send_dir(path,root,ACL)
-            return directory(path,root,folder_size,sort,client,ACL)
+            return directory(path,root,folder_size,sort,client,hostname,ACL)
   
     except Exception as e: return error(e,client)
 
@@ -88,7 +100,17 @@ def index():
 
         # Files management stuff for users
         if "add" in request.args:
-            return addfile("",ACL,root)
+            validate_acl("", ACL, True)
+            return render_template("upload.html")
+    
+        if "upfile" in request.args:
+            return upfile(dps,"",ACL,root)
+        
+        if "updir" in request.args:
+            return updir(dps,"",ACL,root)
+
+        if "mkdir" in request.args:
+            return mkdir("",ACL,root)
 
         # Check if static page is requested
         if "static" in request.args:
@@ -96,11 +118,12 @@ def index():
             return send_file( safe_path(path,sroot),cache=True )
 
         # Else show the root directory
+        proto = request.headers.get('X-Forwarded-Proto',request.scheme)
+        hostname = proto+"://"+request.host+"/"
         path = safe_path("/",root) # Check if we can access it
         sort = request.args["sort"] if "sort" in request.args else ""
 
         if "tar" in request.args: return send_dir(path,root,ACL,"index")
-        return directory(path,root,folder_size,sort,client,ACL)
+        return directory(path,root,folder_size,sort,client,hostname,ACL)
 
     except Exception as e: return error(e,client)
-

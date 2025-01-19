@@ -78,22 +78,21 @@ async function executeDownloads() {
     if (selectMode) {
         for (const id in selectedElements) {
             const div = selectedElements[id];
-            const url = div.getAttribute('data-value');
+            var url = div.getAttribute('data-value');
             if (url) {
                 if (div.hasAttribute('dir')) {
-                    mode = '?dir';
-                } else {
-                    mode = '?raw';
-                }
-                downloadURL(url + mode);
+                    if (!url.endsWith("/"))
+                    { url += "/"; }
+                    mode = '?tar';
+                } else { mode = '?raw'; }
+                downloadURL(url+mode);
                 await delay(100);
             }
         }
     } else {
         var url = new URL(window.location.href).pathname;
-        if (url === "/") {
-            url = '';
-        }
+        if (url=="/" || url=="") { url = ''; }
+        if (!url.endsWith("/"))  { url += "/"; }
         const newURL = url+'?tar';
         downloadURL(newURL);
     }

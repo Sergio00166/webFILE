@@ -1,11 +1,10 @@
 #Code by Sergio00166
 
+from functions import validate_acl, safe_path, redirect_no_query
 from shutil import rmtree, move, copy, copytree, SameFileError
-from os.path import exists, isdir, dirname, relpath, basename
+from os.path import exists, isdir, relpath, basename
 from flask import render_template, redirect, request
-from urllib.parse import urlparse, urlunparse
-from functions import validate_acl, safe_path
-from os import sep, makedirs, remove, walk
+from os import sep, remove, walk, makedirs
 
 
 def check_recursive(path, ACL, root, write=False):
@@ -29,79 +28,73 @@ def check_rec_chg_parent(path, ACL, root, new_parent):
             validate_acl(item_path, ACL, True)
 
 
-def redirect_no_query():
-    parsed_url = urlparse(request.url)
-    return redirect(urlunparse(
-        (parsed_url.scheme,parsed_url.netloc,
-         parsed_url.path, '', '', '')
-        ))
-
-def upload_worker(ACL, r_path, filename, root, file=None, dupmkd=False):
-    try:
-        path = safe_path(r_path+sep+filename, root, True)
-    except PermissionError:
-        return "Permission denied", 403
-    except:
-        return "Internal server error"
-
-    if file is None and not exists(sep.join(path.split(sep)[:-1])):
-        return "Subdirectory does not exist"
-
-    elif exists(path):
-        return "Already exists"\
-               if file is None else\
-               "(Some) File(s) already exist"
-    try:
-        validate_acl(r_path+"/"+filename, ACL, True)
-
-        if file is None:
-            makedirs(path)
-        else:
-            makedirs(dirname(path), exist_ok=True)
-            file.save(path)
-
-    except PermissionError:
-        return "Permission denied for (some) item(s)"
-    except:
-        return "Internal server error"
-
-
-def addfile(path, ACL, root):
-    error = None
-    safe_path(path, root)
-    validate_acl(path, ACL, True)
-
-    if request.method == "POST":
-        action = request.form.get("action")
-
-        if action == "mkdir":
-            foldername = request.form.get("foldername", "").strip()
-            error = "The folder name cannot be empty."\
-                    if not foldername else\
-                    upload_worker(ACL, path, foldername, root)
-
-        elif action in ["upFile", "upDir"]:
-            updir = action == "upDir"
-            files = request.files.getlist('files')
+def mkdir(path, ACL, root):
     
-            if not files or (len(files) == 1 and not files[0].filename):
-                error = "Please select a folder to upload."\
-                if updir else "Please select file(s) to upload."
-            else:
-                for file in files:
-                    error = upload_worker(ACL, path, file.filename, root, file)
-                    if error: break
-        else:
-            error = "That method does not exist"
-
-        if error:
-            return render_template(
-                "upload.html",error=error,action=action,
-                filename=request.form.get("filename", "")
-            )
+    if request.method != "POST":
         return redirect_no_query()
 
-    return render_template("upload.html", error=error)
+    safe_path(path, root)
+    validate_acl(path, ACL, True)
+    foldername = request.form.get("foldername", "").strip()
+    error = None
+
+    if not foldername:
+        error = "Folder name cannot be empty."
+    else:
+        full_path = safe_path(path+sep+foldername, root, True)
+        parent_dir = sep.join(full_path.split(sep)[:-1])
+        r_path = path+sep+foldername
+
+        if not exists(parent_dir):
+            error = "Parent dir does not exist."
+        elif exists(full_path):
+            error = "Dir already exists."
+        else:
+            try: validate_acl(r_path, ACL, True)
+            except PermissionError:
+                error = "You don't have permission to do that."
+            else: makedirs(full_path)
+
+    if not error: return redirect_no_query()
+
+    return render_template(
+        "upload.html", error=error,
+        action="mkdir", filename=foldername
+    )
+
+
+def handle_upload(dps, path, ACL, root, action, up_type):
+
+    if request.method != "POST":
+        redirect_no_query()
+
+    dps.set_params(dps, ACL, path, root)
+    safe_path(path, root)
+    validate_acl(path, ACL, True)
+    error = None
+
+    try: request.form.get("filename")
+    except PermissionError:
+        error = "You don't have permission to upload some files."
+    except NameError:
+        error = f"Please select {up_type} to upload."
+    except SameFileError:
+        error = "(Some) item(s) already exists."
+    except:
+        error = "Something went wrong when uploading."
+
+    if not error: return redirect_no_query()
+    return render_template(
+        "upload.html", error=error,
+        action=action, filename=""
+    )
+    
+
+def upfile(dps, path, ACL, root):
+    return handle_upload(dps, path, ACL, root, "upFile", "file(s)")
+
+def updir(dps, path, ACL, root):
+    return handle_upload(dps, path, ACL, root, "upDir", "dir")
 
 
 def delfile(path, ACL, root):

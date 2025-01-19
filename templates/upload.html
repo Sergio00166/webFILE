@@ -29,8 +29,7 @@
               <div id="backButton" style="display: none;">
                 <button class="button is-block is-danger is-large is-fullwidth" onclick="window.location.href = window.location.origin + window.location.pathname;">Cancel</button>
               </div>
-              <form id="createDirForm" method="POST" action="?add" style="display: none;">
-                <input type="hidden" name="action" value="mkdir">
+              <form id="createDirForm" method="POST" action="?mkdir" style="display: none;">
                 <div class="field">
                   <div class="control">
                     <input class="input is-large" type="text" name="foldername" placeholder="Enter folder name" value="{{ filename|default('') }}">
@@ -38,16 +37,14 @@
                 </div>
                 <button class="button is-block is-info is-large is-fullwidth">Create Folder</button>
               </form>
-              <form id="uploadFileForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
-                <input type="hidden" name="action" value="upFile">
+              <form id="uploadFileForm" method="POST" action="?upfile" enctype="multipart/form-data" style="display: none;">
                 <div class="field file-dropzone" style="border: 2px dashed #00d1b2; padding: 20px; cursor: pointer;" onclick="document.getElementById('fileInput').click();">
                   <span class="file-label" id="fileLabel">Drag here or click to open menu</span>
                   <input class="file-input" type="file" name="files" id="fileInput" multiple style="display: none;" onchange="updateFileLabel('fileInput', 'fileLabel')">
                 </div>
                 <button class="button is-block is-info is-large is-fullwidth">Upload File(s)</button>
               </form>
-              <form id="uploadDirForm" method="POST" action="?add" enctype="multipart/form-data" style="display: none;">
-                <input type="hidden" name="action" value="upDir">
+              <form id="uploadDirForm" method="POST" action="?updir" enctype="multipart/form-data" style="display: none;">
                 <div class="field">
                   <div class="file is-large">
                     <label class="file-label" style="width: 100%;">

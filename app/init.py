@@ -1,17 +1,17 @@
-
 # Code by Sergio00166
 
 from functions import get_file_type,getclient,update_rules
-from flask import redirect,request,Flask
-from actions import *
-from secrets import token_hex
-from threading import Thread
+from override import CustomFormDataParser
+from files import upfile,updir,mkdir,delfile,move_copy
+from flask import redirect,request,Flask,Request
+from send_file import send_file,send_dir
+from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from os import sep,getenv,urandom
-from flask_sqlalchemy import SQLAlchemy
+from secrets import token_hex
+from threading import Thread
+from actions import *
 from sys import path
-from files import addfile,delfile,move_copy
-from send_file import send_file,send_dir
 
 
 def init():
@@ -26,7 +26,6 @@ def init():
     # Create the main app flask
     app = Flask(__name__,static_folder=sroot,template_folder=templates)
     return app,folder_size,root
-
 
 app,folder_size,root = init()
 # Change this to an static value for multi-worker scenarios
@@ -44,6 +43,14 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 db = SQLAlchemy(app)
 app.config['SESSION_SQLALCHEMY'] = db
 Session(app)
+
+# Modify default behaviour
+app.request_class.\
+form_data_parser_class =\
+CustomFormDataParser
+
+# Get current parser object
+dps = app.request_class.form_data_parser_class
 
 # Define basic stuff
 sroot = app.static_folder

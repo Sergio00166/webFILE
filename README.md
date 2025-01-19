@@ -18,7 +18,8 @@ Users can be granted or denied read-only access, write permissions (upload, crea
 
 
 ## To run the web server: ##
-   **To use multi-worker change in app/init.py the app.secret_key to a fixed one to share sessions across workers**
+   **To use multi-worker change in app/init.py the app.secret_key to a fixed one to share sessions across workers**    
+   **If using a reverse proxy ensure that POST buffering is disabled, in NGINX is proxy_request_buffering off;**     
    
   - To run via flask internal HTTP server via CLI (in the /scripts folder)    
     ```python3 run.py -b IP_addr -p port -d directory [--dirsize]```
