@@ -1,5 +1,6 @@
 /* Code by Sergio00166 */
 
+
 function changeURL(mode) {
     var url = window.location.href;
     var urlObj = new URL(url);
@@ -256,13 +257,18 @@ function pasteFiles() {
         mode = "move";
     }
     if (toPaste.length === 0){ return; }
-    for (const path of toPaste){
-        const formData = createForm(urlPath, mode, path);
-        const success = sendRequest(formData, path,urlPath);
-        if (!success){ break; }
-    }
-    clearAllMvCp();
-    location.reload();
+    document.getElementById("loader").style.display = "";
+    document.querySelector(".list-group").style.display = "none";
+    setTimeout(()=>{
+        for (const path of toPaste){
+            const formData = createForm(urlPath, mode, path);
+            const success = sendRequest(formData, path,urlPath);
+            if (!success){ break; }
+        }
+        clearAllMvCp();
+        location.reload();
+    },250);
+
 }
 
 
@@ -290,13 +296,13 @@ function createOptionDialog() {
         const button = document.createElement("button");
         button.textContent = option.text;
         Object.assign(button.style, {
+            margin: "0",
             width: "100%",
             padding: "10px",
             border: "none",
             borderRadius: "5px",
             backgroundColor: "#007bff",
             color: "#fff",
-            cursor: "pointer"
         });
         button.onmouseover = () => button.style.backgroundColor = "#0056b3";
         button.onmouseout = () => button.style.backgroundColor = "#007bff";
@@ -315,3 +321,4 @@ function createOptionDialog() {
         }
     }
 }
+

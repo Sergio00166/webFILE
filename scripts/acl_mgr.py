@@ -3,6 +3,7 @@
 from re import compile as recompile
 from json import load as jsload
 from json import dump as jsdump
+from os.path import normpath
 from hashlib import sha256
 from sys import path
 from os import sep
@@ -74,6 +75,7 @@ def allow_func(args):
         if not is_valid_path.match(resource):
             print(" ACLs KEYs MUST BE A VALID PATH")
             return
+        resource = normpath(resource).replace(sep,"/")
         if resource not in ACL: ACL[resource]={}
         ACL[resource][user] = perms[permission]
 
@@ -92,6 +94,7 @@ def reject_func(args):
         if not is_valid_path.match(resource):
             print(" ACLs KEYs MUST BE A VALID PATH")
             return
+        resource = normpath(resource).replace(sep,"/")
         if resource not in ACL:
             ACL[resource]={}
         if user in ACL[resource]:

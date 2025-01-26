@@ -16,6 +16,14 @@ Users can be granted or denied read-only access, write permissions (upload, crea
  ```pip install -r requirements.txt```    
  Optional for video streaming: ```ffmpeg``` (as system package)
 
+## Extra: ##
+The app/extra directory serves as the storage location for several key 
+files used by the acl_mgr.py script and the application, including:
+   - ACL and User Database   (JSON).
+   - File extension Database (JSON).
+   - Local Storage Database.
+   - Server error log file.
+   - A compressed library (PySubs2).
 
 ## To run the web server: ##
    **To use multi-worker change in app/init.py the app.secret_key to a fixed one to share sessions across workers**    

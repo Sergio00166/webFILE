@@ -12,7 +12,14 @@
     <script src="{{ url_for('index', static='js/index.js') }}"></script>
 </head>
 
+
 <body>
+    <div id="loader" style="display: none;">
+        <div class="load_container">
+            <img src="{{ url_for('index', static='svg/load.gif') }}">
+            <p>Please wait...</p>
+        </div>
+    </div>
     <div class="list-group">
         <h2><pre>Index of&nbsp;{{ folder_path }}</pre></h2>
         <div class="controls">
@@ -28,7 +35,7 @@
                 </button>
             </div>
             <div class="ctrl_flex_1">
-                <button class="toggleSelectMode" class="h_small" onclick="toggleSelectMode()">SELECT</button>
+                <button class="toggleSelectMode" onclick="toggleSelectMode()">SELECT</button>
                 <button id="invertSelection" onclick="invertSelection()" disabled>INV</button>
                 <button onclick="executeDownloads()">DOWNLOAD</button>
                 {% if 'user' in session %}

@@ -24,9 +24,9 @@ def custom_stream_factory(
 ) -> t.IO[bytes]:
 
     if filename=="": raise NameError
-    path = safe_path(parent+sep+filename, root, True)
-    if exists(path): raise SameFileError
+    path = safe_path(parent+sep+filename,root,True)
     validate_acl(parent+"/"+filename, ACL, True)
+    if exists(path): raise SameFileError
     makedirs(dirname(path), exist_ok=True)
 
     return open(path,"wb")

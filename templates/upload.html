@@ -13,9 +13,16 @@
     <section class="hero is-primary is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <div class="column is-4 is-offset-4"> {% if error %} <h1 class="title has-text-danger">{{ error }}</h1> {% endif %} <div class="box">
+          <div class="column is-4 is-offset-4"> 
+              {% if error %} <h1 class="title has-text-danger">{{ error }}</h1> {% endif %} <div class="box">
+
+              <div id="loader"  style="display: none;">
+                   <img src="{{ url_for('index', static='svg/load.gif') }}">
+                   <p>Uploading. Please wait...</p>
+              </div>
+
               <div class="field">
-                <div class="control">
+                <div class="control" id="selector">
                   <div class="select is-large" style="width: 100%;">
                     <select id="actionSelect" style="width: 100%;" onchange="handleOptionChange()">
                       <option value="" selected>Select an option</option>
@@ -26,9 +33,11 @@
                   </div>
                 </div>
               </div>
+
               <div id="backButton" style="display: none;">
                 <button class="button is-block is-danger is-large is-fullwidth" onclick="window.location.href = window.location.origin + window.location.pathname;">Cancel</button>
               </div>
+
               <form id="createDirForm" method="POST" action="?mkdir" style="display: none;">
                 <div class="field">
                   <div class="control">
@@ -37,13 +46,15 @@
                 </div>
                 <button class="button is-block is-info is-large is-fullwidth">Create Folder</button>
               </form>
+
               <form id="uploadFileForm" method="POST" action="?upfile" enctype="multipart/form-data" style="display: none;">
                 <div class="field file-dropzone" style="border: 2px dashed #00d1b2; padding: 20px; cursor: pointer;" onclick="document.getElementById('fileInput').click();">
                   <span class="file-label" id="fileLabel">Drag here or click to open menu</span>
                   <input class="file-input" type="file" name="files" id="fileInput" multiple style="display: none;" onchange="updateFileLabel('fileInput', 'fileLabel')">
                 </div>
-                <button class="button is-block is-info is-large is-fullwidth">Upload File(s)</button>
+                <button id="f_upload" class="button is-block is-info is-large is-fullwidth">Upload File(s)</button>
               </form>
+
               <form id="uploadDirForm" method="POST" action="?updir" enctype="multipart/form-data" style="display: none;">
                 <div class="field">
                   <div class="file is-large">
@@ -55,8 +66,9 @@
                     </label>
                   </div>
                 </div>
-                <button class="button is-block is-info is-large is-fullwidth">Upload Folder</button>
+                <button id="d_upload" class="button is-block is-info is-large is-fullwidth upload">Upload Folder</button>
               </form>
+
             </div>
           </div>
         </div>

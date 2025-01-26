@@ -1,6 +1,7 @@
 #Code by Sergio00166
 
 from functions1 import *
+from os import R_OK
 
 
 def safe_path(path,root,igntf=False):
@@ -10,9 +11,11 @@ def safe_path(path,root,igntf=False):
     path = abspath(root+sep+path)
     if is_subdirectory(root, path):
         if igntf: return path
-        if not exists(path): raise FileNotFoundError
-        if not access(path, R_OK): raise PermissionError
-    else: raise PermissionError
+        if not exists(path):
+            raise FileNotFoundError
+        if not access(path, R_OK):
+            raise PermissionError
+    else:   raise PermissionError
     return path
 
 def readable(num, suffix="B"):

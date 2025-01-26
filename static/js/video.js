@@ -1,6 +1,7 @@
 /* Code by Sergio00166 */
 
 let mouse_ctrl_delay = 1500;
+let doubleTouch_delay = 400;
 
 var video = document.querySelector("video");
 const volume = document.querySelector(".volume");
@@ -772,7 +773,7 @@ function double_touch(e) {
     const now = Date.now();
     const touchInterval = now - lastTouchTime;
     const divRect = touchBox.getBoundingClientRect();
-    if (touchInterval < 250) {
+    if (touchInterval < doubleTouch_delay) {
         const touchX = event.changedTouches[0].clientX;
         const centerX = divRect.left + (divRect.width / 2);
         const p = touchX < centerX;
@@ -784,7 +785,7 @@ function double_touch(e) {
             show_main_animation("fordward");
         }
     } else {
-        touchTimeout = setTimeout(toggleMainState, 250);
+        touchTimeout = setTimeout(toggleMainState, doubleTouch_delay);
     }
     lastTouchTime = now;
 }

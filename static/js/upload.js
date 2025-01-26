@@ -60,4 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => { handleOptionChange(true); }, 25);
 });
 
+function show_loader() {
+    document.getElementById("createDirForm").style.display = "none";
+    document.getElementById("uploadFileForm").style.display = "none";
+    document.getElementById("uploadDirForm").style.display = "none";
+    document.getElementById("selector").style.display = "none";
+    document.getElementById("loader").style.display = "block"
+    document.getElementById("backButton").style.display = "block";
+}
 
+document.getElementById("f_upload").addEventListener("click", show_loader );
+document.getElementById("d_upload").addEventListener("click", show_loader );
