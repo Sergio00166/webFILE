@@ -2,23 +2,22 @@
 
 <!DOCTYPE html>
 <html>
-
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>UPLOAD</title>
     <link rel="stylesheet" href="{{ url_for('index', static='css/forms.css') }}">
   </head>
-
   <body>
     <section class="hero is-primary is-fullheight">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <div class="column is-4 is-offset-4"> 
-              {% if error %} <h1 class="title has-text-danger">{{ error }}</h1> {% endif %} <div class="box">
+          <div class="column is-4 is-offset-4" id="container">
+            <h1 class="title has-text-danger" id="error">{% if error %}{{ error }}{% endif %}</h1>
 
-              <div id="loader"  style="display: none;">
-                   <img src="{{ url_for('index', static='svg/load.gif') }}">
-                   <p>Uploading. Please wait...</p>
+            <div class="box">
+              <div id="loader" style="display: none;">
+                <img src="{{ url_for('index', static='svg/load.gif') }}">
+                <p>Uploading. Please wait...</p>
               </div>
 
               <div class="field">
@@ -38,13 +37,13 @@
                 <button class="button is-block is-danger is-large is-fullwidth" onclick="window.location.href = window.location.origin + window.location.pathname;">Cancel</button>
               </div>
 
-              <form id="createDirForm" method="POST" action="?mkdir" style="display: none;">
+              <form id="createDirForm" onsubmit="mkdir(event)" style="display: none;">
                 <div class="field">
                   <div class="control">
-                    <input class="input is-large" type="text" name="foldername" placeholder="Enter folder name" value="{{ filename|default('') }}">
+                    <input class="input is-large" type="text" id="foldername" placeholder="Enter folder name" value="{{ filename|default('') }}">
                   </div>
                 </div>
-                <button class="button is-block is-info is-large is-fullwidth">Create Folder</button>
+                <button type="submit" class="button is-block is-info is-large is-fullwidth">Create Folder</button>
               </form>
 
               <form id="uploadFileForm" method="POST" action="?upfile" enctype="multipart/form-data" style="display: none;">
@@ -66,7 +65,7 @@
                     </label>
                   </div>
                 </div>
-                <button id="d_upload" class="button is-block is-info is-large is-fullwidth upload">Upload Folder</button>
+                <button id="d_upload" class="button is-block is-info is-large is-fullwidth">Upload Folder</button>
               </form>
 
             </div>
@@ -77,6 +76,8 @@
       <br>
     </section>
     <script defer src="{{ url_for('index', static='js/upload.js') }}"></script>
-    <script> const selectedAction = "{{ action|default('') }}"; </script>
+    <script>
+      const selectedAction = "{{ action|default('') }}";
+    </script>
   </body>
 </html>

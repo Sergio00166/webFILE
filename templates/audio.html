@@ -1,7 +1,7 @@
 <!-- Code by Sergio00166 -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -18,7 +18,7 @@
     <a href='{{ rnd }}' id="random"></a>
 
     <div class="audio-container">
-        <h2> {{ name }} </h2> <br>
+        <h2>{{ name }}</h2> <br>
         <audio onended="handleAudioEnded()">
             <source src="{{ request.path }}?raw">
         </audio>
@@ -36,16 +36,15 @@
             <span>&nbsp;</span>
         </span>
         <div class="flex">
-            <button class="round-button play" onclick="toggleMainState()">
+            <button class="round-button play" onclick="toggleMainState()" title="Play/Pause">
                 <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
                 <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
             </button>
             <span class="volume muteUnmute">
-                <button class="round-button" onclick="toggleMuteUnmute()">
+                <button class="round-button" onclick="toggleMuteUnmute()" title="Volume">
                     <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
                     <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
-                    <img class="sh_meda"
-                        src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
+                    <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
                     <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
                     <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
                 </button>
@@ -53,15 +52,15 @@
                     <div class="current-vol"></div>
                 </div>
             </span>
-            <button class="round-button" onclick="prev()"><img
-                    src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
-            <button class="round-button" onclick="next()"><img
-                    src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
-            <button class="round-button" id="mode">1</button>
-            <button class="round-button download" onclick="download()">
+            <button class="round-button" onclick="prev()" title="Previous">
+                 <img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}"></button>
+            <button class="round-button" onclick="next()" title="Next">
+                 <img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}"></button>
+            <button class="round-button" id="mode" title="Loop">1</button>
+            <button class="round-button download" onclick="download()" title="Download">
                 <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}"></button>
             <span class="settings">
-                <button class="round-button" onclick="handleSettingMenu()">
+                <button class="round-button" onclick="handleSettingMenu()" title="Speed">
                     <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}">
                 </button>
                 <ul class="setting-menu">

@@ -10,6 +10,7 @@ body {
     height: 100dvh;
     background: #000000;
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
     user-select: none;
 }
 .audio-container {
@@ -31,6 +32,7 @@ body {
 h2 {
     text-align: center;
     color: #ffffff;
+    -webkit-user-select: text;
     user-select: text;
     word-break: break-all;
     white-space: pre-wrap;

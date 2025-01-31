@@ -7,7 +7,6 @@ from werkzeug.formparser\
 from flask import Request
 from os import sep, makedirs
 from os.path import dirname, exists
-from shutil import SameFileError
 
 
 t_parse_result = tuple[
@@ -26,7 +25,7 @@ def custom_stream_factory(
     if filename=="": raise NameError
     path = safe_path(parent+sep+filename,root,True)
     validate_acl(parent+"/"+filename, ACL, True)
-    if exists(path): raise SameFileError
+    if exists(path): raise FileExistsError
     makedirs(dirname(path), exist_ok=True)
 
     return open(path,"wb")

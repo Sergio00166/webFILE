@@ -1,7 +1,7 @@
 <!-- Code by Sergio00166 -->
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,12 +42,12 @@
         </div>
         <div class="btn-controls">
           <div class="side-controls">
-            <button class="round-button play-pause" onclick="toggleMainState()">
+            <button class="round-button play-pause" onclick="toggleMainState()" title="Play/Pause">
               <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
               <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
             </button>
             <span class="volume">
-              <button class="round-button" onclick="toggleMuteUnmute()">
+              <button class="round-button" onclick="toggleMuteUnmute()" title="Volume">
                 <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
                 <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
                 <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
@@ -66,15 +66,15 @@
             <span>&nbsp;&nbsp;</span>
           </div>
           <div class="side-controls">
-            <button class="round-button" onclick="prev()">
+            <button class="round-button" onclick="prev()" title="Previous">
               <img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}">
             </button>
-            <button class="round-button" onclick="next()">
+            <button class="round-button" onclick="next()" title="Next">
               <img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}">
             </button>
-            <button class="round-button text" id="mode" onclick="chMode()">1</button>
+            <button class="round-button text" id="mode" onclick="chMode()" title="Loop">1</button>
             <span class="settings">
-              <button class="round-button" id="settings">
+              <button class="round-button" id="settings" title="Menu">
                 <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
               </button>
               <ul class="setting-menu">
@@ -103,7 +103,7 @@
                 <li id="liD">Download</li>
               </ul>
             </span>
-            <button class="round-button" onclick="toggleFullscreen()">
+            <button class="round-button" onclick="toggleFullscreen()" title="Fullscren">
               <img class="full" src="{{ url_for('index', static='svg/videoplayer/scan-outline.svg') }}">
               <img class="contract" src="{{ url_for('index', static='svg/videoplayer/contract-outline.svg') }}">
             </button>

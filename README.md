@@ -14,7 +14,7 @@ Users can be granted or denied read-only access, write permissions (upload, crea
 ## Requirements: ##
  Install all requirements with
  ```pip install -r requirements.txt```    
- Optional for video streaming: ```ffmpeg``` (as system package)
+ Optional for the video player: ```ffmpeg``` (as system package)
 
 ## Extra: ##
 The app/extra directory serves as the storage location for several key 

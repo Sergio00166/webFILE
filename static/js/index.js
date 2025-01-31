@@ -108,7 +108,9 @@ async function executeDeletes() {
                 const div = selectedElements[id];
                 const url = div.getAttribute('data-value');
                 if (url) {
-                    const response = await fetch(url+"?delete");
+                    const response = await fetch(
+                        url, {method: 'DELETE'}
+                    );
                     if (response.status === 403) {
                         msg = 'You dont have permission to do that';
                     } else if (response.status === 404) {
@@ -199,8 +201,7 @@ function renameFiles() {
             var dest = prompt('New Name for '+name);
             if (dest === null) { break; }
             dest = item.substring(0, item.lastIndexOf("/"))+"/"+dest;
-            const formData = createForm(dest, "move", item);
-            const success = sendRequest(formData, item, dest);
+            const success  = sendRequest(item, dest, "MOVE");
             if (!success) break;
         }
         clearAllMvCp();
@@ -208,35 +209,27 @@ function renameFiles() {
     }
 }
 
-function createForm(destination, mode, path) {
-    destination = decodeURIComponent(destination);
-    const inputs = [
-        { name: 'destination', value: destination },
-        { name: 'action', value: mode },
-    ];
-    const formData = new FormData();
-    inputs.forEach(({ name, value }) => {
-        formData.append(name, value);
-    });
-    return formData;
-}
-
-function sendRequest(formData, path, currentUrlPath) {
+function sendRequest(path, destination, method) {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", path+"/?mvcp", false);
-    xhr.send(formData);
+    xhr.open(method, path, false);
+    destination = decodeURIComponent(destination);
+    xhr.setRequestHeader("Destination", destination);
+    xhr.send();
+
     if (xhr.status !== 200) {
-        let errorMessage;
+        let msg;
         if (xhr.status === 403) {
-            msg = 'You dont have permission to do that';
+            msg = 'You don’t have permission to do that';
         } else if (xhr.status === 404) {
             msg = 'That file/folder does not exist';
         } else if (xhr.status === 500) {
             msg = 'Something went wrong on the server.';
-        } else if (xhr.status === 400) {
-            msg = 'Method not valid';
         } else if (xhr.status === 409) {
             msg = 'It already exists';
+        } else if (xhr.status === 507) {
+            msg = 'Not enough free space';
+        } else {
+            msg = 'Something went wrong';
         }
         alert(msg);
         return false;
@@ -251,18 +244,17 @@ function pasteFiles() {
     urlPath = urlPath.endsWith('/')?urlPath.slice(0, -1):urlPath;
     if (urlPath===""){ urlPath += "/"; }
     let toPaste = cpList;
-    let mode = "copy";
+    let mode = "COPY";
     if (toPaste.length === 0){
         toPaste = mvList;
-        mode = "move";
+        mode = "MOVE";
     }
     if (toPaste.length === 0){ return; }
     document.getElementById("loader").style.display = "";
     document.querySelector(".list-group").style.display = "none";
     setTimeout(()=>{
         for (const path of toPaste){
-            const formData = createForm(urlPath, mode, path);
-            const success = sendRequest(formData, path,urlPath);
+            const success  = sendRequest(path, urlPath, mode);
             if (!success){ break; }
         }
         clearAllMvCp();
@@ -321,4 +313,3 @@ function createOptionDialog() {
         }
     }
 }
-

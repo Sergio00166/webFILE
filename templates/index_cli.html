@@ -35,7 +35,7 @@
         {% endif %}{% for item in folder_content %}
             <tr>
                 <td><a href="{{ url_for('explorer', path=item['path']) }}">
-                    {{ item['name'] }}{% if item['description']=='directory' %}/{% endif %}
+                    {{ item['name'] }}{% if item['type']=='directory' %}/{% endif %}
                 </a></td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
                 <td align="right">{{ item['size'] }}</td>

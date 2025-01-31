@@ -3,7 +3,6 @@
 let mouse_ctrl_delay = 1500;
 let doubleTouch_delay = 400;
 
-var video = document.querySelector("video");
 const volume = document.querySelector(".volume");
 const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
@@ -11,7 +10,6 @@ const buffer = document.querySelector(".buffer");
 const totalDuration = document.querySelector(".total-duration");
 const currentDuration = document.querySelector(".current-duration");
 const controls = document.querySelector(".controls");
-var videoContainer = document.querySelector(".video-container");
 const currentVol = document.querySelector(".current-vol");
 const totalVol = document.querySelector(".max-vol");
 const mainState = document.querySelector(".main-state");
@@ -44,6 +42,10 @@ const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 const touchBox = document.getElementById("touch-box");
 
+var video = document.querySelector("video");
+var videoContainer = document.querySelector(".video-container");
+var saved_speed = localStorage.getItem("videoSpeed");
+var volumeVal = localStorage.getItem("videoVolume");
 var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
@@ -71,16 +73,12 @@ function webvtt_subs(url) {
     track.mode = 'showing';
     video.appendChild(track);
 }
-function is_SSA_subs(url) {
-    const xhr = new XMLHttpRequest();
-    xhr.open('HEAD', url, false);
-    try {
-        xhr.send();
-        const mimeType = xhr.getResponseHeader("Content-Type");
-        return mimeType==="application/x-substation-alpha";
-    } catch (e){ return false; }
+async function is_SSA_subs(url) {
+    const response = await fetch(url,{method:'HEAD'});
+    const mimeType = response.headers.get("Content-Type");
+    return mimeType==="application/x-substation-alpha";
 }
-function changeSubs(value) {
+async function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
     if (existingTrack){ existingTrack.parentNode.removeChild(existingTrack); }
     if (ass_worker) { ass_worker.destroy(); }
@@ -88,12 +86,12 @@ function changeSubs(value) {
     if (value > -1) {
         url = window.location.pathname+"?subs="+value;
         if (!is_SSA_subs(url)) { webvtt_subs(url); }
-        else if (subs_legacy) { webvtt_subs(url+"legacy"); }
+        else if (subs_legacy) {  webvtt_subs(url+"legacy"); }
         else { ass_worker = crate_ass_worker(url); }
     }
 }
 function fix_aspect_ratio(){
-    if (video.videoWidth<=0 || video.videoHeight<=0){ 
+    if (video.videoWidth<=0 || video.videoHeight<=0){
         setTimeout(fix_aspect_ratio,25);
     } else {
         if (video.videoWidth < video.videoHeight){
@@ -126,10 +124,9 @@ window.addEventListener('fullscreenchange', scaleVideo);
         } else { subs_legacy = false; }
     } else { subs_legacy = false; }
 
-    const text = localStorage.getItem("videoSubs");
-
     for (var i = 0; i < subtitleSelect.options.length; i++) {
-        if (subtitleSelect.options[i].text === text) {
+        if (subtitleSelect.options[i].text ===
+        localStorage.getItem("videoSubs")) {
             subtitleId = i;  break;
         }
     }
@@ -137,7 +134,6 @@ window.addEventListener('fullscreenchange', scaleVideo);
     subtitleId = subtitleId - 1;
     changeSubs(subtitleId);
 
-    var saved_speed = localStorage.getItem("videoSpeed");
     if (saved_speed != null) {
         video.playbackRate = parseFloat(saved_speed);
         for (let i = 0; i < speedSelect.options.length; i++) {
@@ -152,10 +148,9 @@ window.addEventListener('fullscreenchange', scaleVideo);
         mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
     } else { currentMode = 0; }
 
-    var volumeVal = localStorage.getItem("videoVolume");
     if (volumeVal === null) { volumeVal = 1; }
     video.volume = parseFloat(volumeVal);
-    currentVol.style.width = volumeVal * 100 + "%";
+    currentVol.style.width = volumeVal*100+"%";
 
     // Cast value
     if (muted != null) {
@@ -164,11 +159,10 @@ window.addEventListener('fullscreenchange', scaleVideo);
             video.volume = 0;
         } else { muted = false; }
     } else { muted = false; }
-}
-{
+
     handleVideoIcon();
-    video.play();
-    if (video.paused) { pause(); } 
+    video.play().catch( (e)=>{} );
+    if (video.paused) { pause(); }
     setVideoTime();
     fix_aspect_ratio();
 }
@@ -289,8 +283,7 @@ duration.addEventListener("mouseleave", () => {
     hoverDuration.style.display = 'none';
 });
 
-duration.addEventListener("touchmove", handleTouchNavigate);
-
+duration.addEventListener("touchmove", handleTouchNavigate,{ passive: false });
 
 let cursorTimeout;
 function showCursor() {
@@ -714,14 +707,14 @@ audioTracksSelect.addEventListener('change', function () {
     handleSettingMenu();
 });
 
-subtitleSelect.addEventListener('change', function () {
+subtitleSelect.addEventListener('change', async function () {
     subtitleId = parseInt(this.value);
-    changeSubs(subtitleId);
     if (subtitleId == -1) {
         localStorage.removeItem("videoSubs");
     } else {
-        text = subtitleSelect.options[subtitleId + 1].text;
+        text = subtitleSelect.options[subtitleId+1].text;
         localStorage.setItem("videoSubs", text);
+        await changeSubs(subtitleId);
     }
     handleSettingMenu();
 });
@@ -758,7 +751,7 @@ videoContainer.addEventListener('touchmove',()=>{
     touchFix = true;
     controls.classList.add("show-controls");
     hideControls(2500);
-});
+},{ passive: false });
 
 let lastTouchTime = 0;
 let touchTimeout;
@@ -806,18 +799,17 @@ settingsBtn.addEventListener("touchend", (e) => {
     clearTimeout(mber);
 });
 
-function addrmMLcl() {
+async function addrmMLcl() {
     sttbtnpress = true;
     if (settingsBtn.classList.contains('lmbsl')) {
         subs_legacy = false;
-        changeSubs(subtitleId);
         settingsBtn.classList.remove('lmbsl');
     } else {
         subs_legacy = true;
-        changeSubs(subtitleId);
         settingsBtn.classList.add('lmbsl');
     }
     localStorage.setItem("subsLegacy", subs_legacy);
+    await changeSubs(subtitleId);
 }
 settingsBtn.addEventListener("mousedown", (e) => {
     e.preventDefault();
@@ -826,7 +818,7 @@ settingsBtn.addEventListener("mousedown", (e) => {
 settingsBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     mber = setTimeout(addrmMLcl, 600);
-});
+},{ passive: false });
 
 settingsBtn.addEventListener("click", (e) => {
     if (sttbtnpress) {

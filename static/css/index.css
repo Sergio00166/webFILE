@@ -52,6 +52,7 @@
 }
 .first {
     flex: 1;
+    -webkit-user-select: text;
     user-select: text;
 }
 .sort {
@@ -145,6 +146,7 @@ body {
     font-family: sans-serif;
     background-color: #000000;
     word-break: break-all;
+    -webkit-user-select: none;
     user-select: none;
 }
 h2 {
@@ -154,6 +156,7 @@ h2 {
     text-align: center;
     padding: 15px 25px 15px 25px;
     margin-bottom: 16px;
+    -webkit-user-select: text;
     user-select: text;
 }
 .container {

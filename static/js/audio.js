@@ -127,7 +127,7 @@ function setAudioTime() {
 
 function canPlayInit() {
     handleAudioIcon();
-    audio.play();
+    audio.play().catch((e)=>{});
     if (random) {
         mode.classList.add('lmbsl');
     }
@@ -291,7 +291,7 @@ duration.addEventListener("mouseleave", () => {
     hoverDuration.style.display = 'none';
 });
 
-duration.addEventListener("touchmove", handleTouchNavigate);
+duration.addEventListener("touchmove",handleTouchNavigate,{ passive: false });
 
 let hideHoverTimeout;
 
@@ -399,7 +399,8 @@ mode.addEventListener("mousedown", (e) => {
 mode.addEventListener("touchstart", (e) => {
     e.preventDefault();
     mber = setTimeout(addrmMLcl, 600);
-});
+},{ passive: false });
+
 mode.addEventListener("click", (e) => {
     if (mdbtnpress) {
         e.preventDefault();

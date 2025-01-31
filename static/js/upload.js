@@ -1,5 +1,7 @@
 /* Code by Sergio00166 */
 
+const error_box = document.getElementById("error");
+
 function ResetUploadMsg() {
     document.getElementById('fileLabel').textContent = "Drag here or click to open menu";
     document.getElementById('dirLabel').textContent  = "Select Folder";
@@ -20,14 +22,13 @@ function updateFileLabel(inputId, labelId) {
 function handleOptionChange(dnrem = false) {
     ResetUploadMsg();
     if (dnrem === false) {
-        const h1 = document.querySelector('h1');
-        if (h1) { h1.remove(); }
+		error_box.textContent = "";
     }
     const selection = document.getElementById("actionSelect").value;
-    document.getElementById("backButton").style.display = selection === "" ? "block" : "none";
-    document.getElementById("createDirForm").style.display = selection === "mkdir" ? "block" : "none";
+    document.getElementById("backButton").style.display     = selection === ""       ? "block" : "none";
+    document.getElementById("createDirForm").style.display  = selection === "mkdir"  ? "block" : "none";
     document.getElementById("uploadFileForm").style.display = selection === "upFile" ? "block" : "none";
-    document.getElementById("uploadDirForm").style.display = selection === "upDir" ? "block" : "none";
+    document.getElementById("uploadDirForm").style.display  = selection === "upDir"  ? "block" : "none";
 }
 
 // Drag and drop event handlers
@@ -71,3 +72,36 @@ function show_loader() {
 
 document.getElementById("f_upload").addEventListener("click", show_loader );
 document.getElementById("d_upload").addEventListener("click", show_loader );
+
+
+async function mkdir(e) {
+	e.preventDefault();
+	const folderName = document.getElementById('foldername').value;
+	if (!(folderName)) {
+		error_box.textContent = "You must provide a folder name";
+		return;
+	}
+	var url = window.location.pathname;
+	url = url.endsWith('/')?url.slice(0, -1):url;
+	const xhr = await fetch(
+		url+"/"+folderName, {method: 'MKCOL'}
+	);
+	if (xhr.status !== 200) {
+		if (xhr.status === 403) {
+			msg = 'You dont have permission to do that';
+		} else if (xhr.status === 404) {
+			msg = 'The parent dir does not exist';
+		} else if (xhr.status === 500) {
+			msg = 'Something went wrong on the server.';
+		} else if (xhr.status === 409) {
+			msg = 'It already exists';
+		} else if (xhr.status === 507) {
+			msg = 'Not enough free space'
+		} else {
+			msg = 'Something went wrong';
+		} 
+		error_box.textContent = msg;
+	} else { 
+		window.location.href = window.location.pathname;
+	}
+}

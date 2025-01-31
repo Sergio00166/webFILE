@@ -60,33 +60,33 @@
                 </a>
             {% endif %}
             {% for item in folder_content %}
-                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['description']=='directory' %} dir {% endif %}>
+                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type']=='directory' %} dir {% endif %}>
                     <span class="image">
-                    {% if item['description'] == 'directory' %}
+                    {% if item['type'] == 'directory' %}
                         <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">&nbsp;</img>
-                    {% elif item['description'] == 'source' %}
+                    {% elif item['type'] == 'source' %}
                         <img src="{{ url_for('index', static='svg/index/file-code-solid.svg') }}" class="src">&nbsp;</img>
-                    {% elif item['description'] == 'video' %}
+                    {% elif item['type'] == 'video' %}
                         <img src="{{ url_for('index', static='svg/index/film-solid.svg') }}" class="default">&nbsp;</img>
-                    {% elif item['description'] == 'audio' %}
+                    {% elif item['type'] == 'audio' %}
                         <img src="{{ url_for('index', static='svg/index/music-solid.svg') }}" class="default">&nbsp;</img>
-                    {% elif item['description'] == 'text' %}
+                    {% elif item['type'] == 'text' %}
                         <img src="{{ url_for('index', static='svg/index/file-lines-solid.svg') }}" class="files">&nbsp;</img>
-                    {% elif item['description'] == 'pdf' %}
+                    {% elif item['type'] == 'pdf' %}
                         <img src="{{ url_for('index', static='svg/index/file-pdf-solid.svg') }}" class="pdf">&nbsp;</img>
-                    {% elif item['description'] == 'photo' %}
+                    {% elif item['type'] == 'photo' %}
                         <img src="{{ url_for('index', static='svg/index/image-solid.svg') }}" class="default">&nbsp;&nbsp;</img>
-                    {% elif item['description'] == 'document' %}
+                    {% elif item['type'] == 'document' %}
                         <img src="{{ url_for('index', static='svg/index/file-word-solid.svg') }}" class="doc">&nbsp;</img>
-                    {% elif item['description'] == 'database' %}
+                    {% elif item['type'] == 'database' %}
                         <img src="{{ url_for('index', static='svg/index/database-solid.svg') }}" class="default">&nbsp;</img>
-                    {% elif item['description'] == 'presentation' %}
+                    {% elif item['type'] == 'presentation' %}
                         <img src="{{ url_for('index', static='svg/index/file-powerpoint-solid.svg') }}" class="pp">&nbsp;</img>
-                    {% elif item['description'] == 'virtualdisk' %}
+                    {% elif item['type'] == 'virtualdisk' %}
                         <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="iso">&nbsp;</img>
-                    {% elif item['description'] == 'compressed' %}
+                    {% elif item['type'] == 'compressed' %}
                         <img src="{{ url_for('index', static='svg/index/file-zipper-solid.svg') }}" class="zip">&nbsp;</img>
-                    {% elif item['description'] == 'binary' %}
+                    {% elif item['type'] == 'binary' %}
                         <img src="{{ url_for('index', static='svg/index/file-binary.svg') }}">&nbsp;</img>
                     {% else %}
                         <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}" class="files">&nbsp;</img>
@@ -94,7 +94,7 @@
                     </span>
                     <span class="first">
                         <pre>{{ item['name'] }}</pre>
-                        {% if item['description'] == 'directory' %}
+                        {% if item['type'] == 'directory' %}
                             <t class="small">/</t>
                         {% endif %}
                     </span>
