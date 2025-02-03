@@ -1,11 +1,11 @@
 #Code by Sergio00166
 
 from functions import validate_acl, safe_path, redirect_no_query
-from shutil import rmtree, copytree, SameFileError
 from shutil import move as sh_move, copy as sh_copy
 from os.path import exists, isdir, relpath, basename
 from flask import render_template, redirect, request
 from os import sep, remove, walk, makedirs
+from shutil import rmtree, copytree
 
 
 def check_recursive(path, ACL, root, write=False):
@@ -33,7 +33,9 @@ def upfile(dps, path, ACL, root):
     return handle_upload(dps,path,ACL,root,"upFile","file(s)")
 
 def updir(dps, path, ACL, root):
-    return handle_upload(dps,path,ACL,root,"upDir","dir")
+    dest = request.headers.get('DestDir')
+    if not dest: return "Bad Request", 400
+    return handle_upload(dps,path,ACL,root,dest,"upDir","dir")
 
 def move(path,ACL,root):  
     destination = request.headers.get('Destination')
@@ -120,23 +122,24 @@ def delfile(path, ACL, root):
 def mvcp_worker(ACL, path, destination, root, mv):
     try:
         validate_acl(path, ACL, mv)
-        validate_acl(destination, ACL, True)
+        validate_acl(destination,ACL,True)
         path = safe_path(path, root)
 
         if isdir(path):
             check_recursive(path, ACL, root, mv)
-            check_rec_chg_parent(path, ACL, root, destination)
+            check_rec_chg_parent(path,ACL,root,destination)
         
-        destination = safe_path(destination, root, True)
-        
-        if mv: sh_move(path, destination)
-        elif isdir(path):
-            copytree(path, destination+sep+basename(path))
-        else: sh_copy(path,destination)
+        destination = safe_path(destination,root,True)
+        destination += sep+basename(path)
+        if exists(destination): raise FileExistsError
+
+        if mv:             sh_move (path,destination)
+        elif isdir(path):  copytree(path,destination)
+        else:              sh_copy (path,destination)
 
     except PermissionError:   return "Forbidden",          403
     except FileNotFoundError: return "Not found",          404
-    except SameFileError:     return "Conflict",           409
+    except FileExistsError:   return "Conflict",           409
     except OSError as e:
         if e.errno == 28:     return "Not enough Storage", 507
         else:                 return "Server Error",       500
