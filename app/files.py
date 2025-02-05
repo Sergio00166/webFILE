@@ -130,7 +130,6 @@ def mvcp_worker(ACL, path, destination, root, mv):
             check_rec_chg_parent(path,ACL,root,destination)
         
         destination = safe_path(destination,root,True)
-        destination += sep+basename(path)
         if exists(destination): raise FileExistsError
 
         if mv:             sh_move (path,destination)
