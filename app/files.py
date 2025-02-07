@@ -30,12 +30,10 @@ def check_rec_chg_parent(path, ACL, root, new_parent):
 
 
 def upfile(dps, path, ACL, root):
-    return handle_upload(dps,path,ACL,root,"upFile","file(s)")
+    return handle_upload(dps,path,ACL,root,False)
 
 def updir(dps, path, ACL, root):
-    dest = request.headers.get('DestDir')
-    if not dest: return "Bad Request", 400
-    return handle_upload(dps,path,ACL,root,dest,"upDir","dir")
+    return handle_upload(dps,path,ACL,root,True)
 
 def move(path,ACL,root):  
     destination = request.headers.get('Destination')
@@ -48,7 +46,7 @@ def copy(path,ACL,root):
     return mvcp_worker(ACL,path,destination,root,False)
 
 
-def handle_upload(dps,path,ACL,root,action,up_type):
+def handle_upload(dps,path,ACL,root,upDir):
     if request.method!="POST":
         return redirect_no_query()
 
@@ -65,6 +63,7 @@ def handle_upload(dps,path,ACL,root,action,up_type):
     except PermissionError:
         error = "You don't have permission to upload some files."
     except NameError:
+        up_type = "dir" if upDir else "file(s)"
         error = f"Please select {up_type} to upload."
     except FileExistsError:
         error = "(Some) item(s) already exists."
@@ -78,8 +77,8 @@ def handle_upload(dps,path,ACL,root,action,up_type):
 
     if not error: return redirect_no_query()
     return render_template(
-        "upload.html", error=error,
-        action=action, filename=""
+        "upload.html", error=error, filename="",
+        action= "upDir" if upDir else "upFile"
     )
 
 
