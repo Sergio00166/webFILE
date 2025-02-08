@@ -16,8 +16,6 @@ Users can be granted or denied read-only access, write permissions (upload, crea
  ```pip install -r requirements.txt```    
  Optional for the video player: ```ffmpeg``` (as system package)
 
- modify this to better explaination for README.md
- 
 ## Config ##
 The following environment variables are used to configure the server:
 
