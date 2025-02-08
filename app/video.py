@@ -16,7 +16,7 @@ subsmimes = {
     "webvtt":"text/vtt",
 }
 path.append(sep.join([
-    path[0],"extra","pysubs2.zip"
+    path[0],"lib.zip"
 ]))
 import pysubs2
 

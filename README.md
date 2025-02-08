@@ -16,22 +16,161 @@ Users can be granted or denied read-only access, write permissions (upload, crea
  ```pip install -r requirements.txt```    
  Optional for the video player: ```ffmpeg``` (as system package)
 
-## Extra: ##
-The app/extra directory serves as the storage location for several key 
-files used by the acl_mgr.py script and the application, including:
-   - ACL and User Database   (JSON).
-   - File extension Database (JSON).
-   - Local Storage Database.
-   - Server error log file.
-   - A compressed library (PySubs2).
+ modify this to better explaination for README.md
+ 
+## Config ##
+The following environment variables are used to configure the server:
+
+  - SERVE_PATH (required): Specifies the directory that will be served.
+  - ERRLOG_FILE: Defines the file where server error logs will be stored.
+  - ACL_FILE: Specifies the file that contains the Access Control List (ACL) rules.
+  - USERS_FILE: Determines the file where user account data is stored.
+  - SESSIONS_DB: Defines the file used for storing session-related data.
+  - SHOW_DIRSIZE (optional, default: False): If set to True, the server will display the total size of directories.
 
 ## To run the web server: ##
    **To use multi-worker change in app/init.py the app.secret_key to a fixed one to share sessions across workers**    
    **If using a reverse proxy ensure that POST buffering is disabled, in NGINX is proxy_request_buffering off;**     
    
-  - To run via flask internal HTTP server via CLI (in the /scripts folder)    
-    ```python3 run.py -b IP_addr -p port -d directory [--dirsize]```
+  - To run via flask internal HTTP server via CLI (will run in localhost and port 8000)    
+    ```python3 app.py```
 
   - To use a WSGI for deployment -> (for example gunicorn)    
-    ```gunicorn --env FOLDER=directory [--env SHOWSIZE=True] -b IP_addr app:app```
+    ```gunicorn -b IP_addr app:app```
     
+
+# Command Syntax Documentation for acl_mgr.py
+
+## ALLOW
+**Syntax:**
+```
+ALLOW 'username' TO READ|DOALL ON 'resource'|ALL;
+```
+Assigns permissions for a user to a specific resource or all resources.
+
+---
+
+## REJECT
+**Syntax:**
+```
+REJECT 'username' ON 'resource'|ALL;
+```
+Denies permissions for a user on a specific resource or all resources.
+
+---
+
+## DROP
+**Syntax:**
+```
+DROP 'username' FROM 'resource'|ALL;
+```
+Removes a user from the access control list for a specific resource or all resources.
+
+---
+
+## GET-ACL
+**Syntax:**
+```
+GET-ACL [FOR 'resource'];
+```
+Retrieves the access control list for a specific resource if specified, else shows all.
+
+---
+
+## ADD-USER
+**Syntax:**
+```
+ADD-USER 'username' PWD 'password';
+```
+Adds a new user with the specified password.
+
+---
+
+## DEL-USER
+**Syntax:**
+```
+DEL-USER 'username';
+```
+Deletes a specified user.
+
+---
+
+## GET-USERS
+**Syntax:**
+```
+GET-USERS;
+```
+Lists all registered users.
+
+---
+
+## COMMIT
+**Syntax:**
+```
+COMMIT;
+```
+Commits changes made to the system.
+
+---
+
+## FLUSH
+**Syntax:**
+```
+FLUSH ACL|USERS|ALL;
+```
+Clears the users/ACL database or both.
+
+---
+
+## SOURCE
+**Syntax:**
+```
+SOURCE 'script_path';
+```
+Executes a script from the specified path.    
+I recommend to use the extension .aqs (Acl Query Script)
+
+---
+
+## GET-ENTRIES
+**Syntax:**
+```
+GET-ENTRIES;
+```
+Retrieves all entries from the access control system.
+
+---
+
+## DEL-ENTRY
+**Syntax:**
+```
+DEL-ENTRY 'resource';
+```
+Deletes an ACL entry.
+
+---
+
+## ADD-DF-USR
+**Syntax:**
+```
+ADD-DF-USR;
+```
+Adds the default user for the system.
+
+---
+
+## EXIT
+**Syntax:**
+```
+EXIT;
+```
+Terminates the application.
+
+---
+
+## CLEAR
+**Syntax:**
+```
+CLEAR;
+```
+Clears the terminal display.

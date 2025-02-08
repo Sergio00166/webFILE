@@ -1,7 +1,7 @@
 #Code by Sergio00166
 
 from flask import render_template,stream_template,redirect,request
-from files import upfile,updir,mkdir,delfile,move,copy
+from files_mgr import upfile,updir,mkdir,delfile,move,copy
 from os.path import join, relpath,pardir,abspath
 from urllib.parse import quote as encurl
 from send_file import send_file,send_dir
@@ -88,7 +88,7 @@ def logout():
     return redirect_no_query()
 
 
-def error(e, client):
+def error(e, client, error_file):
     if isinstance(e, PermissionError):
         if client == "json": return "[]", 403
         return render_template('403.html'), 403
@@ -96,7 +96,7 @@ def error(e, client):
         if client == "json": return "[]", 404
         return render_template('404.html'), 404
     else:
-        printerr(e) # Log the error to cli
+        printerr(e,error_file) # Log the error
         if client == "json": return "[]", 500
         return render_template('500.html'), 500
 
