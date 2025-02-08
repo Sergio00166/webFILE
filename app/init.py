@@ -17,7 +17,6 @@ from sys import path
 parent_path = abspath(path[0]+sep+"..")
 templates = parent_path+sep+"templates"
 sroot = parent_path+sep+"static"
-print(sroot)
 
 # Get all the args from the Enviorment
 root        = getenv('SERVE_PATH'  ,None)
@@ -25,16 +24,12 @@ error_file  = getenv('ERRLOG_FILE' ,parent_path+"error.log")
 users_file  = getenv('USERS_FILE'  ,parent_path+"users.json")
 acl_file    = getenv('ACL_FILE'    ,parent_path+"acl.json")
 sessions_db = getenv('SESSIONS_DB' ,parent_path+"sessions.db")
-folder_size = getenv('SHOW_DIRSIZE',"FALSE")
+folder_size = getenv('SHOW_DIRSIZE',"FALSE").upper()=="TRUE"
 
 if root is None: exit(1)
 root = abspath(root)
-folder_size = folder_size.upper()=="TRUE"
-# Create the main app flask
 app = Flask(__name__,static_folder=None,template_folder=templates)
-
-# Change this to an static value for multi-worker scenarios
-app.secret_key = urandom(24).hex()
+app.secret_key = getenv('SECRET_KEY',urandom(24).hex())
 
 # Configure SQLite for session storage
 app.config['SESSION_TYPE'] = 'sqlalchemy'
