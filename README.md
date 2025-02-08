@@ -37,9 +37,10 @@ The following environment variables are used to configure the server:
 
   - To use a WSGI for deployment -> (for example gunicorn)    
     ```gunicorn -b IP_addr app:app```
-    
 
-# Command Syntax Documentation for acl_mgr.py
+------------------------------------------------------------------------------------------------------------------
+
+# Command Syntax Documentation for aclmgr.py
 
 ## ALLOW
 **Syntax:**
