@@ -162,7 +162,7 @@ def video(path,root,mode,file_type,info,ACL):
         except: raise FileNotFoundError
         return get_subtitles(index,path,legacy,info)
     # Else we send the video page
-    prev, nxt, name = get_filepage_data(path,root,file_type,ACL,fixrng=True)
+    prev, nxt, name = get_filepage_data(path,root,file_type,ACL,ngtst=True)
     tracks,chapters = get_info(path),get_chapters(path)
     return render_template('video.html',path=path,name=name,prev=prev,nxt=nxt,tracks=tracks,chapters=chapters)
 
@@ -185,3 +185,4 @@ def directory(path,root,folder_size,sort,client,ACL):
                                parent_directory=parent_directory,is_root=is_root,sort=sort)
         return minify(html) # reduce size
     else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
+
