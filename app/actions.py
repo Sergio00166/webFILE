@@ -101,7 +101,7 @@ def error(e, client, error_file):
         return render_template('500.html'), 500
 
 
-def get_filepage_data(file_path,root,filetype,ACL,random=False,fixrng=False):
+def get_filepage_data(file_path,root,filetype,ACL,random=False,ngtst=False):
     # Get relative path from the root dir
     path = relpath(file_path,start=root).replace(sep,"/")
     # Get the name of the folder
@@ -113,14 +113,14 @@ def get_filepage_data(file_path,root,filetype,ACL,random=False,fixrng=False):
     lst = [x["path"] for x in out if x["type"]==filetype]
     # Get next one
     try: nxt = lst[lst.index(path)+1]
-    except: nxt = "" if fixrng else lst[0]
+    except: nxt = "#" if ngtst else lst[0]
     # Get previous one
     if lst.index(path)==0:
-        prev = "" if fixrng else lst[-1]
+        prev = "#" if ngtst else lst[-1]
     else: prev=lst[lst.index(path)-1]
     # All should start with /
-    prev = "/"+prev if prev!="" else ""
-    nxt = "/"+nxt if nxt!="" else ""
+    if prev!="#": prev = "/"+prev
+    if nxt !="#": nxt  = "/"+nxt 
     # Return random flag
     if random:
         rnd = "/"+choice(lst)
