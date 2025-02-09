@@ -34,7 +34,7 @@ def explorer(path):
         # Send/stream files or directory listing
         return serveFiles_page(path,ACL,root,client,folder_size)
   
-    except Exception as e: return error(e,client)
+    except Exception as e: return error(e,client,error_file)
 
 
 
@@ -58,5 +58,7 @@ def index():
 
         return serveRoot_page(ACL,root,client,folder_size)
 
-    except Exception as e: return error(e,client)
+    except Exception as e: return error(e,client,error_file)
 
+
+if __name__=="__main__": app.run(host="127.0.0.1", port=8000, debug=False)

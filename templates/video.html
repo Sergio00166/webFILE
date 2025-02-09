@@ -74,15 +74,16 @@
             </button>
             <button class="round-button text" id="mode" onclick="chMode()" title="Loop">1</button>
             <span class="settings">
-              <button class="round-button" id="settings" title="Menu">
+              <button class="round-button" id="settings" title="Menu (hold to enable legacy subs)">
                 <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
               </button>
               <ul class="setting-menu">
                 <li>
                   <select id="s0">
-                    <option value="-1">None</option> {% for item in tracks %} <option value={{ tracks.index(item) }}>
-                      {{ item }}
-                    </option> {% endfor %}
+                    <option value="-1">None</option>
+                   {% for item in tracks %}
+                    <option value={{ tracks.index(item) }}>{{ item }}</option>
+                   {% endfor %}
                   </select>
                 </li>
                 <li>

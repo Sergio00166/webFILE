@@ -68,5 +68,3 @@ class CustomFormDataParser(FormDataParser):
         form, files = parser.parse(stream, boundary, content_length)
         return stream, form, files
 
-
-

@@ -4,28 +4,24 @@ from re import compile as recompile
 from json import load as jsload
 from json import dump as jsdump
 from os.path import normpath
+from os import sep, getenv
 from hashlib import sha256
 from sys import path
-from os import sep
 
 try: import readline
 except: pass
 
-pdir = sep.join(
-    path[0].split(sep)[:-1]
-    +["app","extra"]
-)
-userdb_dir = pdir+sep+"users.json"
-acldb_dir  = pdir+sep+"acl.json"
-USERS,ACL = {},{}
+users_file  = getenv('USERS_FILE',path[0]+sep+"users.json")
+acl_file    = getenv('ACL_FILE'  ,path[0]+sep+"acl.json")
+USERS,ACL   = {},{}
 
 """ LOAD DATA FROM DISK """
 try:
-    tmp = jsload(open(userdb_dir))
+    tmp = jsload(open(users_file))
     USERS.clear(); USERS.update(tmp)
 except: pass
 try:
-    tmp = jsload(open(acldb_dir))
+    tmp = jsload(open(acl_file))
     ACL.clear(); ACL.update(tmp)
 except: pass
 
@@ -54,9 +50,9 @@ def clean_acl_after_removing_user(ACL,user):
 def commit(args):
     _,ACL,USERS = args
     try:
-        with open(userdb_dir, 'w') as file:
+        with open(users_file, 'w') as file:
             jsdump(USERS, file)
-        with open(acldb_dir, 'w') as file:
+        with open(acl_file, 'w') as file:
             jsdump(ACL, file)
     except: print("CANNOT SAVE TO DATABASE")
 

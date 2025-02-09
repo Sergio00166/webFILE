@@ -15,7 +15,7 @@ from sys import stderr
 
 is_subdirectory = lambda parent, child: commonpath([parent, child])==parent
 # Load database of file type and extensions
-file_types = jsload(open(sep.join([pypath[0],"extra","files.json"])))
+file_types = jsload(open(pypath[0]+sep+"file_types.json"))
 # Convert it to a lookup table to get file type as O(1)
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Check if the file is a binary file or not
@@ -23,8 +23,6 @@ textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
 is_binary = lambda path: bool(open(path, mode="rb").read(1024).translate(None, textchars))
 # Function to compress HTML output without modifying contents
 minify = lambda stream: (''.join(map(str.strip, x.split("\n"))) for x in stream)
-# Set error output file for server error logging
-error_file = sep.join([pypath[0],"extra","error.log"])
 
 
 def safe_path(path,root,igntf=False):
@@ -140,11 +138,10 @@ def getclient(request):
     return "normal" if normal else "json" if json else "legacy"
 
 
-def load_userACL(USERS,ACL):
-    path = sep.join([pypath[0],"extra",""])
+def load_userACL(USERS,ACL,users_file,acl_file):
     USERS.clear();  ACL.clear()
-    USERS.update(jsload(open(path+"users.json")))
-    ACL.update(jsload(open(path+"acl.json")))
+    USERS.update(jsload(open(users_file)))
+    ACL.update(  jsload(open(  acl_file)))
 
 
 # Checks if the given path has permissions
@@ -172,7 +169,7 @@ def validate_acl(path,ACL,write=False):
     raise PermissionError
 
 
-def printerr(e,override_msg=None):  
+def printerr(e,log_path,override_msg=None):  
     tb = e.__traceback__
     while tb.tb_next: tb = tb.tb_next
     e_type = type(e).__name__
@@ -197,7 +194,7 @@ def printerr(e,override_msg=None):
         f"   [eMsg] {e_message}\n"+
         "[END]\n"
     )
-    open(error_file,"a").write(msg)
+    open(log_path,"a").write(msg)
     print(msg,file=stderr,end="")
 
 

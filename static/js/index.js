@@ -240,9 +240,9 @@ function sendRequest(path, destination, method) {
 function pasteFiles() {
     const cpList = JSON.parse(localStorage.getItem('copy')) || [];
     const mvList = JSON.parse(localStorage.getItem('move')) || [];
-    var urlPath = window.location.pathname;
-    urlPath = urlPath.endsWith('/')?urlPath.slice(0, -1):urlPath;
-    if (urlPath===""){ urlPath += "/"; }
+    var destUrl = window.location.pathname;
+    destUrl = destUrl.endsWith('/')?destUrl.slice(0, -1):destUrl;
+    if (destUrl===""){ destUrl += "/"; }
     let toPaste = cpList;
     let mode = "COPY";
     if (toPaste.length === 0){
@@ -253,14 +253,15 @@ function pasteFiles() {
     document.getElementById("loader").style.display = "";
     document.querySelector(".list-group").style.display = "none";
     setTimeout(()=>{
-        for (const path of toPaste){
-            const success  = sendRequest(path, urlPath, mode);
+        for (var path of toPaste){
+            path = path.endsWith('/')?path.slice(0,-1):path
+            const dest = destUrl+"/"+path.split('/').pop();
+            const success  = sendRequest(path, dest, mode);
             if (!success){ break; }
         }
         clearAllMvCp();
         location.reload();
     },250);
-
 }
 
 

@@ -6,6 +6,7 @@ from os.path import getsize,getmtime
 from json import loads as jsload
 from functools import cache
 from flask import Response
+from io import StringIO
 from sys import path
 from os import sep
 
@@ -14,7 +15,10 @@ subsmimes = {
     "ass":"application/x-substation-alpha",
     "webvtt":"text/vtt",
 }
-path.append(sep.join([path[0],"extra","pysubs2.zip"]))
+path.append(sep.join([
+    path[0],"lib.zip"
+]))
+import pysubs2
 
 
 def check_ffmpeg_installed():
@@ -93,20 +97,14 @@ def get_track(file,index,info=False):
 
 def convert_ass(source,ret):
     try:
-        from gc import collect as free
-        from io import StringIO
-        import pysubs2
         # Load the raw thing onto an object
         subs = pysubs2.SSAFile.from_string(source)
-        del source; free()
         with StringIO() as tmp:
             # Here we convert to webVTT without
             # styles bc it show a some weird stuff
             subs.to_file(tmp, "vtt", apply_styles=False)
-            del subs; free()
             out = tmp.getvalue() 
         subs = pysubs2.SSAFile.from_string(out)
-        del out; free()
         # Remove duplicated webVTT entries
         unique_subs,seen = [],set()
         for line in subs:
@@ -114,10 +112,8 @@ def convert_ass(source,ret):
             if key not in seen:
                 seen.add(key)
                 unique_subs.append(line)
-        del subs.events,seen; free()
         # Pass to the object the values
         subs.events = unique_subs
-        del unique_subs; free()
         ret.put([True,subs.to_string("vtt")])
     except Exception as e: ret.put([False,e])
 
