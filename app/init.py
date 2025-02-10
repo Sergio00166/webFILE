@@ -14,9 +14,9 @@ from actions import *
 from sys import path
 
 # Set the paths of templates and static
-parent_path = abspath(path[0]+sep+"..")
-templates = parent_path+sep+"templates"
-sroot = parent_path+sep+"static"
+parent_path = abspath(path[0]+sep+"..")+sep
+templates = parent_path+"templates"
+sroot = parent_path+"static"
 
 # Get all the args from the Enviorment
 root        = getenv('SERVE_PATH'  ,None)
@@ -25,6 +25,7 @@ users_file  = getenv('USERS_FILE'  ,parent_path+"users.json")
 acl_file    = getenv('ACL_FILE'    ,parent_path+"acl.json")
 sessions_db = getenv('SESSIONS_DB' ,parent_path+"sessions.db")
 folder_size = getenv('SHOW_DIRSIZE',"FALSE").upper()=="TRUE"
+print(sessions_db)
 
 if root is None: exit(1)
 root = abspath(root)
