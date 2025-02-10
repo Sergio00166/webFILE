@@ -36,7 +36,6 @@ def convert(source):
     info['PlayResX'] = int(info['PlayResX'])
     info['PlayResY'] = int(info['PlayResY'])
 
-    # print(info)
 
     # Process styles
 
@@ -54,7 +53,6 @@ def convert(source):
                 style[FORMAT[i]] = value
             styles[style.pop('Name').replace(" ", "")] = style
 
-    # pprint(styles)
 
     # Process captions
 
@@ -73,13 +71,10 @@ def convert(source):
             for i, value in enumerate(dialogue_list):
                 # Some text has commas in it which gets broken up by the comma split, append it back in
                 if i > format_length:
-                    print(dialogue)
-                    print(dialogue['Text'])
                     dialogue['Text'] += "," + value
                     continue
                 dialogue[FORMAT[i]] = value
             captions.append(dialogue)
-    # pprint(captions)
 
     # By this point, we have now collected the data into three structures, info, styles and captions
 
