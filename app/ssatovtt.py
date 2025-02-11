@@ -226,12 +226,14 @@ def convert(source):
             if position['left'] != position['right']:
                 p_flag += " position:{}%".format(round((position['left'] - position['right']) / info['PlayResX'] * 100 + 50))
 
-        if caption["Name"]:
-            v_flag = True
-            name = " " + caption["Name"]
-        if caption["Style"]:
-            v_flag = True
-            style = "." + caption["Style"]
+        try: # Ignore missing
+            if caption["Name"]:
+                v_flag = True
+                name = " " + caption["Name"]
+            if caption["Style"]:
+                v_flag = True
+                style = "." + caption["Style"]
+        except: pass
 
         text = caption["Text"]
 
