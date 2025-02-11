@@ -42,6 +42,9 @@ The following environment variables are used to configure the server:
 
 # Command Syntax Documentation for aclmgr.py
 
+## For what this is
+This script is used for managing all users and access permissions for the server using the SQL-like commands showed below.
+
 ## ALLOW
 **Syntax:**
 ```
