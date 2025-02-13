@@ -267,9 +267,7 @@ function pasteFiles() {
 
 function createOptionDialog() {
     const existingDialog = document.getElementById("optionDialog");
-    if (existingDialog) {
-        document.body.removeChild(existingDialog);
-    }
+    if (existingDialog) { document.body.removeChild(existingDialog); }
     const dialog = document.createElement("div");
     dialog.id = "optionDialog";
 
@@ -277,7 +275,7 @@ function createOptionDialog() {
         { text: "COPY", value: "copy" },
         { text: "MOVE", value: "move" },
         { text: "RENAME", value: "rename" },
-        { text: "CANCEL", value: null }
+        { text: "CANCEL", value: null, isCancel: true }
     ];
     options.forEach(option => {
         const button = createButton(option);
@@ -289,28 +287,19 @@ function createOptionDialog() {
         const button = document.createElement("button");
         button.textContent = option.text;
         Object.assign(button.style, {
-            margin: "0",
-            width: "100%",
-            padding: "10px",
-            border: "none",
-            borderRadius: "5px",
-            backgroundColor: "#007bff",
-            color: "#fff",
+            margin: "0", width: "100%", padding: "10px", border: "none",
+            borderRadius: "5px", color: "#fff", cursor: "pointer",
+            backgroundColor: option.isCancel ? "#dc3545" : "#007bff", // Red for cancel
         });
-        button.onmouseover = () => button.style.backgroundColor = "#0056b3";
-        button.onmouseout = () => button.style.backgroundColor = "#007bff";
+        button.onmouseover = () => button.style.backgroundColor = option.isCancel ? "#b52b38" : "#0056b3";
+        button.onmouseout = () => button.style.backgroundColor = option.isCancel ? "#dc3545" : "#007bff";
         button.onclick = () => { handleChoice(option.value); }
         return button;
     }
-
     function handleChoice(choice) {
         document.body.removeChild(dialog);
-        if (choice === "copy") {
-            copyFiles();
-        } else if (choice === "move") {
-            moveFiles();
-        } else if (choice === "rename") {
-            renameFiles();
-        }
+        if (choice === "copy")        { copyFiles();   }
+        else if (choice === "move")   { moveFiles();   }
+        else if (choice === "rename") { renameFiles(); }
     }
 }
