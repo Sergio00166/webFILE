@@ -11,7 +11,7 @@ Users can be granted or denied read-only access, write permissions (upload, crea
  - Convert SSA in a safe way to webVTT, to do it hold the settings button
  - All video/audio codecs supported by the browser (this server does not use transcoding)
  - Ability to change audio track (enable experimental web platform features)
- - Recommended to use mkv for videos, firefox wont play it, I will work in a fix to address that issue
+ - Recommended to use mkv/mp4 container for videos and AV1 as the video codec.
 
 ## Requirements: ##
  Install all requirements with
