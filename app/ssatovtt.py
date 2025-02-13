@@ -180,14 +180,13 @@ def convert(source):
             p_flag += " line:-{}".format(round(position['bottom'] / info['PlayResY'] * 20, 4))
         if position['left'] != position['right']:
             p_flag += " position:{}%".format(round((position['left'] - position['right']) / info['PlayResX'] * 100 + 50))
-        try:
-            if caption["Name"]:
-                v_flag = True
-                name = " " + caption["Name"]
-            if caption["Style"]:
-                v_flag = True
-                style_str = "." + caption["Style"]
-        except: pass
+            
+        if "Name" in caption and caption["Name"]:
+            v_flag = True
+            name = " " + caption["Name"]
+        if "Style" in caption and caption["Style"]:
+            v_flag = True
+            style_str = "." + caption["Style"]
 
         text = caption["Text"]
         if v_flag:
