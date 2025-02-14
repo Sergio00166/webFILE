@@ -7,11 +7,14 @@ handled through ACLs (Access Control Lists), enabling administrators to set perm
 Users can be granted or denied read-only access, write permissions (upload, create, delete), or complete access restriction to specific resources.    
 
 ## Multimedia (video) ##
+ - All video/audio codecs supported by the browser (this server does not use transcoding)
+ - All tracks (audio, video, subtitles and metadata) must be in the same container.
+ - Ability to change audio track (enable experimental web platform features)
  - SSA/ASS subtitles support by using JASSUB on the client    
  - Convert SSA in a safe way to webVTT, to do it hold the settings button
- - All video/audio codecs supported by the browser (this server does not use transcoding)
- - Ability to change audio track (enable experimental web platform features)
  - Recommended to use mkv/mp4 container for videos and AV1 as the video codec.
+    - Note that both firefox and safari dont support mkv files.
+    - If ASS/SSA subtitles are needed use mkv and a chromium-based browser.
 
 ## Requirements: ##
  Install all requirements with
