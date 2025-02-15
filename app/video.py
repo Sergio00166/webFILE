@@ -1,24 +1,19 @@
 # Code by Sergio00166
 
 from subprocess import Popen,PIPE,run,DEVNULL
-from multiprocessing import Queue, Process
+from ssatovtt import convert as convert_ssa
 from os.path import getsize,getmtime
 from json import loads as jsload
 from functools import cache
 from flask import Response
-from io import StringIO
-from sys import path
 from os import sep
+
 
 subsmimes = {
     "ssa":"application/x-substation-alpha",
     "ass":"application/x-substation-alpha",
     "webvtt":"text/vtt",
 }
-path.append(sep.join([
-    path[0],"lib.zip"
-]))
-import pysubs2
 
 
 def check_ffmpeg_installed():
@@ -95,39 +90,12 @@ def get_track(file,index,info=False):
     return codec, out
  
 
-def convert_ass(source,ret):
-    try:
-        # Load the raw thing onto an object
-        subs = pysubs2.SSAFile.from_string(source)
-        with StringIO() as tmp:
-            # Here we convert to webVTT without
-            # styles bc it show a some weird stuff
-            subs.to_file(tmp, "vtt", apply_styles=False)
-            out = tmp.getvalue() 
-        subs = pysubs2.SSAFile.from_string(out)
-        # Remove duplicated webVTT entries
-        unique_subs,seen = [],set()
-        for line in subs:
-            key = (line.text, line.start, line.end)
-            if key not in seen:
-                seen.add(key)
-                unique_subs.append(line)
-        # Pass to the object the values
-        subs.events = unique_subs
-        ret.put([True,subs.to_string("vtt")])
-    except Exception as e: ret.put([False,e])
-
-
 @cache # Create a cache to dont overload the server
 def extract_subtitles(index,file,legacy,sz,mt):
     codec,out = get_track(file,index)
     # Convert or extract the subtitles
     if legacy and codec!="webvtt":
-        ret = Queue() # Convert the subtitles on a proc
-        proc = Process(target=convert_ass, args=(out,ret,))
-        proc.start(); converted = ret.get(); proc.join()
-        if not converted[0]: raise converted[1]
-        out = converted[1]
+        out = convert_ssa(out)
     return codec,out
     
 

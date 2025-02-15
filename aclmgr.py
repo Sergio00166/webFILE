@@ -1,5 +1,6 @@
 #Code by Sergio00166
 
+from os import sep, getenv, makedirs
 from re import compile as recompile
 from json import load as jsload
 from json import dump as jsdump
@@ -11,9 +12,17 @@ from sys import path
 try: import readline
 except: pass
 
-users_file  = getenv('USERS_FILE',path[0]+sep+"users.json")
-acl_file    = getenv('ACL_FILE'  ,path[0]+sep+"acl.json")
+users_file  = getenv('USERS_FILE',None)
+acl_file    = getenv('ACL_FILE'  ,None)
 USERS,ACL   = {},{}
+
+if not all((users_file, acl_file)):
+    data_dir = path[0]+sep+"data"+sep
+    makedirs(data_dir, exist_ok=True)
+    
+users_file  = users_file  or (data_dir+"users.json")
+acl_file    = acl_file    or (data_dir+"acl.json")
+
 
 """ LOAD DATA FROM DISK """
 try:

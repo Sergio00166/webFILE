@@ -17,9 +17,7 @@
     <div class="audio-container">
       <h2>{{ name }}</h2>
       <br>
-      <audio onended="handleAudioEnded()">
-        <source src="{{ request.path }}?raw">
-      </audio>
+      <audio onended="handleAudioEnded()" src="{{ request.path }}?raw"></audio>
       <div class="duration">
         <div class="current-time"></div>
         <div class="hover-time">

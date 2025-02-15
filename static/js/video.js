@@ -714,8 +714,8 @@ subtitleSelect.addEventListener('change', async function () {
     } else {
         text = subtitleSelect.options[subtitleId+1].text;
         localStorage.setItem("videoSubs", text);
-        await changeSubs(subtitleId);
     }
+    await changeSubs(subtitleId);
     handleSettingMenu();
 });
 

@@ -3,31 +3,53 @@
 if __name__=="__main__": exit(0)
 
 from functions import load_userACL,safe_path
+from os import sep,getenv,urandom,makedirs
 from override import CustomFormDataParser
 from flask import redirect,request,Flask
 from send_file import send_file,send_dir
 from flask_sqlalchemy import SQLAlchemy
-from os import sep,getenv,urandom
 from secrets import token_hex
 from os.path import abspath
 from actions import *
 from sys import path
 
+
 # Set the paths of templates and static
-parent_path = abspath(path[0]+sep+"..")
-templates = parent_path+sep+"templates"
-sroot = parent_path+sep+"static"
+parent_path = abspath(path[0]+sep+"..")+sep
+templates = parent_path+"templates"
+sroot = parent_path+"static"
 
 # Get all the args from the Enviorment
 root        = getenv('SERVE_PATH'  ,None)
-error_file  = getenv('ERRLOG_FILE' ,parent_path+"error.log")
-users_file  = getenv('USERS_FILE'  ,parent_path+"users.json")
-acl_file    = getenv('ACL_FILE'    ,parent_path+"acl.json")
-sessions_db = getenv('SESSIONS_DB' ,parent_path+"sessions.db")
+error_file  = getenv('ERRLOG_FILE' ,None)
+users_file  = getenv('USERS_FILE'  ,None)
+acl_file    = getenv('ACL_FILE'    ,None)
+sessions_db = getenv('SESSIONS_DB' ,None)
 folder_size = getenv('SHOW_DIRSIZE',"FALSE").upper()=="TRUE"
 
-if root is None: exit(1)
-root = abspath(root)
+if root: root = abspath(root)
+else:
+    print("YOU MUST SPECIFY THE SERVE_PATH")
+    exit(1) # Dont continue
+
+if not all((error_file, users_file, acl_file, sessions_db)):
+    data_dir = parent_path+sep+"data"+sep
+    makedirs(data_dir, exist_ok=True)
+
+error_file  = error_file  or (data_dir+"error.log")
+users_file  = users_file  or (data_dir+"users.json")
+acl_file    = acl_file    or (data_dir+"acl.json")
+sessions_db = sessions_db or (data_dir+"sessions.db")
+
+# Load and define the USER/ACL database
+USERS,ACL = {},{}
+try: load_userACL(USERS,ACL,users_file,acl_file)
+except Exception as e:
+    printerr(e,error_file,"Cannot open the USER/ACL database files")
+    exit(1) # Dont countinue if error
+
+
+# Initialize main flask app
 app = Flask(__name__,static_folder=None,template_folder=templates)
 app.secret_key = getenv('SECRET_KEY',urandom(24).hex())
 
@@ -51,11 +73,4 @@ CustomFormDataParser
 
 # Get current parser object
 dps = app.request_class.form_data_parser_class
-
-# Load and define the USER/ACL database
-USERS,ACL = {},{}
-try: load_userACL(USERS,ACL,users_file,acl_file)
-except Exception as e:
-    printerr(e,error_file,"Cannot open the USER/ACL database files")
-    exit(1) # Dont countinue if error
 
