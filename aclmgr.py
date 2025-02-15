@@ -1,5 +1,6 @@
 #Code by Sergio00166
 
+from os import sep, getenv, makedirs
 from re import compile as recompile
 from json import load as jsload
 from json import dump as jsdump
