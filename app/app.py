@@ -26,10 +26,12 @@ def explorer(path):
 
         if request.method.lower() == "mkcol":
             return mkdir(path,ACL,root)
-    
-        if set(request.args) & set(
-            ["add","upfile","updir"]):
-            return add_page(request.args,dps,path,ACL,root)
+
+        if "upfile" in request.args:
+            return upfile(dps,path,ACL,root)
+        
+        if "updir" in request.args:
+            return updir(dps,path,ACL,root)
 
         # Send/stream files or directory listing
         return serveFiles_page(path,ACL,root,client,folder_size)
@@ -47,9 +49,11 @@ def index():
         if "login"  in request.args: return login(USERS)
 
         # Files management stuff for users
-        if set(request.args) & set(
-            ["add","upfile","updir"]):
-            return add_page(request.args,dps,"",ACL,root)
+        if "upfile" in request.args:
+            return upfile(dps,"",ACL,root)
+        
+        if "updir" in request.args:
+            return updir(dps,"",ACL,root)
 
         # Check if static page is requested
         if "static" in request.args:
