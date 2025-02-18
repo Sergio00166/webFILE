@@ -20,6 +20,7 @@ function toggleSelectMode() {
             button.textContent = buttonText;
         });
     document.getElementById('deleteBtn').disabled = !selectMode;
+	document.getElementById('cpmvBtn').disabled = !selectMode;
     document.getElementById('invertSelection').disabled = !selectMode;
     if (!selectMode) { deselectAll(); }
 }
@@ -180,14 +181,14 @@ function copyFiles() {
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
         if (list != []){ set_cp_temp(list); }
-    } else { set_cp_temp([window.location.pathname]); }
+    }
 }
 function moveFiles() {
     clearAllMvCp();
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
         if (list != []){ set_mv_temp(list); }
-    } else { set_mv_temp([window.location.pathname]); }
+    }
 }
 
 function renameFiles() {
