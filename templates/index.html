@@ -12,7 +12,6 @@
     <script src="{{ url_for('index', static='js/index.js') }}"></script>
 </head>
 
-
 <body>
     <div id="loader" style="display: none;">
         <div class="load_container">
@@ -45,9 +44,9 @@
                 {% endif %} 
             </div>
             <div class="ctrl_flex_2">
-                <button id="addBtn" onclick='window.location.href="?add"'>ADD</button>
+                <button id="addBtn" onclick='createAddDialog()'>ADD</button>
                 <button id="deleteBtn" onclick="executeDeletes()" disabled>DEL</button>
-                <button onclick="createOptionDialog()">COPY</button>
+                <button id="cpmvBtn" onclick="createCopyDialog()" disabled>COPY</button>
                 <button onclick="pasteFiles()">PASTE</button>
 
             </div>

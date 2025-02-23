@@ -47,39 +47,37 @@ def copy(path,ACL,root):
 
 
 def handle_upload(dps,path,ACL,root,upDir):
-    if request.method!="POST":
-        return redirect_no_query()
-
     validate_acl(path, ACL, True)
-    # Set params for the file upload class
-    dps.set_params(dps, ACL, path, root)
 
-    try:
-        # Just call the werkzeug modified class to
-        # start parsing and writing them to disk.
-        # See override.py (CustomFormDataParser)
-        request.form.get("filename")
+    if request.method.upper()=="POST":
+        # Set params for the file upload class
+        dps.set_params(dps, ACL, path, root)
+        try:
+            # Just call the werkzeug modified class to
+            # start parsing and writing them to disk.
+            # See override.py (CustomFormDataParser)
+            request.form.get("filename")
 
-    except PermissionError:
-        error = "You don't have permission to upload some files."
-    except NameError:
-        up_type = "dir" if upDir else "file(s)"
-        error = f"Please select {up_type} to upload."
-    except FileExistsError:
-        error = "(Some) item(s) already exists."
-    except OSError as e:
-        if e.errno == 28:
-            error =   "Not enough storage"
-        else: error = "Something went wrong"
-    except Exception:
-        error = "Something went wrong when uploading."
+        except PermissionError:
+            error = "You don't have permission to upload some files."
+        except NameError:
+            up_type = "dir" if upDir else "file(s)"
+            error = f"Please select {up_type} to upload."
+        except FileExistsError:
+            error = "(Some) item(s) already exists."
+        except OSError as e:
+            if e.errno == 28:
+                error =   "Not enough storage"
+            else: error = "Something went wrong"
+        except Exception:
+            error = "Something went wrong when uploading."
+        else: error = None
+
+        if not error: return redirect_no_query()
+
     else: error = None
+    return render_template("upload.html", error=error, upDir=upDir)
 
-    if not error: return redirect_no_query()
-    return render_template(
-        "upload.html", error=error, filename="",
-        action= "upDir" if upDir else "upFile"
-    )
 
 
 def mkdir(path, ACL, root):

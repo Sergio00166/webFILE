@@ -12,14 +12,6 @@ from functions import *
 from video import *
 
 
-def add_page(opt,dps,path,ACL,root):
-    if "upfile" in opt: return upfile(dps,path,ACL,root)
-    if "updir"  in opt: return updir(dps,path,ACL,root)
-    if "add"    in opt:
-        validate_acl(path, ACL, True)
-        return render_template("upload.html")
-
-
 def serveFiles_page(path,ACL,root,client,folder_size):
     validate_acl(path,ACL)
     path = safe_path(path,root)

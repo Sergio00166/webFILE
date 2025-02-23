@@ -20,6 +20,7 @@ function toggleSelectMode() {
             button.textContent = buttonText;
         });
     document.getElementById('deleteBtn').disabled = !selectMode;
+	document.getElementById('cpmvBtn').disabled = !selectMode;
     document.getElementById('invertSelection').disabled = !selectMode;
     if (!selectMode) { deselectAll(); }
 }
@@ -148,9 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('div.container');
     container.addEventListener('click', (event) => {
         const div = event.target.closest('div.filename');
-        if (div) {
-            handleDivClick(div);
-        }
+        if (div){ handleDivClick(div); }
     });
 });
 
@@ -182,14 +181,14 @@ function copyFiles() {
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
         if (list != []){ set_cp_temp(list); }
-    } else { set_cp_temp([window.location.pathname]); }
+    }
 }
 function moveFiles() {
     clearAllMvCp();
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
         if (list != []){ set_mv_temp(list); }
-    } else { set_mv_temp([window.location.pathname]); }
+    }
 }
 
 function renameFiles() {
@@ -212,10 +211,11 @@ function renameFiles() {
 function sendRequest(path, destination, method) {
     const xhr = new XMLHttpRequest();
     xhr.open(method, path, false);
-    destination = decodeURIComponent(destination);
-    xhr.setRequestHeader("Destination", destination);
+    if (destination) {
+        destination = decodeURIComponent(destination);
+        xhr.setRequestHeader("Destination", destination);
+    }
     xhr.send();
-
     if (xhr.status !== 200) {
         let msg;
         if (xhr.status === 403) {
@@ -264,26 +264,29 @@ function pasteFiles() {
     },250);
 }
 
+function mkdir() {
+    var dest = prompt('Create dir');
+    if (dest === null) { return; }
+    var url = window.location.pathname;
+    url = url.endsWith('/')?url.slice(0, -1):url;
+    const success = sendRequest(url+"/"+dest, null, "MKCOL");
+    if (success){ location.reload(); }
 
-function createOptionDialog() {
+}
+
+function createDialog(options, handleChoiceCallback) {
     const existingDialog = document.getElementById("optionDialog");
     if (existingDialog) { document.body.removeChild(existingDialog); }
     const dialog = document.createElement("div");
     dialog.id = "optionDialog";
 
-    const options = [
-        { text: "COPY", value: "copy" },
-        { text: "MOVE", value: "move" },
-        { text: "RENAME", value: "rename" },
-        { text: "CANCEL", value: null, isCancel: true }
-    ];
     options.forEach(option => {
-        const button = createButton(option);
+        const button = createButton(option, handleChoiceCallback);
         dialog.appendChild(button);
     });
     document.body.appendChild(dialog);
 
-    function createButton(option) {
+    function createButton(option, handleChoiceCallback) {
         const button = document.createElement("button");
         button.textContent = option.text;
         Object.assign(button.style, {
@@ -293,13 +296,41 @@ function createOptionDialog() {
         });
         button.onmouseover = () => button.style.backgroundColor = option.isCancel ? "#b52b38" : "#0056b3";
         button.onmouseout = () => button.style.backgroundColor = option.isCancel ? "#dc3545" : "#007bff";
-        button.onclick = () => { handleChoice(option.value); }
+        button.onclick = () => { handleChoiceCallback(option.value); }
         return button;
     }
-    function handleChoice(choice) {
-        document.body.removeChild(dialog);
-        if (choice === "copy")        { copyFiles();   }
-        else if (choice === "move")   { moveFiles();   }
-        else if (choice === "rename") { renameFiles(); }
-    }
+}
+
+function createCopyDialog() {
+    const options = [
+        { text: "COPY", value: "copy" },
+        { text: "MOVE", value: "move" },
+        { text: "RENAME", value: "rename" },
+        { text: "CANCEL", value: null, isCancel: true }
+    ];
+    createDialog(options, handleCopyChoice);
+}
+
+function createAddDialog() {
+    const options = [
+        { text: "CREATE DIR", value: "mkdir" },
+        { text: "UPLOAD FILES", value: "upfiles" },
+        { text: "UPLOAD DIR", value: "updir" },
+        { text: "CANCEL", value: null, isCancel: true }
+    ];
+    createDialog(options, handleAddChoice);
+}
+
+function handleCopyChoice(choice) {
+    document.body.removeChild(document.getElementById("optionDialog"));
+    if (choice === "copy") { copyFiles(); }
+    else if (choice === "move") { moveFiles(); }
+    else if (choice === "rename") { renameFiles(); }
+}
+
+function handleAddChoice(choice) {
+    document.body.removeChild(document.getElementById("optionDialog"));
+    if (choice === "mkdir") { mkdir(); }
+    else if (choice === "upfiles") { window.location.href = "?upfile"; }
+    else if (choice === "updir") { window.location.href = "?updir"; }
 }
