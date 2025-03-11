@@ -294,7 +294,7 @@ function createDialog(options, handleChoiceCallback) {
             borderRadius: "5px", color: "#fff", cursor: "pointer",
             backgroundColor: option.isCancel ? "#dc3545" : "#007bff", // Red for cancel
         });
-        button.onmouseover = () => button.style.backgroundColor = option.isCancel ? "#b52b38" : "#0056b3";
+        button.onmouseover = () => button.style.backgroundColor = option.isCancel ? "#b52b38" : "#005fdd";
         button.onmouseout = () => button.style.backgroundColor = option.isCancel ? "#dc3545" : "#007bff";
         button.onclick = () => { handleChoiceCallback(option.value); }
         return button;

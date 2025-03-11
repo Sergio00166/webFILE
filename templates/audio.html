@@ -7,7 +7,8 @@
     <title>{{ name }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/audio.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}">
+	<script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
   </head>
   <body>
     <a href="{{ request.path }}?raw" download="{{ name }}" id="download"></a>
@@ -77,6 +78,5 @@
       <br>
       <br>
     </div>
-    <script src="{{ url_for('index', static='js/audio.js') }}"></script>
   </body>
 </html>
