@@ -29,7 +29,7 @@
         <button onclick="window.location.href = window.location.origin+window.location.pathname;" class="button-danger">Cancel</button>
       </div>
 
-      {% if upDir %}<div class="drop-zone" ondragover="event.preventDefault();" ondrop="handleDrop(event, 'fileInput', 'fileLabel')"></div>{% endif %}
+      {% if not upDir %}<div class="drop-zone" ondragover="event.preventDefault();" ondrop="handleDrop(event, 'fileInput', 'fileLabel')"></div>{% endif %}
 
     </body>
 </html>
