@@ -131,6 +131,7 @@ pre {
     padding-left: 8px;
     padding-right: 5px;
     margin-bottom: 16px;
+    border-radius: 6px;
 }
 button {
     flex: 1;
@@ -189,8 +190,8 @@ h2 {
     padding-right: 5px;
     margin-top: 4px;
     margin-bottom: 4px;
+    border-radius: 6px;
 }
-
 
 #optionDialog {
     max-width: 300px;
