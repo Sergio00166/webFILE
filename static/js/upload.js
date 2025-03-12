@@ -31,13 +31,3 @@ document.body.ondragover = function(event) {
 document.body.ondrop = function(event) {
     handleDrop(event, 'fileInput', 'fileLabel');
 };
-
-// Show/hide error message if there's an error
-window.onload = function() {
-    const errorMessage = document.getElementById("error");
-    if (errorMessage && errorMessage.innerText.trim() === "") {
-        errorMessage.style.display = "none";
-    } else {
-        errorMessage.style.display = "block";
-    }
-};
