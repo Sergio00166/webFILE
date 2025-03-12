@@ -26,10 +26,10 @@
 		{% endif %}
 		  <button type="submit" id="uploadButton" class="button-upload">Upload</button>
 		</form>
-
         <button onclick="window.location.href = window.location.origin+window.location.pathname;" class="button-danger">Cancel</button>
       </div>
-      <div class="drop-zone" ondragover="event.preventDefault();" ondrop="handleDrop(event, 'fileInput', 'fileLabel')"></div>
+
+      {% if upDir %}<div class="drop-zone" ondragover="event.preventDefault();" ondrop="handleDrop(event, 'fileInput', 'fileLabel')"></div>{% endif %}
 
     </body>
 </html>
