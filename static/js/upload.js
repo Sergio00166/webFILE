@@ -28,13 +28,8 @@ function handleDrop(event, inputId, labelId) {
 document.body.ondragover = function(event) {
     event.preventDefault();
 };
-
 document.body.ondrop = function(event) {
     handleDrop(event, 'fileInput', 'fileLabel');
-};
-
-document.querySelector('.drop-zone').onclick = function(event) {
-    event.stopPropagation();
 };
 
 // Show/hide error message if there's an error

@@ -10,7 +10,7 @@
     </head>
     <body>
       <div class="container">
-        <h1 id="error">{% if error %}{{ error }}{% endif %}</h1>
+        {% if error %}<h2 id="error">{{ error }}</h2>{% endif %}
         <div id="loader" style="display: none">
           <img src="{{ url_for('index', static='svg/load.gif') }}" alt="Loading">
           <p>Uploading. Please wait...</p>
@@ -18,10 +18,10 @@
 
         <form id="uploadForm" method="POST" action="{{ '?updir' if upDir else '?upfile' }}" enctype="multipart/form-data" onsubmit="showLoader()">
 		{% if upDir %}
-		  <input onchange="updateLabel(this,'fileLabel')" type="file" id="fileInput" webkitdirectory>
+		  <input onchange="updateLabel(this,'fileLabel')" type="file" id="fileInput" name="upload" webkitdirectory>
 		  <button type="button" onclick="document.getElementById('fileInput').click()" id="fileLabel" class="button-select">Select Folder</button>
 		{% else %}
-          <input onchange="updateLabel(this,'fileLabel')" type="file" id="fileInput" multiple>
+          <input onchange="updateLabel(this,'fileLabel')" type="file" id="fileInput" name="upload" multiple>
           <button type="button" onclick="document.getElementById('fileInput').click()" id="fileLabel" class="button-select">Select Files</button>
 		{% endif %}
 		  <button type="submit" id="uploadButton" class="button-upload">Upload</button>

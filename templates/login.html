@@ -4,13 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
     <title>LOGIN</title>
 	<link rel="stylesheet" href="{{ url_for('index', static='css/upload.css') }}">
   </head>
   <body>
     <div class="container">
-      {% if error %}<h2 class="error">{{ error }}</h2>{% endif %}
+      {% if error %}<h2 id="error">{{ error }}</h2>{% endif %}
       <form method="POST" action="?login" autocomplete="on">
         <input required class="username" type="text" name="username"
           placeholder="User" autofocus="" autocomplete="username">

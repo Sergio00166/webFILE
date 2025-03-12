@@ -140,7 +140,8 @@ button {
     margin-right: 4px;
     padding-top: 4px;
     padding-bottom: 4px;
-    background-color: #666666;
+    background-color: #1f2f3f;
+    border-radius: 6px;
 }
 body {
     font-family: sans-serif;
@@ -158,6 +159,7 @@ h2 {
     margin-bottom: 16px;
     -webkit-user-select: text;
     user-select: text;
+    border-radius: 8px;
 }
 .container {
     margin-top: 16px;
@@ -165,6 +167,7 @@ h2 {
     background-color: #333333;
     padding-left: 35px;
     padding-right: 40px;
+    border-radius: 8px;
 }
 .list-group {
     position: absolute;
