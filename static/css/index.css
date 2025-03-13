@@ -230,12 +230,11 @@ h2 {
 
 /* RESPONSIVE (pain) ZONE */
 
-@media (min-height: 700px) {
+@media (max-aspect-ratio: 1/1) {
     #optionDialog {
         top: 40%;
     }
 }
-
 @media (max-width: 1080px) {
     .notime {
         display: none;
