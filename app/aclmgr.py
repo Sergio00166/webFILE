@@ -1,10 +1,10 @@
 #Code by Sergio00166
 
+from os.path import normpath,abspath
 from os import sep, getenv, makedirs
 from re import compile as recompile
 from json import load as jsload
 from json import dump as jsdump
-from os.path import normpath
 from os import sep, getenv
 from hashlib import sha256
 from sys import path
