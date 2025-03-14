@@ -17,9 +17,10 @@ acl_file    = getenv('ACL_FILE'  ,None)
 USERS,ACL   = {},{}
 
 if not all((users_file, acl_file)):
-    data_dir = path[0]+sep+"data"+sep
+    parent_path = abspath(path[0]+sep+"..")+sep
+    data_dir = parent_path+sep+"data"+sep
     makedirs(data_dir, exist_ok=True)
-    
+
 users_file  = users_file  or (data_dir+"users.json")
 acl_file    = acl_file    or (data_dir+"acl.json")
 

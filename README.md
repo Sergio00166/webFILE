@@ -16,6 +16,10 @@ Users can be granted or denied read-only access, write permissions (upload, crea
     - Note that both firefox and safari dont support mkv files.
     - If ASS/SSA subtitles are needed use mkv and a chromium-based browser.
 
+## ACL permissions and Users ##
+  Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.
+  See the [documentation](aclmgr.md) for how to use it.
+
 ## Requirements: ##
  Install all requirements with
  ```pip install -r requirements.txt```    
