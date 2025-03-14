@@ -50,10 +50,7 @@ if (currentMode != null) {
 } else {
     currentMode = 0;
 }
-
-if (volumeVal === null) {
-    volumeVal = 1;
-}
+if (volumeVal === null) { volumeVal = 1; }
 audio.volume = parseFloat(volumeVal);
 currentVol.style.width = volumeVal * 100 + "%";
 
@@ -79,6 +76,15 @@ if (random != null) {
     random = false;
 }
 
+audio.addEventListener('canplay', ()=> {
+    audio.play().catch( (e)=> {} );
+    if (audio.paused) { pause(); }
+    setAudioTime();
+    audio.ontimeupdate = handleProgressBar;
+});
+
+
+/* Main functions block */
 
 let mouseDownProgress = false,
     mouseDownVol = false,
@@ -88,7 +94,6 @@ let mouseDownProgress = false,
     touchPastDurationWidth = 0,
     touchStartTime = 0;
 
-canPlayInit();
 
 function prev() {
     if (random) {
@@ -125,19 +130,6 @@ function setAudioTime() {
     }
 }
 
-function canPlayInit() {
-    handleAudioIcon();
-    audio.play().catch((e)=>{});
-    if (random) {
-        mode.classList.add('lmbsl');
-    }
-    if (audio.paused) {
-        pause();
-    }
-    setAudioTime();
-}
-
-
 function play() {
     audio.play();
     sh_pause.classList.remove("sh_pause");
@@ -164,8 +156,6 @@ function handleSettingMenu() {
 function saveVolume() {
     localStorage.setItem("audioVolume", volumeVal);
 }
-
-audio.ontimeupdate = handleProgressBar;
 
 function handleProgressBar() {
     currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
