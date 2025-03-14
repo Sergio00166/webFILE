@@ -17,7 +17,7 @@ Users can be granted or denied read-only access, write permissions (upload, crea
     - If ASS/SSA subtitles are needed use mkv and a chromium-based browser.
 
 ## ACL permissions and Users ##
-  Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.
+  Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.    
   See the [documentation](aclmgr.md) for how to use it.
 
 ## Requirements: ##
