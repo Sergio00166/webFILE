@@ -174,7 +174,7 @@ function scaleVideo(){
 
 var mber = undefined;
 var sttbtnpress = false;
-let mouseDownProgress = false,;
+let mouseDownProgress = false;
 let mouseDownVol = false;
 let isCursorOnControls = false;
 let mouseOverDuration = false;
