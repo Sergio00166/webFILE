@@ -166,7 +166,7 @@ function scaleVideo(){
         split_timeline_chapters();
         loadTracks();
         fix_aspect_ratio();
-    }
+    });
 }
 
 

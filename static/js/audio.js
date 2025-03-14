@@ -71,7 +71,7 @@ var random = localStorage.getItem("audioRandom");
         audio.play().catch( (e)=>{} );
         if (audio.paused) { pause(); }
         totalDuration.innerHTML = showDuration(audio.duration);
-    }
+    });
 }
 
 
