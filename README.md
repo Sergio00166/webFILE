@@ -19,7 +19,7 @@ Users can be granted or denied read-only access, write permissions (upload, crea
 ## Requirements: ##
  Install all requirements with
  ```pip install -r requirements.txt```    
- Optional for the video player: ```ffmpeg``` (as system package)
+ For the video player to work: ```ffmpeg``` (as system package)
 
 ## Config ##
 The following environment variables are used to configure the server:
