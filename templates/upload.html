@@ -36,7 +36,8 @@
         function showLoader() {
             document.getElementById("uploadForm").style.display = "none";
             document.getElementById("loader").style.display = "block";
-            document.getElementById("error").style.display = "none";
+            const error = document.getElementById("error");
+            if (error) { error.style.display = "none"; }
         }
         function handleDrop(event, inputId, labelId) {
             event.preventDefault();

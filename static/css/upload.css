@@ -8,8 +8,8 @@ body {
     margin: 0;
     background-color: #00d1b2;
     font-family: sans-serif;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 95vh;
+    min-height: 95dvh;
     display: flex;
     justify-content: center;
     align-items: center;
