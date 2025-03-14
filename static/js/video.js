@@ -161,9 +161,6 @@ window.addEventListener('fullscreenchange', scaleVideo);
     } else { muted = false; }
 
     handleVideoIcon();
-}
-
-video.addEventListener('canplay', ()=> {
     video.play().catch( (e)=>{} );
     if (video.paused) { pause(); }
     setVideoTime();
@@ -171,7 +168,7 @@ video.addEventListener('canplay', ()=> {
 }
 
 
-/* Main functions block */
+/* Rest of the functions */
 
 let mouseDownProgress = false,
     mouseDownVol = false,
