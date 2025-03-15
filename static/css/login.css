@@ -61,13 +61,13 @@ input {
 }
 
 .button-danger:hover {
-	background-color: #b52b38;
+    background-color: #b52b38;
 }
 .button-upload:hover {
-	background-color: #005fdd;
+    background-color: #005fdd;
 }
 .button-select:hover {
-	background-color: #00b356;
+    background-color: #00b356;
 }
 
 @media (max-width: 300px) {

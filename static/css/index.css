@@ -43,7 +43,11 @@
 .iso {
     filter: brightness(0) invert(1) brightness(50%);
 }
-
+img {
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    user-drag: none;
+}
 .no_overflow {
     white-space: nowrap;
 }
