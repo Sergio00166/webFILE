@@ -67,11 +67,17 @@ var random = localStorage.getItem("audioRandom");
     } else { random = false; }
     if (random) { mode.classList.add('lmbsl'); }
 
-    audio.addEventListener('canplay',()=> {
-        audio.play().catch( (e)=>{} );
-        if (audio.paused) { pause(); }
-        totalDuration.innerHTML = showDuration(audio.duration);
-    });
+	audio.addEventListener('loadeddata', () => {
+		(function wait4ready() {
+			if (isNaN(audio.duration) || audio.duration === 0) {
+				return setTimeout(wait4ready, 25);
+			}
+			audio.play().catch( (e)=>{} );
+			if (audio.paused) { pause(); }
+			totalDuration.innerHTML = showDuration(audio.duration);
+			audio.ontimeupdate = handleProgressBar;
+		})();
+	});
 }
 
 
@@ -421,7 +427,6 @@ document.addEventListener("keydown", handleShorthand);
 // Audio events
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
-audio.ontimeupdate = handleProgressBar;
 
 // Navigation events
 duration.addEventListener("click", navigate);

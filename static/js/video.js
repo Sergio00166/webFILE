@@ -101,7 +101,6 @@ function fix_aspect_ratio(){
         } scaleVideo();
     }
 }
-
 function scaleVideo(){
     const cw = videoContainer.offsetWidth;
     const ch = videoContainer.offsetHeight;
@@ -146,11 +145,6 @@ function scaleVideo(){
         mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
     } else { currentMode = 0; }
 
-    if (volumeVal === null) { volumeVal = 1; }
-    video.volume = parseFloat(volumeVal);
-    currentVol.style.width = volumeVal*100+"%";
-
-    // Cast value
     if (muted != null) {
         if (muted == "true") {
             muted = true;
@@ -158,15 +152,25 @@ function scaleVideo(){
         } else { muted = false; }
     } else { muted = false; }
 
+    if (volumeVal === null) { volumeVal = 1; }
+    video.volume = parseFloat(volumeVal);
+    currentVol.style.width = volumeVal*100+"%";
     handleVideoIcon();
-    video.addEventListener('canplay',()=> {
-        video.play().catch( (e)=>{} );
-        if (video.paused) { pause(); }
-        totalDuration.innerHTML = showDuration(video.duration);
-        split_timeline_chapters();
-        loadTracks();
-        fix_aspect_ratio();
-    });
+	
+	video.addEventListener('loadeddata', () => {
+		(function wait4ready() {
+			if (isNaN(video.duration) || video.duration === 0) {
+				return setTimeout(wait4ready, 25);
+			}
+			video.play().catch(() => {});
+			if (video.paused) { pause(); }
+			totalDuration.innerHTML = showDuration(video.duration);
+			video.ontimeupdate = handleProgressBar;
+			split_timeline_chapters(); // Set chapters
+			loadTracks();  // Set all audio tracks info
+			fix_aspect_ratio(); // Fix the aspect ratio
+		})();
+	});
 }
 
 
@@ -677,7 +681,6 @@ video.addEventListener("waiting", () => {
 video.addEventListener("playing", () => {
     loader.classList.remove("show-state");
 });
-video.addEventListener("timeupdate", handleProgressBar);
 
 // Video container events
 videoContainer.addEventListener("mouseleave", () => {
