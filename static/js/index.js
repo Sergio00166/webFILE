@@ -374,10 +374,9 @@ function uploadFiles(files, isDirectory = false) {
                     msg = "Something went wrong.";
             }
             alert(msg);
-            document.getElementById("uploadForm")?.remove();
         }
-        window.location.reload();
-    });
+    }).catch(() => { alert("Fatal Error") });
+	window.location.reload();
 }
 
 function enableDragAndDropUpload(dropArea, selectDirectory = false) {
