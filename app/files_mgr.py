@@ -58,26 +58,15 @@ def handle_upload(dps,path,ACL,root,upDir):
             # See override.py (CustomFormDataParser)
             request.form.get("filename")
 
-        except PermissionError:
-            error = "You don't have permission to upload some files."
-        except NameError:
-            up_type = "dir" if upDir else "file(s)"
-            error = f"Please select {up_type} to upload."
-        except FileExistsError:
-            error = "(Some) item(s) already exists."
+        except PermissionError:   return "Forbidden",          403
+        except NameError:         return "Bad Request",        400
+        except FileExistsError:   return "Conflict",           409
         except OSError as e:
-            if e.errno == 28:
-                error =   "Not enough storage"
-            else: error = "Something went wrong"
-        except Exception:
-            error = "Something went wrong when uploading."
-        else: error = None
-
-        if not error: return redirect_no_query()
-
-    else: error = None
-    return render_template("upload.html", error=error, upDir=upDir)
-
+            if e.errno == 28:     return "Not enough Storage", 507
+            else:                 return "Server Error",       500
+        except Exception:         return "Server Error",       500
+        else:                     return "Successful",         200
+    else: return redirect_no_query()
 
 
 def mkdir(path, ACL, root):

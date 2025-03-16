@@ -43,7 +43,11 @@
 .iso {
     filter: brightness(0) invert(1) brightness(50%);
 }
-
+img {
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    user-drag: none;
+}
 .no_overflow {
     white-space: nowrap;
 }
@@ -77,15 +81,11 @@ a:hover {
 .controls {
     display: flex;
 }
+.ctrl_group {
+    flex: 1;
+    display: flex;
+}
 .ctrl_flex {
-    flex: 1;
-    display: flex;
-}
-.ctrl_flex_1 {
-    flex: 1;
-    display: flex;
-}
-.ctrl_flex_2 {
     flex: 1;
     display: flex;
 }
@@ -93,10 +93,9 @@ a:hover {
     flex: 1;
     display: flex;
 }
-#invertSelection {
+#invertBtn {
     flex: 0.25;
 }
-
 button:hover {
     background-color: #111111;
     border-color: white;
@@ -131,16 +130,17 @@ pre {
     padding-left: 8px;
     padding-right: 5px;
     margin-bottom: 16px;
+    border-radius: 6px;
 }
 button {
     flex: 1;
     color: white;
     cursor: pointer;
-    margin-left: 4px;
-    margin-right: 4px;
+    margin: 2px;
     padding-top: 4px;
     padding-bottom: 4px;
-    background-color: #666666;
+    background-color: #1f2f3f;
+    border-radius: 6px;
 }
 body {
     font-family: sans-serif;
@@ -158,6 +158,7 @@ h2 {
     margin-bottom: 16px;
     -webkit-user-select: text;
     user-select: text;
+    border-radius: 8px;
 }
 .container {
     margin-top: 16px;
@@ -165,6 +166,7 @@ h2 {
     background-color: #333333;
     padding-left: 35px;
     padding-right: 40px;
+    border-radius: 8px;
 }
 .list-group {
     position: absolute;
@@ -186,28 +188,8 @@ h2 {
     padding-right: 5px;
     margin-top: 4px;
     margin-bottom: 4px;
+    border-radius: 6px;
 }
-
-
-#optionDialog {
-    max-width: 300px;
-    width: 90%;
-    padding: 20px;
-    border: 1px solid black;
-    background-color: #f9f9f9;
-    overflow-y: auto;
-    text-align: center;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    gap: 10px;
-}
-
 #loader {
     display: flex;
     justify-content: center;
@@ -215,7 +197,6 @@ h2 {
     flex-direction: column;
     height: 90dvh;
 }
-
 .load_container {
     background-color: #f9f9f9;
     padding-top: 20px;
@@ -224,25 +205,22 @@ h2 {
     border-radius: 25px;
 }
 
+
 /* RESPONSIVE (pain) ZONE */
 
-@media (min-height: 700px) {
-    #optionDialog {
-        top: 40%;
+@media (max-width: 1300px) {
+    .controls {
+        flex-direction: column;
     }
 }
-
 @media (max-width: 1080px) {
     .notime {
         display: none;
     }
 }
-@media (max-width: 730px) {
-    .controls {
+@media (max-width: 800px) {
+    .ctrl_group {
         flex-direction: column;
-    }
-    button {
-        margin: 2px;
     }
 }
 @media (max-width: 650px) {
@@ -250,21 +228,20 @@ h2 {
         display: none;
     }
 }
-@media (max-width: 320px) {
-    button {
-        margin: 1px;
-    }
+@media (max-width: 400px) {
     .ctrl_flex {
         flex-direction: column;
     }
-    .ctrl_flex_1 {
-        flex-direction: column;
-    }
-    .ctrl_flex_2 {
-        flex-direction: column;
+    .ctrl_group {
+        flex-direction: row;
     }
 }
 @media (max-width: 240px) {
+    .filename {
+        border-bottom: 2px solid black;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
     .image {
         display: none;
     }
@@ -274,10 +251,8 @@ h2 {
     .small {
         display: inline;
     }
-    .filename {
-        border-bottom: 2px solid black;
-        padding-left: 0px;
-        padding-right: 0px;
+    .ctrl_group {
+        flex-direction: column;
     }
 }
 @media (max-width: 120px) {

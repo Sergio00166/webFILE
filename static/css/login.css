@@ -1,0 +1,85 @@
+/* Code by Sergio00166 */
+
+
+#fileInput { display: none; }
+#error { color: red; }
+
+body {
+    margin: 0;
+    background-color: #00d1b2;
+    font-family: sans-serif;
+    min-height: 95vh;
+    min-height: 95dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.container {
+    box-sizing: border-box;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 5px 5px 24px black;
+    display: flex;
+    flex-direction: column;
+    width: min(100%, 400px);
+    
+}
+form {
+    display: flex;
+    flex-direction: column;
+}
+button {
+    padding: 15px 0;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 1.25em;
+}
+input {
+    padding: 15px;
+    margin: 5px 0;
+    border: 3px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-size: 1.25em;
+}
+
+.button-upload {
+    background-color: #007bff;
+}
+.button-danger {
+    background-color: #dc3545;
+    margin-bottom: 4px;
+}
+.button-select {
+    background-color: #00cc7b;
+}
+
+.button-danger:hover {
+    background-color: #b52b38;
+}
+.button-upload:hover {
+    background-color: #005fdd;
+}
+.button-select:hover {
+    background-color: #00b356;
+}
+
+@media (max-width: 300px) {
+    .container {
+        padding-top: 20px;
+        padding-bottom: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+}
+@media (max-width: 120px) {
+    .container {
+        display: none;
+    }
+}

@@ -1,10 +1,10 @@
 #Code by Sergio00166
 
+from os.path import normpath,abspath
 from os import sep, getenv, makedirs
 from re import compile as recompile
 from json import load as jsload
 from json import dump as jsdump
-from os.path import normpath
 from os import sep, getenv
 from hashlib import sha256
 from sys import path
@@ -17,9 +17,10 @@ acl_file    = getenv('ACL_FILE'  ,None)
 USERS,ACL   = {},{}
 
 if not all((users_file, acl_file)):
-    data_dir = path[0]+sep+"data"+sep
+    parent_path = abspath(path[0]+sep+"..")+sep
+    data_dir = parent_path+sep+"data"+sep
     makedirs(data_dir, exist_ok=True)
-    
+
 users_file  = users_file  or (data_dir+"users.json")
 acl_file    = acl_file    or (data_dir+"acl.json")
 

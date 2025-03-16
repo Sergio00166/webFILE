@@ -3,6 +3,7 @@
 let mouse_ctrl_delay = 1500;
 let doubleTouch_delay = 400;
 
+navigator.permissions.request({ name: 'local-fonts' });
 const volume = document.querySelector(".volume");
 const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
@@ -101,7 +102,6 @@ function fix_aspect_ratio(){
         } scaleVideo();
     }
 }
-
 function scaleVideo(){
     const cw = videoContainer.offsetWidth;
     const ch = videoContainer.offsetHeight;
@@ -111,12 +111,10 @@ function scaleVideo(){
     video.style.width  = (vw*scale)+"px";
     video.style.height = (vh*scale)+"px";
 }
-window.addEventListener('resize', scaleVideo);
-window.addEventListener('fullscreenchange', scaleVideo);
 
 
 /* Inicialitate everything */
-{
+{	
     if (subs_legacy != null) {
         if (subs_legacy == "true") {
             subs_legacy = true;
@@ -148,11 +146,6 @@ window.addEventListener('fullscreenchange', scaleVideo);
         mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
     } else { currentMode = 0; }
 
-    if (volumeVal === null) { volumeVal = 1; }
-    video.volume = parseFloat(volumeVal);
-    currentVol.style.width = volumeVal*100+"%";
-
-    // Cast value
     if (muted != null) {
         if (muted == "true") {
             muted = true;
@@ -160,24 +153,50 @@ window.addEventListener('fullscreenchange', scaleVideo);
         } else { muted = false; }
     } else { muted = false; }
 
+    if (volumeVal === null) { volumeVal = 1; }
+    video.volume = parseFloat(volumeVal);
+    currentVol.style.width = volumeVal*100+"%";
     handleVideoIcon();
-    video.play().catch( (e)=>{} );
-    if (video.paused) { pause(); }
-    setVideoTime();
-    fix_aspect_ratio();
+    
+    video.addEventListener('loadeddata', () => {
+        (function wait4ready() {
+            if (isNaN(video.duration) || video.duration === 0) {
+                return setTimeout(wait4ready, 25);
+            }
+            video.play().catch(() => {});
+            if (video.paused) { pause(); }
+            totalDuration.innerHTML = showDuration(video.duration);
+            video.ontimeupdate = handleProgressBar;
+            split_timeline_chapters(); // Set chapters
+            loadTracks();  // Set all audio tracks info
+            fix_aspect_ratio(); // Fix the aspect ratio
+        })();
+    });
 }
 
 
-/* Rest of the functions */
+/* Define variables */
 
-let mouseDownProgress = false,
-    mouseDownVol = false,
-    isCursorOnControls = false,
-    timeout,
-    mouseOverDuration = false,
-    touchClientX = 0,
-    touchPastDurationWidth = 0,
-    touchStartTime = 0;
+var mber = undefined;
+var sttbtnpress = false;
+let mouseDownProgress = false;
+let mouseDownVol = false;
+let isCursorOnControls = false;
+let mouseOverDuration = false;
+let touchClientX = 0;
+let touchPastDurationWidth = 0;
+let touchStartTime = 0;
+let touchActive = false;
+let lastTouchTime = 0;
+let originalTime = 0;
+let fixtouch;
+let touchFix;
+let timeout;
+let touchTimeout;
+let cursorTimeout;
+
+
+/* Main functions zone */
 
 function next() {
     nextLink.click();
@@ -211,16 +230,6 @@ function saveVolume() {
     localStorage.setItem("videoVolume", volumeVal);
 }
 
-function setVideoTime() {
-    if (!(isNaN(video.duration) || video.duration === 0)) {
-        totalDuration.innerHTML = showDuration(video.duration);
-        split_timeline_chapters();
-        loadTracks();
-    } else {
-        setTimeout(setVideoTime, 25);
-    }
-}
-
 function handleVideoEnded() {
     if (currentMode === 1) {
         next();
@@ -231,61 +240,7 @@ function handleVideoEnded() {
     }
 }
 
-// Video Event Listeners
-video.addEventListener("play", play);
-video.addEventListener("pause", pause);
 
-video.addEventListener("waiting", function () {
-    loader.classList.add("show-state");
-});
-video.addEventListener("playing", function () {
-    loader.classList.remove("show-state");
-});
-document.addEventListener("keydown", handleShorthand);
-duration.addEventListener("click", navigate);
-
-controls.addEventListener("click", () => {
-    controls.classList.add("show-controls");
-    showCursor();
-    hideControls(mouse_ctrl_delay);
-});
-
-duration.addEventListener("mousedown", (e) => {
-    mouseDownProgress = true;
-    navigate(e);
-});
-
-document.addEventListener("mouseup", () => {
-    mouseDownProgress = false;
-    mouseDownVol = false;
-});
-
-videoContainer.addEventListener("mouseleave", () => {
-    clearTimeout(cursorTimeout);
-    document.body.style.cursor = 'auto';
-    hideControls(50);
-});
-
-videoContainer.addEventListener("mousemove", (e) => {
-    controls.classList.add("show-controls");
-    showCursor();
-    handleMousemove(e);
-    hideControls(mouse_ctrl_delay);
-});
-
-duration.addEventListener("mouseenter", () => {
-    mouseOverDuration = true;
-});
-
-duration.addEventListener("mouseleave", () => {
-    mouseOverDuration = false;
-    hoverTime.style.width = 0;
-    hoverDuration.style.display = 'none';
-});
-
-duration.addEventListener("touchmove", handleTouchNavigate,{ passive: false });
-
-let cursorTimeout;
 function showCursor() {
     clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
@@ -297,31 +252,6 @@ function showCursor() {
         }, mouse_ctrl_delay);
     }
 }
-
-mainState.addEventListener("click", toggleMainState);
-mainState.addEventListener("animationend", handleMainSateAnimationEnd);
-
-videoContainer.addEventListener("fullscreenchange",()=> {
-    videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
-    if (video.videoWidth >= video.videoHeight){
-        screen.orientation.lock('landscape').catch(()=>{});
-    } else {
-        screen.orientation.lock('portrait').catch(()=>{});
-    }
-});
-
-volume.addEventListener("mouseenter", () => {
-    muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
-});
-
-volume.addEventListener("mouseleave", () => {
-    totalVol.classList.remove("show");
-});
-
-totalVol.addEventListener("mousedown", (e) => {
-    mouseDownVol = true;
-    handleVolume(e);
-});
 
 function play() {
     video.play();
@@ -347,7 +277,6 @@ function handleProgressBar() {
     currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentDuration.innerHTML = showDuration(video.currentTime);
 }
-video.ontimeupdate = handleProgressBar;
 
 function navigate(e) {
     try {
@@ -469,21 +398,6 @@ function getchptname(timeInSeconds) {
     }
 }
 
-// Prevent mouse events from triggering after a touch event
-touchActive = false;
-let fixtouch;
-document.addEventListener('touchstart', ()=> {
-    clearTimeout(fixtouch);
-    touchActive = true;
-});
-document.addEventListener('touchend', ()=> {
-    clearTimeout(fixtouch);
-    fixtouch = setTimeout(() => {
-        touchActive = false
-    }, 500);
-});
-
-
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
@@ -513,7 +427,6 @@ function handleMousemove(e) {
         }
     }
 }
-
 
 function show_main_animation(mode) {
     sh_play_st.classList.add("sh_play_st");
@@ -687,8 +600,6 @@ function loadTracks() {
     } catch {}
 }
 
-let originalTime = 0;
-
 function changeTrack(selectedIndex) {
     if (!isNaN(selectedIndex)) {
         originalTime = video.currentTime;
@@ -698,37 +609,6 @@ function changeTrack(selectedIndex) {
         video.currentTime = originalTime;
     }
 }
-
-audioTracksSelect.addEventListener('change', function () {
-    selectedIndex = parseInt(this.value, 10);
-    changeTrack(selectedIndex);
-    text = audioTracksSelect[selectedIndex].text
-    localStorage.setItem("videoAudio", text);
-    handleSettingMenu();
-});
-
-subtitleSelect.addEventListener('change', async function () {
-    subtitleId = parseInt(this.value);
-    if (subtitleId == -1) {
-        localStorage.removeItem("videoSubs");
-    } else {
-        text = subtitleSelect.options[subtitleId+1].text;
-        localStorage.setItem("videoSubs", text);
-    }
-    await changeSubs(subtitleId);
-    handleSettingMenu();
-});
-
-speedSelect.addEventListener('change', function () {
-    video.playbackRate = parseFloat(this.value);
-    localStorage.setItem("videoSpeed", video.playbackRate);
-    handleSettingMenu();
-});
-
-liD.addEventListener("click", () => {
-    downloadLink.click();
-    handleSettingMenu();
-});
 
 function split_timeline_chapters() {
     const divLength = video.duration;
@@ -746,16 +626,6 @@ function split_timeline_chapters() {
     });
 }
 
-// Show menu if screen movement (touch)
-videoContainer.addEventListener('touchmove',()=>{
-    touchFix = true;
-    controls.classList.add("show-controls");
-    hideControls(2500);
-},{ passive: false });
-
-let lastTouchTime = 0;
-let touchTimeout;
-let touchFix;
 function double_touch(e) {
     e.preventDefault();
     clearTimeout(touchTimeout);
@@ -783,22 +653,6 @@ function double_touch(e) {
     lastTouchTime = now;
 }
 
-touchBox.addEventListener("click",(e)=>{
-    e.preventDefault();
-    toggleMainState();
-    showCursor();
-});
-touchBox.addEventListener('touchend', double_touch);
-
-var mber = undefined;
-var sttbtnpress = false;
-settingsBtn.addEventListener("mouseup", (e) => {
-    clearTimeout(mber);
-});
-settingsBtn.addEventListener("touchend", (e) => {
-    clearTimeout(mber);
-});
-
 async function addrmMLcl() {
     sttbtnpress = true;
     if (settingsBtn.classList.contains('lmbsl')) {
@@ -811,15 +665,107 @@ async function addrmMLcl() {
     localStorage.setItem("subsLegacy", subs_legacy);
     await changeSubs(subtitleId);
 }
+
+
+/* Event listeners */
+
+// Window events
+window.addEventListener('resize', scaleVideo);
+window.addEventListener('fullscreenchange', scaleVideo);
+
+// Video events
+video.addEventListener("play", play);
+video.addEventListener("pause", pause);
+video.addEventListener("waiting", () => {
+    loader.classList.add("show-state");
+});
+video.addEventListener("playing", () => {
+    loader.classList.remove("show-state");
+});
+
+// Video container events
+videoContainer.addEventListener("mouseleave", () => {
+    clearTimeout(cursorTimeout);
+    document.body.style.cursor = 'auto';
+    hideControls(50);
+});
+videoContainer.addEventListener("mousemove", (e) => {
+    controls.classList.add("show-controls");
+    showCursor();
+    handleMousemove(e);
+    hideControls(mouse_ctrl_delay);
+});
+videoContainer.addEventListener("fullscreenchange", () => {
+    videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
+    if (video.videoWidth >= video.videoHeight) {
+        screen.orientation.lock('landscape').catch(() => {});
+    } else {
+        screen.orientation.lock('portrait').catch(() => {});
+    }
+});
+videoContainer.addEventListener('touchmove', () => {
+    touchFix = true;
+    controls.classList.add("show-controls");
+    hideControls(2500);
+}, { passive: false });
+
+// Duration and navigation events
+duration.addEventListener("mouseenter", () => {
+    mouseOverDuration = true;
+});
+duration.addEventListener("mouseleave", () => {
+    mouseOverDuration = false;
+    hoverTime.style.width = 0;
+    hoverDuration.style.display = 'none';
+});
+duration.addEventListener("mousedown", (e) => {
+    mouseDownProgress = true;
+    navigate(e);
+});
+duration.addEventListener("mouseup", () => {
+    mouseDownProgress = false;
+});
+duration.addEventListener("click", navigate);
+duration.addEventListener("touchmove", handleTouchNavigate, { passive: false });
+
+// Controls events
+controls.addEventListener("click", () => {
+    controls.classList.add("show-controls");
+    showCursor();
+    hideControls(mouse_ctrl_delay);
+});
+
+// Volume events
+volume.addEventListener("mouseenter", () => {
+    muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
+});
+volume.addEventListener("mouseleave", () => {
+    totalVol.classList.remove("show");
+});
+totalVol.addEventListener("mousedown", (e) => {
+    mouseDownVol = true;
+    handleVolume(e);
+});
+document.addEventListener("mouseup", () => {
+    mouseDownProgress = false;
+    mouseDownVol = false;
+});
+
+// Settings events
 settingsBtn.addEventListener("mousedown", (e) => {
     e.preventDefault();
     mber = setTimeout(addrmMLcl, 600);
 });
+settingsBtn.addEventListener("mouseup", () => {
+    clearTimeout(mber);
+});
 settingsBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     mber = setTimeout(addrmMLcl, 600);
-},{ passive: false });
-
+}, { passive: false });
+settingsBtn.addEventListener("touchend", () => {
+    clearTimeout(mber);
+});
 settingsBtn.addEventListener("click", (e) => {
     if (sttbtnpress) {
         e.preventDefault();
@@ -835,4 +781,60 @@ settingsBtn.addEventListener("touchend", (e) => {
     } else {
         handleSettingMenu();
     }
+});
+
+// Track selection events
+audioTracksSelect.addEventListener('change', function () {
+    selectedIndex = parseInt(this.value, 10);
+    changeTrack(selectedIndex);
+    text = audioTracksSelect[selectedIndex].text;
+    localStorage.setItem("videoAudio", text);
+    handleSettingMenu();
+});
+subtitleSelect.addEventListener('change', async function () {
+    subtitleId = parseInt(this.value);
+    if (subtitleId == -1) {
+        localStorage.removeItem("videoSubs");
+    } else {
+        text = subtitleSelect.options[subtitleId + 1].text;
+        localStorage.setItem("videoSubs", text);
+    }
+    await changeSubs(subtitleId);
+    handleSettingMenu();
+});
+speedSelect.addEventListener('change', function () {
+    video.playbackRate = parseFloat(this.value);
+    localStorage.setItem("videoSpeed", video.playbackRate);
+    handleSettingMenu();
+});
+
+// Main state events
+mainState.addEventListener("click", toggleMainState);
+mainState.addEventListener("animationend", handleMainSateAnimationEnd);
+
+// Touch interaction events
+document.addEventListener('touchstart', () => {
+    clearTimeout(fixtouch);
+    touchActive = true;
+});
+document.addEventListener('touchend', () => {
+    clearTimeout(fixtouch);
+    fixtouch = setTimeout(() => {
+        touchActive = false;
+    }, 500);
+});
+touchBox.addEventListener('touchend', double_touch);
+touchBox.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleMainState();
+    showCursor();
+});
+
+// Keyboard events
+document.addEventListener("keydown", handleShorthand);
+
+// Download event
+liD.addEventListener("click", () => {
+    downloadLink.click();
+    handleSettingMenu();
 });

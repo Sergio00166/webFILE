@@ -1,12 +1,16 @@
 /* Code by Sergio00166 */
 
+function showLoader() {
+    document.getElementById("loader").style.display = "";
+    document.querySelector(".list-group").style.display = "none";
+}
 
 function changeURL(mode) {
     var url = window.location.href;
     var urlObj = new URL(url);
     urlObj.searchParams.set("sort", mode);
     window.history.replaceState({}, document.title, urlObj.href);
-    location.reload();
+    window.location.reload();
 }
 
 let selectMode = false;
@@ -15,14 +19,15 @@ const selectedElements = {};
 function toggleSelectMode() {
     selectMode = !selectMode;
     const buttonText = selectMode ? 'CANCEL' : 'SELECT';
-    document.querySelectorAll(".toggleSelectMode")
-        .forEach(button => {
-            button.textContent = buttonText;
-        });
-    document.getElementById('deleteBtn').disabled = !selectMode;
-	document.getElementById('cpmvBtn').disabled = !selectMode;
-    document.getElementById('invertSelection').disabled = !selectMode;
-    if (!selectMode) { deselectAll(); }
+    document.getElementById('selectBtn').textContent = buttonText;
+    document.getElementById('delBtn').disabled = !selectMode;
+    document.getElementById('copyBtn').disabled = !selectMode;
+    document.getElementById('moveBtn').disabled = !selectMode;
+    document.getElementById('renBtn').disabled = !selectMode;
+    document.getElementById('invertBtn').disabled = !selectMode;
+    if (!selectMode) {
+        deselectAll();
+    }
 }
 
 function deselectAll() {
@@ -83,19 +88,26 @@ async function executeDownloads() {
             var url = div.getAttribute('data-value');
             if (url) {
                 if (div.hasAttribute('dir')) {
-                    if (!url.endsWith("/"))
-                    { url += "/"; }
+                    if (!url.endsWith("/")) {
+                        url += "/";
+                    }
                     mode = '?tar';
-                } else { mode = '?raw'; }
-                downloadURL(url+mode);
+                } else {
+                    mode = '?raw';
+                }
+                downloadURL(url + mode);
                 await delay(100);
             }
         }
     } else {
         var url = new URL(window.location.href).pathname;
-        if (url=="/" || url=="") { url = ''; }
-        if (!url.endsWith("/"))  { url += "/"; }
-        const newURL = url+'?tar';
+        if (url == "/" || url == "") {
+            url = '';
+        }
+        if (!url.endsWith("/")) {
+            url += "/";
+        }
+        const newURL = url + '?tar';
         downloadURL(newURL);
     }
 }
@@ -110,7 +122,9 @@ async function executeDeletes() {
                 const url = div.getAttribute('data-value');
                 if (url) {
                     const response = await fetch(
-                        url, {method: 'DELETE'}
+                        url, {
+                            method: 'DELETE'
+                        }
                     );
                     if (response.status === 403) {
                         msg = 'You dont have permission to do that';
@@ -122,7 +136,9 @@ async function executeDeletes() {
                     await delay(100);
                 }
             }
-            if (msg!==null) { alert(msg); }
+            if (msg !== null) {
+                alert(msg);
+            }
             window.location.reload();
         }
     }
@@ -149,30 +165,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('div.container');
     container.addEventListener('click', (event) => {
         const div = event.target.closest('div.filename');
-        if (div){ handleDivClick(div); }
+        if (div) {
+            handleDivClick(div);
+        }
     });
 });
 
-function set_cp_temp(list){
-    if (selectMode){ toggleSelectMode(); }
+function set_cp_temp(list) {
+    if (selectMode) {
+        toggleSelectMode();
+    }
     localStorage.setItem('copy', JSON.stringify(list));
 }
-function set_mv_temp(list){
-    if (selectMode){ toggleSelectMode(); }
+
+function set_mv_temp(list) {
+    if (selectMode) {
+        toggleSelectMode();
+    }
     localStorage.setItem('move', JSON.stringify(list));
 }
-function clearAllMvCp(){ 
+
+function clearAllMvCp() {
     localStorage.removeItem('move');
     localStorage.removeItem('copy');
- }
+}
 
-function getURLlist(){
+function getURLlist() {
     list = [];
     for (const id in selectedElements) {
         const div = selectedElements[id];
         const url = div.getAttribute('data-value');
-        if (url) { list.push(url); }
-    } return list;
+        if (url) {
+            list.push(url);
+        }
+    }
+    return list;
 }
 
 
@@ -180,31 +207,38 @@ function copyFiles() {
     clearAllMvCp();
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
-        if (list != []){ set_cp_temp(list); }
+        if (list != []) {
+            set_cp_temp(list);
+        }
     }
 }
+
 function moveFiles() {
     clearAllMvCp();
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
-        if (list != []){ set_mv_temp(list); }
+        if (list != []) {
+            set_mv_temp(list);
+        }
     }
 }
 
 function renameFiles() {
-    if ((selectMode) && (Object.keys(selectedElements).length>0)){
+    if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         const items = getURLlist();
-        for (var item of items){
-            item = item.endsWith('/')?item.slice(0, -1):item;
+        for (var item of items) {
+            item = item.endsWith('/') ? item.slice(0, -1) : item;
             name = item.split('/').pop();
-            var dest = prompt('New Name for '+name);
-            if (dest === null) { break; }
-            dest = item.substring(0, item.lastIndexOf("/"))+"/"+dest;
-            const success  = sendRequest(item, dest, "MOVE");
+            var dest = prompt('New Name for ' + name);
+            if (dest === null) {
+                break;
+            }
+            dest = item.substring(0, item.lastIndexOf("/")) + "/" + dest;
+            const success = sendRequest(item, dest, "MOVE");
             if (!success) break;
         }
         clearAllMvCp();
-        location.reload();
+        window.location.reload();
     }
 }
 
@@ -241,96 +275,127 @@ function pasteFiles() {
     const cpList = JSON.parse(localStorage.getItem('copy')) || [];
     const mvList = JSON.parse(localStorage.getItem('move')) || [];
     var destUrl = window.location.pathname;
-    destUrl = destUrl.endsWith('/')?destUrl.slice(0, -1):destUrl;
-    if (destUrl===""){ destUrl += "/"; }
+    destUrl = destUrl.endsWith('/') ? destUrl.slice(0, -1) : destUrl;
+    if (destUrl === "") {
+        destUrl += "/";
+    }
     let toPaste = cpList;
     let mode = "COPY";
-    if (toPaste.length === 0){
+    if (toPaste.length === 0) {
         toPaste = mvList;
         mode = "MOVE";
+    } // Chech if empty
+    if (toPaste.length === 0) {
+        return;
     }
-    if (toPaste.length === 0){ return; }
-    document.getElementById("loader").style.display = "";
-    document.querySelector(".list-group").style.display = "none";
-    setTimeout(()=>{
-        for (var path of toPaste){
-            path = path.endsWith('/')?path.slice(0,-1):path
-            const dest = destUrl+"/"+path.split('/').pop();
-            const success  = sendRequest(path, dest, mode);
-            if (!success){ break; }
+    showLoader(); // Show loading screen
+
+    setTimeout(() => {
+        for (var path of toPaste) {
+            path = path.endsWith('/') ? path.slice(0, -1) : path
+            const dest = destUrl + "/" + path.split('/').pop();
+            const success = sendRequest(path, dest, mode);
+            if (!success) {
+                break;
+            }
         }
         clearAllMvCp();
-        location.reload();
-    },250);
+        window.location.reload();
+    }, 250);
 }
 
 function mkdir() {
     var dest = prompt('Create dir');
-    if (dest === null) { return; }
+    if (dest === null) {
+        return;
+    }
     var url = window.location.pathname;
-    url = url.endsWith('/')?url.slice(0, -1):url;
-    const success = sendRequest(url+"/"+dest, null, "MKCOL");
-    if (success){ location.reload(); }
-
-}
-
-function createDialog(options, handleChoiceCallback) {
-    const existingDialog = document.getElementById("optionDialog");
-    if (existingDialog) { document.body.removeChild(existingDialog); }
-    const dialog = document.createElement("div");
-    dialog.id = "optionDialog";
-
-    options.forEach(option => {
-        const button = createButton(option, handleChoiceCallback);
-        dialog.appendChild(button);
-    });
-    document.body.appendChild(dialog);
-
-    function createButton(option, handleChoiceCallback) {
-        const button = document.createElement("button");
-        button.textContent = option.text;
-        Object.assign(button.style, {
-            margin: "0", width: "100%", padding: "10px", border: "none",
-            borderRadius: "5px", color: "#fff", cursor: "pointer",
-            backgroundColor: option.isCancel ? "#dc3545" : "#007bff", // Red for cancel
-        });
-        button.onmouseover = () => button.style.backgroundColor = option.isCancel ? "#b52b38" : "#0056b3";
-        button.onmouseout = () => button.style.backgroundColor = option.isCancel ? "#dc3545" : "#007bff";
-        button.onclick = () => { handleChoiceCallback(option.value); }
-        return button;
+    url = url.endsWith('/') ? url.slice(0, -1) : url;
+    const success = sendRequest(url + "/" + dest, null, "MKCOL");
+    if (success) {
+        window.location.reload();
     }
 }
 
-function createCopyDialog() {
-    const options = [
-        { text: "COPY", value: "copy" },
-        { text: "MOVE", value: "move" },
-        { text: "RENAME", value: "rename" },
-        { text: "CANCEL", value: null, isCancel: true }
-    ];
-    createDialog(options, handleCopyChoice);
+
+// Upload functions
+
+function openFileMenu(selectDirectory = false) {
+    const input = document.createElement("input");
+
+    if (selectDirectory) {
+        input.webkitdirectory = true;
+    } else {
+        input.multiple = true;
+    }
+    input.type = "file";
+
+    input.addEventListener("change", function() {
+        if (input.files.length > 0) {
+            let confirmUpload;
+            if (!selectDirectory) {
+                confirmUpload = confirm(`Upload ${input.files.length} item(s)?`);
+            }
+            if (selectDirectory || confirmUpload) {
+                uploadFiles(input.files, selectDirectory);
+            }
+        }
+    });
+    input.click();
 }
 
-function createAddDialog() {
-    const options = [
-        { text: "CREATE DIR", value: "mkdir" },
-        { text: "UPLOAD FILES", value: "upfiles" },
-        { text: "UPLOAD DIR", value: "updir" },
-        { text: "CANCEL", value: null, isCancel: true }
-    ];
-    createDialog(options, handleAddChoice);
+function uploadFiles(files, isDirectory = false) {
+    const formData = new FormData();
+    for (const file of files) {
+        formData.append("upload", file);
+    }
+    const uploadEndpoint = isDirectory ? "?updir" : "?upfile";
+    showLoader(); // Show loading screen
+    fetch(uploadEndpoint, {
+        method: "POST",
+        body: formData
+    }).then(response => {
+        if (!response.ok) {
+            let msg;
+            switch (response.status) {
+                case 403:
+                    msg = "You don’t have permission to do that.";
+                    break;
+                case 500:
+                    msg = "Something went wrong on the server.";
+                    break;
+                case 409:
+                    msg = "It already exists.";
+                    break;
+                case 507:
+                    msg = "Not enough free space.";
+                    break;
+                default:
+                    msg = "Something went wrong.";
+            }
+            alert(msg);
+        }
+    }).catch(() => { alert("Fatal Error") });
+	window.location.reload();
 }
 
-function handleCopyChoice(choice) {
-    document.body.removeChild(document.getElementById("optionDialog"));
-    if (choice === "copy") { copyFiles(); }
-    else if (choice === "move") { moveFiles(); }
-    else if (choice === "rename") { renameFiles(); }
+function enableDragAndDropUpload(dropArea, selectDirectory = false) {
+    dropArea.addEventListener("dragover", function(e) {
+        e.preventDefault();
+    });
+    dropArea.addEventListener("drop", function(e) {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const confirmUpload = confirm(`Upload ${files.length} item(s)?`);
+            if (confirmUpload) {
+                uploadFiles(files, selectDirectory); // Upload files after confirmation
+            }
+        }
+    });
 }
 
-function handleAddChoice(choice) {
-    document.body.removeChild(document.getElementById("optionDialog"));
-    if (choice === "mkdir") { mkdir(); }
-    else if (choice === "upfiles") { window.location.href = "?upfile"; }
-    else if (choice === "updir") { window.location.href = "?updir"; }
-}
+// Upload actions
+function upfile() { openFileMenu(); }
+function updir() { openFileMenu(true); }
+enableDragAndDropUpload(document);

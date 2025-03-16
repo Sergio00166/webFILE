@@ -31,64 +31,71 @@ var muted = localStorage.getItem("audioMuted");
 var saved_speed = localStorage.getItem("audioSpeed");
 var random = localStorage.getItem("audioRandom");
 
+/* Inicialitate everything */
+{
+    if (saved_speed != null) {
+        audio.playbackRate = parseFloat(saved_speed);
+        speedButtons.forEach(item => {
+            if (item.getAttribute('data-value') === saved_speed) {
+                item.classList.add('speed-active');
+            } else { item.classList.remove('speed-active'); }
+        });
+    } delete saved_speed;
 
-if (saved_speed != null) {
-    audio.playbackRate = parseFloat(saved_speed);
-    speedButtons.forEach(item => {
-        if (item.getAttribute('data-value') === saved_speed) {
-            item.classList.add('speed-active');
-        } else {
-            item.classList.remove('speed-active');
-        }
+    if (currentMode != null) {
+        currentMode = parseInt(currentMode);
+        mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
+    } else { currentMode = 0; }
+
+    if (volumeVal === null) { volumeVal = 1; }
+    audio.volume = parseFloat(volumeVal);
+    currentVol.style.width = volumeVal * 100 + "%";
+
+    // Cast value
+    if (muted != null) {
+        if (muted == "true") {
+            muted = true;
+            audio.volume = 0;
+        } else { muted = false; }
+    } else { muted = false; }
+    handleAudioIcon();
+
+    // Cast value
+    if (random != null) {
+        if (random == "true") { random = true; }
+        else { random = false; }
+    } else { random = false; }
+    if (random) { mode.classList.add('lmbsl'); }
+
+    audio.addEventListener('loadeddata', () => {
+        (function wait4ready() {
+            if (isNaN(audio.duration) || audio.duration === 0) {
+                return setTimeout(wait4ready, 25);
+            }
+            audio.play().catch( (e)=>{} );
+            if (audio.paused) { pause(); }
+            totalDuration.innerHTML = showDuration(audio.duration);
+            audio.ontimeupdate = handleProgressBar;
+        })();
     });
 }
-delete saved_speed;
-
-if (currentMode != null) {
-    currentMode = parseInt(currentMode);
-    mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
-} else {
-    currentMode = 0;
-}
-
-if (volumeVal === null) {
-    volumeVal = 1;
-}
-audio.volume = parseFloat(volumeVal);
-currentVol.style.width = volumeVal * 100 + "%";
-
-// Cast value
-if (muted != null) {
-    if (muted == "true") {
-        muted = true;
-        audio.volume = 0;
-    } else {
-        muted = false;
-    }
-} else {
-    muted = false;
-}
-// Cast value
-if (random != null) {
-    if (random == "true") {
-        random = true;
-    } else {
-        random = false;
-    }
-} else {
-    random = false;
-}
 
 
-let mouseDownProgress = false,
-    mouseDownVol = false,
-    isCursorOnControls = false,
-    mouseOverDuration = false,
-    touchClientX = 0,
-    touchPastDurationWidth = 0,
-    touchStartTime = 0;
+/* Define variables */
 
-canPlayInit();
+var mber = undefined;
+var mdbtnpress = false;
+let mouseDownProgress = false;
+let mouseDownVol = false;
+let isCursorOnControls = false;
+let mouseOverDuration = false;
+let touchClientX = 0;
+let touchPastDurationWidth = 0;
+let touchStartTime = 0;
+let hideHoverTimeout;
+
+
+/* Main functions zone */
 
 function prev() {
     if (random) {
@@ -112,31 +119,6 @@ function next() {
 function download() {
     downloadLink.click();
 }
-document.addEventListener("keydown", handleShorthand);
-audio.addEventListener("play", play);
-audio.addEventListener("pause", pause);
-
-
-function setAudioTime() {
-    if (!(isNaN(audio.duration) || audio.duration === 0)) {
-        totalDuration.innerHTML = showDuration(audio.duration);
-    } else {
-        setTimeout(setAudioTime, 25);
-    }
-}
-
-function canPlayInit() {
-    handleAudioIcon();
-    audio.play().catch((e)=>{});
-    if (random) {
-        mode.classList.add('lmbsl');
-    }
-    if (audio.paused) {
-        pause();
-    }
-    setAudioTime();
-}
-
 
 function play() {
     audio.play();
@@ -164,8 +146,6 @@ function handleSettingMenu() {
 function saveVolume() {
     localStorage.setItem("audioVolume", volumeVal);
 }
-
-audio.ontimeupdate = handleProgressBar;
 
 function handleProgressBar() {
     currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
@@ -217,30 +197,6 @@ function showDuration(time) {
     }
 }
 
-// Event Listeners
-duration.addEventListener("click", navigate);
-
-duration.addEventListener("mousedown", (e) => {
-    mouseDownProgress = true;
-    navigate(e);
-});
-
-
-// Prevent mouse events from triggering after a touch event
-touchActive = false;
-let fixtouch;
-document.addEventListener('touchstart', ()=> {
-    clearTimeout(fixtouch);
-    touchActive = true;
-});
-document.addEventListener('touchend', ()=> {
-    clearTimeout(fixtouch);
-    fixtouch = setTimeout(() => {
-        touchActive = false
-    }, 500);
-});
-
-
 function handleMousemove(e) {
     if (mouseDownProgress) {
         hoverTime.style.width = 0;
@@ -268,32 +224,6 @@ function handleMousemove(e) {
         }
     }
 }
-
-duration.addEventListener("mousedown", (e) => {
-    mouseDownProgress = true;
-    navigate(e);
-});
-
-document.addEventListener("mouseup", () => {
-    mouseDownProgress = false;
-    mouseDownVol = false;
-});
-
-document.addEventListener("mousemove", handleMousemove);
-
-duration.addEventListener("mouseenter", () => {
-    mouseOverDuration = true;
-});
-
-duration.addEventListener("mouseleave", () => {
-    mouseOverDuration = false;
-    hoverTime.style.width = 0;
-    hoverDuration.style.display = 'none';
-});
-
-duration.addEventListener("touchmove",handleTouchNavigate,{ passive: false });
-
-let hideHoverTimeout;
 
 function hideHoverDuration() {
     clearTimeout(hideHoverTimeout);
@@ -323,10 +253,6 @@ function handleVolume(e) {
     handleAudioIcon();
 }
 
-volume.addEventListener("mouseenter", () => {
-    muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
-});
-
 function toggleMuteUnmute() {
     totalVol.classList.remove("show");
     if (!muted) {
@@ -341,16 +267,6 @@ function toggleMuteUnmute() {
     localStorage.setItem("audioMuted", muted);
 }
 
-totalVol.addEventListener("mousedown", (e) => {
-    mouseDownVol = true;
-    handleVolume(e);
-});
-
-volume.addEventListener("mouseleave", () => {
-    totalVol.classList.remove("show");
-});
-
-
 function handlePlaybackRate(e) {
     audio.playbackRate = parseFloat(e.target.dataset.value);
     speedButtons.forEach((btn) => {
@@ -360,19 +276,6 @@ function handlePlaybackRate(e) {
     settingMenu.classList.remove("show-setting-menu");
     localStorage.setItem("audioSpeed", audio.playbackRate);
 }
-
-speedButtons.forEach((btn) => {
-    btn.addEventListener("click", handlePlaybackRate);
-});
-
-var mber = undefined;
-var mdbtnpress = false;
-mode.addEventListener("mouseup", () => {
-    clearTimeout(mber);
-});
-mode.addEventListener("touchend", () => {
-    clearTimeout(mber);
-});
 
 function chMode() {
     const modes = ["1", "»", "&orarr;"];
@@ -392,32 +295,6 @@ function addrmMLcl() {
     }
     localStorage.setItem("audioRandom", random);
 }
-mode.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-});
-mode.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-},{ passive: false });
-
-mode.addEventListener("click", (e) => {
-    if (mdbtnpress) {
-        e.preventDefault();
-        mdbtnpress = false;
-    } else {
-        chMode();
-    }
-});
-mode.addEventListener("touchend", (e) => {
-    if (mdbtnpress) {
-        e.preventDefault();
-        mdbtnpress = false;
-    } else {
-        chMode();
-    }
-});
-
 
 function handleAudioEnded() {
     if (currentMode === 1) {
@@ -535,7 +412,106 @@ function handleShorthand(e) {
     }
 }
 
+
+/* Event listeners */
+
+// Media session
 if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('previoustrack', prev);
     navigator.mediaSession.setActionHandler('nexttrack', next);
 }
+
+// Keyboard event
+document.addEventListener("keydown", handleShorthand);
+
+// Audio events
+audio.addEventListener("play", play);
+audio.addEventListener("pause", pause);
+
+// Navigation events
+duration.addEventListener("click", navigate);
+duration.addEventListener("touchmove", handleTouchNavigate, { passive: false });
+duration.addEventListener("mousedown", (e) => {
+    mouseDownProgress = true;
+    navigate(e);
+});
+document.addEventListener("mouseup", () => {
+    mouseDownProgress = false;
+    mouseDownVol = false;
+});
+
+// Mouse movement event
+document.addEventListener("mousemove", handleMousemove);
+
+// Duration hover events
+duration.addEventListener("mouseenter", () => {
+    mouseOverDuration = true;
+});
+duration.addEventListener("mouseleave", () => {
+    mouseOverDuration = false;
+    hoverTime.style.width = 0;
+    hoverDuration.style.display = 'none';
+});
+
+// Prevent mouse events from triggering after a touch event
+touchActive = false;
+let fixtouch;
+document.addEventListener('touchstart', () => {
+    clearTimeout(fixtouch);
+    touchActive = true;
+});
+document.addEventListener('touchend', () => {
+    clearTimeout(fixtouch);
+    fixtouch = setTimeout(() => {
+        touchActive = false;
+    }, 500);
+});
+
+// Mode change button events
+mode.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    mber = setTimeout(addrmMLcl, 600);
+});
+mode.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    mber = setTimeout(addrmMLcl, 600);
+}, { passive: false });
+mode.addEventListener("click", (e) => {
+    if (mdbtnpress) {
+        e.preventDefault();
+        mdbtnpress = false;
+    } else {
+        chMode();
+    }
+});
+mode.addEventListener("touchend", (e) => {
+    if (mdbtnpress) {
+        e.preventDefault();
+        mdbtnpress = false;
+    } else {
+        chMode();
+    }
+});
+mode.addEventListener("mouseup", () => {
+    clearTimeout(mber);
+});
+mode.addEventListener("touchend", () => {
+    clearTimeout(mber);
+});
+
+// Playback speed buttons
+speedButtons.forEach((btn) => {
+    btn.addEventListener("click", handlePlaybackRate);
+});
+
+// Volume controls
+volume.addEventListener("mouseenter", () => {
+    muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
+});
+volume.addEventListener("mouseleave", () => {
+    totalVol.classList.remove("show");
+});
+totalVol.addEventListener("mousedown", (e) => {
+    mouseDownVol = true;
+    handleVolume(e);
+});

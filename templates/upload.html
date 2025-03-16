@@ -2,73 +2,53 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
-  <title>UPLOAD</title>
-  <link rel="stylesheet" href="{{ url_for('index', static='css/forms.css') }}">
-  <style> .file-input { display: none; } </style>
-</head>
-<body>
-  <section class="hero is-primary is-fullheight">
-    <div class="hero-body">
-      <div class="container has-text-centered">
-        <div class="column is-4 is-offset-4" id="container">
-          <h1 class="title has-text-danger" id="error">{% if error %}{{ error }}{% endif %}</h1>
-          <div class="box">
-            <div id="loader" style="display: none;">
-              <img src="{{ url_for('index', static='svg/load.gif') }}" alt="Loading">
-              <p>Uploading. Please wait...</p>
-            </div>
-
-            <form id="uploadForm" method="POST" action="{{ '?updir' if upDir else '?upfile' }}" enctype="multipart/form-data" onsubmit="showLoader()">
-              <div class="field">
-                {% if upDir %}
-                  <div class="file is-large">
-                    <label class="file-label" style="width: 100%;">
-                      <input class="file-input" type="file" name="files" onchange="updateLabel(this,'dirLabel')" webkitdirectory>
-                      <span class="file-cta" style="width: 100%;">
-                        <span class="file-label" id="dirLabel">Select a folder</span>
-                      </span>
-                    </label>
-                  </div>
-                {% else %}
-                  <div class="file-dropzone" style="border: 2px dashed #00d1b2; padding: 20px; cursor: pointer;"
-                    onclick="document.getElementById('fileInput').click();"
-                    ondragover="event.preventDefault(); this.style.borderColor='#3273dc';"
-                    ondragleave="this.style.borderColor='#00d1b2';"
-                    ondrop="handleDrop(event, 'fileInput', 'fileLabel')">
-                    <span class="file-label" id="fileLabel">Drag here or click to open menu</span>
-                    <input class="file-input" type="file" id="fileInput" name="files" onchange="updateLabel(this,'fileLabel')" multiple>
-                  </div>
-                {% endif %}
-              </div>
-              <button class="button is-block is-info is-large is-fullwidth">Upload {{ "Folder" if upDir else "File(s)" }}</button>
-            </form>
-
-            <button class="button is-block is-danger is-large is-fullwidth" style="margin-top: 12px;"
-              onclick="window.location.href = window.location.origin+window.location.pathname;">Cancel</button>
-          </div>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>UPLOAD</title>
+      <link rel="stylesheet" href="{{ url_for('index', static='css/upload.css') }}">
+    </head>
+    <body>
+      <div class="container">
+        {% if error %}<h2 id="error">{{ error }}</h2>{% endif %}
+        <div id="loader" style="display: none">
+          <img src="{{ url_for('index', static='svg/load.gif') }}" alt="Loading">
+          <p>Uploading. Please wait...</p>
         </div>
+        <form id="uploadForm" method="POST" action="{{ '?updir' if upDir else '?upfile' }}" enctype="multipart/form-data" onsubmit="showLoader()">
+        {% if upDir %}
+          <input onchange="updateLabel(this,'fileLabel')" type="file" id="fileInput" name="upload" webkitdirectory>
+          <button type="button" onclick="document.getElementById('fileInput').click()" id="fileLabel" class="button-select">Select Folder</button>
+        {% else %}
+          <input onchange="updateLabel(this,'fileLabel')" type="file" id="fileInput" name="upload" multiple>
+          <button type="button" onclick="document.getElementById('fileInput').click()" id="fileLabel" class="button-select">Select Files</button>
+        {% endif %}
+          <button type="submit" id="uploadButton" class="button-upload">Upload</button>
+        </form>
+        <button onclick="window.location.href = window.location.origin+window.location.pathname;" class="button-danger">Cancel</button>
       </div>
-    </div>
-  </section>
-
-  <script>
-      function updateLabel(input, labelId) {
-          const label = document.getElementById(labelId);
-          label.textContent = input.files.length > 0 ? `${input.files.length} file(s) selected` : "Select a file or folder";
-      }
-      function showLoader() {
-          document.getElementById("uploadForm").style.display = "none";
-          document.getElementById("loader").style.display = "block";
-      }
-      function handleDrop(event, inputId, labelId) {
-          event.preventDefault();
-          event.currentTarget.style.borderColor = '#00d1b2';
-          const input = document.getElementById(inputId);
-          input.files = event.dataTransfer.files;
-          updateLabel(input, labelId);
-      }
-  </script>
-</body>
+      <script defer>
+        function updateLabel(input, labelId) {
+            const label = document.getElementById(labelId);
+            label.textContent = input.files.length > 0 ? `${input.files.length} file(s) selected` : "Select Files";
+            const errorMessage = document.getElementById("error");
+            if (input.files.length>0 && errorMessage){ errorMessage.style.display = "none"; }
+        }
+        function showLoader() {
+            document.getElementById("uploadForm").style.display = "none";
+            document.getElementById("loader").style.display = "block";
+            const error = document.getElementById("error");
+            if (error) { error.style.display = "none"; }
+        }
+        function handleDrop(event, inputId, labelId) {
+            event.preventDefault();
+            const input = document.getElementById(inputId);
+            input.files = event.dataTransfer.files;
+            updateLabel(input, labelId);
+        }
+        {% if not upDir %}
+            document.body.ondragover = function(event) { event.preventDefault(); };
+            document.body.ondrop = function(event) { handleDrop(event, 'fileInput', 'fileLabel'); };
+        {% endif %}
+      </script>
+    </body>
 </html>

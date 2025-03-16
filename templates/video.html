@@ -8,6 +8,11 @@
     <title>{{ name }}</title>
     <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/video.ico') }}">
     <link rel="stylesheet" href="{{ url_for('index', static='css/video.css') }}">
+    <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
+    <script src="{{ url_for('index', static='jassub/jassub.js') }}"></script>
+    <script>
+      const chapters = {{ chapters | tojson}}
+    </script>
   </head>
   <body>
     <a href="{{ request.path }}?raw" download="{{ name }}" id="download"></a>
@@ -110,10 +115,5 @@
         </div>
       </div>
     </div>
-    <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
-    <script src="{{ url_for('index', static='jassub/jassub.js') }}"></script>
-    <script>
-      const chapters = {{ chapters | tojson}}
-    </script>
   </body>
 </html>

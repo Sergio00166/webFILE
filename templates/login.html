@@ -1,36 +1,25 @@
+<!-- Code by Sergio00166 -->
+
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
     <title>LOGIN</title>
-    <link rel="stylesheet" href="{{ url_for('index', static='css/forms.css') }}">
+    <link rel="stylesheet" href="{{ url_for('index', static='css/login.css') }}">
   </head>
   <body>
-    <section class="hero is-primary is-fullheight">
-      <div class="hero-body">
-        <div class="container has-text-centered">
-          <div class="column is-4 is-offset-4"> {% if error %} <h1 class="title has-text-danger">{{ error }}</h1> {% endif %} <div class="box">
-              <form method="POST" action="?login" autocomplete="on">
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="text" name="username" placeholder="User" autofocus="" autocomplete="username" required>
-                  </div>
-                </div>
-                <div class="field">
-                  <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Password" autocomplete="current-password" required>
-                  </div>
-                </div>
-                <button class="button is-block is-info is-large is-fullwidth">Login</button>
-              </form>
-              <button class="button is-danger is-large is-fullwidth" style="margin-top: 12px;"
-                onclick="window.location.href = window.location.origin+window.location.pathname;">Cancel</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <br>
-    </section>
+    <div class="container">
+      {% if error %}<h2 id="error">{{ error }}</h2>{% endif %}
+      <form method="POST" action="?login" autocomplete="on">
+        <input required class="username" type="text" name="username"
+          placeholder="User" autofocus="" autocomplete="username">
+        <input required class="password" type="password" name="password"
+          placeholder="Password" autocomplete="current-password">
+        <button class="button-upload">Login</button>
+      </form>
+      <button onclick="window.location.href = window.location.origin+window.location.pathname;"
+        class="button-danger">Cancel</button>
+    </div>
   </body>
 </html>
