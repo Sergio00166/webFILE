@@ -156,21 +156,21 @@ function scaleVideo(){
     video.volume = parseFloat(volumeVal);
     currentVol.style.width = volumeVal*100+"%";
     handleVideoIcon();
-	
-	video.addEventListener('loadeddata', () => {
-		(function wait4ready() {
-			if (isNaN(video.duration) || video.duration === 0) {
-				return setTimeout(wait4ready, 25);
-			}
-			video.play().catch(() => {});
-			if (video.paused) { pause(); }
-			totalDuration.innerHTML = showDuration(video.duration);
-			video.ontimeupdate = handleProgressBar;
-			split_timeline_chapters(); // Set chapters
-			loadTracks();  // Set all audio tracks info
-			fix_aspect_ratio(); // Fix the aspect ratio
-		})();
-	});
+    
+    video.addEventListener('loadeddata', () => {
+        (function wait4ready() {
+            if (isNaN(video.duration) || video.duration === 0) {
+                return setTimeout(wait4ready, 25);
+            }
+            video.play().catch(() => {});
+            if (video.paused) { pause(); }
+            totalDuration.innerHTML = showDuration(video.duration);
+            video.ontimeupdate = handleProgressBar;
+            split_timeline_chapters(); // Set chapters
+            loadTracks();  // Set all audio tracks info
+            fix_aspect_ratio(); // Fix the aspect ratio
+        })();
+    });
 }
 
 
