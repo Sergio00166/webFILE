@@ -3,7 +3,6 @@
 let mouse_ctrl_delay = 1500;
 let doubleTouch_delay = 400;
 
-navigator.permissions.request({ name: 'local-fonts' });
 const volume = document.querySelector(".volume");
 const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
