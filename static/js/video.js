@@ -145,16 +145,15 @@ function scaleVideo(){
         mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
     } else { currentMode = 0; }
 
+    if (volumeVal === null) { volumeVal = 1; }
+    video.volume = parseFloat(volumeVal);
+    currentVol.style.width = volumeVal*100+"%";
     if (muted != null) {
         if (muted == "true") {
             muted = true;
             video.volume = 0;
         } else { muted = false; }
     } else { muted = false; }
-
-    if (volumeVal === null) { volumeVal = 1; }
-    video.volume = parseFloat(volumeVal);
-    currentVol.style.width = volumeVal*100+"%";
     handleVideoIcon();
     
     video.addEventListener('loadeddata', () => {
