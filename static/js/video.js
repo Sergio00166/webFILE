@@ -52,9 +52,6 @@ var muted = localStorage.getItem("videoMuted");
 var subs_legacy = localStorage.getItem("subsLegacy");
 var subtitleId = 0;
 
-/* Create a list with all fonts */
-for (let key in fonts) { fonts[key] = window.location.pathname+"?font="+fonts[key]; }
-fonts['arial'] = '/?static=jassub/arial.ttf';
 
 /* Start functions zone */
 
