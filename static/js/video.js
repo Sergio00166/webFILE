@@ -52,6 +52,9 @@ var muted = localStorage.getItem("videoMuted");
 var subs_legacy = localStorage.getItem("subsLegacy");
 var subtitleId = 0;
 
+/* Create a list with all fonts */
+for (let key in fonts) { fonts[key] = window.location.pathname+"?font="+fonts[key]; }
+fonts['arial'] = '/?static=jassub/arial.ttf';
 
 /* Start functions zone */
 
@@ -61,8 +64,8 @@ function crate_ass_worker(url) {
         video: video, canvas: canvas, subUrl: url,
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
-        useLocalFonts: true, fallbackFont: "arial",
-        availableFonts: { 'arial': '/?static=jassub/arial.ttf' }
+		fallbackFont: "arial",
+        availableFonts: fonts
     });
 }
 function webvtt_subs(url) {
