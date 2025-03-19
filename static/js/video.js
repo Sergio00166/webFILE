@@ -61,8 +61,8 @@ function crate_ass_worker(url) {
         video: video, canvas: canvas, subUrl: url,
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
-		fallbackFont: "arial",
-        availableFonts: fonts
+        useLocalFonts: true, fallbackFont: "arial",
+        availableFonts: { 'arial': '/?static=jassub/arial.ttf' }
     });
 }
 function webvtt_subs(url) {
