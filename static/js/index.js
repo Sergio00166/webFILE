@@ -228,7 +228,7 @@ function renameFiles() {
         const items = getURLlist();
         for (var item of items) {
             item = item.endsWith('/') ? item.slice(0, -1) : item;
-            name = item.split('/').pop();
+            name = decodeURIComponent( item.split('/').pop() );
             var dest = prompt('New Name for ' + name);
             if (dest === null) {
                 break;

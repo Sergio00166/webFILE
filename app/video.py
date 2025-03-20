@@ -85,7 +85,12 @@ def get_track(file,index,info=False):
             'ffmpeg', '-i', file,
             '-map', f'0:s:{index}',
             '-f', codec, '-'
-        ], stdout=PIPE,stderr=PIPE).stdout.decode()
+        ], stdout=PIPE,stderr=PIPE)
+        if out.returncode != 0:
+            raise NotImplementedError(
+                f"Unsupported subtitle codec"
+            )
+        out = out.stdout.decode()
     else: out = ""
     return codec, out
  

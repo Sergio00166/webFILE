@@ -65,12 +65,14 @@ function crate_ass_worker(url) {
         availableFonts: { 'arial': '/?static=jassub/arial.ttf' }
     });
 }
+
 function webvtt_subs(url) {
     var track = document.createElement('track');
     track.kind = 'subtitles';
     track.src = url;
     track.default = true;
     track.mode = 'showing';
+    track.onerror = ()=>{ alert("Cannot load subtitle"); }
     video.appendChild(track);
 }
 async function is_SSA_subs(url) {
@@ -85,8 +87,8 @@ async function changeSubs(value) {
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (value > -1) {
         url = window.location.pathname+"?subs="+value;
-        if (!is_SSA_subs(url)) { webvtt_subs(url); }
-        else if (subs_legacy) {  webvtt_subs(url+"legacy"); }
+        if (! await is_SSA_subs(url) ) { webvtt_subs(url); }
+        else if (subs_legacy) { webvtt_subs(url+"legacy"); }
         else { ass_worker = crate_ass_worker(url); }
     }
 }
