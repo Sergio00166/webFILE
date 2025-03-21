@@ -4,7 +4,7 @@ from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
 from os.path import getsize,getmtime
 from json import loads as jsload
-from functools import cache
+from cache import SelectiveCache
 from flask import Response
 from os import sep
 
@@ -15,6 +15,9 @@ subsmimes = {
     "webvtt":"text/vtt",
 }
 ssa = ["ssa", "ass"]
+cache = SelectiveCache(
+    max_memory=256*1024*1024
+) # Max cache size 512MB
 
 
 def check_ffmpeg_installed():
@@ -26,7 +29,7 @@ def check_ffmpeg_installed():
 
 
 
-@cache # Dont overload the server
+@cache.cached("sz","mt")
 def ffmpeg_get_codec(source,index,sz,mt):
     codec = run([
         'ffprobe', '-v', 'quiet',
@@ -39,7 +42,7 @@ def ffmpeg_get_codec(source,index,sz,mt):
     else: return "webvtt"
 
 
-@cache # Dont overload the server
+@cache.cached("sz","mt")
 def ffmpeg_extract_chapters(file_path,sz,mt):
     try:
         ffprobe_output = jsload( run([
@@ -56,7 +59,7 @@ def ffmpeg_extract_chapters(file_path,sz,mt):
     except: return ""
 
 
-@cache # Dont overload the server
+@cache.cached("sz","mt")
 def ffmpeg_extract_info(file_path,sz,mt):
     # This is to get all the subtitles name or language
     ffprobe_output = jsload( run([
@@ -80,7 +83,7 @@ def ffmpeg_extract_info(file_path,sz,mt):
     return subtitles_list
 
 
-@cache # Dont overload the server
+@cache.cached("sz","mt")
 def ffmpeg_get_subs(file,index,codec,legacy,sz,mt):
     out = run( [
         'ffmpeg', '-i', file, '-map',
