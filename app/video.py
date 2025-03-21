@@ -15,7 +15,6 @@ subsmimes = {
     "webvtt":"text/vtt",
 }
 
-
 def check_ffmpeg_installed():
     try:
         result = run(['ffmpeg','-version'],stdout=DEVNULL)
@@ -23,7 +22,10 @@ def check_ffmpeg_installed():
             raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
     except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
 
-def get_codec(source, index):
+
+
+@cache # Dont overload the server
+def ffmpeg_get_codec(source, index):
     # Gets the codec name from a file
     return run([
         'ffprobe', '-v', 'quiet',
@@ -33,25 +35,23 @@ def get_codec(source, index):
     ], stdout=PIPE,stderr=PIPE).stdout.decode().strip()
 
 
-def get_chapters(file_path):
+@cache # Dont overload the server
+def ffmpeg_extract_chapters(file_path,sz,mt):
     try:
         ffprobe_output = jsload( run([
             'ffprobe', '-v', 'quiet', '-print_format',
             'json', '-show_entries', 'chapters', file_path
         ], stdout=PIPE,stderr=PIPE).stdout.decode() )
-
-        filtered_chapters = [
-            {
-                'title': chapter['tags'].get('title', 'Untitled'),
-                'start_time': int(float(chapter['start_time']))
-            }
-            for chapter in ffprobe_output['chapters']
-        ]
+        filtered_chapters = [ {
+            'title': chapter['tags'].get('title', 'Untitled'),
+            'start_time': int(float(chapter['start_time']))
+        } for chapter in ffprobe_output['chapters'] ]
         return filtered_chapters
     except: return ""
 
 
-def get_info(file_path):
+@cache # Dont overload the serve
+def ffmpeg_extract_info(file_path):
     # This is to get all the subtitles name or language
     ffprobe_output = jsload( run([
         'ffprobe', '-v', 'quiet', '-select_streams', 's', 
@@ -73,7 +73,7 @@ def get_info(file_path):
     return subtitles_list
 
 
-def get_track(file,index,info=False):
+def ffmpeg_get_subs(file,index,legacy,info=False):
     # Here we extract [and corvert] a
     # subtitle track from a video file
     codec = get_codec(file, index)
@@ -91,25 +91,16 @@ def get_track(file,index,info=False):
                 f"Unsupported subtitle codec"
             )
         out = out.stdout.decode()
-    else: out = ""
+        if legacy and codec!="webvtt":
+            out = convert_ssa(out) 
+    else: out=""
     return codec, out
- 
 
-@cache # Create a cache to dont overload the server
-def extract_subtitles(index,file,legacy,sz,mt):
-    codec,out = get_track(file,index)
-    # Convert or extract the subtitles
-    if legacy and codec!="webvtt":
-        out = convert_ssa(out)
-    return codec,out
-    
 
-def get_subtitles(index,file,legacy,info):
-    if info: codec,out = get_track(file,index,True)
-    else: # SZ & MT only to invalidade cache
-        sz,mt = getsize(file),getmtime(file)
-        args = (index,file,legacy,sz,mt)
-        codec,out = extract_subtitles(*args)
+@cache # Dont overload the server
+def extract_subtitles(index,file,legacy,info):
+    if info: codec,out = ffmpeg_get_subs(index,file,True)
+    else: codec,out = ffmpeg_get_subs(index,file,legacy)
     # Get filename and for downloading the subtitles
     codec = "webvtt" if legacy else codec
     subsname = file.split(sep)[-1]+f".track{str(index)}."
@@ -117,4 +108,26 @@ def get_subtitles(index,file,legacy,info):
     # Return the subtittle track
     return Response(out,mimetype=subsmimes[codec], headers=\
     {'Content-Disposition': 'attachment;filename='+subsname})
+
+
+
+# The functions that will be called.
+# sz and mt for invalidating the cache
+
+def get_subtitles(index,file,legacy,info):
+    sz,mt = getsize(file),getmtime(file)
+    args = (index,file,legacy,info,sz,mt)
+    return extract_subtitles(*args)
+
+def get_info(file):
+    sz,mt = getsize(file), getmtime(file)
+    return ffmpeg_extract_info(file,sz,mt)
+    
+def get_chapters(file):
+    sz,mt = getsize(file), getmtime(file)
+    return ffmpeg_extract_chapters(file,sz,mt)
+
+def get_codec(file, index):
+    sz,mt = getsize(file), getmtime(file)
+    return ffmpeg_get_codec(file,index,sz,mt)
 
