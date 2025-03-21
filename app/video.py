@@ -14,6 +14,8 @@ subsmimes = {
     "ass":"application/x-substation-alpha",
     "webvtt":"text/vtt",
 }
+ssa = ["ssa", "ass"]
+
 
 def check_ffmpeg_installed():
     try:
@@ -25,14 +27,16 @@ def check_ffmpeg_installed():
 
 
 @cache # Dont overload the server
-def ffmpeg_get_codec(source, index):
-    # Gets the codec name from a file
-    return run([
+def ffmpeg_get_codec(source,index,sz,mt):
+    codec = run([
         'ffprobe', '-v', 'quiet',
         '-select_streams', f's:{index}',
         '-show_entries', 'stream=codec_name','-of',
         'default=noprint_wrappers=1:nokey=1',source
     ], stdout=PIPE,stderr=PIPE).stdout.decode().strip()
+
+    if codec in ssa: return codec
+    else: return "webvtt"
 
 
 @cache # Dont overload the server
@@ -42,27 +46,30 @@ def ffmpeg_extract_chapters(file_path,sz,mt):
             'ffprobe', '-v', 'quiet', '-print_format',
             'json', '-show_entries', 'chapters', file_path
         ], stdout=PIPE,stderr=PIPE).stdout.decode() )
+
         filtered_chapters = [ {
             'title': chapter['tags'].get('title', 'Untitled'),
             'start_time': int(float(chapter['start_time']))
         } for chapter in ffprobe_output['chapters'] ]
+
         return filtered_chapters
     except: return ""
 
 
-@cache # Dont overload the serve
-def ffmpeg_extract_info(file_path):
+@cache # Dont overload the server
+def ffmpeg_extract_info(file_path,sz,mt):
     # This is to get all the subtitles name or language
     ffprobe_output = jsload( run([
-        'ffprobe', '-v', 'quiet', '-select_streams', 's', 
-        '-show_entries', 'stream=index:stream_tags=title:stream_tags=language',
+        'ffprobe', '-v', 'quiet', '-select_streams',
+        's', '-show_entries',
+        'stream=index:stream_tags=title:stream_tags=language',
         '-of', 'json', file_path
     ], stdout=PIPE,stderr=PIPE).stdout.decode() )
-    subtitles_list = []
 
-    for p,stream in enumerate(
-        ffprobe_output.get('streams',[])
-    ):
+    subtitles_list = []
+    streams = ffprobe_output.get('streams',[])
+
+    for p,stream in enumerate(streams):
         tags = stream.get('tags', {})
         title = tags.get('title')
         lang = tags.get('language')
@@ -73,56 +80,35 @@ def ffmpeg_extract_info(file_path):
     return subtitles_list
 
 
-def ffmpeg_get_subs(file,index,legacy,info=False):
-    # Here we extract [and corvert] a
-    # subtitle track from a video file
-    codec = get_codec(file, index)
-    # If the codec is not ssa or ass simply let
-    # Fmmpeg to convert it directly
-    if not codec in ["ssa", "ass"]: codec="webvtt"
-    if not info:
-        out = run([
-            'ffmpeg', '-i', file,
-            '-map', f'0:s:{index}',
-            '-f', codec, '-'
-        ], stdout=PIPE,stderr=PIPE)
-        if out.returncode != 0:
-            raise NotImplementedError(
-                f"Unsupported subtitle codec"
-            )
-        out = out.stdout.decode()
-        if legacy and codec!="webvtt":
-            out = convert_ssa(out) 
-    else: out=""
-    return codec, out
-
-
 @cache # Dont overload the server
-def extract_subtitles(index,file,legacy,info):
-    if info: codec,out = ffmpeg_get_subs(index,file,True)
-    else: codec,out = ffmpeg_get_subs(index,file,legacy)
-    # Get filename and for downloading the subtitles
-    codec = "webvtt" if legacy else codec
-    subsname = file.split(sep)[-1]+f".track{str(index)}."
-    subsname += "vtt" if codec=="webvtt" else codec 
-    # Return the subtittle track
-    return Response(out,mimetype=subsmimes[codec], headers=\
-    {'Content-Disposition': 'attachment;filename='+subsname})
+def ffmpeg_get_subs(file,index,codec,legacy,sz,mt):
+    out = run( [
+        'ffmpeg', '-i', file, '-map',
+        f'0:s:{index}', '-f', codec, '-'
+    ], stdout=PIPE,stderr=PIPE )
+
+    if out.returncode != 0:
+        raise NotImplementedError(
+            f"Unsupported subtitle codec"
+        )
+    out = out.stdout.decode()
+    if legacy and codec!="webvtt":
+        return convert_ssa(out)
+    return out
 
 
 
-# The functions that will be called.
-# sz and mt for invalidating the cache
+# sz & mt are just to invalidate cache
 
-def get_subtitles(index,file,legacy,info):
+def extract_subtitles(index,file,codec,legacy):
     sz,mt = getsize(file),getmtime(file)
-    args = (index,file,legacy,info,sz,mt)
-    return extract_subtitles(*args)
+    args = (file,index,codec,legacy,sz,mt)
+    return ffmpeg_get_subs(*args)
 
 def get_info(file):
     sz,mt = getsize(file), getmtime(file)
     return ffmpeg_extract_info(file,sz,mt)
-    
+
 def get_chapters(file):
     sz,mt = getsize(file), getmtime(file)
     return ffmpeg_extract_chapters(file,sz,mt)
@@ -130,4 +116,18 @@ def get_chapters(file):
 def get_codec(file, index):
     sz,mt = getsize(file), getmtime(file)
     return ffmpeg_get_codec(file,index,sz,mt)
+
+
+
+def get_subtitles(index,file,legacy,info):
+    codec = get_codec(file, index)
+    # Extract subtitles if not info flag set
+    out = "" if info else extract_subtitles(index,file,codec,legacy)
+    # Get filename and for downloading the subtitles
+    codec = "webvtt" if legacy else codec
+    subsname = file.split(sep)[-1]+f".track{str(index)}."
+    subsname += "vtt" if codec=="webvtt" else codec
+    # Return the subtittle track with the right mime
+    return Response(out,mimetype=subsmimes[codec], headers=\
+    {'Content-Disposition': 'attachment;filename='+subsname})
 
