@@ -22,9 +22,11 @@ file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 minify = lambda stream: (''.join(map(str.strip, x.split("\n"))) for x in stream)
 
 
-def is_binary(f):
-    try: open(f,'rb').read(1024).decode() 
-    except: return True
+def is_binary(filepath):
+    with open(filepath, 'rb') as f:
+        while chunk := f.read(1024):
+            if b'\x00' in chunk:
+                return True
     return False
 
 
