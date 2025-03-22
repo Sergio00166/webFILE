@@ -51,7 +51,7 @@ The following environment variables are used to configure the server:
       If set to True, the server will display the total size of directories.
 
   - MAX_CACHE    (optional, default: 256):   
-      Specify the max RAM used for metadata/subs caching for videos.
+      Specify the max RAM (in MB) used for metadata/subs caching for videos.
 
 
 ## To run the web server: ##  
