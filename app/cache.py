@@ -3,15 +3,22 @@
 from functools import wraps
 from sys import getsizeof
 
-
 #SelectiveCache(max_memory=1000)
 #@cache.cached("invalidate_variable")
+
 class SelectiveCache:
-    def __init__(self, max_memory=None):
-        self.cache = {}
-        self.inv_keys = {}    # key -> invalidator values
-        self.max_memory = max_memory  # memory limit in bytes
-        self.current_memory = 0       # current mem usage
+    _instance = None
+    _initialized = False
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._initialized:
+            cls._instance = super(SelectiveCache, cls).__new__(cls)
+            cls._instance.cache = {}
+            cls._instance.inv_keys = {}
+            cls._instance.max_memory = kwargs.get('max_memory')
+            cls._instance.current_memory = 0
+            cls._initialized = True
+        return cls._instance
 
     def cached(self, *invalidators):
         def decorator(func):
@@ -30,13 +37,11 @@ class SelectiveCache:
                 size = getsizeof(result)
 
                 if self.max_memory is not None:
-                    # Elimina entradas con menor frecuencia hasta liberar suficiente memoria
                     while self.cache and self.current_memory + size > self.max_memory:
                         least_used_key = min(self.cache, key=lambda k: self.cache[k][1])
                         _, _, removed_size = self.cache.pop(least_used_key)
                         self.inv_keys.pop(least_used_key, None)
                         self.current_memory -= removed_size
-                    # Si la nueva entrada es demasiado grande, no se cachea
                     if self.current_memory + size > self.max_memory:
                         return result
 
@@ -46,4 +51,3 @@ class SelectiveCache:
                 return result
             return wrapper
         return decorator
-
