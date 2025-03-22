@@ -6,8 +6,15 @@ from os.path import getsize,getmtime
 from json import loads as jsload
 from cache import SelectiveCache
 from flask import Response
-from os import sep
+from os import sep,getenv
 
+
+cache_limit = getenv('MAX_CACHE',None)
+if cache_limit and not cache_limit.isdigit():
+    print("MAX_CACHE MUST BE AN INT VALUE")
+    exit(1) # Dont continue
+cache_limit = int(cache_limit) if cache_limit else 256
+cache = SelectiveCache(max_memory=cache_limit*1024*1024)
 
 subsmimes = {
     "ssa":"application/x-substation-alpha",
@@ -15,9 +22,6 @@ subsmimes = {
     "webvtt":"text/vtt",
 }
 ssa = ["ssa", "ass"]
-cache = SelectiveCache(
-    max_memory=256*1024*1024
-) # Max cache size 512MB
 
 
 def check_ffmpeg_installed():
@@ -26,7 +30,6 @@ def check_ffmpeg_installed():
         if result.returncode != 0:
             raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
     except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
-
 
 
 @cache.cached("sz","mt")
