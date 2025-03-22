@@ -38,16 +38,23 @@ var random = localStorage.getItem("audioRandom");
         speedButtons.forEach(item => {
             if (item.getAttribute('data-value') === saved_speed) {
                 item.classList.add('speed-active');
-            } else { item.classList.remove('speed-active'); }
+            } else {
+                item.classList.remove('speed-active');
+            }
         });
-    } delete saved_speed;
+    }
+    delete saved_speed;
 
     if (currentMode != null) {
         currentMode = parseInt(currentMode);
         mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
-    } else { currentMode = 0; }
+    } else {
+        currentMode = 0;
+    }
 
-    if (volumeVal === null) { volumeVal = 1; }
+    if (volumeVal === null) {
+        volumeVal = 1;
+    }
     audio.volume = parseFloat(volumeVal);
     currentVol.style.width = volumeVal * 100 + "%";
 
@@ -56,24 +63,37 @@ var random = localStorage.getItem("audioRandom");
         if (muted == "true") {
             muted = true;
             audio.volume = 0;
-        } else { muted = false; }
-    } else { muted = false; }
+        } else {
+            muted = false;
+        }
+    } else {
+        muted = false;
+    }
     handleAudioIcon();
 
     // Cast value
     if (random != null) {
-        if (random == "true") { random = true; }
-        else { random = false; }
-    } else { random = false; }
-    if (random) { mode.classList.add('lmbsl'); }
+        if (random == "true") {
+            random = true;
+        } else {
+            random = false;
+        }
+    } else {
+        random = false;
+    }
+    if (random) {
+        mode.classList.add('lmbsl');
+    }
 
     audio.addEventListener('loadeddata', () => {
         (function wait4ready() {
             if (isNaN(audio.duration) || audio.duration === 0) {
                 return setTimeout(wait4ready, 25);
             }
-            audio.play().catch( (e)=>{} );
-            if (audio.paused) { pause(); }
+            audio.play().catch((e) => {});
+            if (audio.paused) {
+                pause();
+            }
             totalDuration.innerHTML = showDuration(audio.duration);
             audio.ontimeupdate = handleProgressBar;
         })();
@@ -164,7 +184,7 @@ function navigate(e) {
         const totalDurationRect = duration.getBoundingClientRect();
         const width = Math.min(
             Math.max(0, e.clientX - totalDurationRect.x),
-            totalDurationRect.width
+                               totalDurationRect.width
         );
         currentTime.style.width = (width / totalDurationRect.width) * 100 + "%";
         audio.currentTime = (width / totalDurationRect.width) * audio.duration;
@@ -178,7 +198,7 @@ function handleTouchNavigate(e) {
         const offsetX = clientX - durationRect.left;
         const value = Math.min(
             Math.max(0, offsetX),
-            durationRect.width
+                               durationRect.width
         );
         currentTime.style.width = value + "px";
         audio.currentTime = (value / durationRect.width) * audio.duration;
@@ -214,11 +234,11 @@ function handleMousemove(e) {
             hoverTime.style.width = `${percent}%`;
             const hovtime = (audio.duration * percent) / 100;
             hoverDuration.innerHTML = showDuration(hovtime);
-            const offset = hoverDuration.offsetWidth/2;
+            const offset = hoverDuration.offsetWidth / 2;
             var hvs = hoverDuration.style;
-            hvs.left = (width-offset)+"px";
+            hvs.left = (width - offset) + "px";
             hvs.display = 'block';
-            hvs.visibility = offset===0 ? "hidden":"visible";
+            hvs.visibility = offset === 0 ? "hidden" : "visible";
         } else {
             e.preventDefault();
         }
@@ -229,7 +249,7 @@ function hideHoverDuration() {
     clearTimeout(hideHoverTimeout);
     hoverDuration.style.left = "-9999px";
     hoverDuration.style.width = "0px";
-    hideHoverTimeout = setTimeout(function () {
+    hideHoverTimeout = setTimeout(function() {
         hoverDuration.style.left = "";
         hoverDuration.style.width = "";
         hoverTime.style.width = 0;
@@ -359,56 +379,56 @@ function handleShorthand(e) {
         return;
     }
     switch (e.key.toLowerCase()) {
-    case " ":
-        audio.paused ? play() : pause();
-        break;
-    case "arrowright":
-        audio.currentTime += 2;
-        break;
-    case "arrowleft":
-        audio.currentTime -= 2;
-        break;
-    case "arrowup":
-        prev();
-        break;
-    case "arrowdown":
-        next();
-        break;
-    case "r":
-        chMode();
-        break;
-    case "s":
-        addrmMLcl();
-        break;
-    case "q":
-        toggleMuteUnmute();
-        break;
-    case "+":
-        if (volumeVal < 1 && !muted) {
-            volumeVal = parseFloat(volumeVal + 0.05);
-            if (volumeVal > 1) {
-                volumeVal = 1;
+        case " ":
+            audio.paused ? play() : pause();
+            break;
+        case "arrowright":
+            audio.currentTime += 2;
+            break;
+        case "arrowleft":
+            audio.currentTime -= 2;
+            break;
+        case "arrowup":
+            prev();
+            break;
+        case "arrowdown":
+            next();
+            break;
+        case "r":
+            chMode();
+            break;
+        case "s":
+            addrmMLcl();
+            break;
+        case "q":
+            toggleMuteUnmute();
+            break;
+        case "+":
+            if (volumeVal < 1 && !muted) {
+                volumeVal = parseFloat(volumeVal + 0.05);
+                if (volumeVal > 1) {
+                    volumeVal = 1;
+                }
+                audio.volume = volumeVal;
+                currentVol.style.width = volumeVal * 100 + "%";
+                handleAudioIcon();
+                saveVolume();
             }
-            audio.volume = volumeVal;
-            currentVol.style.width = volumeVal * 100 + "%";
-            handleAudioIcon();
-            saveVolume();
-        }
-        break;
-    case "-":
-        if (volumeVal > 0 && !muted) {
-            volumeVal = parseFloat(volumeVal - 0.05);
-            if (volumeVal < 0) {
-                volumeVal = 0;
+            break;
+        case "-":
+            if (volumeVal > 0 && !muted) {
+                volumeVal = parseFloat(volumeVal - 0.05);
+                if (volumeVal < 0) {
+                    volumeVal = 0;
+                }
+                handleAudioIcon();
+                audio.volume = volumeVal;
+                currentVol.style.width = volumeVal * 100 + "%";
+                saveVolume();
             }
-            handleAudioIcon();
-            audio.volume = volumeVal;
-            currentVol.style.width = volumeVal * 100 + "%";
-            saveVolume();
-        }
-        break;
-    default:
-        break;
+            break;
+        default:
+            break;
     }
 }
 
@@ -430,7 +450,9 @@ audio.addEventListener("pause", pause);
 
 // Navigation events
 duration.addEventListener("click", navigate);
-duration.addEventListener("touchmove", handleTouchNavigate, { passive: false });
+duration.addEventListener("touchmove", handleTouchNavigate, {
+    passive: false
+});
 duration.addEventListener("mousedown", (e) => {
     mouseDownProgress = true;
     navigate(e);
@@ -475,7 +497,9 @@ mode.addEventListener("mousedown", (e) => {
 mode.addEventListener("touchstart", (e) => {
     e.preventDefault();
     mber = setTimeout(addrmMLcl, 600);
-}, { passive: false });
+}, {
+    passive: false
+});
 mode.addEventListener("click", (e) => {
     if (mdbtnpress) {
         e.preventDefault();

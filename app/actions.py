@@ -24,10 +24,6 @@ def serveFiles_page(path,ACL,root,client,folder_size):
         if request.path.endswith('/') and client!="json":
             return redirect(request.path[:-1])
 
-        # If the text is plain text send it as plain text
-        if file_type in ["text","source"]:
-            return send_file(path,mimetype='text/plain')
-
         # If it have the raw arg or is requested
         # from a cli browser return the file
         elif "raw" in request.args or client!="normal":
@@ -40,18 +36,19 @@ def serveFiles_page(path,ACL,root,client,folder_size):
             return video(path,root,subs,file_type,info,ACL)
 
         elif file_type=="audio": return audio(path,root,file_type,ACL)
-
-        # Else send it and let flask autodetect the mime
-        else: return send_file(path)
-
-    # Return the directory explorer
-    else:
+ 
+        else: # Send the file and set mime for text
+            if is_binary(path): return send_file(path)
+            else: return send_file(path,mimetype='text/plain')
+    
+    else: # Return the directory explorer
         if not request.path.endswith('/') and client!="json":
             return redirect(request.path+'/')
 
         sort = request.args["sort"] if "sort" in request.args else ""
         if "tar" in request.args: return send_dir(path,root,ACL)
         return directory(path,root,folder_size,sort,client,ACL)
+
 
 
 def serveRoot_page(ACL,root,client,folder_size):

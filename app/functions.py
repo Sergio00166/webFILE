@@ -18,11 +18,16 @@ is_subdirectory = lambda parent, child: commonpath([parent, child])==parent
 file_types = jsload(open(pypath[0]+sep+"file_types.json"))
 # Convert it to a lookup table to get file type as O(1)
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
-# Check if the file is a binary file or not
-textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
-is_binary = lambda path: bool(open(path, mode="rb").read(1024).translate(None, textchars))
 # Function to compress HTML output without modifying contents
 minify = lambda stream: (''.join(map(str.strip, x.split("\n"))) for x in stream)
+
+
+def is_binary(filepath):
+    with open(filepath, 'rb') as f:
+        while chunk := f.read(1024):
+            if b'\x00' in chunk:
+                return True
+    return False
 
 
 def safe_path(path,root,igntf=False):
@@ -47,12 +52,13 @@ def readable(num, suffix="B"):
         num /= 1024
     return f"{num:.1f} Yi{suffix}"
 
+
 def get_file_type(path):
     if isdir(path): return "directory"
-    return file_type_map.get(
-        Path(path).suffix, "file"
-        if is_binary(path) else "text"
-    )
+    file_type = file_type_map.get(Path(path).suffix)
+    if file_type is not None: return file_type
+    return "file" if is_binary(path) else "text"
+
 
 def get_directory_size(directory):
     total,stack = 0,[directory]

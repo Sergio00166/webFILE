@@ -228,7 +228,7 @@ function renameFiles() {
         const items = getURLlist();
         for (var item of items) {
             item = item.endsWith('/') ? item.slice(0, -1) : item;
-            name = item.split('/').pop();
+            name = decodeURIComponent(item.split('/').pop());
             var dest = prompt('New Name for ' + name);
             if (dest === null) {
                 break;
@@ -356,27 +356,26 @@ function uploadFiles(files, isDirectory = false) {
         body: formData
     }).then(response => {
         if (!response.ok) {
-            let msg;
             switch (response.status) {
                 case 403:
-                    msg = "You don’t have permission to do that.";
+                    alert("You don’t have permission to do that.");
                     break;
                 case 500:
-                    msg = "Something went wrong on the server.";
+                    alert("Something went wrong on the server.");
                     break;
                 case 409:
-                    msg = "It already exists.";
+                    alert("It already exists.");
                     break;
                 case 507:
-                    msg = "Not enough free space.";
+                    alert("Not enough free space.");
                     break;
                 default:
-                    msg = "Something went wrong.";
+                    alert("Something went wrong.");
+                    break;
             }
-            alert(msg);
         }
-    }).catch(() => { alert("Fatal Error") });
-	window.location.reload();
+        window.location.reload();
+    });
 }
 
 function enableDragAndDropUpload(dropArea, selectDirectory = false) {
@@ -385,17 +384,31 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
     });
     dropArea.addEventListener("drop", function(e) {
         e.preventDefault();
-        const files = e.dataTransfer.files;
+        const files = [];
+        const items = e.dataTransfer.items;
+        // Filter only files
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i].webkitGetAsEntry();
+            if (item && item.isFile) {
+                files.push(items[i].getAsFile());
+            }
+        }
         if (files.length > 0) {
             const confirmUpload = confirm(`Upload ${files.length} item(s)?`);
             if (confirmUpload) {
-                uploadFiles(files, selectDirectory); // Upload files after confirmation
+                uploadFiles(files, selectDirectory);
             }
         }
     });
 }
 
+
 // Upload actions
-function upfile() { openFileMenu(); }
-function updir() { openFileMenu(true); }
+function upfile() {
+    openFileMenu();
+}
+
+function updir() {
+    openFileMenu(true);
+}
 enableDragAndDropUpload(document);
