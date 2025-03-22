@@ -1,0 +1,45 @@
+{
+    "source": [
+        ".c", ".cpp", ".java", ".py", ".html", ".css", ".js",
+        ".php",  ".rb", ".go", ".ini", ".bat", ".cmd", ".sh",
+        ".md", ".yml", ".yaml", ".asm", ".cfg", ".rs", ".htm",
+        ".config", ".reg", ".ps1", ".ts", ".kt"
+    ],
+    "photo": [
+        ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg",
+        ".tiff",  ".ico", ".webp", ".raw", ".heic", ".psd"
+    ],
+    "audio": [
+        ".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a",
+        ".wma", ".alac", ".opus", ".aiff"
+    ],
+    "document": [
+        ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
+    ],
+    "database": [
+        ".xml", ".json", ".sql", ".csv", ".xsl",
+        ".xlsx", ".ods", ".odb"
+    ],
+    "presentation": [
+        ".ppt", ".pptx", ".odp", ".pps", ".ppsx"
+    ],
+    "video": [
+        ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", 
+        ".webm", ".mpeg", ".mpg", ".3gp", ".m4v"
+    ],
+    "pdf": [
+        ".pdf"
+    ],
+    "virtualdisk": [
+        ".iso", ".img", ".vdi", ".vmdk", ".vhd",
+        ".vhdx", ".dmg", ".raw", ".qcow2"
+    ],
+    "compressed": [
+        ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
+        ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz", ".zst"
+    ],
+    "binary": [
+        ".exe", ".dll", ".bin", ".sys", ".so", ".apk",
+        ".jar", ".app", ".deb", ".rpm", ".wasm"
+    ]
+}
