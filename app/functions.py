@@ -12,6 +12,9 @@ from flask import session
 from pathlib import Path
 from sys import stderr
 
+if sep==chr(92): import ctypes
+else:    from os import statvfs
+
 
 is_subdirectory = lambda parent, child: commonpath([parent, child])==parent
 # Load database of file type and extensions
@@ -20,6 +23,7 @@ file_types = jsload(open(pypath[0]+sep+"file_types.json"))
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Function to compress HTML output without modifying contents
 minify = lambda stream: (''.join(map(str.strip, x.split("\n"))) for x in stream)
+
 
 
 def is_binary(filepath):
@@ -54,6 +58,7 @@ def readable(num, suffix="B"):
 
 
 def get_file_type(path):
+    if Path(path).is_mount(): return "disk"
     if isdir(path): return "directory"
     file_type = file_type_map.get(Path(path).suffix)
     if file_type is not None: return file_type
@@ -73,6 +78,19 @@ def get_directory_size(directory):
     return total
 
 
+def get_disk_capacity(disk):
+    if sep==chr(92):
+        size_bytes = windll.kernel32.\
+        GetDiskFreeSpaceExW.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(drive_path),None,
+            ctypes.byref(c_ulonglong()),None
+        ).value
+    else:
+        disk_obj = statvfs(disk)
+        size_bytes = disk_obj.f_frsize * disk_obj.f_blocks
+    return readable(size_bytes)
+
+
 def get_folder_content(folder_path, root, folder_size, ACL):
     dirs,files,content = [],[],[]
     for x in listdir(folder_path):
@@ -81,25 +99,27 @@ def get_folder_content(folder_path, root, folder_size, ACL):
         else: files.append(x)
     dirs.sort(); files.sort()
     for item in dirs+files:
-        try:
-            item_path = join(folder_path, item)
-            item_full_path = relpath(item_path,start=root).replace(sep,"/")
-            validate_acl(item_full_path,ACL)
-            filetype = get_file_type(item_path)
-            if filetype == "directory" and folder_size:
-                size = get_directory_size(item_path)
-            elif filetype != "directory":
-                size = getsize(item_path)
-            else: size = 0
-            try: mtime = getmtime(item_path)
-            except: mtime = None
-            if filetype == "directory": item_path += "/"
-            content.append({
-                'name': item, 'path': item_full_path,
-                'type': filetype,
-                "size": size, "mtime": mtime
-            })
-        except: pass
+        #try:
+        item_path = join(folder_path, item)
+        item_full_path = relpath(item_path,start=root).replace(sep,"/")
+        validate_acl(item_full_path,ACL)
+        filetype = get_file_type(item_path)
+        if filetype in ["directory","disk"]:
+            if not folder_size: size = 0
+            else: size = get_directory_size(item_path)
+        else: size = getsize(item_path)
+        try: mtime = getmtime(item_path)
+        except: mtime = None
+        if filetype == "directory": item_path += "/"
+        data = {
+            'name': item, 'path': item_full_path,
+            'type': filetype,
+            "size": size, "mtime": mtime
+        }
+        if filetype == "disk": data["capacity"] =\
+            get_disk_capacity(root+sep+item_full_path)
+        content.append(data)
+        #except: pass
     return content
 
 
