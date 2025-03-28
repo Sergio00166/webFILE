@@ -71,7 +71,7 @@
                 <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} dir {% endif %}>
                     <span class="image">
                     {% if item['type'] == 'disk' %}
-                        <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="default">&nbsp;</img>
+                        <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="disk">&nbsp;</img>
                     {% elif item['type'] == 'directory' %}
                         <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">&nbsp;</img>
                     {% elif item['type'] == 'source' %}

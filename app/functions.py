@@ -99,27 +99,27 @@ def get_folder_content(folder_path, root, folder_size, ACL):
         else: files.append(x)
     dirs.sort(); files.sort()
     for item in dirs+files:
-        #try:
-        item_path = join(folder_path, item)
-        item_full_path = relpath(item_path,start=root).replace(sep,"/")
-        validate_acl(item_full_path,ACL)
-        filetype = get_file_type(item_path)
-        if filetype in ["directory","disk"]:
-            if not folder_size: size = 0
-            else: size = get_directory_size(item_path)
-        else: size = getsize(item_path)
-        try: mtime = getmtime(item_path)
-        except: mtime = None
-        if filetype == "directory": item_path += "/"
-        data = {
-            'name': item, 'path': item_full_path,
-            'type': filetype,
-            "size": size, "mtime": mtime
-        }
-        if filetype == "disk": data["capacity"] =\
-            get_disk_capacity(root+sep+item_full_path)
-        content.append(data)
-        #except: pass
+        try:
+            item_path = join(folder_path, item)
+            item_full_path = relpath(item_path,start=root).replace(sep,"/")
+            validate_acl(item_full_path,ACL)
+            filetype = get_file_type(item_path)
+            if filetype in ["directory","disk"]:
+                if not folder_size: size = 0
+                else: size = get_directory_size(item_path)
+            else: size = getsize(item_path)
+            try: mtime = getmtime(item_path)
+            except: mtime = None
+            if filetype == "directory": item_path += "/"
+            data = {
+                'name': item, 'path': item_full_path,
+                'type': filetype,
+                "size": size, "mtime": mtime
+            }
+            if filetype == "disk": data["capacity"] =\
+                get_disk_capacity(root+sep+item_full_path)
+            content.append(data)
+        except: pass
     return content
 
 
