@@ -40,9 +40,13 @@
     filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(3000%)
         brightness(50%) contrast(100%);
 }
-.iso {
-    filter: brightness(0) invert(1) brightness(50%);
+.disk {
+    filter: brightness(0) invert(1) brightness(67%);
 }
+.iso {
+    filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%);
+}
+
 img {
     -webkit-user-drag: none;
     -moz-user-drag: none;

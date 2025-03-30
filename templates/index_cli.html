@@ -35,12 +35,16 @@
         {% endif %}{% for item in folder_content %}
             <tr>
                 <td><a href="{{ url_for('explorer', path=item['path']) }}">
-                    {{ item['name'] }}{% if item['type']=='directory' %}/{% endif %}
+                    {{ item['name'] }}{% if item['type']=='directory' %}/{% elif item['type']=='disk' %}//{% endif %}
                 </a></td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
+                {% if item['type'] == 'disk' %}
+                <td align="right" colspan="4">{{ item['size'] }}&nbsp;/&nbsp;{{ item['capacity'] }}</td>
+                {% else %}
                 <td align="right">{{ item['size'] }}</td>
                 <td></td>
-                <td align="right" colspan="2">{{ item['mtime'] }}</td>
+                <td align="right" colspan="2">{{ item['mtime'] }}</td>  
+                {% endif %}
             </tr>
         {% endfor %}
     </table>

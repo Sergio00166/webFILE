@@ -68,9 +68,11 @@
                 </a>
             {% endif %}
             {% for item in folder_content %}
-                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type']=='directory' %} dir {% endif %}>
+                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} dir {% endif %}>
                     <span class="image">
-                    {% if item['type'] == 'directory' %}
+                    {% if item['type'] == 'disk' %}
+                        <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="disk">&nbsp;</img>
+                    {% elif item['type'] == 'directory' %}
                         <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">&nbsp;</img>
                     {% elif item['type'] == 'source' %}
                         <img src="{{ url_for('index', static='svg/index/file-code-solid.svg') }}" class="src">&nbsp;</img>
@@ -91,7 +93,7 @@
                     {% elif item['type'] == 'presentation' %}
                         <img src="{{ url_for('index', static='svg/index/file-powerpoint-solid.svg') }}" class="pp">&nbsp;</img>
                     {% elif item['type'] == 'virtualdisk' %}
-                        <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="iso">&nbsp;</img>
+                        <img src="{{ url_for('index', static='svg/index/compact-disc-solid.svg') }}" class="iso">&nbsp;</img>
                     {% elif item['type'] == 'compressed' %}
                         <img src="{{ url_for('index', static='svg/index/file-zipper-solid.svg') }}" class="zip">&nbsp;</img>
                     {% elif item['type'] == 'binary' %}
@@ -102,14 +104,21 @@
                     </span>
                     <span class="first">
                         <pre>{{ item['name'] }}</pre>
-                        {% if item['type'] == 'directory' %}
-                            <t class="small">/</t>
-                        {% endif %}
-                    </span>
-                    <span class="no_overflow">
+                      {% if item['type'] == 'directory' %}
+                        <t class="small">/</t>
+                      {% elif item['type'] == 'disk' %}
+                        <t class="small">//</t>
+                      {% endif %}
+                    </span><span>
+                      {% if item['type'] == 'disk' %}
+                        <t class="nosize">{{ item['size'] }}</t>
+                        <t class="nosize">&nbsp;/&nbsp;</t>
+                        <t class="nosize">{{ item['capacity'] }}</t>
+                      {% else %}
                         <t class="nosize">{{ item['size'] }}</t>
                         <t class="notime">&nbsp;&nbsp;&nbsp;</t>
                         <t class="notime">{{ item['mtime'] }}</t>
+                      {% endif %}
                     </span>
                 </div>
             {% endfor %}

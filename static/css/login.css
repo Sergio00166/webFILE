@@ -1,8 +1,11 @@
 /* Code by Sergio00166 */
 
 #fileInput { display: none; }
-#error { color: red; }
 
+#error { 
+    color: red;
+    margin-top: 0;
+}
 body {
     margin: 0;
     background-color: #00d1b2;

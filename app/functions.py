@@ -12,6 +12,8 @@ from flask import session
 from pathlib import Path
 from sys import stderr
 
+if sep==chr(92): import ctypes
+else:    from os import statvfs
 
 is_subdirectory = lambda parent, child: commonpath([parent, child])==parent
 # Load database of file type and extensions
@@ -54,6 +56,7 @@ def readable(num, suffix="B"):
 
 
 def get_file_type(path):
+    if Path(path).is_mount(): return "disk"
     if isdir(path): return "directory"
     file_type = file_type_map.get(Path(path).suffix)
     if file_type is not None: return file_type
@@ -67,62 +70,93 @@ def get_directory_size(directory):
         try:
             for entry in scandir(current):
                 if entry.is_file(): total += entry.stat().st_size
+                elif Path(entry.path).is_mount(): pass
                 elif entry.is_dir(): stack.append(entry.path)
+
         except NotADirectoryError: total += getsize(current)
         except PermissionError: pass
     return total
 
 
+
+def get_disk_capacity(disk):
+    if sep==chr(92):
+        size_bytes = windll.kernel32.\
+        GetDiskFreeSpaceExW.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(drive_path),None,
+            ctypes.byref(c_ulonglong()),None
+        ).value
+    else:
+        disk_obj = statvfs(disk)
+        size_bytes = disk_obj.f_frsize * disk_obj.f_blocks
+    return readable(size_bytes)
+
+
 def get_folder_content(folder_path, root, folder_size, ACL):
     dirs,files,content = [],[],[]
+ 
     for x in listdir(folder_path):
         fix = join(folder_path, x)
         if isdir(fix): dirs.append(x)
         else: files.append(x)
+
     dirs.sort(); files.sort()
     for item in dirs+files:
         try:
             item_path = join(folder_path, item)
             item_full_path = relpath(item_path,start=root).replace(sep,"/")
+
             validate_acl(item_full_path,ACL)
             filetype = get_file_type(item_path)
-            if filetype == "directory" and folder_size:
-                size = get_directory_size(item_path)
-            elif filetype != "directory":
-                size = getsize(item_path)
-            else: size = 0
-            try: mtime = getmtime(item_path)
-            except: mtime = None
+
+            if filetype in ["directory","disk"]:
+                if not folder_size: size = 0
+                else: size = get_directory_size(item_path)
+            else: size = getsize(item_path)
+
+            if filetype != "disk":
+                try: mtime = getmtime(item_path)
+                except: mtime = None
+            else: mtime = None
+
             if filetype == "directory": item_path += "/"
-            content.append({
+            data = {
                 'name': item, 'path': item_full_path,
                 'type': filetype,
                 "size": size, "mtime": mtime
-            })
+            }
+            if filetype == "disk": data["capacity"] =\
+                get_disk_capacity(root+sep+item_full_path)
+
+            content.append(data)
         except: pass
     return content
 
 
+
 def sort_contents(folder_content, sort, root):
-    # Separate into dirs and files
     dirs,files = [],[]
+
     for x in folder_content:
         path = x["path"].replace("/", sep)
         if isdir(root+sep+path):
             dirs.append(x)
         else: files.append(x)
+ 
     # Sort folder content based on raw values
     if     sort[0]=="d":
         dirs  = sorted(dirs,  key=lambda x: x["mtime"] or 0)
         files = sorted(files, key=lambda x: x["mtime"] or 0)
         if sort[1]=="p": dirs,files = dirs[::-1],files[::-1]
+
     elif   sort[0]=="s":
         dirs  = sorted(dirs,  key=lambda x: x["size"])
         files = sorted(files, key=lambda x: x["size"])
         if sort[1]=="p": dirs,files = dirs[::-1],files[::-1]
-    elif   sort[1]=="d": dirs,files = dirs[::-1],files[::-1]
 
+    elif   sort[1]=="d": dirs,files = dirs[::-1],files[::-1]
     return dirs+files
+
 
 
 def humanize_content(folder_content):
@@ -132,7 +166,6 @@ def humanize_content(folder_content):
         if item["mtime"] is not None:
             item["mtime"] = dt.fromtimestamp(
             item["mtime"]).strftime("%d-%m-%Y %H:%M:%S")
-        else: item["mtime"] = "##-##-#### ##:##:##"
     return folder_content
 
 
@@ -208,4 +241,5 @@ def redirect_no_query():
     parsed_url = urlparse(request.url)
     return redirect(urlunparse(
     ('','',parsed_url.path,'','','')))
+
 

@@ -19,7 +19,7 @@ def serveFiles_page(path,ACL,root,client,folder_size):
     file_type = get_file_type(path)
 
     # Check if the path is not a dir
-    if not file_type=="directory":
+    if not file_type in ["directory","disk"]:
 
         if request.path.endswith('/') and client!="json":
             return redirect(request.path[:-1])
