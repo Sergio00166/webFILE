@@ -104,19 +104,21 @@
                     </span>
                     <span class="first">
                         <pre>{{ item['name'] }}</pre>
-                        {% if item['type'] == 'directory' %}
-                            <t class="small">/</t>
-                        {% endif %}
-                    </span>
-                    {% if item['type'] == 'disk' %}
+                      {% if item['type'] == 'directory' %}
+                        <t class="small">/</t>
+                      {% elif item['type'] == 'disk' %}
+                        <t class="small">//</t>
+                      {% endif %}
+                    </span><span>
+                      {% if item['type'] == 'disk' %}
                         <t class="nosize">{{ item['size'] }}</t>
                         <t class="nosize">&nbsp;/&nbsp;</t>
                         <t class="nosize">{{ item['capacity'] }}</t>
-                    {% else %}
+                      {% else %}
                         <t class="nosize">{{ item['size'] }}</t>
                         <t class="notime">&nbsp;&nbsp;&nbsp;</t>
                         <t class="notime">{{ item['mtime'] }}</t>
-                    {% endif %}
+                      {% endif %}
                     </span>
                 </div>
             {% endfor %}
