@@ -16,6 +16,7 @@ Users can be granted or denied read-only access, write permissions (upload, crea
  - Recommended to use mkv/mp4 container for videos and AV1 as the video codec.
     - Note that both firefox and safari dont support mkv files.
     - If ASS/SSA subtitles are needed use mkv and a chromium-based browser.
+ - (TODO) Includes subtitles on the same path with the format: "videoname.lang.format"
 
 ## ACL permissions and Users ##
   Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.    
