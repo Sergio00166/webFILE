@@ -68,7 +68,7 @@
                 </a>
             {% endif %}
             {% for item in folder_content %}
-                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} dir {% endif %}>
+                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %} tabindex="0">
                     <span class="image">
                     {% if item['type'] == 'disk' %}
                         <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="disk">&nbsp;</img>

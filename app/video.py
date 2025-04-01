@@ -107,11 +107,15 @@ def ffmpeg_get_subs(file,index,codec,legacy,sz,mt):
 # sz & mt are just to invalidate cache
 
 def extract_subtitles(index,file,codec,legacy):
+    sname = ".".join(file.split(".")[:-1]+["mks"])
+    if exists(sname) and isfile(sname): file = sname
     sz,mt = getsize(file),getmtime(file)
     args = (file,index,codec,legacy,sz,mt)
     return ffmpeg_get_subs(*args)
 
 def get_info(file):
+    sname = ".".join(file.split(".")[:-1]+["mks"])
+    if exists(sname) and isfile(sname): file = sname
     sz,mt = getsize(file), getmtime(file)
     return ffmpeg_extract_info(file,sz,mt)
 
@@ -120,6 +124,8 @@ def get_chapters(file):
     return ffmpeg_extract_chapters(file,sz,mt)
 
 def get_codec(file, index):
+    sname = ".".join(file.split(".")[:-1]+["mks"])
+    if exists(sname) and isfile(sname): file = sname
     sz,mt = getsize(file), getmtime(file)
     return ffmpeg_get_codec(file,index,sz,mt)
 
