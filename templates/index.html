@@ -64,7 +64,7 @@
             {% if not is_root %}
                 <a class="backdir" href="{{ url_for('explorer', path=parent_directory) }}">
                     <img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback"></img>
-                    <span class="first">Parent Directory</span>
+                    <span class="name">Parent Directory</span>
                 </a>
             {% endif %}
             {% for item in folder_content %}
