@@ -102,7 +102,7 @@
                         <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}" class="files"></img>
                     {% endif %}
                     </span>
-                    <span class="first">
+                    <span class="name">
                         <pre>{{ item['name'] }}</pre>
                       {% if item['type'] == 'directory' %}
                         <t class="small">/</t>
@@ -110,12 +110,11 @@
                         <t class="small">//</t>
                       {% endif %}
                     </span><span>
-                        <t class="nosize">{{ item['size'] }}</t>
+                        <t class="info1">{{ item['size'] }}</t>
                       {% if item['type'] == 'disk' %}
-                        <t class="notime">/</t>
-                        <t class="notime">{{ item['capacity'] }}</t>
+                        <t class="info3">&nbsp; / &nbsp;{{ item['capacity'] }}</t>
                       {% else %}
-                        <t class="notime">{{ item['mtime'] }}</t>
+                        <t class="info2">{{ item['mtime'] }}</t>
                       {% endif %}
                     </span>
                 </div>
