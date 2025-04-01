@@ -51,6 +51,7 @@ img {
     -webkit-user-drag: none;
     -moz-user-drag: none;
     user-drag: none;
+    margin-right: 0.35em;
 }
 .no_overflow {
     white-space: nowrap;
@@ -208,7 +209,12 @@ h2 {
     padding-right: 40px;
     border-radius: 25px;
 }
-
+.nosize {
+    margin-left: 3em;
+}
+.notime {
+    margin-left: 1em;
+}
 
 /* RESPONSIVE (pain) ZONE */
 
@@ -217,7 +223,7 @@ h2 {
         flex-direction: column;
     }
 }
-@media (max-width: 1080px) {
+@media (max-width: 900px) {
     .notime {
         display: none;
     }
@@ -261,9 +267,6 @@ h2 {
 }
 @media (max-width: 120px) {
     .list-group {
-        display: none;
-    }
-    #optionDialog {
         display: none;
     }
 }

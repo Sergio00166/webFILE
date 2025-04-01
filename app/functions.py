@@ -165,7 +165,7 @@ def humanize_content(folder_content):
         item["size"] = readable(item["size"])
         if item["mtime"] is not None:
             item["mtime"] = dt.fromtimestamp(
-            item["mtime"]).strftime("%d-%m-%Y %H:%M:%S")
+            item["mtime"]).strftime("%d/%m/%Y %H:%M")
     return folder_content
 
 
