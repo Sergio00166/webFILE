@@ -16,6 +16,7 @@ Users can be granted or denied read-only access, write permissions (upload, crea
  - Loads subtitles from an external .mks file with the same name as the video.    
    Note: it will disable all subtitles from the original video file.
  - Main video container must contain all metadata and audio tracks.
+ - Dont use firefox it makes impossible to change webVTT subtitles
 
 ## ACL permissions and Users ##
   Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.    
