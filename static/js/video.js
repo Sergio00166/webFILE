@@ -92,13 +92,12 @@ async function is_SSA_subs(url) {
 }
 async function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
-    if (existingTrack) {
-        existingTrack.parentNode.removeChild(existingTrack);
-    }
-    if (ass_worker) {
-        ass_worker.destroy();
-    }
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    if (ass_worker) { ass_worker.destroy(); }
+    if (existingTrack) {
+        existingTrack.track.mode = 'disabled';
+        existingTrack.remove();
+    }
     if (value > -1) {
         url = window.location.pathname + "?subs=" + value;
         if (!await is_SSA_subs(url)) {
