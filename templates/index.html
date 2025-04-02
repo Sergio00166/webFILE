@@ -112,7 +112,7 @@
                     </span><span>
                         <t class="info1">{{ item['size'] }}</t>
                       {% if item['type'] == 'disk' %}
-                        <t class="info3">&nbsp;/{{item['capacity']}} ({{item["used"]}}%)</t>
+                        <t class="info3">&nbsp;/&nbsp;{{item['capacity']}}&nbsp;({{item["used"]}}%)</t>
                       {% else %}
                         <t class="info2">{{ item['mtime'] }}</t>
                       {% endif %}
