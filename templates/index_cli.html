@@ -12,7 +12,7 @@
 <body>
     <table>
         <tr><td colspan="6">
-            <h4>Index of {{ folder_path }}</h4>
+            <h4>Index of&nbsp;{{ folder_path }}</h4>
         </td></tr>
         <tr><td>&nbsp;</td></tr>
         <tr>
@@ -32,7 +32,7 @@
                 <td><a href="{{ url_for('explorer', path=item['path']) }}">{{ item['name'] }}{% if item['type']=='directory' %}/{% elif item['type']=='disk' %}//{% endif %}</a></td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
               {% if item['type'] == 'disk' %}
-                <td align="right" colspan="4">{{item['size']}} / {{item['capacity']}} ({{item['used']}}%)</td>
+                <td align="right" colspan="4">{{item['size']}}&nbsp;/&nbsp;{{item['capacity']}}&nbsp;({{item['used']}}%)</td>
               {% else %}
                 <td align="right">{{ item['size'] }}</td>
                 <td></td>
