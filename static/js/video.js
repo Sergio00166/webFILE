@@ -77,19 +77,19 @@ function webvtt_subs(url) {
     track.kind = 'subtitles';
     track.src = url;
     track.default = true;
-    track.mode = 'showing';
     track.onerror = () => {
         alert("Cannot load subtitle");
     }
     video.appendChild(track);
+    track.mode = 'showing';
 }
+
 async function is_SSA_subs(url) {
-    const response = await fetch(url, {
-        method: 'HEAD'
-    });
+    const response = await fetch(url, { method: 'HEAD' });
     const mimeType = response.headers.get("Content-Type");
     return mimeType === "application/x-substation-alpha";
 }
+
 async function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
