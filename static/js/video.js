@@ -82,6 +82,8 @@ function webvtt_subs(url) {
     }
     video.appendChild(track);
     track.mode = 'showing';
+    // Firefox you are a joke
+    video.textTracks[0].mode = "showing";
 }
 
 async function is_SSA_subs(url) {
