@@ -96,6 +96,7 @@ var random = localStorage.getItem("audioRandom");
             }
             totalDuration.innerHTML = showDuration(audio.duration);
             audio.ontimeupdate = handleProgressBar;
+            audio.onended = handleAudioEnded;
         })();
     });
 }

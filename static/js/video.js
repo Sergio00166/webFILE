@@ -150,9 +150,8 @@ function scaleVideo() {
     for (var i = 0; i < subtitleSelect.options.length; i++) {
         if (subtitleSelect.options[i].text ===
             localStorage.getItem("videoSubs")) {
-            subtitleId = i;
-        break;
-            }
+            subtitleId = i;  break;
+        }
     }
     subtitleSelect.selectedIndex = subtitleId;
     subtitleId = subtitleId - 1;
@@ -205,6 +204,7 @@ function scaleVideo() {
             }
             totalDuration.innerHTML = showDuration(video.duration);
             video.ontimeupdate = handleProgressBar;
+            video.onended = handleVideoEnded;
             split_timeline_chapters(); // Set chapters
             loadTracks(); // Set all audio tracks info
             fix_aspect_ratio(); // Fix the aspect ratio
