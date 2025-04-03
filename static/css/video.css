@@ -2,6 +2,7 @@
 
 /* Just to add a border to the subtitles */
 video::cue {
+    font-size: 1em !important;
     background: none !important;
     line-height: 1.1 !important;
     text-shadow: 0.07em 0.07em 0.05em black, -0.07em 0.07em 0.05em black,
