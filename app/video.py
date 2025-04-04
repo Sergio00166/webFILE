@@ -16,12 +16,6 @@ if cache_limit and not cache_limit.isdigit():
 cache_limit = int(cache_limit) if cache_limit else 256
 cache = SelectiveCache(max_memory=cache_limit*1024*1024)
 
-subsmimes = {
-    "ssa":"application/x-substation-alpha",
-    "ass":"application/x-substation-alpha",
-    "webvtt":"text/vtt",
-}
-ssa = ["ssa", "ass"]
 
 
 def check_ffmpeg_installed():
@@ -30,19 +24,6 @@ def check_ffmpeg_installed():
         if result.returncode != 0:
             raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
     except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
-
-
-@cache.cached("sz","mt")
-def ffmpeg_get_codec(source,index,sz,mt):
-    codec = run([
-        'ffprobe', '-v', 'quiet',
-        '-select_streams', f's:{index}',
-        '-show_entries', 'stream=codec_name','-of',
-        'default=noprint_wrappers=1:nokey=1',source
-    ], stdout=PIPE,stderr=PIPE).stdout.decode().strip()
-
-    if codec in ssa: return codec
-    else: return "webvtt"
 
 
 @cache.cached("sz","mt")
@@ -123,23 +104,17 @@ def get_chapters(file):
     sz,mt = getsize(file), getmtime(file)
     return ffmpeg_extract_chapters(file,sz,mt)
 
-def get_codec(file, index):
-    sname = ".".join(file.split(".")[:-1]+["mks"])
-    if exists(sname) and isfile(sname): file = sname
-    sz,mt = getsize(file), getmtime(file)
-    return ffmpeg_get_codec(file,index,sz,mt)
 
-
-
-def get_subtitles(index,file,legacy,info):
-    codec = get_codec(file, index)
-    # Extract subtitles if not info flag set
-    out = "" if info else extract_subtitles(index,file,codec,legacy)
+def get_subtitles(index,file,legacy):
+    # Set codec and mimetype for the subtitles
+    if legacy: mime,codec = "text/vtt","webvtt"
+    else: mime,codec = "application/x-substation-alpha","ass"
+    # Extract from the video or exrernal container
+    out = extract_subtitles(index,file,codec,legacy)
     # Get filename and for downloading the subtitles
-    codec = "webvtt" if legacy else codec
     subsname = file.split(sep)[-1]+f".track{str(index)}."
     subsname += "vtt" if codec=="webvtt" else codec
+    headers = {'Content-Disposition': 'attachment;filename='+subsname}
     # Return the subtittle track with the right mime
-    return Response(out,mimetype=subsmimes[codec], headers=\
-    {'Content-Disposition': 'attachment;filename='+subsname})
+    return Response(out, mimetype=mime, headers=headers)
 

@@ -31,9 +31,8 @@ def serveFiles_page(path,ACL,root,client,folder_size):
 
         # Custom player for each multimedia format
         elif file_type=="video":
-            info = (request.method.lower()=="head")
             subs = request.args["subs"] if "subs" in request.args else ""
-            return video(path,root,subs,file_type,info,ACL)
+            return video(path,root,subs,file_type,ACL)
 
         elif file_type=="audio": return audio(path,root,file_type,ACL)
  
@@ -137,7 +136,7 @@ def get_index_data(folder_path,root,folder_size,sort,ACL):
     return folder_content,folder_path,parent_directory,is_root
 
 
-def video(path,root,mode,file_type,info,ACL):
+def video(path,root,mode,file_type,ACL):
     check_ffmpeg_installed()
     # Check if subtitles are requested
     if not mode=="":
@@ -148,7 +147,7 @@ def video(path,root,mode,file_type,info,ACL):
         if path.endswith("/"): path=path[:-1]
         try: index = int(mode)
         except: raise FileNotFoundError
-        return get_subtitles(index,path,legacy,info)
+        return get_subtitles(index,path,legacy)
     # Else we send the video page
     prev, nxt, name = get_filepage_data(path,root,file_type,ACL,ngtst=True)
     tracks,chapters = get_info(path),get_chapters(path)
