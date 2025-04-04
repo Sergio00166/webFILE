@@ -87,7 +87,7 @@ async function executeDownloads() {
             const div = selectedElements[id];
             var url = div.getAttribute('data-value');
             if (url) {
-                if (div.hasAttribute('dir')) {
+                if (div.hasAttribute('isdir')) {
                     if (!url.endsWith("/")) {
                         url += "/";
                     }
