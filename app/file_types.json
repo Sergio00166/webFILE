@@ -36,7 +36,8 @@
     ],
     "compressed": [
         ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
-        ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz", ".zst"
+        ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz",
+        ".zst", ".spzip"
     ],
     "binary": [
         ".exe", ".dll", ".bin", ".sys", ".so", ".apk",

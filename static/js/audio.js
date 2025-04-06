@@ -31,6 +31,19 @@ var muted = localStorage.getItem("audioMuted");
 var saved_speed = localStorage.getItem("audioSpeed");
 var random = localStorage.getItem("audioRandom");
 
+var mber = undefined;
+var mdbtnpress = false;
+let mouseDownProgress = false;
+let mouseDownVol = false;
+let isCursorOnControls = false;
+let mouseOverDuration = false;
+let touchClientX = 0;
+let touchPastDurationWidth = 0;
+let touchStartTime = 0;
+let hideHoverTimeout;
+
+
+
 /* Inicialitate everything */
 {
     if (saved_speed != null) {
@@ -96,23 +109,11 @@ var random = localStorage.getItem("audioRandom");
             }
             totalDuration.innerHTML = showDuration(audio.duration);
             audio.ontimeupdate = handleProgressBar;
+            audio.onended = handleAudioEnded;
         })();
     });
 }
 
-
-/* Define variables */
-
-var mber = undefined;
-var mdbtnpress = false;
-let mouseDownProgress = false;
-let mouseDownVol = false;
-let isCursorOnControls = false;
-let mouseOverDuration = false;
-let touchClientX = 0;
-let touchPastDurationWidth = 0;
-let touchStartTime = 0;
-let hideHoverTimeout;
 
 
 /* Main functions zone */

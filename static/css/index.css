@@ -1,13 +1,6 @@
 /* Code by Sergio00166 */
 
-.row {
-    display: flex;
-    justify-content: space-between;
-}
-.dir-icon {
-    color: #007bff;
-    margin-right: 10px;
-}
+
 .folder {
     filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%)
         brightness(100%) contrast(100%);
@@ -46,11 +39,14 @@
 .iso {
     filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%);
 }
-
+.row {
+    display: flex;
+    justify-content: space-between;
+}
 img {
-    -webkit-user-drag: none;
-    -moz-user-drag: none;
-    user-drag: none;
+   -webkit-user-drag: none;
+   -moz-user-drag: none;
+    margin-right: 0.4em;
 }
 .no_overflow {
     white-space: nowrap;
@@ -58,7 +54,7 @@ img {
 .small {
     display: none;
 }
-.first {
+.name {
     flex: 1;
     -webkit-user-select: text;
     user-select: text;
@@ -69,18 +65,6 @@ img {
 }
 .sort1 {
     display: flex;
-}
-.filename:hover {
-    background-color: #111111;
-}
-a:hover {
-    background-color: #111111;
-}
-.selected {
-    background-color: red;
-}
-.selected:hover {
-    background-color: #600102;
 }
 .controls {
     display: flex;
@@ -107,6 +91,18 @@ button:hover {
 button:disabled {
     background-color: #111111;
     color: gray;
+}
+.filename:hover {
+    background-color: #111111;
+}
+a:hover {
+    background-color: #111111;
+}
+.selected {
+    background-color: red;
+}
+.selected:hover {
+    background-color: #600102;
 }
 pre {
     display: inline;
@@ -208,6 +204,8 @@ h2 {
     padding-right: 40px;
     border-radius: 25px;
 }
+.info1  { margin-left: 3em; }
+.info2  { margin-left: 1em; }
 
 
 /* RESPONSIVE (pain) ZONE */
@@ -217,8 +215,8 @@ h2 {
         flex-direction: column;
     }
 }
-@media (max-width: 1080px) {
-    .notime {
+@media (max-width: 900px) {
+    .info2, .info3 {
         display: none;
     }
 }
@@ -228,7 +226,7 @@ h2 {
     }
 }
 @media (max-width: 650px) {
-    .nosize {
+    .info1 {
         display: none;
     }
 }
@@ -249,7 +247,7 @@ h2 {
     .image {
         display: none;
     }
-    .backdir .first {
+    .backdir name {
         display: none;
     }
     .small {
@@ -261,9 +259,6 @@ h2 {
 }
 @media (max-width: 120px) {
     .list-group {
-        display: none;
-    }
-    #optionDialog {
         display: none;
     }
 }

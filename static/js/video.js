@@ -50,14 +50,32 @@ var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 var subs_legacy = localStorage.getItem("subsLegacy");
+
+var mber = undefined;
+var sttbtnpress = false;
+let mouseDownProgress = false;
+let mouseDownVol = false;
+let isCursorOnControls = false;
+let mouseOverDuration = false;
+let touchClientX = 0;
+let touchPastDurationWidth = 0;
+let touchStartTime = 0;
+let touchActive = false;
+let lastTouchTime = 0;
+let originalTime = 0;
+let fixtouch;
+let touchFix;
+let timeout;
+let touchTimeout;
+let cursorTimeout;
 var subtitleId = 0;
+let ass_worker;
+
 
 
 /* Start functions zone */
 
-let ass_worker;
-
-function crate_ass_worker(url) {
+function create_ass_worker(url) {
     return new JASSUB({
         video: video,
         canvas: canvas,
@@ -77,36 +95,29 @@ function webvtt_subs(url) {
     track.kind = 'subtitles';
     track.src = url;
     track.default = true;
-    track.mode = 'showing';
-    track.onerror = () => {
+    track.onerror = ()=>{
         alert("Cannot load subtitle");
     }
     video.appendChild(track);
+    track.mode = 'showing';
+    // Firefox you are a joke
+    video.textTracks[0].mode = "showing";
 }
-async function is_SSA_subs(url) {
-    const response = await fetch(url, {
-        method: 'HEAD'
-    });
-    const mimeType = response.headers.get("Content-Type");
-    return mimeType === "application/x-substation-alpha";
-}
-async function changeSubs(value) {
+
+function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
-    if (existingTrack) {
-        existingTrack.parentNode.removeChild(existingTrack);
-    }
-    if (ass_worker) {
-        ass_worker.destroy();
-    }
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+    if (ass_worker) { ass_worker.destroy(); }
+    if (existingTrack) {
+        existingTrack.track.mode = 'disabled';
+        existingTrack.remove();
+    }
     if (value > -1) {
         url = window.location.pathname + "?subs=" + value;
-        if (!await is_SSA_subs(url)) {
-            webvtt_subs(url);
-        } else if (subs_legacy) {
+        if (subs_legacy) { 
             webvtt_subs(url + "legacy");
-        } else {
-            ass_worker = crate_ass_worker(url);
+        } else { 
+            ass_worker = create_ass_worker(url);
         }
     }
 }
@@ -151,9 +162,8 @@ function scaleVideo() {
     for (var i = 0; i < subtitleSelect.options.length; i++) {
         if (subtitleSelect.options[i].text ===
             localStorage.getItem("videoSubs")) {
-            subtitleId = i;
-        break;
-            }
+            subtitleId = i;  break;
+        }
     }
     subtitleSelect.selectedIndex = subtitleId;
     subtitleId = subtitleId - 1;
@@ -206,6 +216,7 @@ function scaleVideo() {
             }
             totalDuration.innerHTML = showDuration(video.duration);
             video.ontimeupdate = handleProgressBar;
+            video.onended = handleVideoEnded;
             split_timeline_chapters(); // Set chapters
             loadTracks(); // Set all audio tracks info
             fix_aspect_ratio(); // Fix the aspect ratio
@@ -213,26 +224,6 @@ function scaleVideo() {
     });
 }
 
-
-/* Define variables */
-
-var mber = undefined;
-var sttbtnpress = false;
-let mouseDownProgress = false;
-let mouseDownVol = false;
-let isCursorOnControls = false;
-let mouseOverDuration = false;
-let touchClientX = 0;
-let touchPastDurationWidth = 0;
-let touchStartTime = 0;
-let touchActive = false;
-let lastTouchTime = 0;
-let originalTime = 0;
-let fixtouch;
-let touchFix;
-let timeout;
-let touchTimeout;
-let cursorTimeout;
 
 
 /* Main functions zone */

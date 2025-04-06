@@ -47,12 +47,18 @@ def safe_path(path,root,igntf=False):
     return path
 
 
-def readable(num, suffix="B"):
+def readable_size(num, suffix="B"):
     # Connverts byte values to a human readable format
     for unit in ("","Ki","Mi","Gi","Ti"):
         if num<1024: return f"{num:.1f} {unit}{suffix}"
         num /= 1024
     return f"{num:.1f} Yi{suffix}"
+
+def readable_date(date):
+    if date is not None:
+        return dt.fromtimestamp(
+        date).strftime("%d/%m/%Y %H:%M")
+    else: return "##/##/#### ##:##"
 
 
 def get_file_type(path):
@@ -89,7 +95,7 @@ def get_disk_capacity(disk):
     else:
         disk_obj = statvfs(disk)
         size_bytes = disk_obj.f_frsize * disk_obj.f_blocks
-    return readable(size_bytes)
+    return size_bytes
 
 
 def get_folder_content(folder_path, root, folder_size, ACL):
@@ -156,17 +162,6 @@ def sort_contents(folder_content, sort, root):
 
     elif   sort[1]=="d": dirs,files = dirs[::-1],files[::-1]
     return dirs+files
-
-
-
-def humanize_content(folder_content):
-    # Apply humanization to size and mtime
-    for item in folder_content:
-        item["size"] = readable(item["size"])
-        if item["mtime"] is not None:
-            item["mtime"] = dt.fromtimestamp(
-            item["mtime"]).strftime("%d-%m-%Y %H:%M:%S")
-    return folder_content
 
 
 def getclient(request):
@@ -241,5 +236,4 @@ def redirect_no_query():
     parsed_url = urlparse(request.url)
     return redirect(urlunparse(
     ('','',parsed_url.path,'','','')))
-
 

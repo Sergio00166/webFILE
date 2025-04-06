@@ -58,7 +58,7 @@ function handleDivClick(div) {
     } else {
         const url = div.getAttribute('data-value');
         if (url) {
-            if (div.hasAttribute('dir')) {
+            if (div.hasAttribute('isdir')) {
                 window.location.href = url;
             } else {
                 window.open(url, '_blank');
@@ -87,7 +87,7 @@ async function executeDownloads() {
             const div = selectedElements[id];
             var url = div.getAttribute('data-value');
             if (url) {
-                if (div.hasAttribute('dir')) {
+                if (div.hasAttribute('isdir')) {
                     if (!url.endsWith("/")) {
                         url += "/";
                     }
@@ -165,23 +165,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const container = document.querySelector('div.container');
     container.addEventListener('click', (event) => {
         const div = event.target.closest('div.filename');
-        if (div) {
+        if (div) { handleDivClick(div); }
+    });
+    container.addEventListener('keydown', (event) => {
+        const div = event.target.closest('div.filename');
+        if (div && (event.key==='Enter' || event.key===' ')) {
+            event.preventDefault();
             handleDivClick(div);
         }
     });
 });
 
+
 function set_cp_temp(list) {
-    if (selectMode) {
-        toggleSelectMode();
-    }
+    if (selectMode) { toggleSelectMode(); }
     localStorage.setItem('copy', JSON.stringify(list));
 }
 
 function set_mv_temp(list) {
-    if (selectMode) {
-        toggleSelectMode();
-    }
+    if (selectMode) { toggleSelectMode(); }
     localStorage.setItem('move', JSON.stringify(list));
 }
 
@@ -207,9 +209,7 @@ function copyFiles() {
     clearAllMvCp();
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
-        if (list != []) {
-            set_cp_temp(list);
-        }
+        if (list != []) { set_cp_temp(list); }
     }
 }
 
@@ -217,9 +217,7 @@ function moveFiles() {
     clearAllMvCp();
     if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
         list = getURLlist();
-        if (list != []) {
-            set_mv_temp(list);
-        }
+        if (list != []) { set_mv_temp(list); }
     }
 }
 
@@ -241,7 +239,7 @@ function renameFiles() {
         window.location.reload();
     }
 }
-
+            
 function sendRequest(path, destination, method) {
     const xhr = new XMLHttpRequest();
     xhr.open(method, path, false);

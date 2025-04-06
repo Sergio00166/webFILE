@@ -9,13 +9,13 @@ Users can be granted or denied read-only access, write permissions (upload, crea
 ## Multimedia (video) ##
  - All video/audio codecs supported by the browser (this server does not use transcoding)
  - Uses caching to avoid calling ffmpeg too many times.
- - All tracks (audio, video, subtitles and metadata) must be in the same container.
  - Ability to change audio track (enable experimental web platform features)
  - SSA/ASS subtitles support by using JASSUB on the client    
  - Convert SSA in a safe way to webVTT, to do it hold the settings button
- - Recommended to use mkv/mp4 container for videos and AV1 as the video codec.
-    - Note that both firefox and safari dont support mkv files.
-    - If ASS/SSA subtitles are needed use mkv and a chromium-based browser.
+ - Extract embeded subtitles in a video container like .mkv, mp4, etc.
+ - Loads subtitles from an external .mks file with the same name as the video.    
+   Note: it will disable all subtitles from the original video file.
+ - Main video container must contain all metadata and audio tracks.
 
 ## ACL permissions and Users ##
   Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.    

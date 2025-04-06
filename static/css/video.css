@@ -2,7 +2,6 @@
 
 /* Just to add a border to the subtitles */
 video::cue {
-    font-size: 1.25em !important;
     background: none !important;
     line-height: 1.1 !important;
     text-shadow: 0.07em 0.07em 0.05em black, -0.07em 0.07em 0.05em black,
@@ -12,7 +11,7 @@ video::cue {
 }
 /* Dont cut the bottom of the bottom subtitles */
 video::-webkit-media-text-track-display {
-    padding-bottom: 0.25em !important;
+    padding: 0.25em !important;
 }
 /* Dont fucking show native video controls */
 video::-webkit-media-controls { display: none !important; }

@@ -1,5 +1,6 @@
 #Code by Sergio00166
 
+from video import get_subtitles,get_chapters,get_info,check_ffmpeg_installed
 from flask import render_template,stream_template,redirect,request
 from files_mgr import upfile,updir,mkdir,delfile,move,copy
 from os.path import join, relpath,pardir,abspath
@@ -9,7 +10,6 @@ from flask_session import Session
 from hashlib import sha256
 from random import choice
 from functions import *
-from video import *
 
 
 def serveFiles_page(path,ACL,root,client,folder_size):
@@ -31,9 +31,8 @@ def serveFiles_page(path,ACL,root,client,folder_size):
 
         # Custom player for each multimedia format
         elif file_type=="video":
-            info = (request.method.lower()=="head")
             subs = request.args["subs"] if "subs" in request.args else ""
-            return video(path,root,subs,file_type,info,ACL)
+            return video(path,root,subs,file_type,ACL)
 
         elif file_type=="audio": return audio(path,root,file_type,ACL)
  
@@ -134,11 +133,10 @@ def get_index_data(folder_path,root,folder_size,sort,ACL):
     folder_path = "/"+folder_path.replace(sep,"/")
     parent_directory = parent_directory.replace(sep,"/")
     folder_content = sort_contents(folder_content,sort,root)
-    folder_content = humanize_content(folder_content)
     return folder_content,folder_path,parent_directory,is_root
 
 
-def video(path,root,mode,file_type,info,ACL):
+def video(path,root,mode,file_type,ACL):
     check_ffmpeg_installed()
     # Check if subtitles are requested
     if not mode=="":
@@ -149,7 +147,7 @@ def video(path,root,mode,file_type,info,ACL):
         if path.endswith("/"): path=path[:-1]
         try: index = int(mode)
         except: raise FileNotFoundError
-        return get_subtitles(index,path,legacy,info)
+        return get_subtitles(index,path,legacy)
     # Else we send the video page
     prev, nxt, name = get_filepage_data(path,root,file_type,ACL,ngtst=True)
     tracks,chapters = get_info(path),get_chapters(path)
@@ -161,6 +159,16 @@ def audio(path,root,file_type,ACL):
     return render_template('audio.html',path=path,name=name,prev=prev,nxt=nxt,rnd=rnd)
 
 
+def humanize_all(data):
+    for item in data:
+        if "capacity" in item:
+            item["used"] = round(item["size"]/item["capacity"]*100)
+            item["capacity"] = readable_size(item["capacity"])
+        if "mtime" in item:
+            item["mtime"] = readable_date(item["mtime"])
+        item["size"] = readable_size(item["size"])
+
+
 def directory(path,root,folder_size,sort,client,ACL):
     # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np","nd","sp","sd","dp","dd"] else "np"
@@ -170,8 +178,10 @@ def directory(path,root,folder_size,sort,client,ACL):
     # Return appropiate response depending on the client
     if not client=="json":
         file = "index_cli.html" if client=="legacy" else "index.html"
+        humanize_all(folder_content) # The arg is a reference
         html = stream_template(file,folder_content=folder_content,folder_path=folder_path,\
                                parent_directory=parent_directory,is_root=is_root,sort=sort)
         return minify(html) # reduce size
     else: return [{**item, "path": "/"+encurl(item["path"])} for item in folder_content]
+
 
