@@ -162,6 +162,7 @@ h2 {
 }
 .container {
     margin-top: 16px;
+    margin-bottom: 36px;
     border: none;
     background-color: #333333;
     padding-top: 16px;
