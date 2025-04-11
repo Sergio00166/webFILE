@@ -59,7 +59,7 @@ def readable_date(date):
         cd = dt.fromtimestamp(date)
         return [
             cd.strftime("%d/%m/%Y"),
-            cd.strftime("%H:%M:%S")
+            cd.strftime("%H:%M")
         ]
     else: return ["##/##/####", "##:##:##"]
 
