@@ -164,9 +164,11 @@ h2 {
     margin-top: 16px;
     border: none;
     background-color: #333333;
-    padding-left: 35px;
-    padding-right: 40px;
-    border-radius: 8px;
+    padding-top: 16px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 24px;
+    border-radius: 12px;
 }
 .list-group {
     position: absolute;
@@ -204,8 +206,9 @@ h2 {
     padding-right: 40px;
     border-radius: 25px;
 }
-.info1  { margin-left: 3em; }
-.info2  { margin-left: 1em; }
+.size  { margin-left: 3em; }
+.date  { margin-left: 1em; }
+.time  { margin-left: 0.5em; }
 
 
 /* RESPONSIVE (pain) ZONE */
@@ -215,8 +218,13 @@ h2 {
         flex-direction: column;
     }
 }
+@media (max-width: 1100px) {
+    .time {
+        display: none;
+    }
+}
 @media (max-width: 900px) {
-    .info2, .info3 {
+    .date, .capacity {
         display: none;
     }
 }
@@ -226,8 +234,14 @@ h2 {
     }
 }
 @media (max-width: 650px) {
-    .info1 {
+    .size {
         display: none;
+    }
+    .container {
+        padding-left: 6px;
+        padding-right: 7px;
+        padding-top: 6px;
+        padding-bottom: 7px
     }
 }
 @media (max-width: 400px) {

@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <div class="container"> <br>
+        <div class="container">
             {% if not is_root %}
                 <a class="backdir" href="{{ url_for('explorer', path=parent_directory) }}">
                     <img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback"></img>
@@ -110,16 +110,16 @@
                         <t class="small">//</t>
                       {% endif %}
                     </span><span>
-                        <t class="info1">{{ item['size'] }}</t>
+                        <t class="size">{{ item['size'] }}</t>
                       {% if item['type'] == 'disk' %}
-                        <t class="info3">&nbsp;/&nbsp;{{item['capacity']}}&nbsp;&nbsp;({{item["used"]}}%)</t>
+                        <t class="capacity">&nbsp;/&nbsp;{{item['capacity']}}&nbsp;&nbsp;({{item["used"]}}%)</t>
                       {% else %}
-                        <t class="info2">{{ item['mtime'] }}</t>
+                        <t class="date">{{ item['mtime'][0] }}</t>
+                        <t class="time">{{ item['mtime'][1] }}</t>
                       {% endif %}
                     </span>
                 </div>
             {% endfor %}
-            <br>
         </div>
         <br><br>
     </div>
