@@ -51,7 +51,7 @@ h2 {
     padding: 4px;
     margin: 20px auto;
     border-radius: 12px;
-    max-width: 1200px; /* corregido para igualar a los contenedores */
+    max-width: 1200px;
 }
 
 .container {
@@ -153,7 +153,6 @@ h2 {
     background-color: #880000;
 }
 
-/* Íconos sólo si se muestran */
 .folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) brightness(100%) contrast(100%); }
 .files { filter: brightness(0) invert(1); }
 .goback { filter: saturate(50%) contrast(50%); }
@@ -167,7 +166,6 @@ h2 {
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
 
-/* Responsive */
 @media (max-width: 1300px) {
     .controls { flex-direction: column; }
 }
