@@ -129,7 +129,7 @@ pre {
     padding-bottom: 3px;
     padding-left: 8px;
     padding-right: 5px;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     border-radius: 6px;
 }
 button {
@@ -140,7 +140,7 @@ button {
     padding-top: 4px;
     padding-bottom: 4px;
     background-color: #1f2f3f;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 body {
     font-family: sans-serif;
@@ -158,18 +158,18 @@ h2 {
     margin-bottom: 16px;
     -webkit-user-select: text;
     user-select: text;
-    border-radius: 8px;
+    border-radius: 10px;
 }
 .container {
     margin-top: 16px;
     margin-bottom: 36px;
     border: none;
     background-color: #333333;
-    padding-top: 16px;
-    padding-bottom: 20px;
+    padding-top: 12px;
+    padding-bottom: 14px;
     padding-left: 20px;
     padding-right: 30px;
-    border-radius: 12px;
+    border-radius: 13px;
 }
 .list-group {
     position: absolute;
@@ -237,12 +237,6 @@ h2 {
 @media (max-width: 650px) {
     .size {
         display: none;
-    }
-    .container {
-        padding-left: 6px;
-        padding-right: 7px;
-        padding-top: 6px;
-        padding-bottom: 7px
     }
 }
 @media (max-width: 400px) {
