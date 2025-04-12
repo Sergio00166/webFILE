@@ -57,8 +57,8 @@ h2 {
 .container {
     background-color: #1e1e1e;
     padding: 20px 30px;
-    margin: auto;
     border-radius: 15px;
+    margin-bottom: 30px;
 }
 
 .list-group {
