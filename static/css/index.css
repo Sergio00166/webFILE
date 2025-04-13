@@ -19,6 +19,7 @@ pre {
     white-space: pre-wrap;
     font-family: inherit;
     font-size: inherit;
+    margin: 0;
 }
 
 button {
@@ -29,17 +30,17 @@ button {
     border-radius: 10px;
     color: #fff;
     font-weight: 600;
-    transition: 0.2s ease-in-out;
+    transition: 0.1s;
     cursor: pointer;
 }
 
 button:hover {
-    transform: scale(1.06);
-    background: linear-gradient(145deg, #2d333e, #132225);
+    transform: scale(1.04);
+    background: linear-gradient(145deg, #262a33, #101e1f);
 }
 
 button:disabled {
-    background: #1c1c1c;
+    background: #111;
     color: gray;
     cursor: not-allowed;
 }
@@ -48,10 +49,9 @@ h2 {
     background: #2f2f2f;
     color: #eee;
     text-align: center;
-    padding: 4px;
     margin: 20px auto;
+    padding: 20px;
     border-radius: 12px;
-    max-width: 1200px;
 }
 
 .container {
@@ -63,7 +63,6 @@ h2 {
 
 .list-group {
     width: 95%;
-    max-width: 1200px;
     margin: auto;
 }
 
@@ -71,12 +70,14 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #222;
-    margin: 5px 0;
+    background-color: #2a2a2a;
+    margin: 8px 0;
+    padding-top: 12px;
+    padding-bottom: 12.5px;
     padding-left: 16px;
     padding-right: 18px;
     border-radius: 10px;
-    transition: 0.15s;
+    transition: 0.2s;
 }
 
 .filename .name {
@@ -86,8 +87,8 @@ h2 {
 }
 
 .filename:hover {
-    background-color: #333;
-    transform: scale(1.02);
+    background-color: #3e3e3e;
+    transform: scale(1.01);
 }
 
 .backdir {
@@ -103,12 +104,12 @@ h2 {
 
 .backdir:hover {
     background-color: #333;
-    transform: scale(1.02);
+    transform: scale(1.008);
 }
 
 .controls {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
     margin-bottom: 20px;
 }
