@@ -16,11 +16,11 @@
         </td></tr>
         <tr><td>&nbsp;</td></tr>
         <tr>
-            <td><a href="{{ request.path }}?sort={% if sort=='np' %}nd{% else %}np{% endif %}">NAME {% if sort=="np" %}^{% elif sort=="nd" %}v{% endif %}</a></td>
+            <td align="left"><a href="{{ request.path }}?sort={% if sort=='np' %}nd{% else %}np{% endif %}">NAME {% if sort=="np" %}^{% elif sort=="nd" %}v{% endif %}</a></td>
             <td>&nbsp;&nbsp;</td>
-            <td><a href="{{ request.path }}?sort={% if sort=='sp' %}sd{% else %}sp{% endif %}">SIZE {% if sort=="sp" %}^{% elif sort=="sd" %}v{% endif %}</a></td>
+            <td align="right"><a href="{{ request.path }}?sort={% if sort=='sp' %}sd{% else %}sp{% endif %}">SIZE {% if sort=="sp" %}^{% elif sort=="sd" %}v{% endif %}</a></td>
             <td></td>
-            <td><a href="{{ request.path }}?sort={% if sort=='dp' %}dd{% else %}dp{% endif %}">DATE {% if sort=="dp" %}^{% elif sort=="dd" %}v{% endif %}</a></td>
+            <td align="right"><a href="{{ request.path }}?sort={% if sort=='dp' %}dd{% else %}dp{% endif %}">DATE {% if sort=="dp" %}^{% elif sort=="dd" %}v{% endif %}</a></td>
             <td align="right"><a href="{{ request.path }}?tar">DL·DIR</a></td>
         </tr>
         <tr><td>&nbsp;</td></tr>
@@ -29,14 +29,14 @@
       {% endif %}
       {% for item in folder_content %}
             <tr>
-                <td><a href="{{ url_for('explorer', path=item['path']) }}">{{ item['name'] }}{% if item['type']=='directory' %}/{% elif item['type']=='disk' %}//{% endif %}</a></td>
+                <td align="left"><a href="{{ url_for('explorer', path=item['path']) }}">{{ item['name'] }}{% if item['type']=='directory' %}/{% elif item['type']=='disk' %}//{% endif %}</a></td>
                 <td>&nbsp;&nbsp;&nbsp;</td>
               {% if item['type'] == 'disk' %}
                 <td align="right" colspan="4">{{item['size']}}&nbsp;/&nbsp;{{item['capacity']}}&nbsp;({{item['used']}}%)</td>
               {% else %}
                 <td align="right">{{ item['size'] }}</td>
                 <td></td>
-                <td align="right" colspan="2">{{ item['mtime'] }}</td>  
+                <td align="right" colspan="2">{{ item['mtime'][0] }}&nbsp;{{ item['mtime'][1] }}</td>  
               {% endif %}
             </tr>
       {% endfor %}

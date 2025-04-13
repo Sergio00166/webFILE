@@ -56,9 +56,12 @@ def readable_size(num, suffix="B"):
 
 def readable_date(date):
     if date is not None:
-        return dt.fromtimestamp(
-        date).strftime("%d/%m/%Y %H:%M")
-    else: return "##/##/#### ##:##"
+        cd = dt.fromtimestamp(date)
+        return [
+            cd.strftime("%d/%m/%Y"),
+            cd.strftime("%H:%M")
+        ]
+    else: return ["##/##/####", "##:##:##"]
 
 
 def get_file_type(path):

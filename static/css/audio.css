@@ -3,65 +3,45 @@
 body {
     margin: 0;
     font-family: sans-serif;
+    background: black;
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
     height: 100dvh;
-    background: #000000;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
 }
+
 .audio-container {
-    position: relative;
-    color: #fff;
+    background: #111;
+    padding: 24px;
+    padding-top: 60px;
+    padding-bottom: 56px;
+    border-radius: 36px;
+    border: 2px solid #333;
     width: 90vw;
+    max-width: 800px;
     display: flex;
-    align-items: center;
-    justify-content: center;
     flex-direction: column;
-}
-.flex {
-    display: flex;
-    justify-content: center;
-}
-.lmbsl {
-    background-color: yellow !important;
-}
-h2 {
-    text-align: center;
-    color: #ffffff;
-    -webkit-user-select: text;
-    user-select: text;
-    word-break: break-all;
-    white-space: pre-wrap;
-}
-img {
-   -webkit-user-drag: none;
-   -moz-user-drag: none;
-    user-drag: none;
-    width: 20px;
-    height: 20px;
-}
-.round-button {
-    width: 2.2rem;
-    height: 2.2rem;
-    border-radius: 50%;
-    background: #aaaaaa;
-    display: flex;
     align-items: center;
-    justify-content: center;
-    border: 1px solid transparent;
     box-sizing: border-box;
-    position: relative;
-    margin-right: 0.5rem;
-    cursor: pointer;
+    margin-bottom: 5vh;
+    margin-bottom: 5dvh;
+}
+.audio-container h2 {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 48px;
+    word-break: break-all;
+    user-select: text;
 }
 
 .duration {
     position: relative;
-    width: 36%;
+    width: 90%;
     height: 16px;
     background: #62626274;
     cursor: pointer;
@@ -139,34 +119,67 @@ img {
     visibility: visible;
     transform: scale(1);
 }
+
+.time-container {
+    font-size: 0.9rem;
+    margin: 16px;
+    margin-bottom: 25px;
+    color: #aaa;
+}
+.flex {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.round-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #888;
+    border: 2px solid #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    position: relative;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+.round-button:hover {
+    background: #555;
+    transform: scale(1.05);
+}
+.round-button img {
+    -webkit-user-drag: none;
+    -moz-user-drag: none;
+    user-drag: none;
+    width: 24px;
+    height: 24px;
+}
+
 .volume {
     display: flex;
     align-items: center;
-}
-.time-container {
-    font-size: 13px;
-    font-weight: 500;
-    padding: 10px;
-    color: #eeeeee;
+    position: relative;
 }
 .max-vol {
     height: 3px;
     cursor: pointer;
     background: #ffffff6e;
     transition: all 0.1s;
-    width: 0;
-    visibility: hidden;
     transform: scaleX(0);
     transform-origin: left;
+    width: 0;
+    visibility: hidden;
     display: flex;
     align-items: center;
-    margin-right: 0.33rem;
 }
 .max-vol.show {
-    width: 56px;
+    width: 48px;
     visibility: visible;
     transform: scaleX(1);
-    margin-right: 1.25rem;
+    margin-right: 12px;
 }
 .current-vol {
     position: absolute;
@@ -188,44 +201,45 @@ img {
     border-radius: 50%;
     background: #eee;
 }
+
+.settings {
+    position: relative;
+}
 .setting-menu {
     opacity: 0;
+    padding: 0;
+    margin: 0;
     visibility: hidden;
     list-style: none;
-    padding-inline-start: 0;
-    margin-block-start: 0;
-    margin-block-end: 0;
+    background: #2b2b2b;
+    border: 4px solid #111;
+    border-radius: 8px;
     position: absolute;
-    margin-top: -12rem;
-    margin-left: -9.5rem;
-    transition: all 0.2s;
-    background: rgba(50, 50, 50, 1);
-    border-radius: 5px;
-    z-index: 9999;
-    color: #eeeeee;
+    top: -11rem;
+    left: -7rem;
+    transition: opacity 0.2s;
+    z-index: 999;
 }
 .setting-menu li {
-    padding: 0.3rem 1.33rem;
-    margin: 0.25rem;
-    transition: all 0.2s;
-    border-radius: 5px;
-    font-size: 0.9rem;
-    font-weight: 500;
+    padding: 8px;
+    padding-left: 24px;
+    padding-right: 24px;
     cursor: pointer;
-}
-.speed-active {
-    background: rgb(23, 23, 23);
+    font-size: 0.9rem;
+    color: #eee;
 }
 .setting-menu li:hover {
-    background: rgb(31, 31, 31);
+    background: #444;
+}
+.speed-active {
+    background: #333;
 }
 .show-setting-menu {
     opacity: 1;
-    transform: scaleY(1);
     visibility: visible;
 }
-button:focus {
-    outline: none;
+.lmbsl {
+    background-color: yellow !important;
 }
 
 .sh_pause {
@@ -252,48 +266,27 @@ button:focus {
 
 /* RESPONSIVE (pain) ZONE */
 
-@media (max-width: 1200px) {
-    .duration {
-        width: 50%;
-    }
-}
-@media (max-width: 960px) {
-    .duration {
-        width: 67%;
-    }
-}
-@media (max-width: 520px) {
-    .duration {
-        width: 85%;
-    }
-}
-@media (max-width: 430px) {
+@media (max-width: 500px) {
     .volume {
         display: none;
     }
-    .setting-menu {
-        margin-left: -8.2rem;
-    }
 }
-@media (max-width: 300px) {
+@media (max-width: 380px) {
     .download {
         display: none;
     }
-    .setting-menu {
-        margin-left: -6.67rem;
-    }
 }
-@media (max-width: 260px) {
+@media (max-width: 330px) {
     .settings {
         display: none;
     }
 }
-@media (max-width: 210px) {
+@media (max-width: 280px) {
     #mode {
         display: none;
     }
 }
-@media (max-width: 160px) {
+@media (max-width: 220px) {
     div {
         display: none;
     }
@@ -309,20 +302,19 @@ button:focus {
     .play {
         display: block;
     }
+    .audio-container {
+        background: none;
+        padding: 0px;
+        border: none;
+    }
 }
 
-@media (max-height: 140px) {
-    div {
-        display: none;
-    }
-    h2 {
-        display: none;
-    }
-    span {
-        display: none;
+@media (max-height: 600px) {
+    main {
+        margin: 0;
     }
 }
-@media (max-height: 280px) {
+@media (max-height: 320px) {
     body {
         overflow: hidden;
     }
@@ -334,5 +326,24 @@ button:focus {
     }
     .settings {
         display: none;
+    }
+}
+@media (max-height: 250px) {
+    div {
+        display: none;
+    }
+    h2 {
+        display: none;
+    }
+    span {
+        display: none;
+    }
+}
+
+@media (max-height: 180px) {
+    .audio-container {
+        background: none;
+        padding: 0px;
+        border: none;
     }
 }
