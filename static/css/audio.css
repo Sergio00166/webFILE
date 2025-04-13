@@ -182,7 +182,7 @@ main {
     width: 48px;
     visibility: visible;
     transform: scaleX(1);
-    margin-right: 10px;
+    margin-right: 12px;
 }
 .current-vol {
     position: absolute;
