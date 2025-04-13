@@ -16,6 +16,7 @@ body {
     flex-direction: column;
     color: white;
     user-select: none;
+    transition: 0.2s;
 }
 
 #error {
