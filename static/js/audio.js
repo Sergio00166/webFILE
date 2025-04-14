@@ -23,6 +23,7 @@ const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
 const randomLink = document.getElementById("random");
 
+sh_pause.classList.remove("sh_pause");
 var audio = document.querySelector("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");

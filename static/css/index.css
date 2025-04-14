@@ -14,7 +14,6 @@ body {
     margin: 0;
     user-select: none;
 }
-
 pre {
     white-space: pre-wrap;
     font-family: inherit;
@@ -22,7 +21,6 @@ pre {
     margin: 0;
     user-select: text;
 }
-
 button {
     flex: 1;
     padding: 10px;
@@ -34,18 +32,15 @@ button {
     transition: 0.1s;
     cursor: pointer;
 }
-
 button:hover {
     transform: scale(1.04);
     background: linear-gradient(145deg, #262a33, #101e1f);
 }
-
 button:disabled {
     background: #111;
     color: gray;
     cursor: not-allowed;
 }
-
 h2 {
     background: #2f2f2f;
     color: #eee;
@@ -54,19 +49,16 @@ h2 {
     padding: 20px;
     border-radius: 12px;
 }
-
 .container {
     background-color: #1e1e1e;
     padding: 20px 30px;
     border-radius: 15px;
     margin-bottom: 30px;
 }
-
 .list-group {
     width: 95%;
     margin: auto;
 }
-
 .filename {
     display: flex;
     align-items: center;
@@ -80,18 +72,15 @@ h2 {
     border-radius: 10px;
     transition: 0.2s;
 }
-
 .filename .name {
     text-align: left;
     flex: 1;
     margin-right: 10px;
 }
-
 .filename:hover {
     background-color: #3e3e3e;
     transform: scale(1.01);
 }
-
 .backdir {
     color: white;
     text-decoration: none;
@@ -102,33 +91,28 @@ h2 {
     margin-bottom: 12px;
     transition: 0.15s;
 }
-
 .backdir:hover {
     background-color: #333;
     transform: scale(1.008);
 }
-
 .controls {
     display: flex;
     flex-direction: row;
     gap: 10px;
     margin-bottom: 20px;
 }
-
 .ctrl_group {
     display: flex;
     flex: 1;
     gap: 10px;
     flex-wrap: wrap;
 }
-
 .ctrl_flex {
     display: flex;
     flex: 1;
     gap: 10px;
     flex-wrap: wrap;
 }
-
 .load_container {
     background-color: #f9f9f9;
     padding-top: 20px;
@@ -138,7 +122,6 @@ h2 {
     font-weight: 500; 
     color: black;
 }
-
 #loader {
     display: flex;
     justify-content: center;
@@ -147,7 +130,6 @@ h2 {
     height: 90vh;
     height: 90dvh;
 }
-
 .selected {
     background-color: #aa0000;
 }

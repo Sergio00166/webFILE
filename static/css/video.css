@@ -44,28 +44,39 @@ img {
     height: 20px;
     display: inline-block;
     vertical-align: middle;
-    filter: brightness(0) invert(1);
 }
 .fullimg {
     width: 60%;
     height: 60%;
 }
 .round-button {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    background: rgba(36, 36, 36, 0.667);
+    background: linear-gradient(120deg, #8f9faf, #3f4f5f);
+    border: 2px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid transparent;
     box-sizing: border-box;
     position: relative;
-    margin-right: 0.5rem;
+    margin-right: 8px;
     cursor: pointer;
+    transition: all 0.1s;
+}
+.round-button:hover {
+    background: linear-gradient(145deg, #363a43, #000e0f);
+    color: #fafafa;
+    transform: scale(1.1);
+}
+.round-button:hover img {
+    filter: invert(90%);
 }
 .lmbsl {
-    background: rgba(160, 192, 64, 0.667) !important;
+    background: linear-gradient(120deg, #ffff00, #8f8f00); !important;
+}
+.lmbsl:hover {
+    background: linear-gradient(120deg, #5f5f00, #1f1f00); !important;
 }
 body {
     margin: 0;
@@ -80,7 +91,6 @@ body {
     -webkit-user-select: none;
     user-select: none;
 }
-
 .loader {
     width: 108px;
     height: 108px;
@@ -127,17 +137,14 @@ body {
     visibility: visible !important;
 }
 .controls {
-    position: absolute;
     bottom: 0;
-    padding: 0.5rem 1rem 0.5rem 1rem;
     width: 100%;
+    position: absolute;
+    padding: 0.5rem 1rem 0.5rem 1rem;
     background: linear-gradient(to top, #000000b8 -100%, transparent);
     box-sizing: border-box;
-    opacity: 0;
     visibility: hidden;
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-
 .duration {
     position: relative;
     margin-left: auto;
@@ -160,7 +167,6 @@ body {
     height: 150%;
     top: -25%;
 }
-
 .chapter-container {
     position: relative;
     height: 100%;
@@ -251,23 +257,22 @@ body {
     cursor: pointer;
 }
 .max-vol {
+    width: 0;
     height: 3px;
     cursor: pointer;
     background: #ffffff6e;
-    transition: all 0.1s;
-    width: 0;
-    visibility: hidden;
+    transition: all 0.15s;
     transform: scaleX(0);
     transform-origin: left;
+    visibility: hidden;
     display: flex;
     align-items: center;
-    margin-right: 0.33rem;
 }
 .max-vol.show {
-    width: 56px;
+    width: 48px;
     visibility: visible;
     transform: scaleX(1);
-    margin-right: 1.25rem;
+    margin-right: 12px;
 }
 .current-vol {
     position: absolute;
@@ -291,29 +296,34 @@ body {
 }
 .setting-menu {
     opacity: 0;
+    border: 1px solid black;
     visibility: hidden;
     list-style: none;
     padding-inline-start: 0;
     margin-block-start: 0;
     margin-block-end: 0;
     position: absolute;
-    bottom: 5rem;
-    margin-right: 2rem;
+    bottom: 84px;
     transition: all 0.2s;
-    background: rgba(28, 28, 28, 0.9);
+    background: rgba(40,40,40,0.9);
     transform: scaleY(0);
     transform-origin: bottom;
-    border-radius: 5px;
-    margin-left: -3rem;
+    border-radius: 12px;
+    margin-left: -50px;
 }
 .setting-menu li {
     padding: 0.33rem 0.5rem;
     margin: 0.25rem;
     transition: all 0.2s;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
+    transition: all 0.2s;
+}
+.setting-menu li:hover {
+    background: #666 !important;
+    transform: scale(1.05);
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
@@ -345,7 +355,7 @@ select {
     border: none;
 }
 select option {
-    background-color: rgba(28, 28, 28, 0.9);
+    background-color: rgba(40,40,40,0.9);
     color: #eee;
 }
 .speed-active {
@@ -410,7 +420,6 @@ select option {
 .sh_meda { display: none; }
 .sh_lowa { display: none; }
 .sh_noa { display: none; }
-.text { color: #ffffff; }
 button:focus { outline: none; }
 .transition { transition: opacity 0.25s ease; }
 
@@ -435,7 +444,6 @@ button:focus { outline: none; }
         display: none;
     }
 }
-
 @media (max-aspect-ratio: 1/1) {
     .video-box, .main-state, .custom-loader{
         margin-bottom: 86px;
@@ -448,22 +456,6 @@ button:focus { outline: none; }
             align-items: center;
             flex-direction: column;
         }
-        .setting-menu {
-            margin-left: 2rem;
-            margin-bottom: 2rem;
-        }
-    }
-    @media (max-width: 320px) {
-        .setting-menu {
-            margin-left: 0.5rem;
-            margin-bottom: 0;
-        }
-    }
-    @media (max-width: 260px) {
-        .setting-menu {
-            margin-left: 0.5rem;
-            margin-bottom: -1rem;
-        }
     }
     /* Hide everything if screen is so fucking small */
     @media (max-width: 160px) {
@@ -472,7 +464,6 @@ button:focus { outline: none; }
         }
     }
 }
-
 @media (min-aspect-ratio: 1/1) {
     @media (max-width: 430px) {
         .time-container {
@@ -484,10 +475,6 @@ button:focus { outline: none; }
             display: flex;
             align-items: center;
             flex-direction: column;
-        }
-        .setting-menu {
-            margin-left: 1rem;
-            margin-bottom: 1rem;
         }
     }
     @media (max-height: 320px) {
