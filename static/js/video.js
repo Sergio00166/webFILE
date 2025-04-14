@@ -8,6 +8,7 @@ const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
 const buffer = document.querySelector(".buffer");
 const totalDuration = document.querySelector(".total-duration");
+const timeContainer = document.querySelector(".time-container");
 const currentDuration = document.querySelector(".current-duration");
 const controls = document.querySelector(".controls");
 const currentVol = document.querySelector(".current-vol");
@@ -774,10 +775,12 @@ controls.addEventListener("click", () => {
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
+    timeContainer.style.display = "none";
     muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
     totalVol.classList.remove("show");
+    setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
 });
 totalVol.addEventListener("mousedown", (e) => {
     mouseDownVol = true;
