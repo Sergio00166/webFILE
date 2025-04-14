@@ -775,7 +775,7 @@ controls.addEventListener("click", () => {
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
-    timeContainer.style.display = "none";
+    if (!muted) { timeContainer.style.display = "none"; }
     muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
