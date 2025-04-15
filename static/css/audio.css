@@ -89,30 +89,30 @@ body {
     pointer-events: none;
 }
 .duration .current-time {
-    height: 100%;
-    position: absolute;
     inset: 0;
-    background: #ff6a00;
-    z-index: 999;
+    width: 0;
+    height: 100%;
     display: flex;
+    position: absolute;
+    background: #ff4a10;
+    z-index: 999 !important;
     align-items: center;
     border-radius: 5px;
-    width: 0;
 }
 .current-time::before {
+    opacity: 0;
     content: "";
+    width: 14px;
+    height: 15px;
     position: absolute;
-    right: calc((-25px / 2));
+    right: calc((-14px / 2));
     background: #ff6a00;
-    width: 25px;
-    height: 25px;
     border-radius: 50%;
     transition: all 0.2s;
-    visibility: hidden;
     transform: scale(0);
 }
 .duration:hover .current-time::before {
-    visibility: visible;
+    opacity: 1;
     transform: scale(1);
 }
 .time-container {
@@ -150,19 +150,16 @@ body {
     filter: invert(90%);
 }
 .lmbsl {
-    background: linear-gradient(120deg, #ffff00, #8f8f00); !important;
+    background: linear-gradient(120deg, #ffff00, #8f8f00) !important;
 }
 .lmbsl:hover {
-    background: linear-gradient(120deg, #5f5f00, #1f1f00); !important;
+    background: linear-gradient(120deg, #5f5f00, #1f1f00) !important;
 }
 .round-button img {
-    -webkit-user-drag: none;
-    -moz-user-drag: none;
-    user-drag: none;
+    pointer-events: none;
     width: 24px;
     height: 24px;
 }
-
 .volume {
     display: flex;
     align-items: center;

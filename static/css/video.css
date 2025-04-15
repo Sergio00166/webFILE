@@ -37,9 +37,7 @@ canvas { position: absolute; }
     height: 100%;
 }
 img {
-   -webkit-user-drag: none;
-   -moz-user-drag: none;
-    user-drag: none;
+    pointer-events: none;
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -128,17 +126,16 @@ body {
 }
 .show-controls {
     opacity: 1 !important;
-    transform: translateY(0) !important;
-    visibility: visible !important;
 }
 .controls {
     bottom: 0;
+    opacity: 0;
     width: 100%;
     position: absolute;
+    transition: all 0.3s;
+    box-sizing: border-box;
     padding: 0.5rem 1rem 0.5rem 1rem;
     background: linear-gradient(to top, #000000b8 -100%, transparent);
-    box-sizing: border-box;
-    visibility: hidden;
 }
 .duration {
     position: relative;
@@ -206,32 +203,33 @@ body {
     pointer-events: none;
 }
 .duration .current-time {
-    height: 100%;
-    position: absolute;
     inset: 0;
-    background: #ff6a00;
-    z-index: 999 !important;
-    display: flex;
-    align-items: center;
     width: 0;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    background: #ff4a10;
+    z-index: 999 !important;
+    align-items: center;
     border-radius: 5px;
 }
 .current-time::before {
+    opacity: 0;
     content: "";
+    width: 14px;
+    height: 15px;
     position: absolute;
-    right: calc((-25px / 2));
+    right: calc((-14px / 2));
     background: #ff6a00;
-    width: 25px;
-    height: 25px;
     border-radius: 50%;
     transition: all 0.2s;
-    visibility: hidden;
     transform: scale(0);
 }
 .duration:hover .current-time::before {
-    visibility: visible;
+    opacity: 1;
     transform: scale(1);
 }
+
 .btn-controls {
     padding-top: 1rem;
     font-size: 1.2rem;

@@ -1,6 +1,5 @@
 /* Code by Sergio00166 */
 
-img { margin-right: 0.4em; }
 .small { display: none; }
 .size  { margin-left: 3em; }
 .date  { margin-left: 1em; }
@@ -13,6 +12,10 @@ body {
     color: #f0f0f0;
     margin: 0;
     user-select: none;
+}
+img {
+    pointer-events: none;
+    margin-right: 0.4em;
 }
 pre {
     white-space: pre-wrap;
