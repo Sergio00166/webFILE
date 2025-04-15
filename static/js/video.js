@@ -253,7 +253,7 @@ function handleSettingMenu() {
     if (sttbtnpress) {
         sttbtnpress = false;
     } else {
-        settingMenu.classList.toggle("show-setting-menu");
+        settingMenu.classList.toggle("show");
         isCursorOnControls = !isCursorOnControls;
     }
 }
@@ -295,7 +295,7 @@ function play() {
 
 function pause() {
     video.pause();
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     show_main_animation("play");
     handleVideoIcon();
     sh_pause.classList.add("sh_pause");
@@ -367,6 +367,7 @@ function toggleMuteUnmute() {
         handleVideoIcon();
         show_main_animation("unmute");
     }
+    timeContainer.style.display = "block";
     localStorage.setItem("videoMuted", muted);
 }
 
@@ -374,8 +375,8 @@ function hideControls(delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
-            controls.classList.remove("show-controls");
-            settingMenu.classList.remove("show-setting-menu");
+            controls.classList.remove("show");
+            settingMenu.classList.remove("show");
             for (let i = 0; i < menuButtons.length; i++) {
                 menuButtons[i].style.display = "block";
             }
@@ -470,7 +471,7 @@ function show_main_animation(mode) {
     sh_fordward_st.classList.add("sh_fordward_st");
     switch (mode) {
         case "play":
-            mainState.classList.add("show-state");
+            mainState.classList.add("show");
             sh_play_st.classList.remove("sh_play_st");
             break;
         case "mute":
@@ -490,7 +491,7 @@ function show_main_animation(mode) {
             mainState.classList.add("animate-state");
             break;
         default:
-            mainState.classList.remove("show-state");
+            mainState.classList.remove("show");
             break;
     }
 }
@@ -711,10 +712,10 @@ window.addEventListener('fullscreenchange', scaleVideo);
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
 video.addEventListener("waiting", () => {
-    loader.classList.add("show-state");
+    loader.classList.add("show");
 });
 video.addEventListener("playing", () => {
-    loader.classList.remove("show-state");
+    loader.classList.remove("show");
 });
 
 // Video container events
@@ -724,7 +725,7 @@ videoContainer.addEventListener("mouseleave", () => {
     hideControls(50);
 });
 videoContainer.addEventListener("mousemove", (e) => {
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     showCursor();
     handleMousemove(e);
     hideControls(mouse_ctrl_delay);
@@ -739,7 +740,7 @@ videoContainer.addEventListener("fullscreenchange", () => {
 });
 videoContainer.addEventListener('touchmove', () => {
     touchFix = true;
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     hideControls(2500);
 }, {
     passive: false
@@ -768,7 +769,7 @@ duration.addEventListener("touchmove", handleTouchNavigate, {
 
 // Controls events
 controls.addEventListener("click", () => {
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     showCursor();
     hideControls(mouse_ctrl_delay);
 });

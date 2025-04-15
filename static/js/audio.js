@@ -162,7 +162,7 @@ function toggleMainState() {
 }
 
 function handleSettingMenu() {
-    settingMenu.classList.toggle("show-setting-menu");
+    settingMenu.classList.toggle("show");
 }
 
 function saveVolume() {
@@ -295,7 +295,7 @@ function handlePlaybackRate(e) {
         btn.classList.remove("speed-active");
     });
     e.target.classList.add("speed-active");
-    settingMenu.classList.remove("show-setting-menu");
+    settingMenu.classList.remove("show");
     localStorage.setItem("audioSpeed", audio.playbackRate);
 }
 

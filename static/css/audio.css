@@ -221,6 +221,10 @@ body {
     transition: opacity 0.2s;
     z-index: 999;
 }
+.setting-menu.show {
+    opacity: 1;
+    visibility: visible;
+}
 .setting-menu li {
     border-radius: 12px;
     padding: 8px;
@@ -234,10 +238,6 @@ body {
 }
 .speed-active {
     background: #222;
-}
-.show-setting-menu {
-    opacity: 1;
-    visibility: visible;
 }
 .sh_pause {
     display: none;
@@ -263,22 +263,22 @@ body {
 
 /* RESPONSIVE (pain) ZONE */
 
-@media (max-width: 500px) {
+@media (max-width: 520px) {
     .volume {
         display: none;
     }
 }
-@media (max-width: 380px) {
+@media (max-width: 400px) {
     .download {
         display: none;
     }
 }
-@media (max-width: 330px) {
+@media (max-width: 350px) {
     .settings {
         display: none;
     }
 }
-@media (max-width: 280px) {
+@media (max-width: 290px) {
     #mode {
         display: none;
     }
