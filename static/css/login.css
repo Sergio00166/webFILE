@@ -61,7 +61,7 @@ input::placeholder {
 }
 input:hover {
     background-color: #444;
-    transform: scale(1.01);
+    transform: scale(1.012);
 }
 button {
     padding: 18px;
