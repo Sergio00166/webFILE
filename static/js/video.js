@@ -852,7 +852,6 @@ speedSelect.addEventListener('change', function() {
 });
 
 // Main state events
-mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 
 // Touch interaction events

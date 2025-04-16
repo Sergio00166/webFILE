@@ -33,6 +33,7 @@ canvas { position: absolute; }
 }
 #touch-box {
     position: absolute;
+    z-index: 9;
     width: 100%;
     height: 100%;
 }
@@ -45,8 +46,8 @@ img {
     filter: brightness(0) invert(1);
 }
 .fullimg {
-    width: 60%;
-    height: 60%;
+    width: 67%;
+    height: 67%;
 }
 .round-button {
     width: 40px;
@@ -103,6 +104,10 @@ body {
     transform: scale(0);
     transition: all 0.2s;
 }
+.custom-loader.show {
+    opacity: 1 !important;
+    transform: scale(1);
+}
 .main-state {
     opacity: 0;
     height: 80px;
@@ -114,20 +119,21 @@ body {
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
-    background: rgba(40,40,40,0.9);
-    border: 1px solid #111;
+    background: rgba(48,48,56,0.75);
+    border: 1px solid #222;
 }
 .main-state.show {
     transform: scale(1);
     opacity: 1;
 }
 .animate-state {
-    animation: animation 0.4s forwards;
+    animation: animation 0.5s forwards;
 }
 .controls {
     bottom: 0;
     opacity: 0;
     width: 100%;
+    z-index: 99;
     position: absolute;
     transition: all 0.3s;
     box-sizing: border-box;
@@ -176,7 +182,6 @@ body {
     height: 100%;
     position: absolute;
     background-color: #ff6a0045;
-    z-index: 9 !important;
     width: 0;
 }
 .hover-time {
@@ -185,7 +190,6 @@ body {
     position: absolute;
     inset: 0;
     background: #ffffff9a;
-    z-index: 99 !important;
     display: flex;
     align-items: center;
     width: 0;
@@ -420,6 +424,16 @@ button:focus { outline: none; }
 
 /* RESPONSIVE (pain) ZONE */
 
+@media (max-width: 900px) {
+    .main-state {
+        height: 67px;
+        width: 67px;
+    }
+    .loader {
+        height: 90px;
+        width: 90px;
+    }
+}
 @media (max-width: 500px) {
     .play-pause {
         display: none;
@@ -449,28 +463,34 @@ button:focus { outline: none; }
     #mode {
         display: none;
     }
+    .main-state {
+        height: 50px;
+        width: 50px;
+    }
+    .loader {
+        height: 70px;
+        width: 70px;
+    }
 }
 @media (max-width: 220px) {
     .settings {
         display: none;
     }
 }
-@media (max-height: 240px) {
+@media (max-height: 320px) {
     .btn-controls {
         display: none;
     }
+    .video-box, .main-state, .custom-loader {
+        margin-bottom: 8px !important;
+    }
 }
 @media (max-aspect-ratio: 1/1) {
-    .video-box,
-    .state-btn,
-    .custom-loader {
-        margin-bottom: 86px;
+    .video-box, .main-state, .custom-loader {
+        margin-bottom: 36px;
     }
 }
 @media (min-aspect-ratio: 1/1) and (max-height: 320px) {
-    .video-container {
-        padding-bottom: 0;
-    }
     .hover-time .hover-duration {
         font-size: 0.5rem;
     }
