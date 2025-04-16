@@ -56,8 +56,12 @@ input {
     outline: none;
     transition: 0.2s;
 }
-input::placeholder {
-    color: #aaa;
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 86px 16px #111 inset;
+    -webkit-text-fill-color: #fff !important;
+    border: 2px solid #260;
 }
 input:hover {
     background-color: #444;
