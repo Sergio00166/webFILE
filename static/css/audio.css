@@ -196,8 +196,8 @@ body {
 .current-vol::before {
     content: "";
     position: absolute;
-    right: calc((-10px / 2));
-    width: 10px;
+    right: calc((-9px / 2));
+    width: 9px;
     height: 10px;
     display: block;
     border-radius: 50%;
