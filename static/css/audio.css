@@ -40,7 +40,7 @@ body {
 .duration {
     position: relative;
     width: 90%;
-    height: 16px;
+    height: 14px;
     background: #62626274;
     cursor: pointer;
     border-radius: 5px;
@@ -102,10 +102,10 @@ body {
 .current-time::before {
     opacity: 0;
     content: "";
-    width: 14px;
-    height: 15px;
+    width: 18px;
+    height: 20px;
     position: absolute;
-    right: calc((-14px / 2));
+    right: calc((-18px / 2));
     background: #ff6a00;
     border-radius: 50%;
     transition: all 0.2s;
@@ -196,9 +196,9 @@ body {
 .current-vol::before {
     content: "";
     position: absolute;
-    right: -5px;
-    width: 12px;
-    height: 12px;
+    right: calc((-10px / 2));
+    width: 10px;
+    height: 10px;
     display: block;
     border-radius: 50%;
     background: #eee;

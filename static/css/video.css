@@ -148,7 +148,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: calc((100% - 64px));
-    height: 15px;
+    height: 12px;
     background: #62626274;
     cursor: pointer;
     border-radius: 4px;
@@ -197,7 +197,7 @@ body {
 }
 .hover-time .hover-duration {
     position: absolute;
-    background: #3c3c3ca7;
+    background: #202020f0;
     padding: 0.2rem;
     border-radius: 5px;
     font-size: 0.8rem;
@@ -220,10 +220,10 @@ body {
 .current-time::before {
     opacity: 0;
     content: "";
-    width: 14px;
-    height: 15px;
+    width: 16px;
+    height: 18px;
     position: absolute;
-    right: calc((-14px / 2));
+    right: calc((-16px / 2));
     background: #ff6a00;
     border-radius: 50%;
     transition: all 0.2s;
@@ -233,7 +233,6 @@ body {
     opacity: 1;
     transform: scale(1);
 }
-
 .btn-controls {
     padding-top: 1rem;
     font-size: 1.2rem;
@@ -285,9 +284,9 @@ body {
 .current-vol::before {
     content: "";
     position: absolute;
-    right: -5px;
-    width: 12px;
-    height: 12px;
+    right: calc((-10px / 2));
+    width: 10px;
+    height: 10px;
     display: block;
     border-radius: 50%;
     background: #eee;
