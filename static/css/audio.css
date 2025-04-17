@@ -216,9 +216,8 @@ body {
     border: 3px solid #000;
     border-radius: 20px;
     position: absolute;
-    top: -21vh;
-    top: -21dvh;
-    left: -100px;
+    left: -100px;                                                                                                       
+    transform: translateY(-84%);
     transition: opacity 0.2s;
     z-index: 999;
 }
