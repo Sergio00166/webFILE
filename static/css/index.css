@@ -87,8 +87,8 @@ h2 {
 }
 .filename:hover {
     background-color: #3e3e3e;
-    padding-left: 21px;
-    padding-right: 23px;
+    padding-left: 23px;
+    padding-right: 25px;
 }
 .backdir {
     color: white;
@@ -102,7 +102,7 @@ h2 {
 }
 .backdir:hover {
     background-color: #333;
-    padding-left: 14px;
+    padding-left: 16px;
 }
 .controls {
     display: flex;
