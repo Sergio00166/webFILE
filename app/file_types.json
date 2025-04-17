@@ -11,8 +11,8 @@
         ".tiff",  ".ico", ".webp", ".raw", ".heic", ".psd"
     ],
     "audio": [
-        ".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a",
-        ".wma", ".alac", ".opus", ".aiff"
+        ".mp3", ".wav", ".ogg", ".flac", ".aac",
+        ".m4a", ".opus", "mka"
     ],
     "document": [
         ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
@@ -25,8 +25,7 @@
         ".ppt", ".pptx", ".odp", ".pps", ".ppsx"
     ],
     "video": [
-        ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", 
-        ".webm", ".mpeg", ".mpg", ".3gp", ".m4v"
+        ".mp4", ".avi", ".mkv", ".mov", ".webm", ".mpeg", ".mpg"
     ],
     "pdf": [
         ".pdf"
