@@ -36,7 +36,7 @@ button {
     cursor: pointer;
 }
 button:hover {
-    transform: scale(1.03);
+    transform: scale(1.025);
     background: linear-gradient(145deg, #262a33, #101e1f);
 }
 button:disabled {
@@ -54,7 +54,8 @@ h2 {
 }
 .container {
     background-color: #1e1e1e;
-    padding: 20px 30px;
+    padding: 20px;
+    padding-bottom: 21px;
     border-radius: 15px;
     margin-bottom: 30px;
     display: flex;
@@ -77,6 +78,7 @@ h2 {
     border-radius: 10px;
     box-sizing: border-box;
     transition: all 0.2s;
+    cursor: pointer;
 }
 .filename .name {
     text-align: left;

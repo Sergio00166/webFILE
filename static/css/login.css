@@ -90,7 +90,7 @@ button {
 }
 .button-danger:hover {
     background: linear-gradient(145deg, #932, #621);
-    transform: scale(1.026);
+    transform: scale(1.025);
 }
 
 @media (max-height: 600px) {
