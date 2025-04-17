@@ -5,7 +5,7 @@
         ".pl", ".sh", ".vb", ".c#", ".dart", ".scala", ".erl",
         ".rs", ".vhdl", ".asm", ".perl", ".bat", ".ps1", ".cobol",
         ".zig", ".jsx", ".tsx", ".julia", ".ocaml", ".java",
-        ".cmd", ".fish"
+        ".cmd", ".fish", ".yaml", ".yml"
     ],
     "photo": [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg",
