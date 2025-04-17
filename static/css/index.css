@@ -57,6 +57,9 @@ h2 {
     padding: 20px 30px;
     border-radius: 15px;
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .list-group {
     width: 95%;
@@ -67,13 +70,13 @@ h2 {
     align-items: center;
     justify-content: space-between;
     background-color: #2a2a2a;
-    margin: 8px 0;
     padding-top: 12px;
     padding-bottom: 12.5px;
     padding-left: 16px;
     padding-right: 18px;
     border-radius: 10px;
-    transition: 0.2s;
+    box-sizing: border-box;
+    transition: all 0.2s;
 }
 .filename .name {
     text-align: left;
@@ -82,7 +85,8 @@ h2 {
 }
 .filename:hover {
     background-color: #3e3e3e;
-    transform: scale(1.01);
+    padding-left: 21px;
+    padding-right: 23px;
 }
 .backdir {
     color: white;
@@ -91,7 +95,6 @@ h2 {
     border-radius: 10px;
     display: flex;
     align-items: center;
-    margin-bottom: 12px;
     transition: 0.15s;
 }
 .backdir:hover {
