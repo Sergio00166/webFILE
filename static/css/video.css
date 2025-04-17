@@ -63,11 +63,11 @@ img {
     position: relative;
     margin-right: 8px;
     cursor: pointer;
-    transition: all 0.1s;
+    transition: all 0.2s;
 }
 .round-button:hover {
     background: linear-gradient(120deg, #8f9faf, #3f4f5f);
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 .lmbsl {
     background: linear-gradient(120deg, #6f7f10, #3f4f0a);
@@ -321,11 +321,9 @@ body {
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
 }
 .setting-menu li:hover {
     background: #666 !important;
-    transform: scale(1.05);
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
