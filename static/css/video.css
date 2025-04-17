@@ -55,7 +55,7 @@ img {
     border-radius: 50%;
     color: #fafafa;
     background: linear-gradient(145deg, #363a43, #000e0f);
-    border: 2px solid #111;
+    border: 2px solid black;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -293,7 +293,7 @@ body {
 }
 .setting-menu {
     opacity: 0;
-    border: 1px solid black;
+    border: 2px solid black;
     visibility: hidden;
     list-style: none;
     padding-inline-start: 0;

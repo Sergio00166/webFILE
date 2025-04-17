@@ -216,7 +216,8 @@ body {
     border: 3px solid #000;
     border-radius: 20px;
     position: absolute;
-    top: -180px;
+    top: -21vh;
+    top: -21dvh;
     left: -100px;
     transition: opacity 0.2s;
     z-index: 999;
