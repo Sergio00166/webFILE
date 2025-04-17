@@ -32,11 +32,11 @@ button {
     border-radius: 10px;
     color: #fff;
     font-weight: 600;
-    transition: 0.1s;
+    transition: all 0.2s;
     cursor: pointer;
 }
 button:hover {
-    transform: scale(1.04);
+    transform: scale(1.03);
     background: linear-gradient(145deg, #262a33, #101e1f);
 }
 button:disabled {
@@ -95,11 +95,11 @@ h2 {
     border-radius: 10px;
     display: flex;
     align-items: center;
-    transition: 0.15s;
+    transition: all 0.2s;
 }
 .backdir:hover {
     background-color: #333;
-    transform: scale(1.008);
+    padding-left: 14px;
 }
 .controls {
     display: flex;
