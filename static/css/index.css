@@ -92,6 +92,7 @@ h2 {
 }
 .backdir {
     color: white;
+    background-color: #111;
     text-decoration: none;
     padding: 10px;
     border-radius: 10px;
