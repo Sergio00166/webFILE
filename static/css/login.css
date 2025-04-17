@@ -65,7 +65,7 @@ input:-webkit-autofill:focus {
 }
 input:hover {
     background-color: #444;
-    transform: scale(1.012);
+    transform: scale(1.02);
 }
 button {
     padding: 18px;
@@ -81,16 +81,16 @@ button {
     background: linear-gradient(145deg, #24a, #36d);
 }
 .button-upload:hover {
-    background: linear-gradient(145deg, #246, #123);
-    transform: scale(1.02);
+    background: linear-gradient(145deg, #348, #235);
+    transform: scale(1.03);
 }
 .button-danger {
-    background: linear-gradient(145deg, #f11, #f22);
+    background: linear-gradient(145deg, #f11, #f32);
     margin-top: 10px;
 }
 .button-danger:hover {
-    background: linear-gradient(145deg, #832, #621);
-    transform: scale(1.021);
+    background: linear-gradient(145deg, #932, #621);
+    transform: scale(1.031);
 }
 
 @media (max-height: 600px) {
