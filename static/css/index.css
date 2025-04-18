@@ -129,8 +129,8 @@ h2 {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 90vh;
-    height: 90dvh;
+    height: 95vh;
+    height: 95dvh;
 }
 .selected {
     background-color: #aa0000;
