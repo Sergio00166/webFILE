@@ -91,7 +91,7 @@ h2 {
     border-radius: 10px;
     display: flex;
     align-items: center;
-    margin-top: -6px;
+    margin-top: -8px;
 }
 .backdir:hover {
     background-color: #333;
