@@ -74,14 +74,18 @@ var subtitleId = 0;
 let ass_worker;
 
 
-
 /* Start functions zone */
 
-function create_ass_worker(url) {
+async function create_ass_worker(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        alert("Cannot load subtitle [normal mode]");
+        return;
+    }
     return new JASSUB({
         video: video,
         canvas: canvas,
-        subUrl: url,
+        subContent: await response.text(),
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
         useLocalFonts: true,
@@ -98,7 +102,7 @@ function webvtt_subs(url) {
     track.src = url;
     track.default = true;
     track.onerror = ()=>{
-        alert("Cannot load subtitle");
+        alert("Cannot load subtitle [legacy mode]");
     }
     video.appendChild(track);
     track.mode = 'showing';
@@ -106,7 +110,7 @@ function webvtt_subs(url) {
     video.textTracks[0].mode = "showing";
 }
 
-function changeSubs(value) {
+async function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (ass_worker) { ass_worker.destroy(); }
@@ -119,7 +123,7 @@ function changeSubs(value) {
         if (subs_legacy) { 
             webvtt_subs(url + "legacy");
         } else { 
-            ass_worker = create_ass_worker(url);
+            ass_worker = await create_ass_worker(url);
         }
     }
 }
