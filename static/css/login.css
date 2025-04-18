@@ -54,7 +54,6 @@ input {
     background-color: #333;
     color: white;
     outline: none;
-    transition: 0.2s;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -64,8 +63,7 @@ input:-webkit-autofill:focus {
     border: 2px solid #260;
 }
 input:hover {
-    background-color: #444;
-    transform: scale(1.01);
+    background-color: #4a4a4a;
 }
 button {
     padding: 18px;
@@ -75,22 +73,19 @@ button {
     cursor: pointer;
     font-size: 1em;
     font-weight: 600;
-    transition: 0.2s;
 }
 .button-upload {
-    background: linear-gradient(145deg, #24a, #36d);
+    background: #23f;
 }
 .button-upload:hover {
-    background: linear-gradient(145deg, #348, #235);
-    transform: scale(1.015);
+    background: #328;
 }
 .button-danger {
-    background: linear-gradient(145deg, #f11, #f32);
+    background: red;
     margin-top: 10px;
 }
 .button-danger:hover {
-    background: linear-gradient(145deg, #932, #621);
-    transform: scale(1.015);
+    background: #801;
 }
 
 @media (max-height: 600px) {

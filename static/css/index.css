@@ -32,11 +32,9 @@ button {
     border-radius: 10px;
     color: #fff;
     font-weight: 600;
-    transition: all 0.1s;
     cursor: pointer;
 }
 button:hover {
-    transform: scale(1.025);
     background: linear-gradient(145deg, #262a33, #101e1f);
 }
 button:disabled {
@@ -77,7 +75,6 @@ h2 {
     padding-right: 18px;
     border-radius: 10px;
     box-sizing: border-box;
-    transition: all 0.2s;
     cursor: pointer;
 }
 .filename .name {
@@ -87,22 +84,18 @@ h2 {
 }
 .filename:hover {
     background-color: #3e3e3e;
-    padding-left: 23px;
-    padding-right: 25px;
 }
 .backdir {
     color: white;
-    background-color: #111;
     text-decoration: none;
     padding: 10px;
     border-radius: 10px;
     display: flex;
     align-items: center;
-    transition: all 0.2s;
+    margin-top: -6px;
 }
 .backdir:hover {
     background-color: #333;
-    padding-left: 16px;
 }
 .controls {
     display: flex;

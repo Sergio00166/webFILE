@@ -131,7 +131,7 @@ body {
     height: 40px;
     border-radius: 50%;
     background: linear-gradient(120deg, #8f9faf, #3f4f5f);
-    border: 2px solid black;
+    border: 1px solid #0a0a0a;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -139,12 +139,10 @@ body {
     position: relative;
     margin-right: 8px;
     cursor: pointer;
-    transition: all 0.2s;
 }
 .round-button:hover {
     background: linear-gradient(145deg, #363a43, #000e0f);
     color: #fafafa;
-    transform: scale(1.05);
 }
 .round-button:hover img {
     filter: invert(90%);

@@ -63,11 +63,9 @@ img {
     position: relative;
     margin-right: 8px;
     cursor: pointer;
-    transition: all 0.2s;
 }
 .round-button:hover {
     background: linear-gradient(120deg, #8f9faf, #3f4f5f);
-    transform: scale(1.05);
 }
 .lmbsl {
     background: linear-gradient(120deg, #6f7f10, #3f4f0a);
@@ -359,7 +357,6 @@ select option {
     color: #eee;
 }
 .speed-active {
-    background: rgb(64, 64, 64);
     background: rgb(64, 64, 64);
 }
 .setting-menu li:hover {
