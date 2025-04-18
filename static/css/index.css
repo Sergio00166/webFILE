@@ -53,7 +53,7 @@ h2 {
 .container {
     background-color: #1e1e1e;
     padding: 20px;
-    padding-bottom: 23px;
+    padding-bottom: 21px;
     border-radius: 15px;
     margin-bottom: 30px;
     display: flex;
@@ -88,14 +88,10 @@ h2 {
 .backdir {
     color: white;
     text-decoration: none;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 8px;
+    margin-top: -12px;
     display: flex;
     align-items: center;
-    margin-top: -8px;
-}
-.backdir:hover {
-    background-color: #333;
 }
 .controls {
     display: flex;
