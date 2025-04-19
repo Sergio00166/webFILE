@@ -27,7 +27,7 @@
       <span class="custom-loader">
         <img class="loader" src="{{ url_for('index', static='svg/load.gif') }}">
       </span>
-      <span class="main-state state-btn">
+      <span class="main-state">
         <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
         <img class="fullimg sh_mute_st" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
         <img class="fullimg sh_unmute_st" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
@@ -66,7 +66,6 @@
               <span>/</span>
               <span class="total-duration">00:00</span>
             </span>
-            <span>&nbsp;&nbsp;</span>
           </div>
           <div class="side-controls">
             <button class="round-button" onclick="prev()" title="Previous">
@@ -75,7 +74,7 @@
             <button class="round-button" onclick="next()" title="Next">
               <img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}">
             </button>
-            <button class="round-button text" id="mode" onclick="chMode()" title="Loop">1</button>
+            <button class="round-button" id="mode" onclick="chMode()" title="Loop">1</button>
             <span class="settings">
               <button class="round-button" id="settings" title="Menu (hold to enable legacy subs)">
                 <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">

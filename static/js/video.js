@@ -8,6 +8,7 @@ const currentTime = document.querySelector(".current-time");
 const duration = document.querySelector(".duration");
 const buffer = document.querySelector(".buffer");
 const totalDuration = document.querySelector(".total-duration");
+const timeContainer = document.querySelector(".time-container");
 const currentDuration = document.querySelector(".current-duration");
 const controls = document.querySelector(".controls");
 const currentVol = document.querySelector(".current-vol");
@@ -42,6 +43,7 @@ const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 const touchBox = document.getElementById("touch-box");
 
+sh_pause.classList.remove("sh_pause");
 var video = document.querySelector("video");
 var videoContainer = document.querySelector(".video-container");
 var saved_speed = localStorage.getItem("videoSpeed");
@@ -72,14 +74,18 @@ var subtitleId = 0;
 let ass_worker;
 
 
-
 /* Start functions zone */
 
-function create_ass_worker(url) {
+async function create_ass_worker(url) {
+    const response = await fetch(url);
+    if (!response.ok) {
+        alert("Cannot load subtitle [normal mode]");
+        return;
+    }
     return new JASSUB({
         video: video,
         canvas: canvas,
-        subUrl: url,
+        subContent: await response.text(),
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
         useLocalFonts: true,
@@ -96,7 +102,7 @@ function webvtt_subs(url) {
     track.src = url;
     track.default = true;
     track.onerror = ()=>{
-        alert("Cannot load subtitle");
+        alert("Cannot load subtitle [legacy mode]");
     }
     video.appendChild(track);
     track.mode = 'showing';
@@ -104,7 +110,7 @@ function webvtt_subs(url) {
     video.textTracks[0].mode = "showing";
 }
 
-function changeSubs(value) {
+async function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (ass_worker) { ass_worker.destroy(); }
@@ -117,7 +123,7 @@ function changeSubs(value) {
         if (subs_legacy) { 
             webvtt_subs(url + "legacy");
         } else { 
-            ass_worker = create_ass_worker(url);
+            ass_worker = await create_ass_worker(url);
         }
     }
 }
@@ -251,7 +257,7 @@ function handleSettingMenu() {
     if (sttbtnpress) {
         sttbtnpress = false;
     } else {
-        settingMenu.classList.toggle("show-setting-menu");
+        settingMenu.classList.toggle("show");
         isCursorOnControls = !isCursorOnControls;
     }
 }
@@ -293,7 +299,7 @@ function play() {
 
 function pause() {
     video.pause();
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     show_main_animation("play");
     handleVideoIcon();
     sh_pause.classList.add("sh_pause");
@@ -365,6 +371,7 @@ function toggleMuteUnmute() {
         handleVideoIcon();
         show_main_animation("unmute");
     }
+    timeContainer.style.display = "block";
     localStorage.setItem("videoMuted", muted);
 }
 
@@ -372,8 +379,8 @@ function hideControls(delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
         if (!video.paused && !isCursorOnControls) {
-            controls.classList.remove("show-controls");
-            settingMenu.classList.remove("show-setting-menu");
+            controls.classList.remove("show");
+            settingMenu.classList.remove("show");
             for (let i = 0; i < menuButtons.length; i++) {
                 menuButtons[i].style.display = "block";
             }
@@ -468,7 +475,7 @@ function show_main_animation(mode) {
     sh_fordward_st.classList.add("sh_fordward_st");
     switch (mode) {
         case "play":
-            mainState.classList.add("show-state");
+            mainState.classList.add("show");
             sh_play_st.classList.remove("sh_play_st");
             break;
         case "mute":
@@ -488,7 +495,7 @@ function show_main_animation(mode) {
             mainState.classList.add("animate-state");
             break;
         default:
-            mainState.classList.remove("show-state");
+            mainState.classList.remove("show");
             break;
     }
 }
@@ -709,10 +716,10 @@ window.addEventListener('fullscreenchange', scaleVideo);
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
 video.addEventListener("waiting", () => {
-    loader.classList.add("show-state");
+    loader.classList.add("show");
 });
 video.addEventListener("playing", () => {
-    loader.classList.remove("show-state");
+    loader.classList.remove("show");
 });
 
 // Video container events
@@ -722,7 +729,7 @@ videoContainer.addEventListener("mouseleave", () => {
     hideControls(50);
 });
 videoContainer.addEventListener("mousemove", (e) => {
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     showCursor();
     handleMousemove(e);
     hideControls(mouse_ctrl_delay);
@@ -737,7 +744,7 @@ videoContainer.addEventListener("fullscreenchange", () => {
 });
 videoContainer.addEventListener('touchmove', () => {
     touchFix = true;
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     hideControls(2500);
 }, {
     passive: false
@@ -766,17 +773,19 @@ duration.addEventListener("touchmove", handleTouchNavigate, {
 
 // Controls events
 controls.addEventListener("click", () => {
-    controls.classList.add("show-controls");
+    controls.classList.add("show");
     showCursor();
     hideControls(mouse_ctrl_delay);
 });
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
+    if (!muted) { timeContainer.style.display = "none"; }
     muted ? totalVol.classList.remove("show") : totalVol.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
     totalVol.classList.remove("show");
+    setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
 });
 totalVol.addEventListener("mousedown", (e) => {
     mouseDownVol = true;
@@ -847,7 +856,6 @@ speedSelect.addEventListener('change', function() {
 });
 
 // Main state events
-mainState.addEventListener("click", toggleMainState);
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 
 // Touch interaction events

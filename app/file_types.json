@@ -1,17 +1,18 @@
 {
     "source": [
-        ".c", ".cpp", ".java", ".py", ".html", ".css", ".js",
-        ".php",  ".rb", ".go", ".ini", ".bat", ".cmd", ".sh",
-        ".md", ".yml", ".yaml", ".asm", ".cfg", ".rs", ".htm",
-        ".config", ".reg", ".ps1", ".ts", ".kt"
+        ".js", ".py", ".java", ".cpp", ".c", ".html", ".css", ".rb",
+        ".php", ".ts", ".swift", ".go", ".kt", ".lua", ".pl", ".sh",
+        ".vb", ".c#", ".dart", ".scala", ".erl", ".rs", ".vhdl", 
+        ".asm", ".perl", ".bat", ".ps1", ".cobol",".zig", ".jsx",
+        ".tsx",".julia", ".ocaml", ".java", ".cmd", ".fish"
     ],
     "photo": [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg",
         ".tiff",  ".ico", ".webp", ".raw", ".heic", ".psd"
     ],
     "audio": [
-        ".mp3", ".wav", ".ogg", ".flac", ".aac", ".m4a",
-        ".wma", ".alac", ".opus", ".aiff"
+        ".mp3", ".wav", ".ogg", ".flac", ".aac",
+        ".m4a", ".opus", "mka"
     ],
     "document": [
         ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
@@ -24,8 +25,7 @@
         ".ppt", ".pptx", ".odp", ".pps", ".ppsx"
     ],
     "video": [
-        ".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", 
-        ".webm", ".mpeg", ".mpg", ".3gp", ".m4v"
+        ".mp4", ".avi", ".mkv", ".mov", ".webm", ".mpeg", ".mpg"
     ],
     "pdf": [
         ".pdf"

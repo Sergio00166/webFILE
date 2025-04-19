@@ -23,6 +23,7 @@ const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
 const randomLink = document.getElementById("random");
 
+sh_pause.classList.remove("sh_pause");
 var audio = document.querySelector("audio");
 var mode = document.getElementById("mode");
 var volumeVal = localStorage.getItem("audioVolume");
@@ -161,7 +162,7 @@ function toggleMainState() {
 }
 
 function handleSettingMenu() {
-    settingMenu.classList.toggle("show-setting-menu");
+    settingMenu.classList.toggle("show");
 }
 
 function saveVolume() {
@@ -294,7 +295,7 @@ function handlePlaybackRate(e) {
         btn.classList.remove("speed-active");
     });
     e.target.classList.add("speed-active");
-    settingMenu.classList.remove("show-setting-menu");
+    settingMenu.classList.remove("show");
     localStorage.setItem("audioSpeed", audio.playbackRate);
 }
 

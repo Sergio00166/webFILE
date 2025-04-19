@@ -1,6 +1,5 @@
 /* Code by Sergio00166 */
 
-img { margin-right: 0.4em; }
 .small { display: none; }
 .size  { margin-left: 3em; }
 .date  { margin-left: 1em; }
@@ -9,12 +8,15 @@ img { margin-right: 0.4em; }
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: #020202;
+    background-color: #000;
     color: #f0f0f0;
     margin: 0;
     user-select: none;
 }
-
+img {
+    pointer-events: none;
+    margin-right: 0.4em;
+}
 pre {
     white-space: pre-wrap;
     font-family: inherit;
@@ -22,7 +24,6 @@ pre {
     margin: 0;
     user-select: text;
 }
-
 button {
     flex: 1;
     padding: 10px;
@@ -31,21 +32,16 @@ button {
     border-radius: 10px;
     color: #fff;
     font-weight: 600;
-    transition: 0.1s;
     cursor: pointer;
 }
-
 button:hover {
-    transform: scale(1.04);
     background: linear-gradient(145deg, #262a33, #101e1f);
 }
-
 button:disabled {
     background: #111;
     color: gray;
     cursor: not-allowed;
 }
-
 h2 {
     background: #2f2f2f;
     color: #eee;
@@ -54,81 +50,71 @@ h2 {
     padding: 20px;
     border-radius: 12px;
 }
-
 .container {
     background-color: #1e1e1e;
-    padding: 20px 30px;
+    padding: 20px;
+    padding-bottom: 21px;
     border-radius: 15px;
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
-
 .list-group {
     width: 95%;
     margin: auto;
 }
-
 .filename {
     display: flex;
     align-items: center;
     justify-content: space-between;
     background-color: #2a2a2a;
-    margin: 8px 0;
     padding-top: 12px;
     padding-bottom: 12.5px;
     padding-left: 16px;
     padding-right: 18px;
     border-radius: 10px;
-    transition: 0.2s;
+    box-sizing: border-box;
+    cursor: pointer;
 }
-
 .filename .name {
     text-align: left;
     flex: 1;
     margin-right: 10px;
 }
-
 .filename:hover {
     background-color: #3e3e3e;
-    transform: scale(1.01);
 }
-
 .backdir {
     color: white;
     text-decoration: none;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 8px;
+    margin-top: -8px;
     display: flex;
     align-items: center;
-    margin-bottom: 12px;
-    transition: 0.15s;
+    border-radius: 10px;
 }
-
 .backdir:hover {
-    background-color: #333;
-    transform: scale(1.008);
+    background-color: #2e2e2e;
 }
-
 .controls {
     display: flex;
     flex-direction: row;
     gap: 10px;
     margin-bottom: 20px;
 }
-
 .ctrl_group {
     display: flex;
     flex: 1;
     gap: 10px;
     flex-wrap: wrap;
 }
-
 .ctrl_flex {
     display: flex;
     flex: 1;
     gap: 10px;
     flex-wrap: wrap;
 }
-
 .load_container {
     background-color: #f9f9f9;
     padding-top: 20px;
@@ -138,16 +124,14 @@ h2 {
     font-weight: 500; 
     color: black;
 }
-
 #loader {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 90vh;
-    height: 90dvh;
+    height: 95vh;
+    height: 95dvh;
 }
-
 .selected {
     background-color: #aa0000;
 }
