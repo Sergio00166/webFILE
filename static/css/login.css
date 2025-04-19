@@ -75,17 +75,17 @@ button {
     font-weight: 600;
 }
 .button-upload {
-    background: #23f;
+  background-color: #0d6efd;
 }
 .button-upload:hover {
-    background: #328;
+  background-color: #0b4eb7;
 }
 .button-danger {
-    background: red;
-    margin-top: 10px;
+  background-color: #ff2535;
+  margin-top: 12px;
 }
 .button-danger:hover {
-    background: #801;
+  background-color: #b81323;
 }
 
 @media (max-height: 600px) {
