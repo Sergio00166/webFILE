@@ -89,9 +89,13 @@ h2 {
     color: white;
     text-decoration: none;
     padding: 8px;
-    margin-top: -12px;
+    margin-top: -8px;
     display: flex;
     align-items: center;
+    border-radius: 10px;
+}
+.backdir:hover {
+    background-color: #2e2e2e;
 }
 .controls {
     display: flex;
