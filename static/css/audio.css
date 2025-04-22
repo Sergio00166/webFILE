@@ -27,6 +27,7 @@ body {
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
+    margin-bottom: 24px;
 }
 .audio-container h2 {
     text-align: center;
