@@ -12,9 +12,10 @@
 </head>
 <body>
     <div id="loader" style="display: none;">
-        <div class="load_container">
-            <img src="{{ url_for('index', static='svg/load.gif') }}">
-            <p>Please wait...</p>
+        <div class="load-card">
+            <h1>Processing</h1>
+            <div class="progress-bar"></div>
+            <h3>Please wait...</h3>
         </div>
     </div>
     <div class="list-group">
