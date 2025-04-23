@@ -15,12 +15,6 @@ body {
     user-select: none;
 }
 .audio-container {
-    background: #111;
-    padding: 24px;
-    padding-top: 60px;
-    padding-bottom: 56px;
-    border-radius: 36px;
-    border: 2px solid #333;
     width: 90vw;
     max-width: 800px;
     display: flex;
