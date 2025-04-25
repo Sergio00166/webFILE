@@ -203,13 +203,22 @@ function cycleLoop() {
 }
 
 function prev() {
-    if (isShuffled) randomLink.click();
-    else prevLink.click();
+    if (isShuffled) {
+        window.history.go(-1);
+    } else {
+        prevLink.click();
+    }
 }
 
 function next() {
-    if (isShuffled) randomLink.click();
-    else nextLink.click();
+    if (isShuffled) {
+        window.history.forward();
+        setTimeout(() => {
+            randomLink.click();
+        }, 250);
+    } else {
+        nextLink.click();
+    }
 }
 
 function download() {
