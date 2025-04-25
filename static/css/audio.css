@@ -108,6 +108,10 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.1s;
+}
+.control-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 .control-btn img {
     filter: invert(0.9);
@@ -184,8 +188,12 @@ body {
     border: none;
     cursor: pointer;
     font-size: 1.5rem;
-    color: #0a84ff;
     margin: 0;
+    transition: all 0.1s;
+}
+.extra-controls button:hover {
+    filter: contrast(6);
+    color: #88f
 }
 .download-btn img {
     width: 24px;
