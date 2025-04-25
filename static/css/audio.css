@@ -6,7 +6,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: #121212;
+    background-color: #000;
     color: #eee;
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -31,14 +31,7 @@ body {
     align-items: center;
     width: 100%;
     margin-bottom: 8px;
-}
-.nav-btn {
-    background: none;
-    border: none;
-    color: #0a84ff;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 6px;
+    user-select: text;
 }
 .player-title {
     margin: auto;
@@ -49,12 +42,6 @@ body {
     font-weight: 600;
     color: #eee;
     word-break: break-all;
-}
-.controls {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 .time-bar {
     width: 100%;
@@ -104,24 +91,19 @@ body {
     align-items: center;
     justify-content: space-between;
 }
-.control-btn {
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 12px;
+.controls {
+    width: 100%;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
+}
+.icon-menu {
+    width: 30px;
+    height: 30px;
     transition: all 0.1s;
 }
-.control-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-.control-btn img {
-    filter: invert(0.9);
-    width: 24px;
-    height: 24px;
+.icon-menu:hover {
+    filter: invert(1);
 }
 .volume-control {
     width: 100%;
@@ -185,9 +167,7 @@ body {
     align-items: space-between;
     justify-content: space-around;
 }
-.download-btn,
-.shuffle-btn,
-.loop-btn {
+.extra-controls button {
     padding: 0;
     margin: 0;
     border: none;
@@ -195,19 +175,51 @@ body {
     background: none;
     cursor: pointer;
 }
-.download-btn img,
-.shuffle-btn img,
-.loop-btn img {
-     width: 30px;
-     height: 30px;
-}
 .speed-btn {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 18px;
     color: #0a84ff;
+    transition: all 0.1s;
 }
+.speed-btn:hover {
+    filter: invert(1);
+}
+.control-btn {
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s;
+}
+.control-btn img {
+    filter: invert(1);
+}
+.control-btn:hover {
+    background: rgba(64, 192, 48, 0.4);
+}
+.control-btn img {
+    width: 24px;
+    height: 24px;
+}
+.nav-btn {
+    background: none;
+    border: none;
+    color: #0a84ff;
+    font-size: 14px;
+    cursor: pointer;
+    padding: 6px;
+    transition: all 0.1s;
+}
+.nav-btn:hover {
+    filter: invert(1);
+}
+
 
 /* RESPONSIVE  ZONE */
 
