@@ -39,6 +39,7 @@ body {
 }
 .player-title {
     margin: auto;
+    margin-top: 6px;
     margin-bottom: 36px;
     text-align: center;
     font-size: 24px;
@@ -189,6 +190,7 @@ body {
     border: none;
     height: 100%;
     background: none;
+    cursor: pointer;
 }
 .download-btn img,
 .shuffle-btn img,
@@ -237,7 +239,8 @@ body {
         height: 24px;
     }
     .player-title {
-        margin-bottom: 4px;
+        margin-top: 12px;
+        margin-bottom: 16px;
         font-size: 20px;
     }
 }
@@ -248,6 +251,9 @@ body {
     .playback-controls {
         align-items: center;
         justify-content: center;
+    }
+    span {
+        display: none;
     }
 }
 @media (max-width: 120px) {
