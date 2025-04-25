@@ -9,6 +9,9 @@ body {
     background-color: #121212;
     color: #eee;
     font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
 }
 .audio-player {
     max-width: 500px;
