@@ -12,10 +12,10 @@ body {
     color: #f0f0f0;
     margin: 0;
     user-select: none;
+    word-break: break-all;
 }
 img {
     pointer-events: none;
-    margin-right: 0.4em;
 }
 pre {
     white-space: pre-wrap;
@@ -79,10 +79,11 @@ h2 {
     box-sizing: border-box;
     cursor: pointer;
 }
-.filename .name {
+.name {
     text-align: left;
     flex: 1;
     margin-right: 10px;
+    margin-left: 0.4rem;
 }
 .filename:hover {
     background-color: #3e3e3e;
@@ -136,7 +137,6 @@ h2 {
     animation: fadeIn 0.5s ease-out;
     font-family: sans-serif;
     max-width: 100vw;
-    word-break: break-word;
 }
 
 .load_container h1,h3 {
@@ -183,7 +183,6 @@ h2 {
     100% { left: 100%; }
 }
 
-
 .folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) brightness(100%) contrast(100%); }
 .files { filter: brightness(0) invert(1); }
 .goback { filter: saturate(50%) contrast(50%); }
@@ -218,7 +217,7 @@ h2 {
 }
 @media (max-width: 240px) {
     .filename { padding: 5px 0; border-bottom: 2px solid #000; }
-    .image { display: none; }
+    .filename img { display: none; }
     .backdir .name { display: none; }
     .small { display: inline; }
     .ctrl_group { flex-direction: column; }

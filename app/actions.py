@@ -29,6 +29,9 @@ def serveFiles_page(path,ACL,root,client,folder_size):
         elif "raw" in request.args or client!="normal":
             return send_file(path)
 
+        elif file_type=="webpage":
+            return send_file(path,mimetype='text/html')
+
         # Custom player for each multimedia format
         elif file_type=="video":
             subs = request.args["subs"] if "subs" in request.args else ""

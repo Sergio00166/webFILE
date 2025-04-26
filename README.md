@@ -4,7 +4,8 @@
 This web server facilitates file sharing via a web browser, allowing users to stream videos, music, and other file types.    
 It supports file uploads, creation, and deletion, all managed under a single "write" permission group. Access control is
 handled through ACLs (Access Control Lists), enabling administrators to set permissions for each resource.
-Users can be granted or denied read-only access, write permissions (upload, create, delete), or complete access restriction to specific resources.    
+Users can be granted or denied read-only access, write permissions (upload, create, delete), or complete access restriction to specific resources.
+Also if an html file with extension .web will actuate as an HTML page as .html is interpreted as plain text by default.    
 
 ## Multimedia (video) ##
  - All video/audio codecs supported by the browser (this server does not use transcoding)
