@@ -101,7 +101,7 @@ function formatTime(sec) {
 }
 
 function updateSeekBar() {
-    const percent = Math.floor((audio.currentTime/audio.duration)*100);
+    const percent = (audio.currentTime/audio.duration)*100;
     seekBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
     currentTimeElem.textContent = formatTime(audio.currentTime);
     seekBar.value = percent;
