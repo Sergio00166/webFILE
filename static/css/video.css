@@ -218,10 +218,10 @@ body {
 .current-time::before {
     opacity: 0;
     content: "";
-    width: 16px;
+    width: 17px;
     height: 18px;
     position: absolute;
-    right: calc((-16px / 2));
+    right: calc((-17px / 2));
     background: #ff6a00;
     border-radius: 50%;
     transition: all 0.2s;
@@ -251,43 +251,37 @@ body {
     display: flex;
     cursor: pointer;
 }
-.max-vol {
-    width: 0;
+#volume-bar {
     height: 3px;
+    outline: none;
     cursor: pointer;
-    background: #ffffff6e;
-    transition: all 0.15s;
-    transform: scaleX(0);
-    transform-origin: left;
+    appearance: none;
+    border-radius: 2px;
     visibility: hidden;
-    display: flex;
-    align-items: center;
+    width: 0 !important;
+    background: #e1e1e1;
+    transition: all 0.1s;
+    -webkit-appearance: none;
 }
-.max-vol.show {
-    width: 48px;
+#volume-bar::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+    appearance: none;
+    border-radius: 50%;
+    background: #007aff;
+    -webkit-appearance: none;
+}
+#volume-bar::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #007aff;
+}
+#volume-bar.show {
+    width: 48px !important;
     visibility: visible;
     transform: scaleX(1);
     margin-right: 16px;
-}
-.current-vol {
-    position: absolute;
-    inset: 0;
-    width: 20%;
-    height: 100%;
-    background: #fff;
-    display: flex;
-    transition: none;
-    align-items: center;
-}
-.current-vol::before {
-    content: "";
-    position: absolute;
-    right: calc((-9px / 2));
-    width: 9px;
-    height: 10px;
-    display: block;
-    border-radius: 50%;
-    background: #eee;
 }
 .setting-menu {
     opacity: 0;
