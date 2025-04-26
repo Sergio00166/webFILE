@@ -94,7 +94,7 @@ async function executeDownloads() {
             let url = div.dataset.value;
             if (!url) continue;
             if (div.hasAttribute('isdir')) {
-                if (!path.endsWith('/')) path += '/';
+                if (!url.endsWith('/')) url += '/';
                 const suffix = "?tar";
             } else {
                 const suffix = "?raw";
