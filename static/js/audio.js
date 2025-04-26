@@ -23,10 +23,6 @@ const loopSameImg = document.getElementById('loopSame');
 let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
 let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
 
-audio.addEventListener('loadeddata', () => {
-    toggleMainState();
-})
-
 function updateLoopButton() {
     if (loopMode === 0) {
         audio.loop = false;
@@ -125,6 +121,8 @@ volumeBar.addEventListener('input', (e) => {
 
 audio.addEventListener('loadeddata', () => {
     totalTimeElem.textContent = formatTime(audio.duration);
+    toggleMainState();
+    updateVolumeBar();
 });
 audio.addEventListener('timeupdate', updateSeekBar);
 audio.addEventListener('ended', () => {
