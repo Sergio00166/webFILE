@@ -3,6 +3,7 @@ body {
     padding: 0;
     width: 100%;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,6 +66,7 @@ body {
     background: #333;
     border-radius: 2px;
     outline: none;
+    cursor: pointer;
     background: linear-gradient(to right, #0a84ff 0%, #333 0%);
 }
 #seek-bar::-webkit-slider-thumb {
@@ -74,14 +76,12 @@ body {
     height: 10px;
     border-radius: 50%;
     background: #0a84ff;
-    cursor: pointer;
 }
 #seek-bar::-moz-range-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #0a84ff;
-    cursor: pointer;
 }
 .playback-controls {
     margin-top: 16px;
@@ -96,14 +96,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-.icon-menu {
-    width: 30px;
-    height: 30px;
-    transition: all 0.1s;
-}
-.icon-menu:hover {
-    filter: invert(1);
 }
 .volume-control {
     width: 100%;
@@ -142,6 +134,7 @@ body {
     background: #e1e1e1;
     border-radius: 2px;
     outline: none;
+    cursor: pointer;
     background: linear-gradient(to right, #007aff 100%, #e1e1e1 0%);
 }
 #volume-bar::-webkit-slider-thumb {
@@ -151,14 +144,12 @@ body {
     height: 10px;
     border-radius: 50%;
     background: #007aff;
-    cursor: pointer;
 }
 #volume-bar::-moz-range-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #007aff;
-    cursor: pointer;
 }
 .extra-controls {
     width: 100%;
@@ -184,11 +175,11 @@ body {
     transition: all 0.1s;
 }
 .speed-btn:hover {
-    filter: invert(1);
+    color: #aad4ff;
 }
 .control-btn {
     border: none;
-    background: rgba(255, 255, 255, 0.2);
+    background: #def3;
     cursor: pointer;
     padding: 6px;
     border-radius: 12px;
@@ -201,7 +192,7 @@ body {
     filter: invert(1);
 }
 .control-btn:hover {
-    background: rgba(64, 192, 48, 0.4);
+    background: #def6;
 }
 .control-btn img {
     width: 24px;
@@ -210,16 +201,16 @@ body {
 .nav-btn {
     background: none;
     border: none;
-    color: #0a84ff;
-    font-size: 14px;
     cursor: pointer;
-    padding: 6px;
-    transition: all 0.1s;
 }
-.nav-btn:hover {
-    filter: invert(1);
+.nav-btn img {
+    width: 40px;
+    height: 40px;
 }
-
+.icon-menu {
+    width: 30px;
+    height: 30px;
+}
 
 /* RESPONSIVE  ZONE */
 
