@@ -73,7 +73,87 @@ var subtitleId = 0;
 let ass_worker;
 
 
-/* Start functions zone */
+/* Inicialitate everything */
+
+if (subs_legacy != null) {
+    if (subs_legacy == "true") {
+        subs_legacy = true;
+        settingsBtn.classList.add('lmbsl');
+    } else {
+        subs_legacy = false;
+    }
+} else {
+    subs_legacy = false;
+}
+
+for (var i = 0; i < subtitleSelect.options.length; i++) {
+    if (subtitleSelect.options[i].text ===
+        localStorage.getItem("videoSubs")) {
+        subtitleId = i;  break;
+    }
+}
+subtitleSelect.selectedIndex = subtitleId;
+subtitleId = subtitleId - 1;
+changeSubs(subtitleId);
+
+if (saved_speed != null) {
+    video.playbackRate = parseFloat(saved_speed);
+    for (let i = 0; i < speedSelect.options.length; i++) {
+        if (speedSelect.options[i].value === saved_speed) {
+            speedSelect.selectedIndex = i;
+            break;
+        }
+    }
+} else {
+    speedSelect.selectedIndex = 3;
+}
+
+if (currentMode != null) {
+    currentMode = parseInt(currentMode);
+    mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
+} else {
+    currentMode = 0;
+}
+
+if (volumeVal === null) {
+    volumeVal = 1;
+}
+video.volume = parseFloat(volumeVal);
+volumeBar.value = video.volume;
+updateVolumeBar();
+
+if (muted != null) {
+    if (muted == "true") {
+        muted = true;
+        video.volume = 0;
+    } else {
+        muted = false;
+    }
+} else {
+    muted = false;
+}
+handleVideoIcon();
+
+video.addEventListener('loadeddata', () => {
+    (function wait4ready() {
+        if (isNaN(video.duration) || video.duration === 0) {
+            return setTimeout(wait4ready, 25);
+        }
+        video.play().catch(() => {});
+        if (video.paused) {
+            pause();
+        }
+        totalDuration.innerHTML = showDuration(video.duration);
+        video.ontimeupdate = handleProgressBar;
+        video.onended = handleVideoEnded;
+        split_timeline_chapters(); // Set chapters
+        loadTracks(); // Set all audio tracks info
+        fix_aspect_ratio(); // Fix the aspect ratio
+    })();
+});
+
+
+/* Video helpers zone */
 
 async function create_ass_worker(url) {
     const response = await fetch(url);
@@ -149,88 +229,6 @@ function scaleVideo() {
     video.style.width = (vw * scale) + "px";
     video.style.height = (vh * scale) + "px";
 }
-
-
-/* Inicialitate everything */
-{
-    if (subs_legacy != null) {
-        if (subs_legacy == "true") {
-            subs_legacy = true;
-            settingsBtn.classList.add('lmbsl');
-        } else {
-            subs_legacy = false;
-        }
-    } else {
-        subs_legacy = false;
-    }
-
-    for (var i = 0; i < subtitleSelect.options.length; i++) {
-        if (subtitleSelect.options[i].text ===
-            localStorage.getItem("videoSubs")) {
-            subtitleId = i;  break;
-        }
-    }
-    subtitleSelect.selectedIndex = subtitleId;
-    subtitleId = subtitleId - 1;
-    changeSubs(subtitleId);
-
-    if (saved_speed != null) {
-        video.playbackRate = parseFloat(saved_speed);
-        for (let i = 0; i < speedSelect.options.length; i++) {
-            if (speedSelect.options[i].value === saved_speed) {
-                speedSelect.selectedIndex = i;
-                break;
-            }
-        }
-    } else {
-        speedSelect.selectedIndex = 3;
-    }
-
-    if (currentMode != null) {
-        currentMode = parseInt(currentMode);
-        mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
-    } else {
-        currentMode = 0;
-    }
-
-    if (volumeVal === null) {
-        volumeVal = 1;
-    }
-    video.volume = parseFloat(volumeVal);
-    volumeBar.value = video.volume;
-    updateVolumeBar();
-
-    if (muted != null) {
-        if (muted == "true") {
-            muted = true;
-            video.volume = 0;
-        } else {
-            muted = false;
-        }
-    } else {
-        muted = false;
-    }
-    handleVideoIcon();
-
-    video.addEventListener('loadeddata', () => {
-        (function wait4ready() {
-            if (isNaN(video.duration) || video.duration === 0) {
-                return setTimeout(wait4ready, 25);
-            }
-            video.play().catch(() => {});
-            if (video.paused) {
-                pause();
-            }
-            totalDuration.innerHTML = showDuration(video.duration);
-            video.ontimeupdate = handleProgressBar;
-            video.onended = handleVideoEnded;
-            split_timeline_chapters(); // Set chapters
-            loadTracks(); // Set all audio tracks info
-            fix_aspect_ratio(); // Fix the aspect ratio
-        })();
-    });
-}
-
 
 
 /* Main functions zone */
