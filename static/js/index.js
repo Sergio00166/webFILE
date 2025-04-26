@@ -225,4 +225,14 @@ function uploadFiles(files, isDir = false) {
         .finally(() => location.reload());
 }
 
+function enableDragAndDropUpload(dropArea, selectDirectory = false) {
+    dropArea.addEventListener("dragover", e => e.preventDefault());
+    dropArea.addEventListener("drop", e => {
+        e.preventDefault();
+        const files = Array.from(e.dataTransfer.files);
+        if(files.length && confirm(`¿Subir ${files.length} archivo(s)?`)) {
+            uploadFiles(files, selectDirectory);
+        }
+    });
+}
 enableDragAndDropUpload(document);
