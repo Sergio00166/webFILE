@@ -95,9 +95,9 @@ async function executeDownloads() {
             if (!url) continue;
             if (div.hasAttribute('isdir')) {
                 if (!url.endsWith('/')) url += '/';
-                const suffix = "?tar";
+                suffix = "?tar";
             } else {
-                const suffix = "?raw";
+                suffix = "?raw";
             }
             downloadURL(url + suffix);
             await delay(100);
