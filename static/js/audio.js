@@ -1,3 +1,5 @@
+/* Code by Sergio00166 */
+
 const audio = document.getElementById('audio');
 const iconPlay = document.querySelector('.icon-play');
 const iconPause = document.querySelector('.icon-pause');
@@ -176,7 +178,7 @@ function play() {
 
 function toggleMainState() {
     if (audio.paused) { play();  }
-    else              { pause(); }
+    else { pause(); }
 }
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
