@@ -1,412 +1,237 @@
 /* Code by Sergio00166 */
 
-function showLoader() {
-    document.getElementById("loader").style.display = "";
-    document.querySelector(".list-group").style.display = "none";
-}
-
-function changeURL(mode) {
-    var url = window.location.href;
-    var urlObj = new URL(url);
-    urlObj.searchParams.set("sort", mode);
-    window.history.replaceState({}, document.title, urlObj.href);
-    window.location.reload();
-}
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
 
 let selectMode = false;
-const selectedElements = {};
+const selected = new Map();
 
-function toggleSelectMode() {
+// Cached buttons
+const buttons = {
+    select: $('#selectBtn'),
+    del: $('#delBtn'),
+    copy: $('#copyBtn'),
+    move: $('#moveBtn'),
+    ren: $('#renBtn'),
+    invert: $('#invertBtn'),
+};
+
+const showLoader = () => {
+    $('#loader').style.display = '';
+    $('.list-group').style.display = 'none';
+};
+
+const changeURL = mode => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', mode);
+    history.replaceState({}, document.title, url);
+    location.reload();
+};
+
+const toggleSelectMode = () => {
     selectMode = !selectMode;
-    const buttonText = selectMode ? 'CANCEL' : 'SELECT';
-    document.getElementById('selectBtn').textContent = buttonText;
-    document.getElementById('delBtn').disabled = !selectMode;
-    document.getElementById('copyBtn').disabled = !selectMode;
-    document.getElementById('moveBtn').disabled = !selectMode;
-    document.getElementById('renBtn').disabled = !selectMode;
-    document.getElementById('invertBtn').disabled = !selectMode;
-    if (!selectMode) {
-        deselectAll();
-    }
-}
+    buttons.select.textContent = selectMode ? 'CANCEL' : 'SELECT';
+    Object.values(buttons).slice(1).forEach(btn => btn.disabled = !selectMode);
+    if (!selectMode) deselectAll();
+};
 
-function deselectAll() {
-    document.querySelectorAll('.filename.selected').forEach(div => {
+const deselectAll = () => {
+    selected.forEach((div, id) => div.classList.remove('selected'));
+    selected.clear();
+};
+
+const selectDiv = div => {
+    const id = div.id;
+    if (selected.has(id)) {
         div.classList.remove('selected');
-        delete selectedElements[div.id];
+        selected.delete(id);
+    } else {
+        div.classList.add('selected');
+        selected.set(id, div);
+    }
+};
+
+const handleDivClick = div => {
+    if (selectMode) return selectDiv(div);
+    const url = div.dataset.value;
+    if (!url) return;
+    div.hasAttribute('isdir') ?
+        location.href = url :
+        window.open(url, '_blank');
+};
+
+enableDelegation();
+
+function enableDelegation() {
+    const container = $('div.container');
+    container.addEventListener('click', e => {
+        const d = e.target.closest('.filename');
+        if (d) handleDivClick(d);
+    });
+    container.addEventListener('keydown', e => {
+        if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.filename')) {
+            e.preventDefault();
+            handleDivClick(e.target.closest('.filename'));
+        }
     });
 }
 
-function selectDiv(divId) {
-    if (selectMode) {
-        const div = document.getElementById(divId);
-        if (div) {
-            if (selectedElements[divId]) {
-                delete selectedElements[divId];
-                div.classList.remove('selected');
-            } else {
-                selectedElements[divId] = div;
-                div.classList.add('selected');
-            }
-        }
-    }
-}
+const delay = ms => new Promise(r => setTimeout(r, ms));
 
-function handleDivClick(div) {
-    if (selectMode) {
-        selectDiv(div.id);
-    } else {
-        const url = div.getAttribute('data-value');
-        if (url) {
-            if (div.hasAttribute('isdir')) {
-                window.location.href = url;
-            } else {
-                window.open(url, '_blank');
-            }
-        }
-    }
-}
-
-function downloadURL(downloadUrl) {
-    const tempLink = document.createElement('a');
-    tempLink.href = downloadUrl;
-    tempLink.download = "";
-    tempLink.style.display = 'none';
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    document.body.removeChild(tempLink);
-}
-
-function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+const downloadURL = url => {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    a.style.display = 'none';
+    document.body.append(a);
+    a.click();
+    a.remove();
+};
 
 async function executeDownloads() {
     if (selectMode) {
-        for (const id in selectedElements) {
-            const div = selectedElements[id];
-            var url = div.getAttribute('data-value');
-            if (url) {
-                if (div.hasAttribute('isdir')) {
-                    if (!url.endsWith("/")) {
-                        url += "/";
-                    }
-                    mode = '?tar';
-                } else {
-                    mode = '?raw';
-                }
-                downloadURL(url + mode);
-                await delay(100);
-            }
+        for (const div of selected.values()) {
+            let url = div.dataset.value;
+            if (!url) continue;
+            suffix = div.hasAttribute('isdir') ? "?tar" : "?raw";
+            downloadURL(url + suffix);
+            await delay(100);
         }
     } else {
-        var url = new URL(window.location.href).pathname;
-        if (url == "/" || url == "") {
-            url = '';
-        }
-        if (!url.endsWith("/")) {
-            url += "/";
-        }
-        const newURL = url + '?tar';
-        downloadURL(newURL);
+        let path = new URL(location.href).pathname;
+        downloadURL(path + '?tar');
     }
 }
 
 async function executeDeletes() {
-    if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
-        msg = null;
-        const sure = confirm("Are you sure to delete?");
-        if (sure) {
-            for (const id in selectedElements) {
-                const div = selectedElements[id];
-                const url = div.getAttribute('data-value');
-                if (url) {
-                    const response = await fetch(
-                        url, {
-                            method: 'DELETE'
-                        }
-                    );
-                    if (response.status === 403) {
-                        msg = 'You dont have permission to do that';
-                    } else if (response.status === 404) {
-                        msg = 'That file/folder does not exist';
-                    } else if (response.status === 500) {
-                        msg = 'Something went wrong on the server.';
-                    }
-                    await delay(100);
-                }
-            }
-            if (msg !== null) {
-                alert(msg);
-            }
-            window.location.reload();
+    if (!selectMode || !selected.size) return;
+    if (!confirm('Are you sure to delete?')) return;
+    let msg = null;
+    for (const div of selected.values()) {
+        const res = await fetch(div.dataset.value, { method: 'DELETE' });
+        if (![200, 204].includes(res.status)) {
+            msg = res.status === 403 ? 'You dont have permission to do that' :
+                res.status === 404 ? 'That file/folder does not exist' :
+                'Something went wrong on the server.';
         }
+        await delay(100);
     }
+    if (msg) alert(msg);
+    location.reload();
 }
 
-function invertSelection() {
-    if (selectMode) {
-        const allDivs = document.querySelectorAll('.filename');
-        allDivs.forEach(div => {
-            const id = div.id;
-            if (selectedElements[id]) {
-                delete selectedElements[id];
-                div.classList.remove('selected');
-            } else {
-                selectedElements[id] = div;
-                div.classList.add('selected');
-            }
-        });
-    }
-}
+const invertSelection = () => {
+    if (!selectMode) return;
+    $$('.filename').forEach(div => selectDiv(div));
+};
 
-// Bind click handling to divs
-document.addEventListener('DOMContentLoaded', () => {
-    const container = document.querySelector('div.container');
-    container.addEventListener('click', (event) => {
-        const div = event.target.closest('div.filename');
-        if (div) { handleDivClick(div); }
-    });
-    container.addEventListener('keydown', (event) => {
-        const div = event.target.closest('div.filename');
-        if (div && (event.key==='Enter' || event.key===' ')) {
-            event.preventDefault();
-            handleDivClick(div);
-        }
-    });
-});
+const storageOp = (key, list) => {
+    if (selectMode) toggleSelectMode();
+    if (list?.length) localStorage.setItem(key, JSON.stringify(list));
+};
 
+const getURLlist = () => Array.from(selected.values())
+    .map(div => div.dataset.value).filter(Boolean);
 
-function set_cp_temp(list) {
-    if (selectMode) { toggleSelectMode(); }
-    localStorage.setItem('copy', JSON.stringify(list));
-}
+const copyFiles = () => storageOp('copy', getURLlist());
+const moveFiles = () => storageOp('move', getURLlist());
+const clearAllMvCp = () => ['copy', 'move'].forEach(k => localStorage.removeItem(k));
 
-function set_mv_temp(list) {
-    if (selectMode) { toggleSelectMode(); }
-    localStorage.setItem('move', JSON.stringify(list));
-}
-
-function clearAllMvCp() {
-    localStorage.removeItem('move');
-    localStorage.removeItem('copy');
-}
-
-function getURLlist() {
-    list = [];
-    for (const id in selectedElements) {
-        const div = selectedElements[id];
-        const url = div.getAttribute('data-value');
-        if (url) {
-            list.push(url);
-        }
-    }
-    return list;
-}
-
-
-function copyFiles() {
-    clearAllMvCp();
-    if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
-        list = getURLlist();
-        if (list != []) { set_cp_temp(list); }
-    }
-}
-
-function moveFiles() {
-    clearAllMvCp();
-    if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
-        list = getURLlist();
-        if (list != []) { set_mv_temp(list); }
-    }
-}
-
-function renameFiles() {
-    if ((selectMode) && (Object.keys(selectedElements).length > 0)) {
-        const items = getURLlist();
-        for (var item of items) {
-            item = item.endsWith('/') ? item.slice(0, -1) : item;
-            name = decodeURIComponent(item.split('/').pop());
-            var dest = prompt('New Name for ' + name);
-            if (dest === null) {
-                break;
-            }
-            dest = item.substring(0, item.lastIndexOf("/")) + "/" + dest;
-            const success = sendRequest(item, dest, "MOVE");
-            if (!success) break;
-        }
-        clearAllMvCp();
-        window.location.reload();
-    }
-}
-            
-function sendRequest(path, destination, method) {
-    const xhr = new XMLHttpRequest();
-    xhr.open(method, path, false);
-    if (destination) {
-        destination = decodeURIComponent(destination);
-        xhr.setRequestHeader("Destination", destination);
-    }
-    xhr.send();
-    if (xhr.status !== 200) {
-        let msg;
-        if (xhr.status === 403) {
-            msg = 'You don’t have permission to do that';
-        } else if (xhr.status === 404) {
-            msg = 'That file/folder does not exist';
-        } else if (xhr.status === 500) {
-            msg = 'Something went wrong on the server.';
-        } else if (xhr.status === 409) {
-            msg = 'It already exists';
-        } else if (xhr.status === 507) {
-            msg = 'Not enough free space';
-        } else {
-            msg = 'Something went wrong';
-        }
-        alert(msg);
+async function sendRequest(path, dest, method) {
+    try {
+        const opts = { method };
+        if (dest) opts.headers = { Destination: decodeURIComponent(dest) };
+        const res = await fetch(path, opts);
+        if (res.status !== 200) throw res.status;
+        return true;
+    } catch (status) {
+        const msgs = {
+            403: 'You don’t have permission to do that',
+            404: 'That file/folder does not exist',
+            409: 'It already exists',
+            507: 'Not enough free space'
+        };
+        alert(msgs[status] || 'Something went wrong');
         return false;
     }
-    return true;
 }
 
-function pasteFiles() {
-    const cpList = JSON.parse(localStorage.getItem('copy')) || [];
-    const mvList = JSON.parse(localStorage.getItem('move')) || [];
-    var destUrl = window.location.pathname;
-    destUrl = destUrl.endsWith('/') ? destUrl.slice(0, -1) : destUrl;
-    if (destUrl === "") {
-        destUrl += "/";
+async function renameFiles() {
+    if (!selectMode || !selected.size) return;
+    for (const item of getURLlist()) {
+        const url = item.replace(/\/$/, '');
+        const name = decodeURIComponent(url.split('/').pop());
+        const destName = prompt(`New Name for ${name}`);
+        if (!destName) break;
+        const dest = `${url.substring(0, url.lastIndexOf('/'))}/${destName}`;
+        if (!await sendRequest(url, dest, 'MOVE')) break;
     }
-    let toPaste = cpList;
-    let mode = "COPY";
-    if (toPaste.length === 0) {
-        toPaste = mvList;
-        mode = "MOVE";
-    } // Chech if empty
-    if (toPaste.length === 0) {
-        return;
-    }
-    showLoader(); // Show loading screen
-
-    setTimeout(() => {
-        for (var path of toPaste) {
-            path = path.endsWith('/') ? path.slice(0, -1) : path
-            const dest = destUrl + "/" + path.split('/').pop();
-            const success = sendRequest(path, dest, mode);
-            if (!success) {
-                break;
-            }
-        }
-        clearAllMvCp();
-        window.location.reload();
-    }, 250);
+    clearAllMvCp();
+    location.reload();
 }
 
-function mkdir() {
-    var dest = prompt('Create dir');
-    if (dest === null) {
-        return;
+async function pasteFiles() {
+    const cp = JSON.parse(localStorage.getItem('copy') || '[]');
+    const mv = JSON.parse(localStorage.getItem('move') || '[]');
+    const toPaste = cp.length ? { list: cp, mode: 'COPY' } : mv.length ? { list: mv, mode: 'MOVE' } : {};
+    if (!toPaste.list) return;
+
+    showLoader();
+    await delay(250);
+    const base = location.pathname.replace(/\/$/, '') || '/';
+    for (const p of toPaste.list) {
+        const path = p.replace(/\/$/, '');
+        const dest = `${base}/${path.split('/').pop()}`;
+        if (!await sendRequest(path, dest, toPaste.mode)) break;
     }
-    var url = window.location.pathname;
-    url = url.endsWith('/') ? url.slice(0, -1) : url;
-    const success = sendRequest(url + "/" + dest, null, "MKCOL");
-    if (success) {
-        window.location.reload();
-    }
+    clearAllMvCp();
+    location.reload();
 }
 
+async function mkdir() {
+    const name = prompt('Create dir');
+    if (!name) return;
+    const base = location.pathname.replace(/\/$/, '');
+    if (await sendRequest(`${base}/${name}`, null, 'MKCOL')) location.reload();
+}
 
-// Upload functions
-
-function openFileMenu(selectDirectory = false) {
-    const input = document.createElement("input");
-
-    if (selectDirectory) {
-        input.webkitdirectory = true;
-    } else {
-        input.multiple = true;
-    }
-    input.type = "file";
-
-    input.addEventListener("change", function() {
-        if (input.files.length > 0) {
-            let confirmUpload;
-            if (!selectDirectory) {
-                confirmUpload = confirm(`Upload ${input.files.length} item(s)?`);
-            }
-            if (selectDirectory || confirmUpload) {
-                uploadFiles(input.files, selectDirectory);
-            }
-        }
+function openFileMenu(selectDir = false) {
+    const inp = Object.assign(document.createElement('input'), {
+        type: 'file',
+        multiple: !selectDir,
+        ...(selectDir && { webkitdirectory: true })
     });
-    input.click();
+    inp.onchange = () => {
+        if (inp.files.length && (selectDir || confirm(`Upload ${inp.files.length} item(s)?`))) uploadFiles(inp.files, selectDir);
+    };
+    inp.click();
 }
 
-function uploadFiles(files, isDirectory = false) {
-    const formData = new FormData();
-    for (const file of files) {
-        formData.append("upload", file);
-    }
-    const uploadEndpoint = isDirectory ? "?updir" : "?upfile";
-    showLoader(); // Show loading screen
-    fetch(uploadEndpoint, {
-        method: "POST",
-        body: formData
-    }).then(response => {
-        if (!response.ok) {
-            switch (response.status) {
-                case 403:
-                    alert("You don’t have permission to do that.");
-                    break;
-                case 500:
-                    alert("Something went wrong on the server.");
-                    break;
-                case 409:
-                    alert("It already exists.");
-                    break;
-                case 507:
-                    alert("Not enough free space.");
-                    break;
-                default:
-                    alert("Something went wrong.");
-                    break;
-            }
-        }
-        window.location.reload();
-    });
+function uploadFiles(files, isDir = false) {
+    const fd = new FormData();
+    Array.from(files).forEach(f => fd.append('upload', f));
+    showLoader();
+    fetch(isDir ? '?updir' : '?upfile', { method: 'POST', body: fd })
+        .then(r => r.ok || Promise.reject(r.status))
+        .catch(status => {
+            const msgs = {
+                403: 'You don’t have permission to do that',
+                409: 'It already exists',
+                507: 'Not enough free space'
+            };
+            alert(msgs[status] || 'Server error');
+        })
+        .finally(() => location.reload());
 }
 
 function enableDragAndDropUpload(dropArea, selectDirectory = false) {
-    dropArea.addEventListener("dragover", function(e) {
+    dropArea.addEventListener("dragover", e => e.preventDefault());
+    dropArea.addEventListener("drop", e => {
         e.preventDefault();
-    });
-    dropArea.addEventListener("drop", function(e) {
-        e.preventDefault();
-        const files = [];
-        const items = e.dataTransfer.items;
-        // Filter only files
-        for (let i = 0; i < items.length; i++) {
-            const item = items[i].webkitGetAsEntry();
-            if (item && item.isFile) {
-                files.push(items[i].getAsFile());
-            }
-        }
-        if (files.length > 0) {
-            const confirmUpload = confirm(`Upload ${files.length} item(s)?`);
-            if (confirmUpload) {
-                uploadFiles(files, selectDirectory);
-            }
+        const files = Array.from(e.dataTransfer.files);
+        if(files.length && confirm(`¿Subir ${files.length} archivo(s)?`)) {
+            uploadFiles(files, selectDirectory);
         }
     });
-}
-
-
-// Upload actions
-function upfile() {
-    openFileMenu();
-}
-
-function updir() {
-    openFileMenu(true);
 }
 enableDragAndDropUpload(document);

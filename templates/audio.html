@@ -2,77 +2,66 @@
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>{{ name }}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/x-icon" href="{{ url_for('index', static='ico/audio.ico') }}">
-  <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}">
-  <script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
-</head>
-<body>
-  <div class="audio-container">
-    <h2>{{ name }}</h2>
-    <audio src="{{ request.path }}?raw"></audio>
-    <div class="duration">
-      <div class="current-time"></div>
-      <div class="hover-time">
-        <span class="hover-duration"></span>
-      </div>
-      <div class="buffer"></div>
-    </div>
-    <span class="time-container">
-      <span class="current-duration">00:00</span>
-      <span>/</span>
-      <span class="total-duration">00:00</span>
-    </span>
-    <div class="flex">
-      <button class="round-button play" onclick="toggleMainState()" title="Play/Pause">
-        <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
-        <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
-      </button>
-      <span class="volume">
-         <button class="round-button" onclick="toggleMuteUnmute()" title="Volume">
-          <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
-          <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
-          <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
-          <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
-          <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
-        </button>
-        <div class="max-vol">
-          <div class="current-vol"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="{{ url_for('index', static='ico/audio.ico') }}" />
+    <link rel="stylesheet" href="{{ url_for('index', static='css/audio.css') }}" />
+    <script defer src="{{ url_for('index', static='js/audio.js') }}"></script>
+  </head>
+  <body>
+    <div class="audio-player">
+      <header class="player-header">
+        <h1 class="player-title">{{ name }}</h1>
+      </header>
+      <audio id="audio" src="{{ request.path }}?raw"></audio>
+      <div class="controls">
+        <div class="time-bar">
+          <span id="current-time">00:00</span>
+          <input type="range" id="seek-bar" min="0" max="100" value="0" step="0.01" />
+          <span id="total-time">00:00</span>
         </div>
-      </span>
-      <button class="round-button" onclick="prev()" title="Previous">
-        <img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}">
-      </button>
-      <button class="round-button" onclick="next()" title="Next">
-        <img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}">
-      </button>
-      <button class="round-button" id="mode" title="Loop (hold to enable random)">1</button>
-      <button class="round-button download" onclick="download()" title="Download">
-        <img src="{{ url_for('index', static='svg/videoplayer/download-outline.svg') }}">
-      </button>
-      <span class="settings">
-        <button class="round-button" onclick="handleSettingMenu()" title="Speed">
-          <img src="{{ url_for('index', static='svg/videoplayer/speed-outline.svg') }}">
+        <div class="playback-controls">
+          <button class="nav-btn prev" onclick="prev()" title="Previous track">
+            <img src="{{ url_for('index', static='svg/audioplayer/round-double-alt-arrow-left.svg') }}" />
+          </button>
+          <button id="play-pause" class="control-btn" onclick="toggleMainState()" title="Play/Pause">
+            <img class="icon-play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" />
+            <img class="icon-pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display:none;" />
+          </button>
+          <button class="nav-btn next" onclick="next()" title="Next track">
+            <img src="{{ url_for('index', static='svg/audioplayer/round-double-alt-arrow-right.svg') }}" />
+          </button>
+        </div>
+        <div class="volume-control">
+          <div class="vol-icons">
+            <img class="icon-vol vol-high" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" onclick="toggleMuteUnmute()" />
+            <img class="icon-vol vol-medium" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" onclick="toggleMuteUnmute()" />
+            <img class="icon-vol vol-low" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}" onclick="toggleMuteUnmute()" />
+            <img class="icon-vol vol-zero" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}" onclick="toggleMuteUnmute()" />
+            <img class="icon-vol vol-muted" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" onclick="toggleMuteUnmute()" />
+          </div>
+          <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" />
+        </div>
+      </div>
+      <div class="extra-controls">
+        <button id="shuffle-btn" class="shuffle-btn" onclick="toggleShuffle()" title="Shuffle">
+            <img class="icon-menu" src="{{ url_for('index', static='svg/audioplayer/shuffle-tracks-button.svg') }}" />
         </button>
-        <ul class="setting-menu">
-          <li data-value="0.25">0.25x</li>
-          <li data-value="0.5">0.5x</li>
-          <li data-value="0.75">0.75x</li>
-          <li data-value="1" class="speed-active">1x</li>
-          <li data-value="1.25">1.25x</li>
-          <li data-value="1.5">1.5x</li>
-          <li data-value="1.75">1.75x</li>
-          <li data-value="2">2x</li>
-        </ul>
-      </span>
+        <button id="loop-btn" class="loop-btn" onclick="cycleLoop()" title="Loop Mode">
+            <img class="icon-menu" id="loop" src="{{ url_for('index', static='svg/audioplayer/repeat-button.svg') }}" style="display:block;" />
+            <img class="icon-menu" id="loopSame" src="{{ url_for('index', static='svg/audioplayer/repeat-single-button.svg') }}" style="display:none;" />
+        </button>
+        <button id="speed-btn" class="speed-btn" title="Playback Speed">1x</button>
+        <button id="download-btn" class="download-btn" onclick="download()" title="Download">
+            <img class="icon-menu" src="{{ url_for('index', static='svg/audioplayer/down-arrow.svg') }}" />
+        </button>
+      </div>
     </div>
-  </div>
-  <a href="{{ request.path }}?raw" download="{{ name }}" id="download"></a>
-  <a href="{{ nxt }}" id="next"></a>
-  <a href="{{ prev }}" id="prev"></a>
-  <a href="{{ rnd }}" id="random"></a>
-</body>
+    <a href="{{ request.path }}?raw" download="{{ name }}" id="download-link"></a>
+    <a href="{{ nxt }}" id="next"></a>
+    <a href="{{ prev }}" id="prev"></a>
+    <a href="{{ rnd }}" id="random"></a>
+  </body>
 </html>
