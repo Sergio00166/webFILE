@@ -93,18 +93,12 @@ async function executeDownloads() {
         for (const div of selected.values()) {
             let url = div.dataset.value;
             if (!url) continue;
-            if (div.hasAttribute('isdir')) {
-                if (!url.endsWith('/')) url += '/';
-                suffix = "?tar";
-            } else {
-                suffix = "?raw";
-            }
+            suffix = div.hasAttribute('isdir') ? "?tar" : "?raw";
             downloadURL(url + suffix);
             await delay(100);
         }
     } else {
         let path = new URL(location.href).pathname;
-        if (!path.endsWith('/')) path += '/';
         downloadURL(path + '?tar');
     }
 }
