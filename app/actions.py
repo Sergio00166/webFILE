@@ -21,8 +21,12 @@ def serveFiles_page(path, ACL, root, client, folder_size):
     # Check if the path is not a dir
     if not file_type in ["directory", "disk"]:
 
+        # Serve page (for plugin-like stuff)
+        if file_type == "webpage":
+            return send_file(path, mimetype="text/html")
+        
         # Those are the sub-endpoints
-        if "raw" in request.args or client != "normal":
+        elif "raw" in request.args or client != "normal":
             return send_file(path)
 
         elif "subs" in request.args and file_type == "video":
@@ -34,9 +38,6 @@ def serveFiles_page(path, ACL, root, client, folder_size):
             return redirect(request.path[:-1])
 
         # Serve the files depending of filetype
-        elif file_type == "webpage":
-            return send_file(path, mimetype="text/html")
-
         elif file_type == "video":
             check_ffmpeg_installed()
             return video(path, root, file_type, ACL)
