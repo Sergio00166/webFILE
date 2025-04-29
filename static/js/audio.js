@@ -82,10 +82,10 @@ speedBtn.addEventListener('click', () => {
 });
 speedBtn.addEventListener('wheel', e => {
     e.preventDefault();
-    if (e.deltaY < 0 && speedIndex > 0) {
-        speedIndex--;
-    } else if (e.deltaY > 0 && speedIndex < speedOptions.length - 1) {
+    if (e.deltaY < 0 && speedIndex < speedOptions.length - 1) {
         speedIndex++;
+    } else if (e.deltaY > 0 && speedIndex > 0) {
+        speedIndex--;
     }
     audio.playbackRate = speedOptions[speedIndex];
     localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
