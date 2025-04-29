@@ -103,6 +103,12 @@ function updateSeekBar() {
     seekBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
     currentTimeElem.textContent = formatTime(audio.currentTime);
     seekBar.value = percent;
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.setPositionState({
+            position: audio.currentTime,
+            playbackRate: audio.playbackRate,
+            duration: audio.duration
+        });
 }
 
 seekBar.addEventListener('input', (e) => {
