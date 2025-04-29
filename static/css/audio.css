@@ -99,10 +99,11 @@ body {
     align-items: center;
 }
 .volume-control {
-    width: 100%;
+    width: 90%;
     display: flex;
     align-items: center;
     gap: 8px;
+    padding-right: 5%;
 }
 .vol-icons {
     position: relative;
