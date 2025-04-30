@@ -38,11 +38,11 @@ def serveFiles_page(path, ACL, root, client, folder_size):
             return redirect(request.path[:-1])
 
         # Serve the files depending of filetype
-        if file_type == "video" and client != "normal":
+        if file_type == "video" and client == "normal":
             check_ffmpeg_installed()
             return video(path, root, file_type, ACL)
 
-        elif file_type == "audio"  and client != "normal":
+        elif file_type == "audio" and client == "normal":
             return audio(path, root, file_type, ACL)
 
         else:  # Send the file and set mime for text
