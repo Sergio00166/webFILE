@@ -1,17 +1,17 @@
 # Code by Sergio00166
 
-from video import get_subtitles,get_chapters,get_info,check_ffmpeg_installed
-from flask import render_template,stream_template,redirect,request
-from files_mgr import upfile,updir,mkdir,delfile,move,copy
-from os.path import join,relpath,pardir,abspath
+from video import get_subtitles, get_chapters, get_info, check_ffmpeg_installed
+from flask import render_template, stream_template, redirect, request
+from files_mgr import upfile, updir, mkdir, delfile, move, copy
+from os.path import join, relpath, pardir, abspath
 from urllib.parse import quote as encurl
-from send_file import send_file,send_dir
+from send_file import send_file, send_dir
 from flask_session import Session
 from hashlib import sha256
 from random import choice
 from functions import *
 
-autoload_webpage = "index"+webpage_file_ext
+autoload_webpage = "index" + webpage_file_ext
 
 
 def serveFiles_page(path, ACL, root, client, folder_size):
@@ -25,9 +25,10 @@ def serveFiles_page(path, ACL, root, client, folder_size):
         # Serve page (for plugin-like stuff)
         if file_type == "webpage" and client == "normal":
             return send_file(path, mimetype="text/html")
-        
+
         # Those are the sub-endpoints
-        if "raw" in request.args: return send_file(path)
+        if "raw" in request.args:
+            return send_file(path)
 
         if "subs" in request.args and file_type == "video":
             check_ffmpeg_installed()
@@ -55,15 +56,18 @@ def serveFiles_page(path, ACL, root, client, folder_size):
             return send_dir(path, root, ACL)
 
         # Autoload index.web if available (plugins-like)
-        if exists(path+sep+autoload_webpage) and not\
-        "noauto" in request.args and client == "normal":
-            return redirect(request.path+"/"+autoload_webpage)
+        if (
+            exists(path + sep + autoload_webpage)
+            and not "noauto" in request.args
+            and client == "normal"
+        ):
+            return redirect(request.path + "/" + autoload_webpage)
 
         # Redirect to have /$ (it means dir)
         if not request.path.endswith("/") and client != "json":
             query = request.query_string.decode()
-            query = "?"+query if query else ""
-            return redirect(request.path+"/"+query)
+            query = "?" + query if query else ""
+            return redirect(request.path + "/" + query)
 
         # Return the directory explorer
         sort = request.args["sort"] if "sort" in request.args else ""

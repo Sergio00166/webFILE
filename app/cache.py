@@ -3,8 +3,9 @@
 from functools import wraps
 from sys import getsizeof
 
-#SelectiveCache(max_memory=1000)
-#@cache.cached("invalidate_variable")
+
+# SelectiveCache(max_memory=1000)
+# @cache.cached("invalidate_variable")
 
 class SelectiveCache:
     _instance = None
@@ -15,7 +16,7 @@ class SelectiveCache:
             cls._instance = super(SelectiveCache, cls).__new__(cls)
             cls._instance.cache = {}
             cls._instance.inv_keys = {}
-            cls._instance.max_memory = kwargs.get('max_memory')
+            cls._instance.max_memory = kwargs.get("max_memory")
             cls._instance.current_memory = 0
             cls._initialized = True
         return cls._instance
@@ -24,7 +25,9 @@ class SelectiveCache:
         def decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):
-                filtered_kwargs = {k: v for k, v in kwargs.items() if k not in invalidators}
+                filtered_kwargs = {
+                    k: v for k, v in kwargs.items() if k not in invalidators
+                }
                 key = (func, args, frozenset(filtered_kwargs.items()))
                 inv_values = {k: kwargs.get(k) for k in invalidators}
 
@@ -49,5 +52,6 @@ class SelectiveCache:
                 self.inv_keys[key] = inv_values
                 self.current_memory += size
                 return result
+
             return wrapper
         return decorator
