@@ -24,22 +24,15 @@ webpage_file_ext = file_types.get("webpage")[0]
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Function to compress HTML output without modifying contents
 minify = lambda stream: (''.join(map(str.strip, x.split("\n"))) for x in stream)
-# Table with BOMs for each unicode encoding
-BOMS = {
-    b"\xef\xbb\xbf": "utf-8-sig",
-    b"\xff\xfe": "utf-16-le",
-    b"\xfe\xff": "utf-16-be",
-    b"\xff\xfe\x00\x00": "utf-32-le",
-    b"\x00\x00\xfe\xff": "utf-32-be",
-}
 
-def is_binary(file_path):
-    with open(file_path, 'rb') as file: sample = file.read(1024)
-    if any(sample.startswith(bom) for bom in BOMS): return False
-    if not sample or b"\x00" not in sample: return False
-    return not any(sample.decode(enc, errors='ignore')
-    for enc in ("utf-8", "utf-16") if b"\x00" in sample)
 
+def is_binary(filepath):
+    with open(filepath, 'rb') as f:
+        f.seek(32)  # Skip 32 bytes
+        while chunk := f.read(1024):
+            if b'\x00' in chunk:
+                return True
+    return False
 
 def safe_path(path,root,igntf=False):
     # Checks if the path is inside the root dir
