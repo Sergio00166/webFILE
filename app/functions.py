@@ -18,6 +18,8 @@ else:    from os import statvfs
 is_subdirectory = lambda parent, child: commonpath([parent, child])==parent
 # Load database of file type and extensions
 file_types = jsload(open(pypath[0]+sep+"file_types.json"))
+# Get website (plugin) extension to import it on actions.py
+webpage_file_ext = file_types.get("webpage")[0]
 # Convert it to a lookup table to get file type as O(1)
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Function to compress HTML output without modifying contents
