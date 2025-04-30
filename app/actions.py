@@ -242,7 +242,7 @@ def directory(path, root, folder_size, sort, client, ACL):
     else:
         file = "index_cli.html" if client == "legacy" else "index.html"
         humanize_all(folder_content)  # The arg is a reference
-       return minify(stream_template(
+        return minify(stream_template(
             file, folder_content=folder_content,folder_path=folder_path,
             parent_directory=parent_directory, is_root=is_root, sort=sort
         ))
