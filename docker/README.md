@@ -33,7 +33,7 @@ SHOW_DIRSIZE=True
 CONFIG_DIR=/etc/webFILE
 
 # Local source directory that will served by the server
-USER_DATA_DIR=/path/to/your/directory
+SERVE_DIR=/path/to/your/directory
 ```
 
 ### 3. Build and Run the Container
