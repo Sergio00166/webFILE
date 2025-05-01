@@ -34,6 +34,12 @@ CONFIG_DIR=/etc/webFILE
 
 # Local source directory that will served by the server
 SERVE_DIR=/path/to/your/directory
+ 
+# Specify the max RAM (in MB) used for metadata/subs caching for videos (per worker).
+MAX_CACHE=256
+
+# Specify the number of workers for gunicorn
+WORKERS=8
 ```
 
 ### 3. Build and Run the Container

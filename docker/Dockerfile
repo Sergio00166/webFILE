@@ -11,4 +11,4 @@ RUN pip install --no-cache-dir gunicorn \
 
 WORKDIR /main/app
 
-CMD ["gunicorn", "app:app", "--bind", "127.0.0.1:8080", "-w", "16", "--preload", "--timeout", "900"]
+CMD ["gunicorn", "app:app", "--bind", "127.0.0.1:8080", "-workers", "$WORKERS", "--preload", "--timeout", "900"]

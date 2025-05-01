@@ -56,7 +56,7 @@ The following environment variables are used to configure the server:
   - SHOW_DIRSIZE (optional, default: False):    
       If set to True, the server will display the total size of directories.
 
-  - MAX_CACHE    (optional, default: 256):   
+  - MAX_CACHE    (optional, default: 256) [per process]:   
       Specify the max RAM (in MB) used for metadata/subs caching for videos.
 
 
