@@ -4,14 +4,15 @@ services:
     network_mode: host
     restart: unless-stopped
     container_name: webfile
+    env_file:
+      - .env
     environment:
-      - SERVE_PATH=/FTP
-      - SHOW_DIRSIZE=True
+      # Do not touch
+      - SERVE_PATH=/data
       - ERRLOG_FILE=/etc/webFILE/error.log
       - ACL_FILE=/etc/webFILE/acl.json
       - USERS_FILE=/etc/webFILE/users.json
       - SESSIONS_DB=/etc/webFILE/sessions.db
-      - SECRET_KEY=329043r5ed987u23wqea7q45etrr9453tq89ui45trq
     volumes:
-      - /etc/webFILE:/etc/webFILE:rw
-      - /FTP:/FTP:rw
+      - ${CONFIG_DIR}:/etc/webFILE:rw
+      - ${SERVE_DIR}:/data:rw
