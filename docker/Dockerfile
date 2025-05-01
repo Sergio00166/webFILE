@@ -2,7 +2,7 @@ FROM python:3.13
 
 WORKDIR /main
 
-RUN apt-get update && apt-get install -y git \
+RUN apt-get update && apt-get install -y git ffmpeg \
     && git clone https://github.com/Sergio00166/webFILE.git /main \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
