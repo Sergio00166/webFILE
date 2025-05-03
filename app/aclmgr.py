@@ -103,10 +103,7 @@ def reject_func(args):
         resource = normpath(resource).replace(sep,"/")
         if resource not in ACL:
             ACL[resource]={}
-        if user in ACL[resource]:
-            del ACL[resource][user]
-            if not ACL[resource]: del ACL[resource]
-        else: ACL[resource][user] = perms["NONE"]
+        ACL[resource][user] = perms["NONE"]
 
 def drop_usr_from_acl(args):
     arg, ACL, USERS = args
@@ -220,6 +217,13 @@ def adddefaultuser(args):
     _,_,USERS = args
     USERS["DEFAULT"] = None
 
+def export_acl(args):
+    _,ACL,_= args
+    print("----- Exporting ACL ------\n"+"FLUSH ACL;\n"+"\n".join(
+        f"REJECT '{y}' ON '{x}';" if perms_rev[ACL[x][y]] == "NONE"
+        else f"ALLOW '{y}' TO {perms_rev[ACL[x][y]]} ON '{x}';"
+        for x in ACL for y in ACL[x]
+    )+"\n")
 
 
 """ MAIN USER INPUT BLOCK """
@@ -238,6 +242,7 @@ commands = {
     "GET-ENTRIES": getentries_func,
     "DEL-ENTRY":   delentry_func,
     "ADD-DF-USR":  adddefaultuser,
+    "EXPORT-ACL":  export_acl,
     "EXIT":        lambda arg: exit(0),
     "CLEAR":       lambda arg: print("\r\033c",end=""),
 }
@@ -279,4 +284,3 @@ def main():
 
 
 if __name__=="__main__": main()
-
