@@ -82,10 +82,10 @@ speedBtn.addEventListener('click', () => {
 });
 speedBtn.addEventListener('wheel', e => {
     e.preventDefault();
-    if (e.deltaY < 0 && speedIndex > 0) {
-        speedIndex--;
-    } else if (e.deltaY > 0 && speedIndex < speedOptions.length - 1) {
+    if (e.deltaY < 0 && speedIndex < speedOptions.length - 1) {
         speedIndex++;
+    } else if (e.deltaY > 0 && speedIndex > 0) {
+        speedIndex--;
     }
     audio.playbackRate = speedOptions[speedIndex];
     localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
@@ -103,6 +103,13 @@ function updateSeekBar() {
     seekBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
     currentTimeElem.textContent = formatTime(audio.currentTime);
     seekBar.value = percent;
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.setPositionState({
+            position: audio.currentTime,
+            playbackRate: audio.playbackRate,
+            duration: audio.duration
+        });
+    }
 }
 
 seekBar.addEventListener('input', (e) => {
@@ -225,6 +232,29 @@ function download() {
     downloadLink.click();
 }
 
+
+let speedBtn_startY = 0;
+
+speedBtn.addEventListener('touchstart', e => {
+    speedBtn_startY = e.touches[0].clientY;
+}, { passive: true });
+
+speedBtn.addEventListener('touchend', e => {
+    const speedBtn_endY = e.changedTouches[0].clientY;
+    const speedBtn_deltaY = speedBtn_endY - speedBtn_startY;
+
+    if (speedBtn_deltaY > 10 && speedIndex < speedOptions.length - 1) {
+        speedIndex++;
+    } else if (speedBtn_deltaY < -10 && speedIndex > 0) {
+        speedIndex--;
+    }
+
+    audio.playbackRate = speedOptions[speedIndex];
+    localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
+    updateSpeedDisplay();
+});
+
+
 // Add keyboard shortcuts
 document.addEventListener('keydown', (e) => {
     e.preventDefault();
@@ -275,6 +305,6 @@ document.addEventListener('keydown', (e) => {
 
 // Media session
 if ('mediaSession' in navigator) {
-navigator.mediaSession.setActionHandler('previoustrack', prev);
-navigator.mediaSession.setActionHandler('nexttrack', next);
+    navigator.mediaSession.setActionHandler('previoustrack', prev);
+    navigator.mediaSession.setActionHandler('nexttrack', next);
 }

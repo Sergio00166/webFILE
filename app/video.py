@@ -126,4 +126,3 @@ def get_subtitles(index,file,legacy):
     headers = {'Content-Disposition': 'attachment;filename='+subsname}
     # Return the subtittle track with the right mime
     return Response(out, mimetype=mime, headers=headers)
-

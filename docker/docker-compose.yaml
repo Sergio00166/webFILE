@@ -1,0 +1,18 @@
+services:
+  webfile:
+    build: .
+    network_mode: host
+    restart: unless-stopped
+    container_name: webfile
+    env_file:
+      - .env
+    environment:
+      # Do not touch
+      - SERVE_PATH=/data
+      - ERRLOG_FILE=/etc/webFILE/error.log
+      - ACL_FILE=/etc/webFILE/acl.json
+      - USERS_FILE=/etc/webFILE/users.json
+      - SESSIONS_DB=/etc/webFILE/sessions.db
+    volumes:
+      - ${CONFIG_DIR}:/etc/webFILE:rw
+      - ${SERVE_DIR}:/data:rw

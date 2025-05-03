@@ -1,67 +1,78 @@
 # Code by Sergio00166
 
-from video import get_subtitles,get_chapters,get_info,check_ffmpeg_installed
-from flask import render_template,stream_template,redirect,request
-from files_mgr import upfile,updir,mkdir,delfile,move,copy
-from os.path import join, relpath,pardir,abspath
+from video import get_subtitles, get_chapters, get_info, check_ffmpeg_installed
+from flask import render_template, stream_template, redirect, request
+from files_mgr import upfile, updir, mkdir, delfile, move, copy
+from os.path import join, relpath, pardir, abspath
 from urllib.parse import quote as encurl
-from send_file import send_file,send_dir
+from send_file import send_file, send_dir
 from flask_session import Session
 from hashlib import sha256
 from random import choice
 from functions import *
 
+autoload_webpage = "index" + webpage_file_ext
+
 
 def serveFiles_page(path, ACL, root, client, folder_size):
     validate_acl(path, ACL)
     path = safe_path(path, root)
-    # Get the file type of the file
     file_type = get_file_type(path)
 
     # Check if the path is not a dir
     if not file_type in ["directory", "disk"]:
 
+        # Serve page (for plugin-like stuff)
+        if file_type == "webpage" and client == "normal":
+            return send_file(path, mimetype="text/html")
+
         # Those are the sub-endpoints
-        if "raw" in request.args or client != "normal":
+        if "raw" in request.args:
             return send_file(path)
 
-        elif "subs" in request.args and file_type == "video":
+        if "subs" in request.args and file_type == "video":
             check_ffmpeg_installed()
             return subtitles(path, request.args["subs"])
 
         # For main pages redirect without /$
-        elif request.path.endswith("/") and client != "json":
+        if request.path.endswith("/") and client != "json":
             return redirect(request.path[:-1])
 
         # Serve the files depending of filetype
-        elif file_type == "webpage":
-            return send_file(path, mimetype="text/html")
-
-        elif file_type == "video":
+        if file_type == "video" and client == "normal":
             check_ffmpeg_installed()
             return video(path, root, file_type, ACL)
 
-        elif file_type == "audio":
+        elif file_type == "audio" and client == "normal":
             return audio(path, root, file_type, ACL)
 
         else:  # Send the file and set mime for text
-            if is_binary(path):
-                return send_file(path)
-            else:
-                return send_file(path, mimetype="text/plain")
+            mime = None if is_binary(path) else "text/plain"
+            return send_file(path, mimetype=mime)
 
     else:
         # Sub-endpoint to get the dir as tar
         if "tar" in request.args:
             return send_dir(path, root, ACL)
 
+        # Autoload index.web if available (plugins-like)
+        if (
+            exists(path + sep + autoload_webpage)
+            and not "noauto" in request.args
+            and client == "normal"
+        ):
+            return redirect(request.path + "/" + autoload_webpage)
+
         # Redirect to have /$ (it means dir)
         if not request.path.endswith("/") and client != "json":
-            return redirect(request.path + "/")
+            query = request.query_string.decode()
+            query = "?" + query if query else ""
+            return redirect(request.path + "/" + query)
 
         # Return the directory explorer
         sort = request.args["sort"] if "sort" in request.args else ""
         return directory(path, root, folder_size, sort, client, ACL)
+
 
 
 def serveRoot_page(ACL, root, client, folder_size):
@@ -201,22 +212,12 @@ def subtitles(path, mode):
 def video(path, root, file_type, ACL):
     prev, nxt, name = get_filepage_data(path, root, file_type, ACL, ngtst=True)
     tracks, chapters = get_info(path), get_chapters(path)
-    return render_template(
-        "video.html",
-        path=path,
-        name=name,
-        prev=prev,
-        nxt=nxt,
-        tracks=tracks,
-        chapters=chapters,
-    )
+    return render_template("video.html", path=path, name=name, prev=prev, nxt=nxt, tracks=tracks, chapters=chapters)
 
 
 def audio(path, root, file_type, ACL):
     prev, nxt, name, rnd = get_filepage_data(path, root, file_type, ACL, random=True)
-    return render_template(
-        "audio.html", path=path, name=name, prev=prev, nxt=nxt, rnd=rnd
-    )
+    return render_template("audio.html", path=path, name=name, prev=prev, nxt=nxt, rnd=rnd)
 
 
 def humanize_all(data):
@@ -233,24 +234,15 @@ def directory(path, root, folder_size, sort, client, ACL):
     # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
 
-    # Get all the data from that directry and its contents
-    folder_content, folder_path, parent_directory, is_root = get_index_data(
-        path, root, folder_size, sort, ACL
-    )
+    folder_content, folder_path, parent_directory, is_root =\
+    get_index_data(path, root, folder_size, sort, ACL)
 
-    # Return appropiate response depending on the client
-    if not client == "json":
+    if client == "json":
+        return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
+    else:
         file = "index_cli.html" if client == "legacy" else "index.html"
         humanize_all(folder_content)  # The arg is a reference
-        html = stream_template(
-            file,
-            folder_content=folder_content,
-            folder_path=folder_path,
-            parent_directory=parent_directory,
-            is_root=is_root,
-            sort=sort,
-        )
-        return minify(html)  # reduce size
-
-    else:
-        return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
+        return minify(stream_template(
+            file, folder_content=folder_content,folder_path=folder_path,
+            parent_directory=parent_directory, is_root=is_root, sort=sort
+        ))
