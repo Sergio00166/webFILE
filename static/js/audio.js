@@ -6,7 +6,6 @@ const iconPause = document.querySelector('.icon-pause');
 const seekBar = document.getElementById('seek-bar');
 const currentTimeElem = document.getElementById('current-time');
 const totalTimeElem = document.getElementById('total-time');
-const volIcon = document.getElementById('vol-icon');
 const volumeBar = document.getElementById('volume-bar');
 const shuffleBtn = document.getElementById('shuffle-btn');
 const loopBtn = document.getElementById('loop-btn');
@@ -14,6 +13,7 @@ const prevLink = document.getElementById('prev');
 const nextLink = document.getElementById('next');
 const randomLink = document.getElementById('random');
 const downloadLink = document.getElementById('download-link');
+const volBtn = document.querySelector('.vol-icons');
 const volHighIcon = document.querySelector('.vol-high');
 const volMedIcon = document.querySelector('.vol-medium');
 const volLowIcon = document.querySelector('.vol-low');
@@ -128,12 +128,23 @@ volumeBar.addEventListener('input', (e) => {
     updateVolumeBar();
 });
 
-audio.addEventListener('loadeddata', () => {
-    totalTimeElem.textContent = formatTime(audio.duration);
-    toggleMainState();
-    updateVolumeBar();
+volBtn.addEventListener('click', ()=>{
+    toggleMuteUnmute();
+    console.log("pepe");
 });
-audio.addEventListener('timeupdate', updateSeekBar);
+
+
+audio.addEventListener('loadeddata', () => {
+    (function wait4ready() {
+        if (isNaN(audio.duration) || audio.duration === 0) {
+            return setTimeout(wait4ready, 25);
+        }
+        totalTimeElem.textContent = formatTime(audio.duration);
+        audio.addEventListener('timeupdate', updateSeekBar);
+        toggleMainState(); // Try play & update play btn
+    })();
+});
+
 audio.addEventListener('ended', () => {
     if (loopMode === 2) {
         audio.play();
@@ -263,7 +274,7 @@ document.addEventListener('keydown', (e) => {
             e.preventDefault();
             toggleMainState();
             break;
-        case 'KeyM':
+        case 'm':
             toggleMuteUnmute();
             break;
         case 's':
