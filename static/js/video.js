@@ -118,9 +118,13 @@ if (currentMode != null) {
 if (volumeVal === null) {
     volumeVal = 1;
 }
+
 video.volume = parseFloat(volumeVal);
-volumeBar.value = video.volume;
-updateVolumeBar();
+
+window.addEventListener('pageshow', () => {
+    volumeBar.value = video.volume;
+    updateVolumeBar();
+});
 
 if (muted != null) {
     if (muted == "true") {
