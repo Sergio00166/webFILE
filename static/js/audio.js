@@ -51,17 +51,19 @@ updateLoopButton();
 
 shuffleBtn.style.opacity = isShuffled ? 1 : 0.4;
 
-const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
-const savedMuted = localStorage.getItem('audioMuted');
-if (!isNaN(savedVolume)) {
+
+window.addEventListener('pageshow', () => {
+  const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
+  if (!isNaN(savedVolume)) {
     audio.volume = savedVolume;
     volumeBar.value = savedVolume;
-}
-if (savedMuted !== null) {
-    audio.muted = savedMuted === 'true';
-}
-updateVolumeIcon(audio.volume);
-updateVolumeBar();
+  }
+  const savedMuted = localStorage.getItem('audioMuted');
+  audio.muted = savedMuted === 'true';
+  updateVolumeIcon(audio.volume);
+  updateVolumeBar();
+});
+
 
 const speedBtn = document.getElementById('speed-btn');
 const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -103,7 +105,7 @@ function updateSeekBar() {
     seekBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
     currentTimeElem.textContent = formatTime(audio.currentTime);
     seekBar.value = percent;
-    if ('mediaSession' in navigator) {
+    if ('mediaSession' in navigator) and (audio.currentTime>=0) {
         navigator.mediaSession.setPositionState({
             position: audio.currentTime,
             playbackRate: audio.playbackRate,
