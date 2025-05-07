@@ -102,6 +102,7 @@ function formatTime(sec) {
 }
 
 function updateSeekBar() {
+    if (!(audio.currentTime >= 0)) { return; }
     const percent = (audio.currentTime/audio.duration)*100;
     seekBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
     currentTimeElem.textContent = formatTime(audio.currentTime);
@@ -133,7 +134,6 @@ volumeBar.addEventListener('input', (e) => {
 
 volBtn.addEventListener('click', ()=>{
     toggleMuteUnmute();
-    console.log("pepe");
 });
 
 
