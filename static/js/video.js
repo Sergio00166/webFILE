@@ -27,6 +27,7 @@ const sh_unmute = document.querySelector(".sh_unmute");
 const sh_pause = document.querySelector(".sh_pause");
 const sh_play = document.querySelector(".sh_play");
 const sh_play_st = document.querySelector(".sh_play_st");
+const sh_pause_st = document.querySelector(".sh_pause_st");
 const sh_mute_st = document.querySelector(".sh_mute_st");
 const sh_unmute_st = document.querySelector(".sh_unmute_st");
 const sh_fordward_st = document.querySelector(".sh_fordward_st");
@@ -292,11 +293,12 @@ function showCursor() {
     }
 }
 
+
 function play() {
     video.play();
     sh_pause.classList.remove("sh_pause");
     sh_play.classList.add("sh_play");
-    show_main_animation("");
+    show_main_animation("pause");
     hideControls(mouse_ctrl_delay);
 }
 
@@ -476,14 +478,19 @@ function handleMousemove(e) {
 
 function show_main_animation(mode) {
     sh_play_st.classList.add("sh_play_st");
+    sh_pause_st.classList.add("sh_pause_st");
     sh_mute_st.classList.add("sh_mute_st");
     sh_unmute_st.classList.add("sh_unmute_st");
     sh_back_st.classList.add("sh_back_st");
     sh_fordward_st.classList.add("sh_fordward_st");
     switch (mode) {
         case "play":
-            mainState.classList.add("show");
             sh_play_st.classList.remove("sh_play_st");
+            mainState.classList.add("animate-state");
+            break;
+        case "pause":
+            sh_pause_st.classList.remove("sh_pause_st");
+            mainState.classList.add("animate-state");
             break;
         case "mute":
             sh_mute_st.classList.remove("sh_mute_st");
@@ -556,6 +563,8 @@ function handleVideoIcon() {
 
 function handleShorthand(e) {
     e.preventDefault();
+    if (e.repeat) return;
+
     if (e.code === 'F5') {
         location.reload(true);
         return;
