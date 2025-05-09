@@ -172,7 +172,6 @@ body {
     height: 100%;
     width: 2px;
     margin-left: -1px;
-    z-index: 999;
     background-color: #000;
 }
 .duration .buffer {
@@ -215,6 +214,7 @@ body {
     border-radius: 5px;
 }
 .current-time::before {
+    z-index: 9;
     opacity: 0;
     content: "";
     width: 13px;
@@ -223,7 +223,6 @@ body {
     right: calc((-13px / 2));
     background: #ff6a00;
     border-radius: 50%;
-    z-index: 999;
     transition: all 0.2s;
     transform: scale(0);
 }
@@ -464,7 +463,7 @@ button:focus { outline: none; }
         border: 7px solid #FFF;
         border-bottom-color: transparent;
     }
-}
+}z-index
 @media (max-width: 220px) {
     .settings {
         display: none;
