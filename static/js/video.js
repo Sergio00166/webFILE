@@ -563,8 +563,7 @@ function handleVideoIcon() {
 
 function handleShorthand(e) {
     e.preventDefault();
-    if (e.repeat) return;
-
+    if (e.repeat && e.key.toLowerCase()==" ") return;
     if (e.code === 'F5') {
         location.reload(true);
         return;
@@ -586,11 +585,17 @@ function handleShorthand(e) {
             toggleFullscreen();
             break;
         case "arrowright":
+            controls.classList.add("show");
+            hideControls(500);
             video.currentTime += 5;
+            handleProgressBar();
             show_main_animation("fordward");
             break;
         case "arrowleft":
+            controls.classList.add("show");
+            hideControls(500);
             video.currentTime -= 5;
+            handleProgressBar();
             show_main_animation("back");
             break;
         case "arrowup":
