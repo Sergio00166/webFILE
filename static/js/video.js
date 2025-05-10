@@ -64,6 +64,7 @@ let touchTimeout;
 let cursorTimeout;
 var subtitleId = 0;
 let ass_worker;
+let fixTouchHover = false;
 
 
 /* Inicialitate everything */
@@ -438,21 +439,6 @@ function touchDrag(handlerMove) {
   document.addEventListener('touchmove', handlerMove, { passive: true });
   document.addEventListener('touchend', end, { once: true, passive: true });
 }
-
-duration.addEventListener('mousedown', e =>
-  drag(eMove => updateTime(getPct(eMove.clientX).pct))
-);
-duration.addEventListener('touchstart', e =>
-  touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
-);
-
-document.addEventListener('touchstart', () => { clearHover(); }, { passive: true });
-duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-duration.addEventListener('mousemove', e => { showHover(e.clientX); });
-duration.addEventListener('mouseleave', () => { clearHover(); });
-
-
-
 
 
 function show_main_animation(mode) {
@@ -851,3 +837,16 @@ liD.addEventListener("click", () => {
     downloadLink.click();
     handleSettingMenu();
 });
+
+duration.addEventListener('mousedown', e =>
+  drag(eMove => updateTime(getPct(eMove.clientX).pct))
+);
+duration.addEventListener('touchstart', e =>
+  touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+);
+
+document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
+duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
+duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
+duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
+
