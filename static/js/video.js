@@ -55,17 +55,9 @@ var subs_legacy = localStorage.getItem("subsLegacy");
 
 var mber = undefined;
 var sttbtnpress = false;
-let mouseDownProgress = false;
-let mouseDownVol = false;
 let isCursorOnControls = false;
-let mouseOverDuration = false;
-let touchClientX = 0;
-let touchPastDurationWidth = 0;
-let touchStartTime = 0;
-let touchActive = false;
 let lastTouchTime = 0;
 let originalTime = 0;
-let fixtouch;
 let touchFix;
 let timeout;
 let touchTimeout;
@@ -280,7 +272,6 @@ function handleVideoEnded() {
     }
 }
 
-
 function showCursor() {
     clearTimeout(cursorTimeout);
     document.body.style.cursor = 'auto';
@@ -293,19 +284,18 @@ function showCursor() {
     }
 }
 
-
 function play() {
     video.play();
     sh_pause.classList.remove("sh_pause");
     sh_play.classList.add("sh_play");
-    show_main_animation("pause");
+    show_main_animation("play");
     hideControls(mouse_ctrl_delay);
 }
 
 function pause() {
     video.pause();
     controls.classList.add("show");
-    show_main_animation("play");
+    show_main_animation("pause");
     handleVideoIcon();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
@@ -319,32 +309,6 @@ function handleProgressBar() {
     currentDuration.innerHTML = showDuration(video.currentTime);
 }
 
-function navigate(e) {
-    try {
-        const totalDurationRect = duration.getBoundingClientRect();
-        const width = Math.min(
-            Math.max(0, e.clientX - totalDurationRect.x),
-                               totalDurationRect.width
-        );
-        currentTime.style.width = (width / totalDurationRect.width) * 100 + "%";
-        video.currentTime = (width / totalDurationRect.width) * video.duration;
-    } catch {};
-}
-
-function handleTouchNavigate(e) {
-    if (e.timeStamp - touchStartTime > 500) {
-        const durationRect = duration.getBoundingClientRect();
-        const clientX = e.changedTouches[0].clientX;
-        const offsetX = clientX - durationRect.left;
-        const value = Math.min(
-            Math.max(0, offsetX),
-                               durationRect.width
-        );
-        currentTime.style.width = value + "px";
-        video.currentTime = (value / durationRect.width) * video.duration;
-        currentDuration.innerHTML = showDuration(video.currentTime);
-    }
-}
 
 function showDuration(time) {
     const hours = Math.floor(time / 60 ** 2);
@@ -406,22 +370,6 @@ function handleVolume(e) {
     handleVideoIcon();
 }
 
-function handleProgress() {
-    var currentTime = video.currentTime;
-    var buffLen = video.buffered.length;
-    var i;
-
-    for (i = 0; i < buffLen; i++) {
-        if (video.buffered.start(i) <= currentTime && currentTime < video.buffered.end(i)) {
-            var currentBufferLength = video.buffered.end(i);
-            break;
-        }
-    }
-    // Calculate buffer width
-    var width = (currentBufferLength / video.duration) * 100;
-    buffer.style.width = width + "%";
-}
-
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         videoContainer.requestFullscreen();
@@ -444,37 +392,68 @@ function getchptname(timeInSeconds) {
     }
 }
 
-function handleMousemove(e) {
-    if (mouseDownProgress) {
-        hoverTime.style.width = 0;
-        hoverDuration.style.display = 'none';
-        e.preventDefault();
-        navigate(e);
-    } else if (mouseDownVol) {
-        handleVolume(e);
-    } else if (mouseOverDuration) {
-        const rect = duration.getBoundingClientRect();
-        hoverDuration.style.bottom = `${rect.height+8}px`;
-        const width = Math.min(Math.max(0, e.clientX - rect.x), rect.width);
-        if (!touchActive) {
-            const percent = (width / rect.width) * 100;
-            hoverTime.style.width = `${percent}%`;
-            const hovtime = (video.duration * percent) / 100;
-            hoverDuration.innerHTML = showDuration(hovtime);
-            const chapter = getchptname(hovtime);
-            if (chapter) {
-                hoverDuration.innerHTML += "<br>" + chapter;
-            }
-            const offset = hoverDuration.offsetWidth / 2;
-            var hvs = hoverDuration.style;
-            hvs.left = (width - offset) + "px";
-            hvs.display = 'block';
-            hvs.visibility = offset === 0 ? "hidden" : "visible";
-        } else {
-            e.preventDefault();
-        }
-    }
+const getPct = clientX => {
+  const { x, width, height } = duration.getBoundingClientRect();
+  const pos = Math.min(Math.max(0, clientX - x), width);
+  return { pct: pos / width, pos, height };
+};
+
+function updateTime(pct) {
+  currentTime.style.width = `${pct * 100}%`;
+  video.currentTime = pct * video.duration;
 }
+
+
+// Time bar control funcs
+
+function showHover(clientX) {
+  const { pct, pos, height } = getPct(clientX);
+  hoverTime.style.width = `${pct * 100}%`;
+  const hovtime = pct * video.duration;
+  const timeStr = showDuration(hovtime);
+  const chapter = getchptname(hovtime);
+  hoverDuration.innerHTML = chapter ? `${timeStr}<br>${chapter}` : timeStr;
+  const offset = hoverDuration.offsetWidth / 2;
+  hoverDuration.style.cssText = `
+    bottom: ${height + 8}px;
+    left: ${pos - offset}px;
+    display: block;
+    visibility: ${offset ? 'visible' : 'hidden'};
+  `;
+}
+
+function clearHover() {
+  hoverTime.style.width = '0';
+  hoverDuration.style.display = 'none';
+}
+
+function drag(handlerMove) {
+  const end = () => document.removeEventListener('mousemove', handlerMove);
+  document.addEventListener('mousemove', handlerMove);
+  document.addEventListener('mouseup', end, { once: true });
+}
+
+function touchDrag(handlerMove) {
+  const end = () => document.removeEventListener('touchmove', handlerMove);
+  document.addEventListener('touchmove', handlerMove, { passive: true });
+  document.addEventListener('touchend', end, { once: true, passive: true });
+}
+
+duration.addEventListener('mousedown', e =>
+  drag(eMove => updateTime(getPct(eMove.clientX).pct))
+);
+duration.addEventListener('touchstart', e =>
+  touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+);
+
+document.addEventListener('touchstart', () => { clearHover(); }, { passive: true });
+duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
+duration.addEventListener('mousemove', e => { showHover(e.clientX); });
+duration.addEventListener('mouseleave', () => { clearHover(); });
+
+
+
+
 
 function show_main_animation(mode) {
     sh_play_st.classList.add("sh_play_st");
@@ -754,7 +733,6 @@ videoContainer.addEventListener("mouseleave", () => {
 videoContainer.addEventListener("mousemove", (e) => {
     controls.classList.add("show");
     showCursor();
-    handleMousemove(e);
     hideControls(mouse_ctrl_delay);
 });
 videoContainer.addEventListener("fullscreenchange", () => {
@@ -774,25 +752,6 @@ videoContainer.addEventListener('touchmove', () => {
 });
 
 // Duration and navigation events
-duration.addEventListener("mouseenter", () => {
-    mouseOverDuration = true;
-});
-duration.addEventListener("mouseleave", () => {
-    mouseOverDuration = false;
-    hoverTime.style.width = 0;
-    hoverDuration.style.display = 'none';
-});
-duration.addEventListener("mousedown", (e) => {
-    mouseDownProgress = true;
-    navigate(e);
-});
-duration.addEventListener("mouseup", () => {
-    mouseDownProgress = false;
-});
-duration.addEventListener("click", navigate);
-duration.addEventListener("touchmove", handleTouchNavigate, {
-    passive: false
-});
 
 // Controls events
 controls.addEventListener("click", () => {
@@ -811,12 +770,7 @@ volume.addEventListener("mouseleave", () => {
     setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
 });
 volumeBar.addEventListener('input', (e) => {
-    mouseDownVol = true;
     handleVolume(e);
-});
-document.addEventListener("mouseup", () => {
-    mouseDownProgress = false;
-    mouseDownVol = false;
 });
 
 // Settings events
@@ -882,16 +836,6 @@ speedSelect.addEventListener('change', function() {
 mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 
 // Touch interaction events
-document.addEventListener('touchstart', () => {
-    clearTimeout(fixtouch);
-    touchActive = true;
-});
-document.addEventListener('touchend', () => {
-    clearTimeout(fixtouch);
-    fixtouch = setTimeout(() => {
-        touchActive = false;
-    }, 500);
-});
 touchBox.addEventListener('touchend', double_touch);
 touchBox.addEventListener("click", (e) => {
     e.preventDefault();
