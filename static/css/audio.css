@@ -48,13 +48,11 @@ img {
     color: #eee;
     word-break: break-all;
 }
-
 .time-bar {
     display: flex;
     width: 100%;
     align-items: center;
 }
-
 .duration {
     position: relative;
     margin-left: auto;
@@ -78,7 +76,6 @@ img {
     height: 150%;
     top: -25%;
 }
-
 .hover-time {
     overflow: show;
     height: 100%;
@@ -94,9 +91,11 @@ img {
 .hover-time .hover-duration {
     position: absolute;
     background: #202020f0;
-    padding: 0.2rem;
+    padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 3px;
     border-radius: 5px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     visibility: hidden;
     font-weight: bold;
     text-align: center;
@@ -141,32 +140,6 @@ img {
     margin-right: 8px;
 }
 
-#seek-bar {
-    flex: 1;
-    width: 100%;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 4px;
-    background: #333;
-    border-radius: 2px;
-    outline: none;
-    cursor: pointer;
-    background: linear-gradient(to right, #0a84ff 0%, #333 0%);
-}
-#seek-bar::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #0a84ff;
-}
-#seek-bar::-moz-range-thumb {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #0a84ff;
-}
 .playback-controls {
     margin-top: 20px;
     margin-bottom: 16px;
@@ -215,7 +188,7 @@ img {
     flex: 1;
     -webkit-appearance: none;
     appearance: none;
-    height: 3px;
+    height: 4px;
     background: #e1e1e1;
     border-radius: 2px;
     outline: none;

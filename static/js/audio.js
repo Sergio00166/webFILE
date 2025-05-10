@@ -34,7 +34,6 @@ let speedIndex = speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpee
     speedOptions.indexOf(1);
 audio.playbackRate = speedOptions[speedIndex];
 let speedBtn_startY = 0;
-let fixTouchHover = false;
 
 
 function updateLoopButton() {
@@ -298,7 +297,7 @@ function showHover(clientX) {
   hoverTime.style.width = `${pct * 100}%`;
   hoverDuration.textContent = showDuration(pct * audio.duration);
   hoverDuration.style.cssText = `
-    bottom: ${height + 8}px;
+    bottom: ${height + 5}px;
     left: ${pos - hoverDuration.offsetWidth/2}px;
     visibility: ${hoverDuration.offsetWidth ? 'visible' : 'hidden'};
     display: block;
@@ -329,10 +328,10 @@ duration.addEventListener('touchstart', e =>
   touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
 );
 
-document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
+document.addEventListener('touchstart', () => { clearHover(); }, { passive: true });
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
-duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
+duration.addEventListener('mousemove', e => { showHover(e.clientX); });
+duration.addEventListener('mouseleave', () => { clearHover(); });
 
 
 // Add keyboard shortcuts
