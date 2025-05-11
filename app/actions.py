@@ -61,7 +61,8 @@ def serveFiles_page(path, ACL, root, client, folder_size):
             and not "noauto" in request.args
             and client == "normal"
         ):
-            return redirect(request.path + "/" + autoload_webpage)
+            url_sep = "" if request.path.endswith("/") else "/"
+            return redirect(request.path + url_sep + autoload_webpage)
 
         # Redirect to have /$ (it means dir)
         if not request.path.endswith("/") and client != "json":
