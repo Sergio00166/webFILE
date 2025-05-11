@@ -3,10 +3,12 @@
 const audio = document.getElementById('audio');
 const iconPlay = document.querySelector('.icon-play');
 const iconPause = document.querySelector('.icon-pause');
-const seekBar = document.getElementById('seek-bar');
+const duration = document.querySelector(".duration");
+const currentTime = document.querySelector(".current-time");
+const hoverTime = document.querySelector(".hover-time");
+const hoverDuration = document.querySelector(".hover-duration");
 const currentTimeElem = document.getElementById('current-time');
 const totalTimeElem = document.getElementById('total-time');
-const volIcon = document.getElementById('vol-icon');
 const volumeBar = document.getElementById('volume-bar');
 const shuffleBtn = document.getElementById('shuffle-btn');
 const loopBtn = document.getElementById('loop-btn');
@@ -14,6 +16,7 @@ const prevLink = document.getElementById('prev');
 const nextLink = document.getElementById('next');
 const randomLink = document.getElementById('random');
 const downloadLink = document.getElementById('download-link');
+const volBtn = document.querySelector('.vol-icons');
 const volHighIcon = document.querySelector('.vol-high');
 const volMedIcon = document.querySelector('.vol-medium');
 const volLowIcon = document.querySelector('.vol-low');
@@ -24,6 +27,14 @@ const loopSameImg = document.getElementById('loopSame');
 
 let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
 let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
+const speedBtn = document.getElementById('speed-btn');
+const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+let speedIndex = speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0 ?
+    speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) :
+    speedOptions.indexOf(1);
+audio.playbackRate = speedOptions[speedIndex];
+let speedBtn_startY = 0;
+
 
 function updateLoopButton() {
     if (loopMode === 0) {
@@ -55,20 +66,16 @@ const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
 const savedMuted = localStorage.getItem('audioMuted');
 if (!isNaN(savedVolume)) {
     audio.volume = savedVolume;
-    volumeBar.value = savedVolume;
 }
 if (savedMuted !== null) {
     audio.muted = savedMuted === 'true';
 }
-updateVolumeIcon(audio.volume);
-updateVolumeBar();
 
-const speedBtn = document.getElementById('speed-btn');
-const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-let speedIndex = speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0 ?
-    speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) :
-    speedOptions.indexOf(1);
-audio.playbackRate = speedOptions[speedIndex];
+window.addEventListener('pageshow', () => {
+    volumeBar.value = audio.volume;
+    updateVolumeIcon(audio.volume);
+    updateVolumeBar();
+});
 
 function updateSpeedDisplay() {
     speedBtn.textContent = speedOptions[speedIndex] + 'x';
@@ -99,10 +106,8 @@ function formatTime(sec) {
 }
 
 function updateSeekBar() {
-    const percent = (audio.currentTime/audio.duration)*100;
-    seekBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
+    currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
     currentTimeElem.textContent = formatTime(audio.currentTime);
-    seekBar.value = percent;
     if ('mediaSession' in navigator) {
         navigator.mediaSession.setPositionState({
             position: audio.currentTime,
@@ -111,11 +116,6 @@ function updateSeekBar() {
         });
     }
 }
-
-seekBar.addEventListener('input', (e) => {
-    audio.currentTime = (e.target.value / 100) * audio.duration;
-    updateSeekBar();
-});
 
 volumeBar.addEventListener('input', (e) => {
     audio.volume = e.target.value;
@@ -128,12 +128,22 @@ volumeBar.addEventListener('input', (e) => {
     updateVolumeBar();
 });
 
-audio.addEventListener('loadeddata', () => {
-    totalTimeElem.textContent = formatTime(audio.duration);
-    toggleMainState();
-    updateVolumeBar();
+volBtn.addEventListener('click', ()=>{
+    toggleMuteUnmute();
 });
-audio.addEventListener('timeupdate', updateSeekBar);
+
+
+audio.addEventListener('loadeddata', () => {
+    (function wait4ready() {
+        if (isNaN(audio.duration) || audio.duration === 0) {
+            return setTimeout(wait4ready, 25);
+        }
+        totalTimeElem.textContent = formatTime(audio.duration);
+        audio.addEventListener('timeupdate', updateSeekBar);
+        toggleMainState(); // Try play & update play btn
+    })();
+});
+
 audio.addEventListener('ended', () => {
     if (loopMode === 2) {
         audio.play();
@@ -232,9 +242,6 @@ function download() {
     downloadLink.click();
 }
 
-
-let speedBtn_startY = 0;
-
 speedBtn.addEventListener('touchstart', e => {
     speedBtn_startY = e.touches[0].clientY;
 }, { passive: true });
@@ -255,6 +262,78 @@ speedBtn.addEventListener('touchend', e => {
 });
 
 
+function formatter(number) {
+    return new Intl.NumberFormat({}, {
+        minimumIntegerDigits: 2
+    }).format(number);
+}
+function showDuration(time) {
+    const hours = Math.floor(time / 60 ** 2);
+    const min = Math.floor((time / 60) % 60);
+    const sec = Math.floor(time % 60);
+    if (hours > 0) {
+        return `${formatter(hours)}:${formatter(min)}:${formatter(sec)}`;
+    } else {
+        return `${formatter(min)}:${formatter(sec)}`;
+    }
+}
+
+
+// Time bar control funcs
+
+const getPct = clientX => {
+  const { x, width, height } = duration.getBoundingClientRect();
+  const pos = Math.min(Math.max(0, clientX - x), width);
+  return { pct: pos / width, pos, height };
+};
+
+function updateTime(pct) {
+  currentTime.style.width = `${pct * 100}%`;
+  audio.currentTime = pct * audio.duration;
+}
+
+function showHover(clientX) {
+  const { pct, pos, height } = getPct(clientX);
+  hoverTime.style.width = `${pct * 100}%`;
+  hoverDuration.textContent = showDuration(pct * audio.duration);
+  hoverDuration.style.cssText = `
+    bottom: ${height + 5}px;
+    left: ${pos - hoverDuration.offsetWidth/2}px;
+    visibility: ${hoverDuration.offsetWidth ? 'visible' : 'hidden'};
+    display: block;
+  `;
+}
+
+function clearHover() {
+  hoverTime.style.width = '0';
+  hoverDuration.style.display = 'none';
+}
+
+function drag(handlerMove) {
+  const end = () => document.removeEventListener('mousemove', handlerMove);
+  document.addEventListener('mousemove', handlerMove);
+  document.addEventListener('mouseup', end, { once: true });
+}
+
+function touchDrag(handlerMove) {
+  const end = () => document.removeEventListener('touchmove', handlerMove);
+  document.addEventListener('touchmove', handlerMove, { passive: true });
+  document.addEventListener('touchend', end, { once: true, passive: true });
+}
+
+duration.addEventListener('mousedown', e =>
+  drag(eMove => updateTime(getPct(eMove.clientX).pct))
+);
+duration.addEventListener('touchstart', e =>
+  touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+);
+
+document.addEventListener('touchstart', () => { clearHover(); }, { passive: true });
+duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
+duration.addEventListener('mousemove', e => { showHover(e.clientX); });
+duration.addEventListener('mouseleave', () => { clearHover(); });
+
+
 // Add keyboard shortcuts
 document.addEventListener('keydown', (e) => {
     e.preventDefault();
@@ -263,7 +342,7 @@ document.addEventListener('keydown', (e) => {
             e.preventDefault();
             toggleMainState();
             break;
-        case 'KeyM':
+        case 'm':
             toggleMuteUnmute();
             break;
         case 's':

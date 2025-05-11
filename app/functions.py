@@ -209,8 +209,7 @@ def getclient(request):
     normal = ua.startswith("mozilla/5.0") and not any(
         x in ua for x in ["msie", "trident"]
     )
-    return "normal" if normal else "json" if json else "legacy"
-
+    return "json" if json else "normal" if normal else "legacy"
 
 def load_userACL(USERS, ACL, users_file, acl_file):
     USERS.clear()

@@ -114,24 +114,19 @@ body {
 
 .main-state {
     opacity: 0;
-    height: 80px;
-    width: 80px;
+    height: 75px;
+    width: 75px;
     position: absolute; 
     cursor: pointer;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
     background: rgba(48,48,56,0.75);
     border: 1px solid #222;
 }
-.main-state.show {
-    transform: scale(1);
-    opacity: 1;
-}
 .animate-state {
-    animation: animation 0.5s forwards;
+    animation: animation 0.6s forwards;
 }
 .controls {
     bottom: 0;
@@ -152,7 +147,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: calc((100% - 64px));
-    height: 12px;
+    height: 10px;
     background: #62626274;
     cursor: pointer;
     border-radius: 4px;
@@ -180,7 +175,7 @@ body {
     height: 100%;
     width: 2px;
     margin-left: -1px;
-    background-color: #0f0f0f;
+    background-color: #000;
 }
 .duration .buffer {
     height: 100%;
@@ -198,6 +193,7 @@ body {
     align-items: center;
     width: 0;
     border-radius: 5px;
+    z-index: -1;
 }
 .hover-time .hover-duration {
     position: absolute;
@@ -217,17 +213,17 @@ body {
     display: flex;
     position: absolute;
     background: #ff4a10;
-    z-index: 999 !important;
     align-items: center;
     border-radius: 5px;
 }
 .current-time::before {
+    z-index: 9;
     opacity: 0;
     content: "";
-    width: 17px;
-    height: 18px;
+    width: 13px;
+    height: 14px;
     position: absolute;
-    right: calc((-17px / 2));
+    right: calc((-13px / 2));
     background: #ff6a00;
     border-radius: 50%;
     transition: all 0.2s;
@@ -404,6 +400,7 @@ select option {
 .sh_pause { display: none; }
 .sh_play { display: none; }
 .sh_play_st { display: none; }
+.sh_pause_st { display: none; }
 .sh_mute_st { display: none; }
 .sh_unmute_st { display: none; }
 .sh_fordward_st { display: none; }
@@ -420,8 +417,8 @@ button:focus { outline: none; }
 
 @media (max-width: 900px) {
     .main-state {
-        height: 67px;
-        width: 67px;
+        height: 64px;
+        width: 64px;
     }
     .custom-loader {
         height: 90px;
@@ -460,8 +457,8 @@ button:focus { outline: none; }
         display: none;
     }
     .main-state {
-        height: 50px;
-        width: 50px;
+        height: 45px;
+        width: 45px;
     }
     .custom-loader {
         height: 70px;
@@ -469,7 +466,7 @@ button:focus { outline: none; }
         border: 7px solid #FFF;
         border-bottom-color: transparent;
     }
-}
+}z-index
 @media (max-width: 220px) {
     .settings {
         display: none;

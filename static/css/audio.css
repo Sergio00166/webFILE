@@ -49,44 +49,97 @@ img {
     word-break: break-all;
 }
 .time-bar {
+    display: flex;
     width: 100%;
+    align-items: center;
+}
+.duration {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc((100% - 64px));
+    height: 10px;
+    background: #62626274;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 1px;
+}
+/* This weird shit is only to let the */
+/* user select easily the start and end */
+/* and also try to fix one bug */
+.duration::before {
+    position: absolute;
+    content: "\00a0";
+    height: 100%;
+    left: -48px;
+    width: calc((100% + 98px));
+    height: 150%;
+    top: -25%;
+}
+.hover-time {
+    overflow: show;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    background: #ffffff9a;
     display: flex;
     align-items: center;
-    font-size: 12px;
-    color: #bbb;
-    gap: 6px;
+    width: 0;
+    border-radius: 5px;
+    z-index: -1;
 }
-#current-time,
-#total-time {
-    width: 36px;
+.hover-time .hover-duration {
+    position: absolute;
+    background: #202020f0;
+    padding: 4px;
+    padding-top: 1px;
+    padding-bottom: 3px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    visibility: hidden;
+    font-weight: bold;
     text-align: center;
+    pointer-events: none;
 }
-#seek-bar {
-    flex: 1;
-    width: 100%;
-    -webkit-appearance: none;
-    appearance: none;
-    height: 4px;
-    background: #333;
-    border-radius: 2px;
-    outline: none;
-    cursor: pointer;
-    background: linear-gradient(to right, #0a84ff 0%, #333 0%);
+.duration .current-time {
+    inset: 0;
+    width: 0;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    background: #ff4a10;
+    align-items: center;
+    border-radius: 5px;
 }
-#seek-bar::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 10px;
-    height: 10px;
+.current-time::before {
+    z-index: 9;
+    opacity: 0;
+    content: "";
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    right: calc((-14px / 2));
+    background: #ff6a00;
     border-radius: 50%;
-    background: #0a84ff;
+    transition: all 0.2s;
+    transform: scale(0);
 }
-#seek-bar::-moz-range-thumb {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #0a84ff;
+.duration:hover .current-time::before {
+    opacity: 1;
+    transform: scale(1);
 }
+
+#current-time {
+    font-size: 0.8rem;
+    margin-left: 8px;
+    margin-right: 12px;
+}
+#total-time {
+    font-size: 0.8rem;
+    margin-left: 12px;
+    margin-right: 8px;
+}
+
 .playback-controls {
     margin-top: 20px;
     margin-bottom: 16px;
@@ -135,7 +188,7 @@ img {
     flex: 1;
     -webkit-appearance: none;
     appearance: none;
-    height: 3px;
+    height: 4px;
     background: #e1e1e1;
     border-radius: 2px;
     outline: none;

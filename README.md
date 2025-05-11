@@ -25,7 +25,9 @@ Users can be granted or denied read-only access, write permissions (upload, crea
 Also if an html file with extension ```.web``` will actuate as an HTML page as .html is interpreted as plain text by default.
     
 If inside a folder there is a file ```index.web``` it will be autoloaded when opening the folder.  
-It wont work on text-based or old browsers (MSIE), to force disable add ```?noauto``` to the folder URL.
+It wont work on text-based or old browsers (MSIE), to force disable add ```?noauto``` to the folder URL.    
+
+Se available plugins at [offical plugins](https://github.com/Sergio00166/webFILE-plugins)
 
 ## Requirements: ##
  Install all requirements with
