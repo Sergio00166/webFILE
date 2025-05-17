@@ -52,6 +52,7 @@ input {
     background-color: #333;
     color: white;
     outline: none;
+    box-shadow: 4px 4px 24px #0006;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -71,6 +72,7 @@ button {
     cursor: pointer;
     font-size: 1em;
     font-weight: 600;
+    box-shadow: 4px 4px 24px #0006;
 }
 .button-upload {
   background-color: #0d6efd;
