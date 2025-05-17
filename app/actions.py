@@ -18,17 +18,18 @@ def serveFiles_page(path, ACL, root, client, folder_size):
     validate_acl(path, ACL)
     path = safe_path(path, root)
     file_type = get_file_type(path)
+    encache = "cache" in request.args
 
     # Check if the path is not a dir
     if not file_type in ["directory", "disk"]:
-
+        
         # Serve page (for plugin-like stuff)
         if file_type == "webpage" and client == "normal":
             return send_file(path, mimetype="text/html")
 
         # Those are the sub-endpoints
-        if "raw" in request.args:
-            return send_file(path)
+        if "raw" in request.args: 
+            return send_file(path, cache=encache)
 
         if "subs" in request.args and file_type == "video":
             check_ffmpeg_installed()
@@ -47,8 +48,9 @@ def serveFiles_page(path, ACL, root, client, folder_size):
             return audio(path, root, file_type, ACL)
 
         else:  # Send the file and set mime for text
-            mime = None if is_binary(path) else "text/plain"
-            return send_file(path, mimetype=mime)
+            mime = None if is_binary(path) else "text/css"\
+                  if path.endswith(".css") else "text/plain"
+            return send_file(path, mimetype=mime, cache=encache)
 
     else:
         # Sub-endpoint to get the dir as tar

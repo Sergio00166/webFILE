@@ -75,6 +75,7 @@ h2 {
     padding-right: 18px;
     border-radius: 10px;
     cursor: pointer;
+    transition: all 0.2s;
 }
 .name {
     text-align: left;
@@ -84,6 +85,7 @@ h2 {
 }
 .filename:hover {
     background-color: #3e3e3e;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.7);
 }
 .backdir {
     color: white;

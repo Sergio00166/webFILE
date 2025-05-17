@@ -297,7 +297,7 @@ function showHover(clientX) {
   hoverTime.style.width = `${pct * 100}%`;
   hoverDuration.textContent = showDuration(pct * audio.duration);
   hoverDuration.style.cssText = `
-    bottom: ${height + 5}px;
+    bottom: ${height + 6}px;
     left: ${pos - hoverDuration.offsetWidth/2}px;
     visibility: ${hoverDuration.offsetWidth ? 'visible' : 'hidden'};
     display: block;

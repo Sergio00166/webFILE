@@ -90,15 +90,9 @@ img {
 }
 .hover-time .hover-duration {
     position: absolute;
-    background: #202020f0;
-    padding: 4px;
-    padding-top: 1px;
-    padding-bottom: 3px;
-    border-radius: 5px;
     font-size: 0.7rem;
     visibility: hidden;
     font-weight: bold;
-    text-align: center;
     pointer-events: none;
 }
 .duration .current-time {
