@@ -2,9 +2,9 @@
     "source": [
         ".js", ".py", ".java", ".cpp", ".c", ".html", ".htm", ".css", 
         ".php", ".ts", ".swift", ".go", ".kt", ".lua", ".pl", ".rb",
-        ".vb", ".c#", ".dart", ".scala", ".erl", ".rs", ".vhdl", 
-        ".asm", ".perl", ".bat", ".ps1", ".cobol",".zig", ".jsx",
-        ".tsx",".julia", ".ocaml", ".java", ".cmd", ".fish", ".sh"
+        ".vb", ".c#", ".rs", ".asm", ".perl", ".bat", ".ps1", ".zig",
+        ".jsx", ".tsx", ".julia", ".ocaml", ".java", ".cmd", ".fish",
+        ".sh", ".sql"
     ],
     "photo": [
         ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg",
@@ -18,8 +18,7 @@
         ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
     ],
     "database": [
-        ".xml", ".json", ".sql", ".csv", ".xsl",
-        ".xlsx", ".ods", ".odb"
+        ".xml", ".json", ".csv", ".xsl", ".xlsx", ".ods", ".odb"
     ],
     "presentation": [
         ".ppt", ".pptx", ".odp", ".pps", ".ppsx"
