@@ -228,7 +228,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
     dropArea.addEventListener("drop", e => {
         e.preventDefault();
         const files = Array.from(e.dataTransfer.files);
-        if(files.length && confirm('Upload ${inp.files.length} item(s)?')) {
+        if(files.length && confirm('Upload ${files.length} item(s)?')) {
             uploadFiles(files, selectDirectory);
         }
     });
