@@ -6,7 +6,6 @@ const $$ = sel => Array.from(document.querySelectorAll(sel));
 let selectMode = false;
 const selected = new Map();
 
-// Cached buttons
 const buttons = {
     select: $('#selectBtn'),
     del: $('#delBtn'),
@@ -137,6 +136,7 @@ const copyFiles = () => storageOp('copy', getURLlist());
 const moveFiles = () => storageOp('move', getURLlist());
 const clearAllMvCp = () => ['copy', 'move'].forEach(k => localStorage.removeItem(k));
 
+
 async function sendRequest(path, dest, method) {
     try {
         const opts = { method };
@@ -161,9 +161,9 @@ async function renameFiles() {
     for (const item of getURLlist()) {
         const url = item.replace(/\/$/, '');
         const name = decodeURIComponent(url.split('/').pop());
-        const destName = prompt(`New Name for ${name}`);
+        const destName = prompt('New Name for ${name}');
         if (!destName) break;
-        const dest = `${url.substring(0, url.lastIndexOf('/'))}/${destName}`;
+        const dest = '${url.substring(0, url.lastIndexOf('/'))}/${destName}';
         if (!await sendRequest(url, dest, 'MOVE')) break;
     }
     clearAllMvCp();
@@ -175,13 +175,12 @@ async function pasteFiles() {
     const mv = JSON.parse(localStorage.getItem('move') || '[]');
     const toPaste = cp.length ? { list: cp, mode: 'COPY' } : mv.length ? { list: mv, mode: 'MOVE' } : {};
     if (!toPaste.list) return;
-
     showLoader();
     await delay(250);
     const base = location.pathname.replace(/\/$/, '') || '/';
     for (const p of toPaste.list) {
         const path = p.replace(/\/$/, '');
-        const dest = `${base}/${path.split('/').pop()}`;
+        const dest = '${base}/${path.split('/').pop()}';
         if (!await sendRequest(path, dest, toPaste.mode)) break;
     }
     clearAllMvCp();
@@ -192,7 +191,7 @@ async function mkdir() {
     const name = prompt('Create dir');
     if (!name) return;
     const base = location.pathname.replace(/\/$/, '');
-    if (await sendRequest(`${base}/${name}`, null, 'MKCOL')) location.reload();
+    if (await sendRequest('${base}/${name}', null, 'MKCOL')) location.reload();
 }
 
 function openFileMenu(selectDir = false) {
@@ -202,7 +201,7 @@ function openFileMenu(selectDir = false) {
         ...(selectDir && { webkitdirectory: true })
     });
     inp.onchange = () => {
-        if (inp.files.length && (selectDir || confirm(`Upload ${inp.files.length} item(s)?`))) uploadFiles(inp.files, selectDir);
+        if (inp.files.length && (selectDir || confirm('Upload ${inp.files.length} item(s)?'))) uploadFiles(inp.files, selectDir);
     };
     inp.click();
 }
@@ -229,7 +228,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
     dropArea.addEventListener("drop", e => {
         e.preventDefault();
         const files = Array.from(e.dataTransfer.files);
-        if(files.length && confirm(`¿Subir ${files.length} archivo(s)?`)) {
+        if(files.length && confirm('Upload ${files.length} item(s)?')) {
             uploadFiles(files, selectDirectory);
         }
     });
