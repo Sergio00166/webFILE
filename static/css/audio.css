@@ -124,14 +124,16 @@ img {
 }
 
 #current-time {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     margin-left: 8px;
     margin-right: 12px;
+    font-family: monospace;
 }
 #total-time {
-    font-size: 0.8rem;
-    margin-left: 12px;
-    margin-right: 8px;
+    font-size: 0.75rem;
+    margin-left: 8px;
+    margin-right: 12px;
+    font-family: monospace;
 }
 
 .playback-controls {

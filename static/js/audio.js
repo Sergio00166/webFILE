@@ -243,8 +243,9 @@ function download() {
 }
 
 speedBtn.addEventListener('touchstart', e => {
+    e.preventDefault();
     speedBtn_startY = e.touches[0].clientY;
-}, { passive: true });
+}, { passive: false });
 
 speedBtn.addEventListener('touchend', e => {
     const speedBtn_endY = e.changedTouches[0].clientY;
