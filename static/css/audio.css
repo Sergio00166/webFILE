@@ -220,7 +220,7 @@ img {
     background: none;
     cursor: pointer;
 }
-.speed-btn {
+#speed-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -228,7 +228,7 @@ img {
     color: #0a84ff;
     transition: all 0.1s;
 }
-.speed-btn:hover {
+#speed-btn:hover {
     color: #aad4ff;
 }
 .control-btn {
