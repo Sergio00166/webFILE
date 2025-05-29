@@ -34,6 +34,7 @@ let speedIndex = speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpee
     speedOptions.indexOf(1);
 audio.playbackRate = speedOptions[speedIndex];
 let speedBtn_startY = 0;
+let fixTouchHover = false;
 
 
 function updateLoopButton() {
@@ -329,10 +330,10 @@ duration.addEventListener('touchstart', e =>
   touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
 );
 
-document.addEventListener('touchstart', () => { clearHover(); }, { passive: true });
+document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-duration.addEventListener('mousemove', e => { showHover(e.clientX); });
-duration.addEventListener('mouseleave', () => { clearHover(); });
+duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
+duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
 
 
 // Add keyboard shortcuts
