@@ -59,9 +59,9 @@ def index():
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
-            path = safe_path(path,sroot),cache=True
+            path = safe_path(path,sroot)
             if not isfile(path): return "Not Acceptable", 406
-            return send_file( path )
+            return send_file( path, cache=True )
 
         return serveRoot_page(ACL,root,client,folder_size)
 
