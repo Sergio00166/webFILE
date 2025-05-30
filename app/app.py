@@ -1,5 +1,6 @@
 #Code by Sergio00166
 
+from os.path import isfile
 from init import *
 
 
