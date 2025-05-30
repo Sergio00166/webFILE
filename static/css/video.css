@@ -61,7 +61,8 @@ img {
     justify-content: center;
     box-sizing: border-box;
     position: relative;
-    margin-right: 8px;
+    margin-right: 4px;
+    margin-left: 4px;
     cursor: pointer;
 }
 .round-button:hover {
@@ -466,7 +467,7 @@ button:focus { outline: none; }
         border: 7px solid #FFF;
         border-bottom-color: transparent;
     }
-}z-index
+}
 @media (max-width: 220px) {
     .settings {
         display: none;
