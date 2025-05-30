@@ -1,3 +1,5 @@
+/* Code by Sergio00166 */
+
 body {
     margin: 0;
     padding: 0;
@@ -55,8 +57,7 @@ img {
 }
 .duration {
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
     width: calc((100% - 64px));
     height: 10px;
     background: #62626274;
@@ -122,16 +123,11 @@ img {
     transform: scale(1);
 }
 
-#current-time {
-    font-size: 0.75rem;
+#current-time, #total-time {
+    margin: auto;
     margin-left: 8px;
     margin-right: 12px;
-    font-family: monospace;
-}
-#total-time {
     font-size: 0.75rem;
-    margin-left: 8px;
-    margin-right: 12px;
     font-family: monospace;
 }
 
