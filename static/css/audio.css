@@ -70,7 +70,7 @@ img {
 /* and also try to fix one bug */
 .duration::before {
     position: absolute;
-    content: "\00a0";
+    content: "";
     height: 100%;
     left: -48px;
     width: calc((100% + 98px));
@@ -125,7 +125,7 @@ img {
 }
 
 #current-time, #total-time {
-    font-size: 14px;
+    font-size: 12px;
     font-family: monospace;
 }
 #total-time {
