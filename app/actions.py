@@ -3,7 +3,7 @@
 from video import get_subtitles, get_chapters, get_info, check_ffmpeg_installed
 from flask import render_template, stream_template, redirect, request
 from files_mgr import upfile, updir, mkdir, delfile, move, copy
-from os.path import join, relpath, pardir, abspath
+from os.path import join, relpath, pardir, abspath, isfile
 from urllib.parse import quote as encurl
 from send_file import send_file, send_dir
 from flask_session import Session
@@ -59,7 +59,7 @@ def serveFiles_page(path, ACL, root, client, folder_size):
 
         # Autoload index.web if available (plugins-like)
         if (
-            exists(path + sep + autoload_webpage)
+            isfile(path + sep + autoload_webpage)
             and not "noauto" in request.args
             and client == "normal"
         ):
@@ -215,7 +215,18 @@ def subtitles(path, mode):
 def video(path, root, file_type, ACL):
     prev, nxt, name = get_filepage_data(path, root, file_type, ACL, ngtst=True)
     tracks, chapters = get_info(path), get_chapters(path)
-    return render_template("video.html", path=path, name=name, prev=prev, nxt=nxt, tracks=tracks, chapters=chapters)
+
+    subs_file = ".".join(path.split(".")[:-1]+["mks"])
+    subs_name = subs_file.split("/")[-1]
+    if not isfile(subs_file): subs_file = None
+    else: subs_file = "/"+relpath(subs_file, start=root)
+
+    return render_template(
+        "video.html", path=path, name=name,
+        prev=prev,nxt=nxt, tracks=tracks,
+        chapters=chapters, subs_file=subs_file,
+        subs_name = subs_name
+    )
 
 
 def audio(path, root, file_type, ACL):

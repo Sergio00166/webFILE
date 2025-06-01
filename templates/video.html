@@ -11,11 +11,12 @@
     <script defer src="{{ url_for('index', static='js/video.js') }}"></script>
     <script src="{{ url_for('index', static='jassub/jassub.js') }}"></script>
     <script>
-      const chapters = {{ chapters | tojson}}
+      const chapters = {{ chapters | tojson}};
     </script>
   </head>
   <body>
-    <a href="{{ request.path }}?raw" download="{{ name }}" id="download"></a>
+    <a href="{{ request.path }}?raw" download="{{ name }}" id="download_video"></a>
+    <a href="{{ subs_file }}" download="{{ subs_name }}" id="download_subs"></a>
     <a href='{{ nxt }}' id="next"></a>
     <a href='{{ prev }}' id="prev"></a>
     <div class="video-container">

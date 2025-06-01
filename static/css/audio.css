@@ -1,7 +1,9 @@
+/* Code by Sergio00166 */
+
 body {
     margin: 0;
     padding: 0;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     height: 100dvh;
     display: flex;
@@ -21,11 +23,12 @@ body {
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.3);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    padding: 12px;
     display: flex;
+    padding: 12px;
     box-sizing: border-box;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
 }
 img {
     pointer-events: none;
@@ -34,7 +37,6 @@ img {
     display: flex;
     align-items: center;
     width: 100%;
-    margin-bottom: 8px;
     user-select: text;
     -webkit-user-select: text;
 }
@@ -55,21 +57,19 @@ img {
 }
 .duration {
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
+    margin: auto;
     width: calc((100% - 64px));
     height: 10px;
     background: #62626274;
     cursor: pointer;
     border-radius: 4px;
-    margin-top: 1px;
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
 /* and also try to fix one bug */
 .duration::before {
     position: absolute;
-    content: "\00a0";
+    content: "";
     height: 100%;
     left: -48px;
     width: calc((100% + 98px));
@@ -123,15 +123,17 @@ img {
     transform: scale(1);
 }
 
-#current-time {
-    font-size: 0.8rem;
-    margin-left: 8px;
-    margin-right: 12px;
+#current-time, #total-time {
+    font-size: 12px;
+    font-family: monospace;
 }
 #total-time {
-    font-size: 0.8rem;
     margin-left: 12px;
-    margin-right: 8px;
+    margin-right: 8px;    
+}
+#current-time {
+    margin-left: 8px;
+    margin-right: 12px;
 }
 
 .playback-controls {
@@ -218,7 +220,7 @@ img {
     background: none;
     cursor: pointer;
 }
-.speed-btn {
+#speed-btn {
     background: none;
     border: none;
     cursor: pointer;
@@ -226,7 +228,7 @@ img {
     color: #0a84ff;
     transition: all 0.1s;
 }
-.speed-btn:hover {
+#speed-btn:hover {
     color: #aad4ff;
 }
 .control-btn {
@@ -275,12 +277,7 @@ img {
         padding: 0px;
         border: none;
     }
-}
-@media (max-width: 250px) {
-    .volume-control {
-        display: none;
-    }
-    .extra-controls {
+    .volume-control, .extra-controls {
         display: none;
     }
     .audio-player {
@@ -302,7 +299,15 @@ img {
         font-size: 20px;
     }
 }
-@media (max-width: 160px) {
+@media (max-width: 250px) {
+    #current-time, #total-time {
+        display: none;
+    }
+    .duration {
+        width: calc((100% - 16px));
+    }
+}
+@media (max-width: 180px) {
     .nav-btn {
         display: none;
     }

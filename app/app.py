@@ -1,5 +1,6 @@
 #Code by Sergio00166
 
+from os.path import isfile
 from init import *
 
 
@@ -58,7 +59,9 @@ def index():
         # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
-            return send_file( safe_path(path,sroot),cache=True )
+            path = safe_path(path,sroot)
+            if not isfile(path): raise FileNotFoundError
+            return send_file( path, cache=True )
 
         return serveRoot_page(ACL,root,client,folder_size)
 

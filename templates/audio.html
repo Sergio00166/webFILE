@@ -51,15 +51,15 @@
         </div>
       </div>
       <div class="extra-controls">
-        <button id="shuffle-btn" class="shuffle-btn" onclick="toggleShuffle()" title="Shuffle">
+        <button id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle">
             <img class="icon-menu" src="{{ url_for('index', static='svg/audioplayer/shuffle-tracks-button.svg') }}" />
         </button>
-        <button id="loop-btn" class="loop-btn" onclick="cycleLoop()" title="Loop Mode">
+        <button id="loop-btn" onclick="cycleLoop()" title="Loop Mode">
             <img class="icon-menu" id="loop" src="{{ url_for('index', static='svg/audioplayer/repeat-button.svg') }}" style="display:block;" />
             <img class="icon-menu" id="loopSame" src="{{ url_for('index', static='svg/audioplayer/repeat-single-button.svg') }}" style="display:none;" />
         </button>
-        <button id="speed-btn" class="speed-btn" title="Playback Speed">1x</button>
-        <button id="download-btn" class="download-btn" onclick="download()" title="Download">
+        <button id="speed-btn" title="Playback Speed">1x</button>
+        <button onclick="download()" title="Download">
             <img class="icon-menu" src="{{ url_for('index', static='svg/audioplayer/down-arrow.svg') }}" />
         </button>
       </div>
