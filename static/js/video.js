@@ -37,7 +37,8 @@ const sh_lowa = document.querySelector(".sh_lowa");
 const sh_meda = document.querySelector(".sh_meda");
 const sh_noa = document.querySelector(".sh_noa");
 const liD = document.getElementById("liD");
-const downloadLink = document.getElementById("download");
+const download_video = document.getElementById("download_video");
+const download_subs = document.getElementById("download_subs");
 const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
@@ -834,7 +835,8 @@ document.addEventListener("keydown", handleShorthand);
 
 // Download event
 liD.addEventListener("click", () => {
-    downloadLink.click();
+    download_video.click();
+    download_subs.click();
     handleSettingMenu();
 });
 
@@ -849,4 +851,3 @@ document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
 duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
 duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
-
