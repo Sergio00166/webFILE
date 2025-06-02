@@ -339,6 +339,17 @@ duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHove
 // Add keyboard shortcuts
 document.addEventListener('keydown', (e) => {
     e.preventDefault();
+
+    if (e.repeat && e.key.toLowerCase()==" ") return;
+    if (e.code === 'F5') {
+        location.reload(true);
+        return;
+    }
+    if (e.key.match(/[0-9]/gi)) {
+        audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
+        return;
+    }
+
     switch (e.key.toLowerCase()) {
         case ' ':
             e.preventDefault();
