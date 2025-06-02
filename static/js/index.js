@@ -233,3 +233,44 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
     });
 }
 enableDragAndDropUpload(document);
+
+
+/* Keyboard Shorthands */
+
+function moveFocus(direction) {
+    const container = $('.container');
+    const items = Array.from(container.children)
+        .filter(el => !el.classList.contains('backdir'));
+    if (items.length == 0) return;
+    const active = document.activeElement;
+    let index = items.indexOf(active);
+    index = (index + direction + items.length) % items.length;
+    items[index].focus();
+}
+
+const keyHandlers = {
+    'arrowdown': () => moveFocus(1),
+    'arrowup':   () => moveFocus(-1),
+    'arrowright': () => document.activeElement.click(),
+    'arrowleft': () => {
+        const active = document.activeElement;
+        if (selectMode) active.click();
+        else $(".backdir").click();
+    },
+    'a': invertSelection,
+    'd': executeDownloads,
+    'c': copyFiles,
+    'x': moveFiles,
+    'p': pasteFiles,
+    'u': () => openFileMenu(),
+    'i': () => openFileMenu(true),
+    's': toggleSelectMode,
+    'n': renameFiles,
+    'r': executeDeletes,
+    'm': mkdir
+};
+
+document.addEventListener('keydown', event => {
+    keyHandlers[event.key.toLowerCase()]();
+});
+
