@@ -272,6 +272,9 @@ const keyHandlers = {
 };
 
 document.addEventListener('keydown', event => {
-    keyHandlers[event.key.toLowerCase()]();
+    const key = event.key;
+    if (typeof key === 'string') {
+        keyHandlers[key.toLowerCase()]();
+    }
 });
 
