@@ -248,33 +248,58 @@ function moveFocus(direction) {
     items[index].focus();
 }
 
-const keyHandlers = {
-    'arrowdown': () => moveFocus(1),
-    'arrowup':   () => moveFocus(-1),
-    'arrowright': () => document.activeElement.click(),
-    'arrowleft': () => {
-        const active = document.activeElement;
-        const backdir = $(".backdir");
-        if (selectMode) active.click();
-        else if (backdir) backdir.click();
-    },
-    'a': invertSelection,
-    'd': executeDownloads,
-    'c': copyFiles,
-    'x': moveFiles,
-    'p': pasteFiles,
-    'u': () => openFileMenu(),
-    'i': () => openFileMenu(true),
-    's': toggleSelectMode,
-    'n': renameFiles,
-    'r': executeDeletes,
-    'm': mkdir
-};
-
-document.addEventListener('keydown', event => {
-    const key = event.key;
-    if (typeof key === 'string') {
-        keyHandlers[key.toLowerCase()]();
+document.addEventListener('keydown', e => {
+    switch (e.key.toLowerCase()) {
+        case 'arrowdown':
+            moveFocus(1);
+            break;
+        case 'arrowup':
+            moveFocus(-1);
+            break;
+        case 'arrowright':
+            document.activeElement.click();
+            break;
+        case 'arrowleft': {
+            const active = document.activeElement;
+            const backdir = $(".backdir");
+            if (selectMode) active.click();
+            else if (backdir) backdir.click();
+            break;
+        }
+        case 'a':
+            invertSelection();
+            break;
+        case 'd':
+            executeDownloads();
+            break;
+        case 'c':
+            copyFiles();
+            break;
+        case 'x':
+            moveFiles();
+            break;
+        case 'p':
+            pasteFiles();
+            break;
+        case 'u':
+            openFileMenu();
+            break;
+        case 'i':
+            openFileMenu(true);
+            break;
+        case 's':
+            toggleSelectMode();
+            break;
+        case 'n':
+            renameFiles();
+            break;
+        case 'r':
+            executeDeletes();
+            break;
+        case 'm':
+            mkdir();
+            break;
+        default:
+            break;
     }
 });
-
