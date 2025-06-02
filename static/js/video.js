@@ -570,10 +570,10 @@ function handleShorthand(e) {
         case "arrowdown":
             next();
             break;
-        case "r":
+        case "l":
             chMode();
             break;
-        case "q":
+        case "m":
             toggleMuteUnmute();
             break;
         case "+":
