@@ -254,8 +254,9 @@ const keyHandlers = {
     'arrowright': () => document.activeElement.click(),
     'arrowleft': () => {
         const active = document.activeElement;
+        const backdir = $(".backdir");
         if (selectMode) active.click();
-        else $(".backdir").click();
+        else if (backdir) backdir.click();
     },
     'a': invertSelection,
     'd': executeDownloads,
