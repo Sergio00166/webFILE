@@ -299,6 +299,15 @@ document.addEventListener('keydown', e => {
         case 'm':
             mkdir();
             break;
+        case '1':
+            $("#sortName").click();
+            break;
+        case '2':
+            $("#sortSize").click();
+            break;
+        case '3':
+            $("#sortDate").click();
+            break;
         default:
             break;
     }
