@@ -527,86 +527,6 @@ function handleVideoIcon() {
     }
 }
 
-function handleShorthand(e) {
-    e.preventDefault();
-    if (e.repeat && e.key.toLowerCase()==" ") return;
-    if (e.code === 'F5') {
-        location.reload(true);
-        return;
-    }
-    if (e.code === 'F11') {
-        toggleFullscreen();
-        return;
-    }
-    if (e.key.match(/[0-9]/gi)) {
-        video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
-        currentTime.style.width = parseInt(e.key) * 10 + "%";
-        return;
-    }
-    switch (e.key.toLowerCase()) {
-        case " ":
-            video.paused ? play() : pause();
-            break;
-        case "f":
-            toggleFullscreen();
-            break;
-        case "arrowright":
-            controls.classList.add("show");
-            hideControls(500);
-            video.currentTime += 5;
-            handleProgressBar();
-            show_main_animation("fordward");
-            break;
-        case "arrowleft":
-            controls.classList.add("show");
-            hideControls(500);
-            video.currentTime -= 5;
-            handleProgressBar();
-            show_main_animation("back");
-            break;
-        case "arrowup":
-            prev();
-            break;
-        case "arrowdown":
-            next();
-            break;
-        case "l":
-            chMode();
-            break;
-        case "m":
-            toggleMuteUnmute();
-            break;
-        case "+":
-            if (volumeVal < 1 && !muted) {
-                volumeVal = parseFloat(volumeVal + 0.05);
-                if (volumeVal > 1) {
-                    volumeVal = 1;
-                }
-                video.volume = volumeVal;
-                volumeBar.value = volumeVal;
-                updateVolumeBar();
-                handleVideoIcon();
-                saveVolume();
-            }
-            break;
-        case "-":
-            if (volumeVal > 0 && !muted) {
-                volumeVal = parseFloat(volumeVal - 0.05);
-                if (volumeVal < 0) {
-                    volumeVal = 0;
-                }
-                video.volume = volumeVal;
-                volumeBar.value = volumeVal;
-                updateVolumeBar();
-                handleVideoIcon();
-                saveVolume();
-            }
-            break;
-        default:
-            break;
-    }
-}
-
 function loadTracks() {
     try {
         saved = localStorage.getItem("videoAudio");
@@ -851,3 +771,82 @@ document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
 duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
 duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
+
+
+/* Keyboard events */
+
+function handleShorthand(e) {
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    e.preventDefault(); // Avoid intercepting the browser actions
+
+    if (e.key.match(/[0-9]/gi)) {
+        video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
+        currentTime.style.width = parseInt(e.key) * 10 + "%";
+        return;
+    }
+    switch (e.key.toLowerCase()) {
+        case " ":
+            e.preventDefault();
+            if (e.repeat) break;
+            video.paused ? play() : pause();
+            break;
+        case "f":
+            toggleFullscreen();
+            break;
+        case "arrowright":
+            controls.classList.add("show");
+            hideControls(500);
+            video.currentTime += 5;
+            handleProgressBar();
+            show_main_animation("fordward");
+            break;
+        case "arrowleft":
+            controls.classList.add("show");
+            hideControls(500);
+            video.currentTime -= 5;
+            handleProgressBar();
+            show_main_animation("back");
+            break;
+        case "arrowup":
+            prev();
+            break;
+        case "arrowdown":
+            next();
+            break;
+        case "l":
+            chMode();
+            break;
+        case "m":
+            toggleMuteUnmute();
+            break;
+        case "+":
+            if (volumeVal < 1 && !muted) {
+                volumeVal = parseFloat(volumeVal + 0.05);
+                if (volumeVal > 1) {
+                    volumeVal = 1;
+                }
+                video.volume = volumeVal;
+                volumeBar.value = volumeVal;
+                updateVolumeBar();
+                handleVideoIcon();
+                saveVolume();
+            }
+            break;
+        case "-":
+            if (volumeVal > 0 && !muted) {
+                volumeVal = parseFloat(volumeVal - 0.05);
+                if (volumeVal < 0) {
+                    volumeVal = 0;
+                }
+                video.volume = volumeVal;
+                volumeBar.value = volumeVal;
+                updateVolumeBar();
+                handleVideoIcon();
+                saveVolume();
+            }
+            break;
+        default:
+            break;
+    }
+}
+

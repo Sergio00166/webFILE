@@ -338,21 +338,17 @@ duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHove
 
 // Add keyboard shortcuts
 document.addEventListener('keydown', (e) => {
-    e.preventDefault();
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    e.preventDefault(); // Avoid intercepting the browser actions
 
-    if (e.repeat && e.key.toLowerCase()==" ") return;
-    if (e.code === 'F5') {
-        location.reload(true);
-        return;
-    }
-    if (e.key.match(/[0-9]/gi)) {
+    if (e.key.match(/[0-9]/gi) && !event.ctrlKey) {
         audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
         return;
     }
-
     switch (e.key.toLowerCase()) {
         case ' ':
             e.preventDefault();
+            if (e.repeat) break;
             toggleMainState();
             break;
         case 'm':
@@ -400,3 +396,4 @@ if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('previoustrack', prev);
     navigator.mediaSession.setActionHandler('nexttrack', next);
 }
+
