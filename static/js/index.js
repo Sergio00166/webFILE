@@ -249,8 +249,7 @@ function moveFocus(direction) {
 }
 
 document.addEventListener('keydown', e => {
-    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-    e.preventDefault(); // Avoid intercepting the browser actions
+    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
 
     switch (e.key.toLowerCase()) {
         case 'arrowdown':

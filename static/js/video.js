@@ -776,8 +776,7 @@ duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHove
 /* Keyboard events */
 
 function handleShorthand(e) {
-    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-    e.preventDefault(); // Avoid intercepting the browser actions
+    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
 
     if (e.key.match(/[0-9]/gi)) {
         video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
