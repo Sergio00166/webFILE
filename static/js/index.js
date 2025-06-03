@@ -302,6 +302,9 @@ document.addEventListener('keydown', e => {
         case 'm':
             mkdir();
             break;
+        case 'm':
+            $("#login").click();
+            break;
         case '1':
             $("#sortName").click();
             break;

@@ -38,9 +38,9 @@
                     <button id="invertBtn" onclick="invertSelection()" disabled>*</button>
                     <button onclick="executeDownloads()">DWNLD</button>
                     {% if 'user' in session %}
-                        <button onclick='window.location.href="?logout"'>LOGOUT</button>
+                        <button onclick='window.location.href="?logout"' id="login">LOGOUT</button>
                     {% else %}
-                        <button onclick='window.location.href="?login"'>LOGIN</button>
+                        <button onclick='window.location.href="?login"' id="login">LOGIN</button>
                     {% endif %} 
                 </div>
             </div>
