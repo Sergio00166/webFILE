@@ -302,7 +302,7 @@ document.addEventListener('keydown', e => {
         case 'm':
             mkdir();
             break;
-        case 'm':
+        case 'l':
             $("#login").click();
             break;
         case '1':
