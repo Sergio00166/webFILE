@@ -785,9 +785,11 @@ function handleShorthand(e) {
     }
     switch (e.key.toLowerCase()) {
         case " ":
-            if (e.repeat) break;
-            video.paused ? play() : pause();
-            break;
+            if (document.activeElement === document.body) {
+                e.preventDefault();
+                if (e.repeat) break;
+                video.paused ? play() : pause();
+            } break;
         case "f":
             toggleFullscreen();
             break;

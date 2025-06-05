@@ -346,10 +346,11 @@ document.addEventListener('keydown', (e) => {
     }
     switch (e.key.toLowerCase()) {
         case ' ':
-            e.preventDefault();
-            if (e.repeat) break;
-            toggleMainState();
-            break;
+            if (document.activeElement === document.body) {
+                e.preventDefault();
+                if (e.repeat) break;
+                toggleMainState();
+            } break;
         case 'm':
             toggleMuteUnmute();
             break;
