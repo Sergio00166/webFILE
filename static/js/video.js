@@ -642,6 +642,12 @@ videoContainer.addEventListener("mousemove", (e) => {
     showCursor();
     hideControls(mouse_ctrl_delay);
 });
+
+videoContainer.addEventListener("focusin", (e) => {
+    controls.classList.add("show");
+    hideControls(mouse_ctrl_delay);
+});
+
 videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
     if (video.videoWidth >= video.videoHeight) {
