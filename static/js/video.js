@@ -349,12 +349,14 @@ function toggleMuteUnmute() {
 function hideControls(delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-        if (!video.paused && !isCursorOnControls) {
+        if (!video.paused) {
+            if (isCursorOnControls) return;
             controls.classList.remove("show");
             settingMenu.classList.remove("show");
             for (let i = 0; i < menuButtons.length; i++) {
                 menuButtons[i].style.display = "block";
             }
+            document.activeElement.blur();
         }
     }, delay);
 }
