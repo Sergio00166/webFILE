@@ -757,7 +757,7 @@ document.addEventListener("keydown", handleShorthand);
 liD.addEventListener("click", () => {
     download_video.click();
     download_subs.click();
-    handleSettingMenu();
+    setTimeout(handleSettingMenu, 100);
 });
 liD.addEventListener("keydown", function(e) {
     if (e.key === "Enter" || e.key === " ") {
