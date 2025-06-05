@@ -339,7 +339,6 @@ duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHove
 // Add keyboard shortcuts
 document.addEventListener('keydown', (e) => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
-    e.preventDefault(); // Avoid intercepting the browser actions
 
     if (e.key.match(/[0-9]/gi)) {
         audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
