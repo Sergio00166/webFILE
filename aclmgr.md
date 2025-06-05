@@ -6,9 +6,10 @@ This script is used for managing all users and access permissions for the server
 ## ALLOW
 **Syntax:**
 ```
-ALLOW 'username' TO READ|DOALL ON 'resource'|ALL;
+ALLOW 'username' TO READ|DOALL ON 'resource'|ALL [DONT INHERIT];
 ```
 Assigns permissions for a user to a specific resource or all resources.
+Also allows to disable inheritance, by default (not present) is enabled.
 
 ---
 
