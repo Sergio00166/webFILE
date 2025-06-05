@@ -753,11 +753,17 @@ touchBox.addEventListener("click", (e) => {
 // Keyboard events
 document.addEventListener("keydown", handleShorthand);
 
-// Download event
+// Download events
 liD.addEventListener("click", () => {
     download_video.click();
     download_subs.click();
     handleSettingMenu();
+});
+liD.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        liD.click();
+    }
 });
 
 duration.addEventListener('mousedown', e =>
