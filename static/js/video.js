@@ -810,14 +810,14 @@ function handleShorthand(e) {
         case "arrowright":
             controls.classList.add("show");
             hideControls(500);
-            video.currentTime += 5;
+            video.currentTime += 2;
             handleProgressBar();
             show_main_animation("fordward");
             break;
         case "arrowleft":
             controls.classList.add("show");
             hideControls(500);
-            video.currentTime -= 5;
+            video.currentTime -= 2;
             handleProgressBar();
             show_main_animation("back");
             break;
@@ -835,10 +835,7 @@ function handleShorthand(e) {
             break;
         case "+":
             if (volumeVal < 1 && !muted) {
-                volumeVal = parseFloat(volumeVal + 0.05);
-                if (volumeVal > 1) {
-                    volumeVal = 1;
-                }
+                volumeVal = Math.min(volumeVal + 0.02, 1);
                 video.volume = volumeVal;
                 volumeBar.value = volumeVal;
                 updateVolumeBar();
@@ -848,12 +845,9 @@ function handleShorthand(e) {
             break;
         case "-":
             if (volumeVal > 0 && !muted) {
-                volumeVal = parseFloat(volumeVal - 0.05);
-                if (volumeVal < 0) {
-                    volumeVal = 0;
-                }
+                volumeVal = Math.max(volumeVal - 0.02, 0);
                 video.volume = volumeVal;
-                volumeBar.value = volumeVal;
+                volumeBar.value = video.volume;
                 updateVolumeBar();
                 handleVideoIcon();
                 saveVolume();

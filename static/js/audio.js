@@ -373,14 +373,14 @@ document.addEventListener('keydown', (e) => {
             audio.currentTime -= 2;
             break;
         case "+":
-            audio.volume = Math.min(audio.volume + 0.05, 1);
+            audio.volume = Math.min(audio.volume + 0.02, 1);
             volumeBar.value = audio.volume;
             localStorage.setItem('audioVolume', audio.volume);
             updateVolumeIcon(audio.volume);
             updateVolumeBar();
             break;
         case "-":
-            audio.volume = Math.max(audio.volume - 0.05, 0);
+            audio.volume = Math.max(audio.volume - 0.02, 0);
             volumeBar.value = audio.volume;
             localStorage.setItem('audioVolume', audio.volume);
             updateVolumeIcon(audio.volume);
