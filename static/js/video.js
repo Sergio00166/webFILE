@@ -27,6 +27,7 @@ const sh_unmute = document.querySelector(".sh_unmute");
 const sh_pause = document.querySelector(".sh_pause");
 const sh_play = document.querySelector(".sh_play");
 const sh_play_st = document.querySelector(".sh_play_st");
+const sh_volume_st = document.querySelector(".sh_volume_st");
 const sh_pause_st = document.querySelector(".sh_pause_st");
 const sh_mute_st = document.querySelector(".sh_mute_st");
 const sh_unmute_st = document.querySelector(".sh_unmute_st");
@@ -114,7 +115,8 @@ if (volumeVal === null) {
     volumeVal = 1;
 }
 
-video.volume = parseFloat(volumeVal);
+volumeVal = parseFloat(volumeVal);
+video.volume = volumeVal;
 
 window.addEventListener('pageshow', () => {
     volumeBar.value = video.volume;
@@ -298,9 +300,9 @@ function pause() {
     video.pause();
     controls.classList.add("show");
     show_main_animation("pause");
-    handleVideoIcon();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
+    handleVideoIcon();
     if (video.ended) {
         currentTime.style.width = 100 + "%";
     }
@@ -334,7 +336,7 @@ function toggleMuteUnmute() {
     if (!muted) {
         video.volume = 0;
         muted = true;
-        handleVideoIcon();
+        handleVideoIcon();m
         show_main_animation("mute");
     } else {
         video.volume = volumeVal;
@@ -451,6 +453,8 @@ function show_main_animation(mode) {
     sh_unmute_st.classList.add("sh_unmute_st");
     sh_back_st.classList.add("sh_back_st");
     sh_fordward_st.classList.add("sh_fordward_st");
+    sh_volume_st.classList.add("sh_volume_st");
+
     switch (mode) {
         case "play":
             sh_play_st.classList.remove("sh_play_st");
@@ -476,6 +480,10 @@ function show_main_animation(mode) {
             sh_fordward_st.classList.remove("sh_fordward_st");
             mainState.classList.add("animate-state");
             break;
+        case "show_vol":
+            sh_volume_st.innerText = Math.round(volumeVal * 100) + "%";;
+            sh_volume_st.classList.remove("sh_volume_st");
+            mainState.classList.add("animate-state");
         default:
             mainState.classList.remove("show");
             break;
@@ -485,7 +493,8 @@ function show_main_animation(mode) {
 function handleMainSateAnimationEnd() {
     mainState.classList.remove("animate-state");
     if (video.paused) {
-        sh_play_st.classList.remove("sh_play_st");
+        sh_volume_st.classList.add("sh_volume_st");
+        sh_play_st.classList.add("sh_play_st");
         sh_mute_st.classList.add("sh_mute_st");
         sh_unmute_st.classList.add("sh_unmute_st");
         sh_back_st.classList.add("sh_back_st");
@@ -614,6 +623,15 @@ async function addrmMLcl() {
     }
     localStorage.setItem("subsLegacy", subs_legacy);
     await changeSubs(subtitleId);
+}
+
+function volume_kbd() {
+    video.volume = volumeVal;
+    volumeBar.value = volumeVal;
+    updateVolumeBar();
+    handleVideoIcon();
+    show_main_animation("show_vol");
+    saveVolume();
 }
 
 
@@ -836,21 +854,13 @@ function handleShorthand(e) {
         case "+":
             if (volumeVal < 1 && !muted) {
                 volumeVal = Math.min(volumeVal + 0.02, 1);
-                video.volume = volumeVal;
-                volumeBar.value = volumeVal;
-                updateVolumeBar();
-                handleVideoIcon();
-                saveVolume();
+                volume_kbd();
             }
             break;
         case "-":
             if (volumeVal > 0 && !muted) {
                 volumeVal = Math.max(volumeVal - 0.02, 0);
-                video.volume = volumeVal;
-                volumeBar.value = video.volume;
-                updateVolumeBar();
-                handleVideoIcon();
-                saveVolume();
+                volume_kbd();
             }
             break;
         default:

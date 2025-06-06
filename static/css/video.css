@@ -87,7 +87,6 @@ body {
     -webkit-user-select: none;
     user-select: none;
 }
-
 .custom-loader {
     width: 108px;
     height: 108px;
@@ -112,7 +111,6 @@ body {
         transform: rotate(360deg);
     }
 } 
-
 .main-state {
     opacity: 0;
     height: 75px;
@@ -127,7 +125,17 @@ body {
     border: 1px solid #222;
 }
 .animate-state {
-    animation: animation 0.6s forwards;
+    animation: animation 0.7s forwards;
+}
+@keyframes animation {
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
 }
 .controls {
     bottom: 0;
@@ -341,7 +349,6 @@ body {
     color: #ffffff;
     position: absolute;
 }
-
 select {
     cursor: pointer;
     -webkit-appearance: none;
@@ -391,16 +398,6 @@ select option {
 .video-container.fullscreen .contract {
     display: flex;
 }
-@keyframes animation {
-    50% {
-        opacity: 1;
-        transform: scale(1.1);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(1);
-    }
-}
 
 /* Define default values */
 .sh_mute { display: none; }
@@ -411,6 +408,7 @@ select option {
 .sh_pause_st { display: none; }
 .sh_mute_st { display: none; }
 .sh_unmute_st { display: none; }
+.sh_volume_st { display: none; }
 .sh_fordward_st { display: none; }
 .sh_back_st { display: none; }
 .sh_fulla { display: none; }
