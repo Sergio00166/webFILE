@@ -630,7 +630,6 @@ function volume_kbd() {
     volumeBar.value = volumeVal;
     updateVolumeBar();
     handleVideoIcon();
-    show_main_animation("show_vol");
     saveVolume();
 }
 
@@ -855,13 +854,13 @@ function handleShorthand(e) {
             if (volumeVal < 1 && !muted) {
                 volumeVal = Math.min(volumeVal + 0.02, 1);
                 volume_kbd();
-            }
+            } show_main_animation("show_vol");
             break;
         case "-":
             if (volumeVal > 0 && !muted) {
                 volumeVal = Math.max(volumeVal - 0.02, 0);
                 volume_kbd();
-            }
+            } show_main_animation("show_vol");
             break;
         default:
             break;
