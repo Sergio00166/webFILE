@@ -336,7 +336,7 @@ function toggleMuteUnmute() {
     if (!muted) {
         video.volume = 0;
         muted = true;
-        handleVideoIcon();m
+        handleVideoIcon();
         show_main_animation("mute");
     } else {
         video.volume = volumeVal;
@@ -445,8 +445,10 @@ function touchDrag(handlerMove) {
   document.addEventListener('touchend', end, { once: true, passive: true });
 }
 
-
+let anim_timeout;
 function show_main_animation(mode) {
+    if (anim_timeout) clearTimeout(anim_timeout);
+
     sh_play_st.classList.add("sh_play_st");
     sh_pause_st.classList.add("sh_pause_st");
     sh_mute_st.classList.add("sh_mute_st");
@@ -458,48 +460,38 @@ function show_main_animation(mode) {
     switch (mode) {
         case "play":
             sh_play_st.classList.remove("sh_play_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "pause":
             sh_pause_st.classList.remove("sh_pause_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "mute":
             sh_mute_st.classList.remove("sh_mute_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "unmute":
             sh_unmute_st.classList.remove("sh_unmute_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "back":
             sh_back_st.classList.remove("sh_back_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "fordward":
             sh_fordward_st.classList.remove("sh_fordward_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "show_vol":
-            sh_volume_st.innerText = Math.round(volumeVal * 100) + "%";;
+            sh_volume_st.innerText = Math.round(volumeVal * 100) + "%";
             sh_volume_st.classList.remove("sh_volume_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
+            break;
         default:
             mainState.classList.remove("show");
-            break;
+            return;
     }
-}
-
-function handleMainSateAnimationEnd() {
-    mainState.classList.remove("animate-state");
-    if (video.paused) {
-        sh_volume_st.classList.add("sh_volume_st");
-        sh_play_st.classList.add("sh_play_st");
-        sh_mute_st.classList.add("sh_mute_st");
-        sh_unmute_st.classList.add("sh_unmute_st");
-        sh_back_st.classList.add("sh_back_st");
-        sh_fordward_st.classList.add("sh_fordward_st");
-    }
+    anim_timeout = setTimeout(show_main_animation, 400);
 }
 
 function handleVideoIcon() {
@@ -763,9 +755,6 @@ speedSelect.addEventListener('change', function() {
     localStorage.setItem("videoSpeed", video.playbackRate);
     handleSettingMenu();
 });
-
-// Main state events
-mainState.addEventListener("animationend", handleMainSateAnimationEnd);
 
 // Touch interaction events
 touchBox.addEventListener('touchend', double_touch);
