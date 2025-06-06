@@ -253,9 +253,11 @@ document.addEventListener('keydown', e => {
 
     switch (e.key.toLowerCase()) {
         case 'arrowdown':
+            e.preventDefault();
             moveFocus(1);
             break;
         case 'arrowup':
+            e.preventDefault();
             moveFocus(-1);
             break;
         case 'arrowright':
