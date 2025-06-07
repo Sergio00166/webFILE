@@ -824,7 +824,7 @@ function handleShorthand(e) {
             video.volume = Math.min(video.volume + 0.02, 1);
             volume_kbd_helper();
             break;
-        case "-": {
+        case "-":
             video.volume = Math.max(video.volume - 0.02, 0);
             volume_kbd_helper();
             break;
