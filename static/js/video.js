@@ -580,7 +580,7 @@ function double_touch(e) {
     const touchInterval = now - lastTouchTime;
     const divRect = touchBox.getBoundingClientRect();
     if (touchInterval < doubleTouch_delay) {
-        const touchX = event.changedTouches[0].clientX;
+        const touchX = e.changedTouches[0].clientX;
         const centerX = divRect.left + (divRect.width / 2);
         const p = touchX < centerX;
         if (p) {
