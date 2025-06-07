@@ -71,6 +71,10 @@ let fixTouchHover = false;
 
 /* Inicialitate everything */
 
+if (volumeVal === null) { volumeVal = 1; }
+volumeVal = parseFloat(volumeVal);
+video.volume = volumeVal;
+
 if (subs_legacy != null) {
     if (subs_legacy == "true") {
         subs_legacy = true;
@@ -111,27 +115,15 @@ if (currentMode != null) {
     currentMode = 0;
 }
 
-if (volumeVal === null) {
-    volumeVal = 1;
-}
-
-volumeVal = parseFloat(volumeVal);
-video.volume = volumeVal;
-
 window.addEventListener('pageshow', () => {
     volumeBar.value = video.volume;
     updateVolumeBar();
 });
 
 if (muted != null) {
-    if (muted == "true") {
-        muted = true;
-        video.volume = 0;
-    } else {
-        muted = false;
-    }
+    video.muted = (muted == "true")
 } else {
-    muted = false;
+    video.muted = false;
 }
 handleVideoIcon();
 
@@ -263,7 +255,9 @@ function handleSettingMenu() {
 }
 
 function saveVolume() {
-    localStorage.setItem("videoVolume", volumeVal);
+    localStorage.setItem("videoVolume", 
+        video.volume.toString()
+    );
 }
 
 function handleVideoEnded() {
@@ -333,20 +327,19 @@ function formatter(number) {
 
 function toggleMuteUnmute() {
     volumeBar.classList.remove("show");
-    if (!muted) {
-        video.volume = 0;
-        muted = true;
+    video.muted = !video.muted;
+    if (video.muted) {
         handleVideoIcon();
         show_main_animation("mute");
     } else {
-        video.volume = volumeVal;
-        muted = false;
         handleVideoIcon();
         show_main_animation("unmute");
     }
     timeContainer.style.display = "block";
-    localStorage.setItem("videoMuted", muted);
+    localStorage.setItem("videoMuted", video.muted);
 }
+
+
 
 function hideControls(delay) {
     clearTimeout(timeout);
@@ -369,8 +362,7 @@ function updateVolumeBar() {
 }
 
 function handleVolume(e) {
-    volumeVal = e.target.value;
-    video.volume = volumeVal;
+    video.volume = e.target.value;
     updateVolumeBar();
     saveVolume();
     handleVideoIcon();
@@ -483,7 +475,7 @@ function show_main_animation(mode) {
             mainState.classList.add("show");
             break;
         case "show_vol":
-            sh_volume_st.innerText = Math.round(volumeVal * 100) + "%";
+            sh_volume_st.innerText = Math.round(video.volume * 100) + "%";
             sh_volume_st.classList.remove("sh_volume_st");
             mainState.classList.add("show");
             break;
@@ -495,26 +487,26 @@ function show_main_animation(mode) {
 }
 
 function handleVideoIcon() {
-    if (!muted) {
-        if (volumeVal == 0.0) {
+    if (!video.muted) {
+        if (video.volume == 0.0) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.add("sh_fulla");
             sh_meda.classList.add("sh_meda");
             sh_lowa.classList.add("sh_lowa");
             sh_noa.classList.remove("sh_noa");
-        } else if (volumeVal > 0.67) {
+        } else if (video.volume > 0.67) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.remove("sh_fulla");
             sh_meda.classList.add("sh_meda");
             sh_lowa.classList.add("sh_lowa");
             sh_noa.classList.add("sh_noa");
-        } else if (volumeVal > 0.33) {
+        } else if (video.volume > 0.33) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.add("sh_fulla");
             sh_meda.classList.remove("sh_meda");
             sh_lowa.classList.add("sh_lowa");
             sh_noa.classList.add("sh_noa");
-        } else if (volumeVal > 0) {
+        } else if (video.volume > 0) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.add("sh_fulla");
             sh_meda.classList.add("sh_meda");
@@ -538,10 +530,10 @@ function loadTracks() {
             const track = audioTracks[i];
             const option = document.createElement('option');
             option.value = i;
-            name = (track.label || track.language || "Track " + (i + 1));
-            option.textContent = name;
+            subs_name = (track.label || track.language || "Track " + (i + 1));
+            option.textContent = subs_name;
             audioTracksSelect.appendChild(option);
-            if (name === saved) {
+            if (subs_name === saved) {
                 audioTracksSelect.selectedIndex = i;
                 changeTrack();
             } else {
@@ -598,6 +590,9 @@ function double_touch(e) {
             video.currentTime += 5;
             show_main_animation("fordward");
         }
+        handleProgressBar();
+        controls.classList.add("show");
+        hideControls(500);
     } else {
         touchTimeout = setTimeout(toggleMainState, doubleTouch_delay);
     }
@@ -615,14 +610,6 @@ async function addrmMLcl() {
     }
     localStorage.setItem("subsLegacy", subs_legacy);
     await changeSubs(subtitleId);
-}
-
-function volume_kbd() {
-    video.volume = volumeVal;
-    volumeBar.value = volumeVal;
-    updateVolumeBar();
-    handleVideoIcon();
-    saveVolume();
 }
 
 
@@ -686,8 +673,8 @@ controls.addEventListener("click", () => {
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
-    if (!muted) { timeContainer.style.display = "none"; }
-    muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
+    if (!video.muted) { timeContainer.style.display = "none"; }
+    video.muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
     volumeBar.classList.remove("show");
@@ -814,18 +801,12 @@ function handleShorthand(e) {
             toggleFullscreen();
             break;
         case "arrowright":
-            controls.classList.add("show");
-            hideControls(500);
             video.currentTime += 2;
-            handleProgressBar();
-            show_main_animation("fordward");
+            chgtime_kdb_helper("fordward");
             break;
         case "arrowleft":
-            controls.classList.add("show");
-            hideControls(500);
             video.currentTime -= 2;
-            handleProgressBar();
-            show_main_animation("back");
+            chgtime_kdb_helper("back");
             break;
         case "arrowup":
             prev();
@@ -839,20 +820,30 @@ function handleShorthand(e) {
         case "m":
             toggleMuteUnmute();
             break;
-        case "+":
-            if (volumeVal < 1 && !muted) {
-                volumeVal = Math.min(volumeVal + 0.02, 1);
-                volume_kbd();
-            } show_main_animation("show_vol");
+        case "+": 
+            video.volume = Math.min(video.volume + 0.02, 1);
+            volume_kbd_helper();
             break;
-        case "-":
-            if (volumeVal > 0 && !muted) {
-                volumeVal = Math.max(volumeVal - 0.02, 0);
-                volume_kbd();
-            } show_main_animation("show_vol");
+        case "-": {
+            video.volume = Math.max(video.volume - 0.02, 0);
+            volume_kbd_helper();
             break;
         default:
             break;
     }
+}
+
+function volume_kbd_helper() {
+    volumeBar.value = video.volume;
+    updateVolumeBar();
+    handleVideoIcon();
+    saveVolume();
+    show_main_animation("show_vol");
+}
+function chgtime_kdb_helper(mode) {
+    controls.classList.add("show");
+    hideControls(500);
+    handleProgressBar();
+    show_main_animation(mode);
 }
 

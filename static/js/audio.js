@@ -204,7 +204,7 @@ audio.addEventListener("pause", pause);
 
 function toggleMuteUnmute() {
     audio.muted = !audio.muted;
-    localStorage.setItem('audioMuted', audio.muted.toString());
+    localStorage.setItem('audioMuted', audio.muted);
     updateVolumeIcon(audio.volume);
     updateVolumeBar();
 }
@@ -374,22 +374,23 @@ document.addEventListener('keydown', (e) => {
             break;
         case "+":
             audio.volume = Math.min(audio.volume + 0.02, 1);
-            volumeBar.value = audio.volume;
-            localStorage.setItem('audioVolume', audio.volume);
-            updateVolumeIcon(audio.volume);
-            updateVolumeBar();
+            volume_kbd_helper();
             break;
         case "-":
             audio.volume = Math.max(audio.volume - 0.02, 0);
-            volumeBar.value = audio.volume;
-            localStorage.setItem('audioVolume', audio.volume);
-            updateVolumeIcon(audio.volume);
-            updateVolumeBar();
+            volume_kbd_helper();
             break;
         default:
             break;
     }
 });
+
+function volume_kbd_helper() {
+    volumeBar.value = audio.volume;
+    localStorage.setItem('audioVolume', audio.volume);
+    updateVolumeIcon(audio.volume);
+    updateVolumeBar();
+}
 
 // Media session
 if ('mediaSession' in navigator) {
