@@ -1,6 +1,8 @@
 /* Code by Sergio00166 */
 
 let mouse_ctrl_delay = 1500;
+let touch_ctrl_delay = 2500;
+let timechange_delay = 750;
 let doubleTouch_delay = 400;
 
 const volume = document.querySelector(".volume");
@@ -27,6 +29,7 @@ const sh_unmute = document.querySelector(".sh_unmute");
 const sh_pause = document.querySelector(".sh_pause");
 const sh_play = document.querySelector(".sh_play");
 const sh_play_st = document.querySelector(".sh_play_st");
+const sh_volume_st = document.querySelector(".sh_volume_st");
 const sh_pause_st = document.querySelector(".sh_pause_st");
 const sh_mute_st = document.querySelector(".sh_mute_st");
 const sh_unmute_st = document.querySelector(".sh_unmute_st");
@@ -70,6 +73,10 @@ let fixTouchHover = false;
 
 /* Inicialitate everything */
 
+if (volumeVal === null) { volumeVal = 1; }
+volumeVal = parseFloat(volumeVal);
+video.volume = volumeVal;
+
 if (subs_legacy != null) {
     if (subs_legacy == "true") {
         subs_legacy = true;
@@ -110,26 +117,15 @@ if (currentMode != null) {
     currentMode = 0;
 }
 
-if (volumeVal === null) {
-    volumeVal = 1;
-}
-
-video.volume = parseFloat(volumeVal);
-
 window.addEventListener('pageshow', () => {
     volumeBar.value = video.volume;
     updateVolumeBar();
 });
 
 if (muted != null) {
-    if (muted == "true") {
-        muted = true;
-        video.volume = 0;
-    } else {
-        muted = false;
-    }
+    video.muted = (muted == "true")
 } else {
-    muted = false;
+    video.muted = false;
 }
 handleVideoIcon();
 
@@ -247,7 +243,7 @@ function chMode() {
     localStorage.setItem("videoMode", currentMode);
 }
 
-function toggleMainState() {
+function toggleMainState() {timechange_delaytimechange_delay
     video.paused ? play() : pause();
 }
 
@@ -261,7 +257,9 @@ function handleSettingMenu() {
 }
 
 function saveVolume() {
-    localStorage.setItem("videoVolume", volumeVal);
+    localStorage.setItem("videoVolume", 
+        video.volume.toString()
+    );
 }
 
 function handleVideoEnded() {
@@ -298,9 +296,9 @@ function pause() {
     video.pause();
     controls.classList.add("show");
     show_main_animation("pause");
-    handleVideoIcon();
     sh_pause.classList.add("sh_pause");
     sh_play.classList.remove("sh_play");
+    handleVideoIcon();
     if (video.ended) {
         currentTime.style.width = 100 + "%";
     }
@@ -310,7 +308,6 @@ function handleProgressBar() {
     currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentDuration.innerHTML = showDuration(video.currentTime);
 }
-
 
 function showDuration(time) {
     const hours = Math.floor(time / 60 ** 2);
@@ -331,30 +328,30 @@ function formatter(number) {
 
 function toggleMuteUnmute() {
     volumeBar.classList.remove("show");
-    if (!muted) {
-        video.volume = 0;
-        muted = true;
+    video.muted = !video.muted;
+    if (video.muted) {
         handleVideoIcon();
         show_main_animation("mute");
     } else {
-        video.volume = volumeVal;
-        muted = false;
         handleVideoIcon();
         show_main_animation("unmute");
     }
     timeContainer.style.display = "block";
-    localStorage.setItem("videoMuted", muted);
+    localStorage.setItem("videoMuted", video.muted);
 }
+
 
 function hideControls(delay) {
     clearTimeout(timeout);
     timeout = setTimeout(() => {
-        if (!video.paused && !isCursorOnControls) {
+        if (!video.paused) {
+            if (isCursorOnControls) return;
             controls.classList.remove("show");
             settingMenu.classList.remove("show");
             for (let i = 0; i < menuButtons.length; i++) {
                 menuButtons[i].style.display = "block";
             }
+            document.activeElement.blur();
         }
     }, delay);
 }
@@ -365,8 +362,7 @@ function updateVolumeBar() {
 }
 
 function handleVolume(e) {
-    volumeVal = e.target.value;
-    video.volume = volumeVal;
+    video.volume = e.target.value;
     updateVolumeBar();
     saveVolume();
     handleVideoIcon();
@@ -441,77 +437,76 @@ function touchDrag(handlerMove) {
   document.addEventListener('touchend', end, { once: true, passive: true });
 }
 
-
+let anim_timeout;
 function show_main_animation(mode) {
+    if (anim_timeout) clearTimeout(anim_timeout);
+
     sh_play_st.classList.add("sh_play_st");
     sh_pause_st.classList.add("sh_pause_st");
     sh_mute_st.classList.add("sh_mute_st");
     sh_unmute_st.classList.add("sh_unmute_st");
     sh_back_st.classList.add("sh_back_st");
     sh_fordward_st.classList.add("sh_fordward_st");
+    sh_volume_st.classList.add("sh_volume_st");
+
     switch (mode) {
         case "play":
             sh_play_st.classList.remove("sh_play_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "pause":
             sh_pause_st.classList.remove("sh_pause_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "mute":
             sh_mute_st.classList.remove("sh_mute_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "unmute":
             sh_unmute_st.classList.remove("sh_unmute_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "back":
             sh_back_st.classList.remove("sh_back_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
             break;
         case "fordward":
             sh_fordward_st.classList.remove("sh_fordward_st");
-            mainState.classList.add("animate-state");
+            mainState.classList.add("show");
+            break;
+        case "show_vol":
+            sh_volume_st.innerText = Math.round(video.volume * 100) + "%";
+            sh_volume_st.classList.remove("sh_volume_st");
+            mainState.classList.add("show");
             break;
         default:
             mainState.classList.remove("show");
-            break;
+            return;
     }
-}
-
-function handleMainSateAnimationEnd() {
-    mainState.classList.remove("animate-state");
-    if (video.paused) {
-        sh_play_st.classList.remove("sh_play_st");
-        sh_mute_st.classList.add("sh_mute_st");
-        sh_unmute_st.classList.add("sh_unmute_st");
-        sh_back_st.classList.add("sh_back_st");
-        sh_fordward_st.classList.add("sh_fordward_st");
-    }
+    anim_timeout = setTimeout(show_main_animation, 400);
 }
 
 function handleVideoIcon() {
-    if (!muted) {
-        if (volumeVal == 0.0) {
+    if (!video.muted) {
+        if (video.volume == 0.0) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.add("sh_fulla");
             sh_meda.classList.add("sh_meda");
             sh_lowa.classList.add("sh_lowa");
             sh_noa.classList.remove("sh_noa");
-        } else if (volumeVal > 0.67) {
+        } else if (video.volume > 0.67) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.remove("sh_fulla");
             sh_meda.classList.add("sh_meda");
             sh_lowa.classList.add("sh_lowa");
             sh_noa.classList.add("sh_noa");
-        } else if (volumeVal > 0.33) {
+        } else if (video.volume > 0.33) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.add("sh_fulla");
             sh_meda.classList.remove("sh_meda");
             sh_lowa.classList.add("sh_lowa");
             sh_noa.classList.add("sh_noa");
-        } else if (volumeVal > 0) {
+        } else if (video.volume > 0) {
             sh_mute.classList.add("sh_mute");
             sh_fulla.classList.add("sh_fulla");
             sh_meda.classList.add("sh_meda");
@@ -527,86 +522,6 @@ function handleVideoIcon() {
     }
 }
 
-function handleShorthand(e) {
-    e.preventDefault();
-    if (e.repeat && e.key.toLowerCase()==" ") return;
-    if (e.code === 'F5') {
-        location.reload(true);
-        return;
-    }
-    if (e.code === 'F11') {
-        toggleFullscreen();
-        return;
-    }
-    if (e.key.match(/[0-9]/gi)) {
-        video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
-        currentTime.style.width = parseInt(e.key) * 10 + "%";
-        return;
-    }
-    switch (e.key.toLowerCase()) {
-        case " ":
-            video.paused ? play() : pause();
-            break;
-        case "f":
-            toggleFullscreen();
-            break;
-        case "arrowright":
-            controls.classList.add("show");
-            hideControls(500);
-            video.currentTime += 5;
-            handleProgressBar();
-            show_main_animation("fordward");
-            break;
-        case "arrowleft":
-            controls.classList.add("show");
-            hideControls(500);
-            video.currentTime -= 5;
-            handleProgressBar();
-            show_main_animation("back");
-            break;
-        case "arrowup":
-            prev();
-            break;
-        case "arrowdown":
-            next();
-            break;
-        case "r":
-            chMode();
-            break;
-        case "q":
-            toggleMuteUnmute();
-            break;
-        case "+":
-            if (volumeVal < 1 && !muted) {
-                volumeVal = parseFloat(volumeVal + 0.05);
-                if (volumeVal > 1) {
-                    volumeVal = 1;
-                }
-                video.volume = volumeVal;
-                volumeBar.value = volumeVal;
-                updateVolumeBar();
-                handleVideoIcon();
-                saveVolume();
-            }
-            break;
-        case "-":
-            if (volumeVal > 0 && !muted) {
-                volumeVal = parseFloat(volumeVal - 0.05);
-                if (volumeVal < 0) {
-                    volumeVal = 0;
-                }
-                video.volume = volumeVal;
-                volumeBar.value = volumeVal;
-                updateVolumeBar();
-                handleVideoIcon();
-                saveVolume();
-            }
-            break;
-        default:
-            break;
-    }
-}
-
 function loadTracks() {
     try {
         saved = localStorage.getItem("videoAudio");
@@ -615,10 +530,10 @@ function loadTracks() {
             const track = audioTracks[i];
             const option = document.createElement('option');
             option.value = i;
-            name = (track.label || track.language || "Track " + (i + 1));
-            option.textContent = name;
+            subs_name = (track.label || track.language || "Track " + (i + 1));
+            option.textContent = subs_name;
             audioTracksSelect.appendChild(option);
-            if (name === saved) {
+            if (subs_name === saved) {
                 audioTracksSelect.selectedIndex = i;
                 changeTrack();
             } else {
@@ -646,7 +561,7 @@ function split_timeline_chapters() {
     // Create sections within the div
     chptdata.slice(0, -1).forEach((time, index) => {
         const nextTime = chptdata[index + 1];
-        const startPercent = Math.min((time / divLength) * 100, 100)
+        const startPercent = Math.min((time / divtimechange_delayLength) * 100, 100)
         const section = document.createElement('div');
         section.classList.add("chapter");
         section.style.left = `${startPercent}%`;
@@ -665,7 +580,7 @@ function double_touch(e) {
     const touchInterval = now - lastTouchTime;
     const divRect = touchBox.getBoundingClientRect();
     if (touchInterval < doubleTouch_delay) {
-        const touchX = event.changedTouches[0].clientX;
+        const touchX = e.changedTouches[0].clientX;
         const centerX = divRect.left + (divRect.width / 2);
         const p = touchX < centerX;
         if (p) {
@@ -675,6 +590,9 @@ function double_touch(e) {
             video.currentTime += 5;
             show_main_animation("fordward");
         }
+        handleProgressBar();
+        controls.classList.add("show");
+        hideControls(timechange_delay);
     } else {
         touchTimeout = setTimeout(toggleMainState, doubleTouch_delay);
     }
@@ -700,7 +618,7 @@ async function addrmMLcl() {
 // Window events
 window.addEventListener('resize', scaleVideo);
 window.addEventListener('fullscreenchange', scaleVideo);
-
+timechange_delay
 // Video events
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
@@ -722,6 +640,12 @@ videoContainer.addEventListener("mousemove", (e) => {
     showCursor();
     hideControls(mouse_ctrl_delay);
 });
+
+videoContainer.addEventListener("focusin", (e) => {
+    controls.classList.add("show");
+    hideControls(mouse_ctrl_delay);
+});
+
 videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
     if (video.videoWidth >= video.videoHeight) {
@@ -733,7 +657,7 @@ videoContainer.addEventListener("fullscreenchange", () => {
 videoContainer.addEventListener('touchmove', () => {
     touchFix = true;
     controls.classList.add("show");
-    hideControls(2500);
+    hideControls(touch_ctrl_delay);
 }, {
     passive: false
 });
@@ -749,8 +673,8 @@ controls.addEventListener("click", () => {
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
-    if (!muted) { timeContainer.style.display = "none"; }
-    muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
+    if (!video.muted) { timeContainer.style.display = "none"; }
+    video.muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
     volumeBar.classList.remove("show");
@@ -819,9 +743,6 @@ speedSelect.addEventListener('change', function() {
     handleSettingMenu();
 });
 
-// Main state events
-mainState.addEventListener("animationend", handleMainSateAnimationEnd);
-
 // Touch interaction events
 touchBox.addEventListener('touchend', double_touch);
 touchBox.addEventListener("click", (e) => {
@@ -833,11 +754,17 @@ touchBox.addEventListener("click", (e) => {
 // Keyboard events
 document.addEventListener("keydown", handleShorthand);
 
-// Download event
+// Download events
 liD.addEventListener("click", () => {
     download_video.click();
     download_subs.click();
-    handleSettingMenu();
+    setTimeout(handleSettingMenu, 100);
+});
+liD.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        liD.click();
+    }
 });
 
 duration.addEventListener('mousedown', e =>
@@ -851,3 +778,72 @@ document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
 duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
 duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
+
+
+/* Keyboard events */
+
+function handleShorthand(e) {
+    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+    
+    if (e.key.match(/[0-9]/gi)) {
+        video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
+        currentTime.style.width = parseInt(e.key) * 10 + "%";
+        return;
+    }
+    switch (e.key.toLowerCase()) {
+        case " ":
+            if (document.activeElement === document.body) {
+                e.preventDefault();
+                if (e.repeat) break;
+                video.paused ? play() : pause();
+            } break;
+        case "f":
+            toggleFullscreen();
+            break;
+        case "arrowright":
+            video.currentTime += 2;
+            chgtime_kdb_helper("fordward");
+            break;
+        case "arrowleft":
+            video.currentTime -= 2;
+            chgtime_kdb_helper("back");
+            break;
+        case "arrowup":
+            prev();
+            break;
+        case "arrowdown":
+            next();
+            break;
+        case "l":
+            chMode();
+            break;
+        case "m":
+            toggleMuteUnmute();
+            break;
+        case "+": 
+            video.volume = Math.min(video.volume + 0.02, 1);
+            volume_kbd_helper();
+            break;
+        case "-":
+            video.volume = Math.max(video.volume - 0.02, 0);
+            volume_kbd_helper();
+            break;
+        default:
+            break;
+    }
+}
+
+function volume_kbd_helper() {
+    volumeBar.value = video.volume;
+    updateVolumeBar();
+    handleVideoIcon();
+    saveVolume();
+    show_main_animation("show_vol");
+}
+function chgtime_kdb_helper(mode) {
+    controls.classList.add("show");
+    hideControls(timechange_delay);
+    handleProgressBar();
+    show_main_animation(mode);
+}
+

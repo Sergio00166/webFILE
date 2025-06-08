@@ -23,13 +23,13 @@
         <div class="controls">
             <div class="ctrl_group">
                 <div class="ctrl_flex">
-                    <button onclick="changeURL({% if sort=='np' %}'nd'{% else %}'np'{% endif %})">
+                    <button id="sortName" onclick="changeURL({% if sort=='np' %}'nd'{% else %}'np'{% endif %})">
                         NAME{% if sort=="np" %}&nbsp;&uarr;{% elif sort=="nd" %}&nbsp;&darr;{% endif %}
                     </button>
-                    <button onclick="changeURL({% if sort=='sp' %}'sd'{% else %}'sp'{% endif %})">
+                    <button id="sortSize" onclick="changeURL({% if sort=='sp' %}'sd'{% else %}'sp'{% endif %})">
                         SIZE{% if sort=="sp" %}&nbsp;&uarr;{% elif sort=="sd" %}&nbsp;&darr;{% endif %}
                     </button>
-                    <button onclick="changeURL({% if sort=='dp' %}'dd'{% else %}'dp'{% endif %})">
+                    <button id="sortDate" onclick="changeURL({% if sort=='dp' %}'dd'{% else %}'dp'{% endif %})">
                         DATE{% if sort=="dp" %}&nbsp;&uarr;{% elif sort=="dd" %}&nbsp;&darr;{% endif %}
                     </button>
                 </div>
@@ -38,9 +38,9 @@
                     <button id="invertBtn" onclick="invertSelection()" disabled>*</button>
                     <button onclick="executeDownloads()">DWNLD</button>
                     {% if 'user' in session %}
-                        <button onclick='window.location.href="?logout"'>LOGOUT</button>
+                        <button onclick='window.location.href="?logout"' id="login">LOGOUT</button>
                     {% else %}
-                        <button onclick='window.location.href="?login"'>LOGIN</button>
+                        <button onclick='window.location.href="?login"' id="login">LOGIN</button>
                     {% endif %} 
                 </div>
             </div>

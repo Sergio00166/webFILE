@@ -71,8 +71,8 @@ img {
     position: absolute;
     content: "";
     height: 100%;
-    left: -48px;
-    width: calc((100% + 98px));
+    left: -10%;
+    width: 120%;
     height: 150%;
     top: -25%;
 }

@@ -233,3 +233,90 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
     });
 }
 enableDragAndDropUpload(document);
+
+
+/* Keyboard Shorthands */
+
+function moveFocus(direction) {
+    const container = $('.container');
+    const items = Array.from(container.children)
+        .filter(el => !el.classList.contains('backdir'));
+    if (items.length == 0) return;
+    const active = document.activeElement;
+    let index = items.indexOf(active);
+    index = (index + direction + items.length) % items.length;
+    items[index].focus();
+}
+
+document.addEventListener('keydown', e => {
+    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+
+    switch (e.key.toLowerCase()) {
+        case 'arrowdown':
+            e.preventDefault();
+            moveFocus(1);
+            break;
+        case 'arrowup':
+            e.preventDefault();
+            moveFocus(-1);
+            break;
+        case 'arrowright':
+            document.activeElement.click();
+            break;
+        case 'arrowleft': {
+            const active = document.activeElement;
+            const backdir = $(".backdir");
+            if (selectMode) active.click();
+            else if (backdir) backdir.click();
+            break;
+        }
+        case 'a':
+            invertSelection();
+            break;
+        case 'd':
+            executeDownloads();
+            break;
+        case 'c':
+            copyFiles();
+            break;
+        case 'x':
+            moveFiles();
+            break;
+        case 'p':
+            pasteFiles();
+            break;
+        case 'u':
+            openFileMenu();
+            break;
+        case 'i':
+            openFileMenu(true);
+            break;
+        case 's':
+            toggleSelectMode();
+            break;
+        case 'n':
+            renameFiles();
+            break;
+        case 'r':
+            executeDeletes();
+            break;
+        case 'm':
+            mkdir();
+            break;
+        case 'l':
+            $("#login").click();
+            break;
+        case '1':
+            $("#sortName").click();
+            break;
+        case '2':
+            $("#sortSize").click();
+            break;
+        case '3':
+            $("#sortDate").click();
+            break;
+        default:
+            break;
+    }
+});
+

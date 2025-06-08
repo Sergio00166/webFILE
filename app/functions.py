@@ -225,6 +225,7 @@ def validate_acl(path, ACL, write=False):
     user = session.get("user", "DEFAULT")
     path = normpath(path)
     path = path.replace(sep, "/")
+    prop = False
 
     if path.startswith("//"):
         path = path[2:]
@@ -234,16 +235,17 @@ def validate_acl(path, ACL, write=False):
     while True:
         # Check if there is a rule for it
         if path in ACL and user in ACL[path]:
-            perm = ACL[path][user]
-            if perm == 0:
-                break
-            if perm >= askd_perm:
-                return
+            values = ACL[path][user]
+            if not values["inherit"] and prop: break
+            perm = values["access"]
+            if perm == 0: break
+            if perm >= askd_perm: return
+                
         # Check if on top and break loop
-        if path == "/":
-            break
+        if path == "/": break
         # Goto parent directory
         path = dirname(path)
+        prop = True # Flag
 
     raise PermissionError
 
@@ -282,3 +284,4 @@ def printerr(e, log_path, override_msg=None):
 def redirect_no_query():
     parsed_url = urlparse(request.url)
     return redirect(urlunparse(("", "", parsed_url.path, "", "", "")))
+

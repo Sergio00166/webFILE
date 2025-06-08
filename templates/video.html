@@ -15,13 +15,13 @@
     </script>
   </head>
   <body>
-    <a href="{{ request.path }}?raw" download="{{ name }}" id="download_video"></a>
-    <a href="{{ subs_file }}" download="{{ subs_name }}" id="download_subs"></a>
-    <a href='{{ nxt }}' id="next"></a>
-    <a href='{{ prev }}' id="prev"></a>
+    <a href="{{ request.path }}?raw" download="{{ name }}" id="download_video" tabindex="-1"></a>
+    <a href="{{ subs_file }}" download="{{ subs_name }}" id="download_subs" tabindex="-1"></a>
+    <a href='{{ nxt }}' id="next" tabindex="-1"></a>
+    <a href='{{ prev }}' id="prev" tabindex="-1"></a>
     <div class="video-container">
       <div class="video-box">
-          <video src="{{ request.path }}?raw"></video>
+          <video src="{{ request.path }}?raw" disablePictureInPicture tabindex="-1"></video>
           <canvas></canvas>
       </div>
       <div id="touch-box"></div>
@@ -34,6 +34,7 @@
         <img class="fullimg sh_unmute_st" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
         <img class="fullimg sh_fordward_st" src="{{ url_for('index', static='svg/videoplayer/chevron-forward-outline.svg') }}">
         <img class="fullimg sh_back_st" src="{{ url_for('index', static='svg/videoplayer/chevron-back-outline.svg') }}">
+        <div class="vol_val_st sh_volume_st"></div>
       </span>
       <div class="controls">
         <div class="duration">
@@ -58,7 +59,7 @@
                 <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
                 <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
               </button>
-              <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" />
+              <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1" />
             </span>
             <span class="time-container">
               <span class="current-duration">00:00</span>
@@ -102,7 +103,7 @@
                     <option value="2">2x</option>
                   </select>
                 </li>
-                <li id="liD">Download</li>
+                <li id="liD" tabindex="0">Download</li>
               </ul>
             </span>
             <button class="round-button" onclick="toggleFullscreen()" title="Fullscren">

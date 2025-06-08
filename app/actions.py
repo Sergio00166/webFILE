@@ -237,11 +237,14 @@ def audio(path, root, file_type, ACL):
 def humanize_all(data):
     for item in data:
         if "capacity" in item:
-            item["used"] = round(item["size"] / item["capacity"] * 100)
+            if item["capacity"] == 0: item["used"] = 0
+            else: item["used"] = round(item["size"] / item["capacity"] * 100)
             item["capacity"] = readable_size(item["capacity"])
+
         if "mtime" in item:
             item["mtime"] = readable_date(item["mtime"])
         item["size"] = readable_size(item["size"])
+
 
 
 def directory(path, root, folder_size, sort, client, ACL):

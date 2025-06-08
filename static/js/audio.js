@@ -204,7 +204,7 @@ audio.addEventListener("pause", pause);
 
 function toggleMuteUnmute() {
     audio.muted = !audio.muted;
-    localStorage.setItem('audioMuted', audio.muted.toString());
+    localStorage.setItem('audioMuted', audio.muted);
     updateVolumeIcon(audio.volume);
     updateVolumeBar();
 }
@@ -338,12 +338,19 @@ duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHove
 
 // Add keyboard shortcuts
 document.addEventListener('keydown', (e) => {
-    e.preventDefault();
+    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+
+    if (e.key.match(/[0-9]/gi)) {
+        audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
+        return;
+    }
     switch (e.key.toLowerCase()) {
         case ' ':
-            e.preventDefault();
-            toggleMainState();
-            break;
+            if (document.activeElement === document.body) {
+                e.preventDefault();
+                if (e.repeat) break;
+                toggleMainState();
+            } break;
         case 'm':
             toggleMuteUnmute();
             break;
@@ -366,26 +373,28 @@ document.addEventListener('keydown', (e) => {
             audio.currentTime -= 2;
             break;
         case "+":
-            audio.volume = Math.min(audio.volume + 0.05, 1);
-            volumeBar.value = audio.volume;
-            localStorage.setItem('audioVolume', audio.volume);
-            updateVolumeIcon(audio.volume);
-            updateVolumeBar();
+            audio.volume = Math.min(audio.volume + 0.02, 1);
+            volume_kbd_helper();
             break;
         case "-":
-            audio.volume = Math.max(audio.volume - 0.05, 0);
-            volumeBar.value = audio.volume;
-            localStorage.setItem('audioVolume', audio.volume);
-            updateVolumeIcon(audio.volume);
-            updateVolumeBar();
+            audio.volume = Math.max(audio.volume - 0.02, 0);
+            volume_kbd_helper();
             break;
         default:
             break;
     }
 });
 
+function volume_kbd_helper() {
+    volumeBar.value = audio.volume;
+    localStorage.setItem('audioVolume', audio.volume);
+    updateVolumeIcon(audio.volume);
+    updateVolumeBar();
+}
+
 // Media session
 if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('previoustrack', prev);
     navigator.mediaSession.setActionHandler('nexttrack', next);
 }
+

@@ -87,7 +87,6 @@ body {
     -webkit-user-select: none;
     user-select: none;
 }
-
 .custom-loader {
     width: 108px;
     height: 108px;
@@ -112,9 +111,9 @@ body {
         transform: rotate(360deg);
     }
 } 
-
 .main-state {
     opacity: 0;
+    transform: scale(0);
     height: 75px;
     width: 75px;
     position: absolute; 
@@ -125,9 +124,11 @@ body {
     justify-content: center;
     background: rgba(48,48,56,0.75);
     border: 1px solid #222;
+    transition: all 0.3s;
 }
-.animate-state {
-    animation: animation 0.6s forwards;
+.main-state.show {
+  opacity: 1;
+  transform: scale(1);
 }
 .controls {
     bottom: 0;
@@ -158,10 +159,10 @@ body {
 /* and also try to fix one bug */
 .duration::before {
     position: absolute;
-    content: "\00a0";
+    content: "";
     height: 100%;
-    left: -48px;
-    width: calc((100% + 98px));
+    left: -10%;
+    width: 120%;
     height: 150%;
     top: -25%;
 }
@@ -256,7 +257,6 @@ body {
 }
 #volume-bar {
     height: 3px;
-    outline: none;
     cursor: pointer;
     appearance: none;
     border-radius: 2px;
@@ -325,6 +325,13 @@ body {
     color: #ffffff;
     position: absolute;
 }
+.setting-menu li:focus-within {
+    background-color: #888;
+}
+#liD:focus {
+    outline: none;
+    background-color: #888;
+}
 .setting-menu li:nth-child(2)::before {
     content: "Tracks";
     color: #ffffff;
@@ -384,16 +391,6 @@ select option {
 .video-container.fullscreen .contract {
     display: flex;
 }
-@keyframes animation {
-    50% {
-        opacity: 1;
-        transform: scale(1.1);
-    }
-    100% {
-        opacity: 0;
-        transform: scale(1);
-    }
-}
 
 /* Define default values */
 .sh_mute { display: none; }
@@ -404,14 +401,15 @@ select option {
 .sh_pause_st { display: none; }
 .sh_mute_st { display: none; }
 .sh_unmute_st { display: none; }
+.sh_volume_st { display: none; }
 .sh_fordward_st { display: none; }
 .sh_back_st { display: none; }
 .sh_fulla { display: none; }
 .sh_meda { display: none; }
 .sh_lowa { display: none; }
 .sh_noa { display: none; }
-button:focus { outline: none; }
 .transition { transition: opacity 0.25s ease; }
+.vol_val_st { font-size: 1.3rem; }
 
 
 /* RESPONSIVE (pain) ZONE */
@@ -466,6 +464,9 @@ button:focus { outline: none; }
         width: 70px;
         border: 7px solid #FFF;
         border-bottom-color: transparent;
+    }
+    .vol_val_st { 
+        font-size: 1rem;
     }
 }
 @media (max-width: 220px) {

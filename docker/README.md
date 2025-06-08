@@ -3,6 +3,7 @@
 ## Requirements
 
 - Docker and Docker Compose installed on your machine.
+- Have created the ACL and USERS DB using the utility ```aclmgr.py```.
 
 ## Instructions to Run
 

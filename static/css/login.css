@@ -17,6 +17,7 @@ body {
     color: white;
     user-select: none;
     transition: 0.2s;
+    -webkit-tap-highlight-color: transparent;
 }
 #error {
     text-align: center;

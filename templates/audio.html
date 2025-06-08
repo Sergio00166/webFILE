@@ -40,14 +40,14 @@
           </button>
         </div>
         <div class="volume-control">
-          <div class="vol-icons">
+          <div class="vol-icons" tabindex="0">
             <img class="icon-vol vol-high" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" onclick="toggleMuteUnmute()" />
             <img class="icon-vol vol-medium" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" onclick="toggleMuteUnmute()" />
             <img class="icon-vol vol-low" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}" onclick="toggleMuteUnmute()" />
             <img class="icon-vol vol-zero" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}" onclick="toggleMuteUnmute()" />
             <img class="icon-vol vol-muted" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" onclick="toggleMuteUnmute()" />
           </div>
-          <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" />
+          <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1" />
         </div>
       </div>
       <div class="extra-controls">
@@ -64,9 +64,9 @@
         </button>
       </div>
     </div>
-    <a href="{{ request.path }}?raw" download="{{ name }}" id="download-link"></a>
-    <a href="{{ nxt }}" id="next"></a>
-    <a href="{{ prev }}" id="prev"></a>
-    <a href="{{ rnd }}" id="random"></a>
+    <a href="{{ request.path }}?raw" download="{{ name }}" id="download-link" tabindex="-1"></a>
+    <a href="{{ nxt }}" id="next" tabindex="-1"></a>
+    <a href="{{ prev }}" id="prev" tabindex="-1"></a>
+    <a href="{{ rnd }}" id="random" tabindex="-1"></a>
   </body>
 </html>
