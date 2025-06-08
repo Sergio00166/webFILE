@@ -1,6 +1,8 @@
 /* Code by Sergio00166 */
 
 let mouse_ctrl_delay = 1500;
+let touch_ctrl_delay = 2500;
+let timechange_delay = 750;
 let doubleTouch_delay = 400;
 
 const volume = document.querySelector(".volume");
@@ -241,7 +243,7 @@ function chMode() {
     localStorage.setItem("videoMode", currentMode);
 }
 
-function toggleMainState() {
+function toggleMainState() {timechange_delaytimechange_delay
     video.paused ? play() : pause();
 }
 
@@ -307,7 +309,6 @@ function handleProgressBar() {
     currentDuration.innerHTML = showDuration(video.currentTime);
 }
 
-
 function showDuration(time) {
     const hours = Math.floor(time / 60 ** 2);
     const min = Math.floor((time / 60) % 60);
@@ -338,7 +339,6 @@ function toggleMuteUnmute() {
     timeContainer.style.display = "block";
     localStorage.setItem("videoMuted", video.muted);
 }
-
 
 
 function hideControls(delay) {
@@ -561,7 +561,7 @@ function split_timeline_chapters() {
     // Create sections within the div
     chptdata.slice(0, -1).forEach((time, index) => {
         const nextTime = chptdata[index + 1];
-        const startPercent = Math.min((time / divLength) * 100, 100)
+        const startPercent = Math.min((time / divtimechange_delayLength) * 100, 100)
         const section = document.createElement('div');
         section.classList.add("chapter");
         section.style.left = `${startPercent}%`;
@@ -592,7 +592,7 @@ function double_touch(e) {
         }
         handleProgressBar();
         controls.classList.add("show");
-        hideControls(500);
+        hideControls(timechange_delay);
     } else {
         touchTimeout = setTimeout(toggleMainState, doubleTouch_delay);
     }
@@ -618,7 +618,7 @@ async function addrmMLcl() {
 // Window events
 window.addEventListener('resize', scaleVideo);
 window.addEventListener('fullscreenchange', scaleVideo);
-
+timechange_delay
 // Video events
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
@@ -657,7 +657,7 @@ videoContainer.addEventListener("fullscreenchange", () => {
 videoContainer.addEventListener('touchmove', () => {
     touchFix = true;
     controls.classList.add("show");
-    hideControls(2500);
+    hideControls(touch_ctrl_delay);
 }, {
     passive: false
 });
@@ -842,7 +842,7 @@ function volume_kbd_helper() {
 }
 function chgtime_kdb_helper(mode) {
     controls.classList.add("show");
-    hideControls(500);
+    hideControls(timechange_delay);
     handleProgressBar();
     show_main_animation(mode);
 }
