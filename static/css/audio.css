@@ -37,8 +37,8 @@ img {
     display: flex;
     align-items: center;
     width: 100%;
-    user-select: text;
     -webkit-user-select: text;
+    user-select: text;
 }
 .player-title {
     margin: auto;
