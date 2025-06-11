@@ -243,12 +243,8 @@ body {
     justify-content: space-between;
 }
 .time-container {
-    display: flex;
-    gap: 2px;
-    flex-wrap: wrap;
-    font-size: 12px;
+    font-size: 13px;
     padding-right: 8px;
-    font-family: monospace;
 }
 .volume {
     display: flex;
