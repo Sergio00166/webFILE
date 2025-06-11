@@ -243,9 +243,12 @@ body {
     justify-content: space-between;
 }
 .time-container {
-    font-size: 13px;
-    font-weight: 500;
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+    font-size: 12px;
     padding-right: 8px;
+    font-family: monospace;
 }
 .volume {
     display: flex;
@@ -497,3 +500,4 @@ select option {
         display: none;
     }
 }
+

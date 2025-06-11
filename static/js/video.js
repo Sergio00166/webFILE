@@ -338,7 +338,7 @@ function toggleMuteUnmute() {
         handleVideoIcon();
         show_main_animation("unmute");
     }
-    timeContainer.style.display = "block";
+    timeContainer.style.display = "flex";
     localStorage.setItem("videoMuted", video.muted);
 }
 
@@ -681,7 +681,7 @@ volume.addEventListener("mouseenter", () => {
 });
 volume.addEventListener("mouseleave", () => {
     volumeBar.classList.remove("show");
-    setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
+    setTimeout(()=>{ timeContainer.style.display = "flex"; }, 100);
 });
 volumeBar.addEventListener('input', (e) => {
     handleVolume(e);
