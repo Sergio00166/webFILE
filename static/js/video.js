@@ -64,7 +64,8 @@ let isCursorOnControls = false;
 let lastTouchTime = 0;
 let originalTime = 0;
 let touchFix;
-let timeout;
+let ctrlsTimeout;
+let voltimeTimeout;
 let touchTimeout;
 let cursorTimeout;
 var subtitleId = 0;
@@ -345,8 +346,8 @@ function toggleMuteUnmute() {
 
 
 function hideControls(delay) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
+    clearTimeout(ctrlsTimeout);
+    ctrlsTimeout = setTimeout(() => {
         if (!video.paused) {
             if (isCursorOnControls) return;
             controls.classList.remove("show");
@@ -442,7 +443,7 @@ function touchDrag(handlerMove) {
 
 let anim_timeout;
 function show_main_animation(mode) {
-    if (anim_timeout) clearTimeout(anim_timeout);
+    clearTimeout(anim_timeout);
 
     sh_play_st.classList.add("sh_play_st");
     sh_pause_st.classList.add("sh_pause_st");
@@ -676,12 +677,14 @@ controls.addEventListener("click", () => {
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
+    clearTimeout(voltimeTimeout);
     if (!video.muted) { timeContainer.style.display = "none"; }
     video.muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
+    clearTimeout(voltimeTimeout);
     volumeBar.classList.remove("show");
-    setTimeout(()=>{ timeContainer.style.display = "flex"; }, 100);
+    voltimeTimeout = setTimeout(()=>{ timeContainer.style.display = "flex"; }, 100);
 });
 volumeBar.addEventListener('input', (e) => {
     handleVolume(e);
