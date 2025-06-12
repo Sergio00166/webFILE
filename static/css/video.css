@@ -64,6 +64,7 @@ img {
     margin-right: 4px;
     margin-left: 4px;
     cursor: pointer;
+    flex-shrink: 0;
 }
 .round-button:hover {
     background: linear-gradient(120deg, #8f9faf, #3f4f5f);
@@ -257,21 +258,21 @@ body {
 #volume-bar {
     height: 3px;
     cursor: pointer;
-    appearance: none;
     border-radius: 2px;
     visibility: hidden;
     width: 0 !important;
     background: #e1e1e1;
     transition: all 0.1s;
     -webkit-appearance: none;
+    appearance: none;
 }
 #volume-bar::-webkit-slider-thumb {
     width: 10px;
     height: 10px;
-    appearance: none;
     border-radius: 50%;
     background: #007aff;
     -webkit-appearance: none;
+    appearance: none;
 }
 #volume-bar::-moz-range-thumb {
     width: 10px;
@@ -345,8 +346,8 @@ select {
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: none;
     appearance: none;
+    background-image: none;
     width: 100%;
     text-align: center;
     font-size: 1rem;
