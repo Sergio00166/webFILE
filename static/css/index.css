@@ -36,6 +36,7 @@ button {
     color: #fff;
     font-weight: 600;
     cursor: pointer;
+    line-height: 1.5;
 }
 button:hover {
     background: linear-gradient(145deg, #262a33, #101e1f);
