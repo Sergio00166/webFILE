@@ -45,10 +45,6 @@ img {
     vertical-align: middle;
     filter: brightness(0) invert(1);
 }
-.fullimg {
-    width: 67%;
-    height: 67%;
-}
 .round-button {
     width: 40px;
     height: 40px;
@@ -126,6 +122,10 @@ body {
     background: rgba(48,48,56,0.75);
     border: 1px solid #222;
     transition: all 0.3s;
+}
+.main-state img {
+    width: 67%;
+    height: 67%;
 }
 .main-state.show {
   opacity: 1;

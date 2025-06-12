@@ -25,21 +25,21 @@ const loader = document.querySelector(".custom-loader");
 const subtitleSelect = document.getElementById('s0');
 const audioTracksSelect = document.getElementById('s1');
 const speedSelect = document.getElementById('s2');
-const sh_mute = document.querySelector(".sh_mute");
-const sh_unmute = document.querySelector(".sh_unmute");
-const sh_pause = document.querySelector(".sh_pause");
-const sh_play = document.querySelector(".sh_play");
-const sh_play_st = document.querySelector(".sh_play_st");
-const sh_volume_st = document.querySelector(".sh_volume_st");
-const sh_pause_st = document.querySelector(".sh_pause_st");
-const sh_mute_st = document.querySelector(".sh_mute_st");
-const sh_unmute_st = document.querySelector(".sh_unmute_st");
-const sh_fordward_st = document.querySelector(".sh_fordward_st");
-const sh_back_st = document.querySelector(".sh_back_st");
-const sh_fulla = document.querySelector(".sh_fulla");
-const sh_lowa = document.querySelector(".sh_lowa");
-const sh_meda = document.querySelector(".sh_meda");
-const sh_noa = document.querySelector(".sh_noa");
+const sh_mute = document.querySelector(".volume img:nth-child(1)");
+const sh_unmute = document.querySelector(".volume img:nth-child(2)");
+const sh_pause = document.querySelector(".play-pause img:nth-child(1)");
+const sh_play = document.querySelector(".play-pause img:nth-child(2)");
+const sh_play_st = document.querySelector(".main-state img:nth-child(1)");
+const sh_volume_st = document.querySelector(".vol_val_st");
+const sh_pause_st = document.querySelector(".main-state img:nth-child(2)");
+const sh_mute_st = document.querySelector(".main-state img:nth-child(3)");
+const sh_unmute_st = document.querySelector(".main-state img:nth-child(4)");
+const sh_fordward_st = document.querySelector(".main-state img:nth-child(5)");
+const sh_back_st = document.querySelector(".main-state img:nth-child(6)");
+const sh_fulla = document.querySelector(".volume img:nth-child(2)");
+const sh_lowa = document.querySelector(".volume img:nth-child(4)");
+const sh_meda = document.querySelector(".volume img:nth-child(3)");
+const sh_noa = document.querySelector(".volume img:nth-child(5)");
 const liD = document.getElementById("liD");
 const download_video = document.getElementById("download_video");
 const download_subs = document.getElementById("download_subs");
@@ -48,7 +48,7 @@ const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 const touchBox = document.getElementById("touch-box");
 
-sh_pause.classList.remove("sh_pause");
+sh_pause.style.display = 'none';
 var video = document.querySelector("video");
 var videoContainer = document.querySelector(".video-container");
 var saved_speed = localStorage.getItem("videoSpeed");
@@ -288,8 +288,8 @@ function showCursor() {
 
 function play() {
     video.play();
-    sh_pause.classList.remove("sh_pause");
-    sh_play.classList.add("sh_play");
+    sh_pause.style.display = 'none';
+    sh_play.style.display = 'block';
     show_main_animation("play");
     hideControls(mouse_ctrl_delay);
 }
@@ -298,8 +298,8 @@ function pause() {
     video.pause();
     controls.classList.add("show");
     show_main_animation("pause");
-    sh_pause.classList.add("sh_pause");
-    sh_play.classList.remove("sh_play");
+    sh_pause.style.display = 'block';
+    sh_play.style.display = 'none';
     handleVideoIcon();
     if (video.ended) {
         currentTime.style.width = 100 + "%";
@@ -416,12 +416,10 @@ function showHover(clientX) {
   const chapter = getchptname(hovtime);
   hoverDuration.innerHTML = chapter ? `${timeStr}<br>${chapter}` : timeStr;
   const offset = hoverDuration.offsetWidth / 2;
-  hoverDuration.style.cssText = `
-    bottom: ${height + 8}px;
-    left: ${pos - offset}px;
-    display: block;
-    visibility: ${offset ? 'visible' : 'hidden'};
-  `;
+  hoverDuration.style.display = 'block';
+  hoverDuration.style.bottom = `${height + 8}px`;
+  hoverDuration.style.left = `${pos - offset}px`;
+  hoverDuration.style.visibility = offset ? 'visible' : 'hidden';
 }
 
 function clearHover() {
@@ -445,42 +443,36 @@ let anim_timeout;
 function show_main_animation(mode) {
     clearTimeout(anim_timeout);
 
-    sh_play_st.classList.add("sh_play_st");
-    sh_pause_st.classList.add("sh_pause_st");
-    sh_mute_st.classList.add("sh_mute_st");
-    sh_unmute_st.classList.add("sh_unmute_st");
-    sh_back_st.classList.add("sh_back_st");
-    sh_fordward_st.classList.add("sh_fordward_st");
-    sh_volume_st.classList.add("sh_volume_st");
+    [sh_play_st, sh_pause_st, sh_mute_st, sh_unmute_st, sh_back_st, sh_fordward_st, sh_volume_st].forEach(el => el.style.display = 'none');
 
     switch (mode) {
         case "play":
-            sh_play_st.classList.remove("sh_play_st");
+            sh_play_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "pause":
-            sh_pause_st.classList.remove("sh_pause_st");
+            sh_pause_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "mute":
-            sh_mute_st.classList.remove("sh_mute_st");
+            sh_mute_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "unmute":
-            sh_unmute_st.classList.remove("sh_unmute_st");
+            sh_unmute_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "back":
-            sh_back_st.classList.remove("sh_back_st");
+            sh_back_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "fordward":
-            sh_fordward_st.classList.remove("sh_fordward_st");
+            sh_fordward_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "show_vol":
             sh_volume_st.innerText = Math.round(video.volume * 100) + "%";
-            sh_volume_st.classList.remove("sh_volume_st");
+            sh_volume_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         default:
@@ -493,36 +485,36 @@ function show_main_animation(mode) {
 function handleVideoIcon() {
     if (!video.muted) {
         if (video.volume == 0.0) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.add("sh_fulla");
-            sh_meda.classList.add("sh_meda");
-            sh_lowa.classList.add("sh_lowa");
-            sh_noa.classList.remove("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'none';
+            sh_meda.style.display = 'none';
+            sh_lowa.style.display = 'none';
+            sh_noa.style.display = 'block';
         } else if (video.volume > 0.67) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.remove("sh_fulla");
-            sh_meda.classList.add("sh_meda");
-            sh_lowa.classList.add("sh_lowa");
-            sh_noa.classList.add("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'block';
+            sh_meda.style.display = 'none';
+            sh_lowa.style.display = 'none';
+            sh_noa.style.display = 'none';
         } else if (video.volume > 0.33) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.add("sh_fulla");
-            sh_meda.classList.remove("sh_meda");
-            sh_lowa.classList.add("sh_lowa");
-            sh_noa.classList.add("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'none';
+            sh_meda.style.display = 'block';
+            sh_lowa.style.display = 'none';
+            sh_noa.style.display = 'none';
         } else if (video.volume > 0) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.add("sh_fulla");
-            sh_meda.classList.add("sh_meda");
-            sh_lowa.classList.remove("sh_lowa");
-            sh_noa.classList.add("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'none';
+            sh_meda.style.display = 'none';
+            sh_lowa.style.display = 'block';
+            sh_noa.style.display = 'none';
         }
     } else {
-        sh_mute.classList.remove("sh_mute");
-        sh_fulla.classList.add("sh_fulla");
-        sh_meda.classList.add("sh_meda");
-        sh_lowa.classList.add("sh_lowa");
-        sh_noa.classList.add("sh_noa");
+        sh_mute.style.display = 'block';
+        sh_fulla.style.display = 'none';
+        sh_meda.style.display = 'none';
+        sh_lowa.style.display = 'none';
+        sh_noa.style.display = 'none';
     }
 }
 
