@@ -147,9 +147,6 @@ img {
     width: 24px;
     height: 24px;
 }
-#play-pause img:last-child {
-    display: none;
-}
 .controls {
     width: 100%;
     display: flex;
@@ -177,9 +174,6 @@ img {
     height: 100%;
     cursor: pointer;
     filter: invert(0.9);
-}
-.vol-icons img:first-child {
-    display: block;
 }
 #vol-icon {
     width: 24px;

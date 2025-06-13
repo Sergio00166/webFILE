@@ -317,6 +317,13 @@ body {
     font-weight: 500;
     cursor: pointer;
 }
+.setting-menu li:focus-within {
+    background-color: #888;
+}
+#liD:focus {
+    outline: none;
+    background-color: #888;
+}
 .setting-menu li:hover {
     background: #666 !important;
 }
@@ -324,13 +331,6 @@ body {
     content: "Subs";
     color: #ffffff;
     position: absolute;
-}
-.setting-menu li:focus-within {
-    background-color: #888;
-}
-#liD:focus {
-    outline: none;
-    background-color: #888;
 }
 .setting-menu li:nth-child(2)::before {
     content: "Tracks";
