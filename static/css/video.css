@@ -382,34 +382,13 @@ select option {
     display: flex;
     align-items: center;
 }
-.full,.contract {
-    display: none;
-}
-.video-container:not(.fullscreen) .full {
-    display: flex;
-}
-.video-container.fullscreen .contract {
-    display: flex;
-}
 
 /* Define default values */
-.sh_mute { display: none; }
-.sh_unmute { display: none; }
-.sh_pause { display: none; }
-.sh_play { display: none; }
-.sh_play_st { display: none; }
-.sh_pause_st { display: none; }
-.sh_mute_st { display: none; }
-.sh_unmute_st { display: none; }
-.sh_volume_st { display: none; }
-.sh_fordward_st { display: none; }
-.sh_back_st { display: none; }
-.sh_fulla { display: none; }
-.sh_meda { display: none; }
-.sh_lowa { display: none; }
-.sh_noa { display: none; }
-.transition { transition: opacity 0.25s ease; }
 .vol_val_st { font-size: 1.3rem; }
+.full,.contract { display: none; }
+.transition { transition: opacity 0.25s ease; }
+.video-container:not(.fullscreen) .full { display: block; }
+.video-container.fullscreen .contract { display: block; }
 
 
 /* RESPONSIVE (pain) ZONE */
