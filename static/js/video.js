@@ -1,9 +1,10 @@
 /* Code by Sergio00166 */
 
-let mouse_ctrl_delay = 1500;
-let touch_ctrl_delay = 2500;
-let timechange_delay = 750;
-let doubleTouch_delay = 400;
+const mouse_ctrl_delay = 1500;
+const touch_ctrl_delay = 2500;
+const timechange_delay = 750;
+const doubleTouch_delay = 400;
+const animation_st_delay = 400;
 
 const volume = document.querySelector(".volume");
 const currentTime = document.querySelector(".current-time");
@@ -24,21 +25,21 @@ const loader = document.querySelector(".custom-loader");
 const subtitleSelect = document.getElementById('s0');
 const audioTracksSelect = document.getElementById('s1');
 const speedSelect = document.getElementById('s2');
-const sh_mute = document.querySelector(".sh_mute");
-const sh_unmute = document.querySelector(".sh_unmute");
-const sh_pause = document.querySelector(".sh_pause");
-const sh_play = document.querySelector(".sh_play");
-const sh_play_st = document.querySelector(".sh_play_st");
-const sh_volume_st = document.querySelector(".sh_volume_st");
-const sh_pause_st = document.querySelector(".sh_pause_st");
-const sh_mute_st = document.querySelector(".sh_mute_st");
-const sh_unmute_st = document.querySelector(".sh_unmute_st");
-const sh_fordward_st = document.querySelector(".sh_fordward_st");
-const sh_back_st = document.querySelector(".sh_back_st");
-const sh_fulla = document.querySelector(".sh_fulla");
-const sh_lowa = document.querySelector(".sh_lowa");
-const sh_meda = document.querySelector(".sh_meda");
-const sh_noa = document.querySelector(".sh_noa");
+const sh_mute = document.querySelector(".volume img:nth-child(1)");
+const sh_unmute = document.querySelector(".volume img:nth-child(2)");
+const sh_pause = document.querySelector(".play-pause img:nth-child(1)");
+const sh_play = document.querySelector(".play-pause img:nth-child(2)");
+const sh_play_st = document.querySelector(".main-state img:nth-child(1)");
+const sh_volume_st = document.querySelector(".vol_val_st");
+const sh_pause_st = document.querySelector(".main-state img:nth-child(2)");
+const sh_mute_st = document.querySelector(".main-state img:nth-child(3)");
+const sh_unmute_st = document.querySelector(".main-state img:nth-child(4)");
+const sh_fordward_st = document.querySelector(".main-state img:nth-child(5)");
+const sh_back_st = document.querySelector(".main-state img:nth-child(6)");
+const sh_fulla = document.querySelector(".volume img:nth-child(2)");
+const sh_lowa = document.querySelector(".volume img:nth-child(4)");
+const sh_meda = document.querySelector(".volume img:nth-child(3)");
+const sh_noa = document.querySelector(".volume img:nth-child(5)");
 const liD = document.getElementById("liD");
 const download_video = document.getElementById("download_video");
 const download_subs = document.getElementById("download_subs");
@@ -47,7 +48,7 @@ const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 const touchBox = document.getElementById("touch-box");
 
-sh_pause.classList.remove("sh_pause");
+sh_pause.style.display = 'none';
 var video = document.querySelector("video");
 var videoContainer = document.querySelector(".video-container");
 var saved_speed = localStorage.getItem("videoSpeed");
@@ -63,7 +64,8 @@ let isCursorOnControls = false;
 let lastTouchTime = 0;
 let originalTime = 0;
 let touchFix;
-let timeout;
+let ctrlsTimeout;
+let voltimeTimeout;
 let touchTimeout;
 let cursorTimeout;
 var subtitleId = 0;
@@ -135,9 +137,7 @@ video.addEventListener('loadeddata', () => {
             return setTimeout(wait4ready, 25);
         }
         video.play().catch(() => {});
-        if (video.paused) {
-            pause();
-        }
+        if (video.paused) pause();
         totalDuration.innerHTML = showDuration(video.duration);
         video.ontimeupdate = handleProgressBar;
         video.onended = handleVideoEnded;
@@ -243,7 +243,7 @@ function chMode() {
     localStorage.setItem("videoMode", currentMode);
 }
 
-function toggleMainState() {timechange_delaytimechange_delay
+function toggleMainState() {
     video.paused ? play() : pause();
 }
 
@@ -286,8 +286,8 @@ function showCursor() {
 
 function play() {
     video.play();
-    sh_pause.classList.remove("sh_pause");
-    sh_play.classList.add("sh_play");
+    sh_pause.style.display = 'none';
+    sh_play.style.display = 'block';
     show_main_animation("play");
     hideControls(mouse_ctrl_delay);
 }
@@ -296,8 +296,8 @@ function pause() {
     video.pause();
     controls.classList.add("show");
     show_main_animation("pause");
-    sh_pause.classList.add("sh_pause");
-    sh_play.classList.remove("sh_play");
+    sh_pause.style.display = 'block';
+    sh_play.style.display = 'none';
     handleVideoIcon();
     if (video.ended) {
         currentTime.style.width = 100 + "%";
@@ -308,6 +308,7 @@ function handleProgressBar() {
     currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentDuration.innerHTML = showDuration(video.currentTime);
 }
+
 
 function showDuration(time) {
     const hours = Math.floor(time / 60 ** 2);
@@ -341,9 +342,10 @@ function toggleMuteUnmute() {
 }
 
 
+
 function hideControls(delay) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
+    clearTimeout(ctrlsTimeout);
+    ctrlsTimeout = setTimeout(() => {
         if (!video.paused) {
             if (isCursorOnControls) return;
             controls.classList.remove("show");
@@ -412,12 +414,10 @@ function showHover(clientX) {
   const chapter = getchptname(hovtime);
   hoverDuration.innerHTML = chapter ? `${timeStr}<br>${chapter}` : timeStr;
   const offset = hoverDuration.offsetWidth / 2;
-  hoverDuration.style.cssText = `
-    bottom: ${height + 8}px;
-    left: ${pos - offset}px;
-    display: block;
-    visibility: ${offset ? 'visible' : 'hidden'};
-  `;
+  hoverDuration.style.display = 'block';
+  hoverDuration.style.bottom = `${height + 8}px`;
+  hoverDuration.style.left = `${pos - offset}px`;
+  hoverDuration.style.visibility = offset ? 'visible' : 'hidden';
 }
 
 function clearHover() {
@@ -439,44 +439,38 @@ function touchDrag(handlerMove) {
 
 let anim_timeout;
 function show_main_animation(mode) {
-    if (anim_timeout) clearTimeout(anim_timeout);
+    clearTimeout(anim_timeout);
 
-    sh_play_st.classList.add("sh_play_st");
-    sh_pause_st.classList.add("sh_pause_st");
-    sh_mute_st.classList.add("sh_mute_st");
-    sh_unmute_st.classList.add("sh_unmute_st");
-    sh_back_st.classList.add("sh_back_st");
-    sh_fordward_st.classList.add("sh_fordward_st");
-    sh_volume_st.classList.add("sh_volume_st");
+    [sh_play_st, sh_pause_st, sh_mute_st, sh_unmute_st, sh_back_st, sh_fordward_st, sh_volume_st].forEach(el => el.style.display = 'none');
 
     switch (mode) {
         case "play":
-            sh_play_st.classList.remove("sh_play_st");
+            sh_play_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "pause":
-            sh_pause_st.classList.remove("sh_pause_st");
+            sh_pause_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "mute":
-            sh_mute_st.classList.remove("sh_mute_st");
+            sh_mute_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "unmute":
-            sh_unmute_st.classList.remove("sh_unmute_st");
+            sh_unmute_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "back":
-            sh_back_st.classList.remove("sh_back_st");
+            sh_back_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "fordward":
-            sh_fordward_st.classList.remove("sh_fordward_st");
+            sh_fordward_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         case "show_vol":
             sh_volume_st.innerText = Math.round(video.volume * 100) + "%";
-            sh_volume_st.classList.remove("sh_volume_st");
+            sh_volume_st.style.display = 'block';
             mainState.classList.add("show");
             break;
         default:
@@ -489,36 +483,36 @@ function show_main_animation(mode) {
 function handleVideoIcon() {
     if (!video.muted) {
         if (video.volume == 0.0) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.add("sh_fulla");
-            sh_meda.classList.add("sh_meda");
-            sh_lowa.classList.add("sh_lowa");
-            sh_noa.classList.remove("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'none';
+            sh_meda.style.display = 'none';
+            sh_lowa.style.display = 'none';
+            sh_noa.style.display = 'block';
         } else if (video.volume > 0.67) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.remove("sh_fulla");
-            sh_meda.classList.add("sh_meda");
-            sh_lowa.classList.add("sh_lowa");
-            sh_noa.classList.add("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'block';
+            sh_meda.style.display = 'none';
+            sh_lowa.style.display = 'none';
+            sh_noa.style.display = 'none';
         } else if (video.volume > 0.33) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.add("sh_fulla");
-            sh_meda.classList.remove("sh_meda");
-            sh_lowa.classList.add("sh_lowa");
-            sh_noa.classList.add("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'none';
+            sh_meda.style.display = 'block';
+            sh_lowa.style.display = 'none';
+            sh_noa.style.display = 'none';
         } else if (video.volume > 0) {
-            sh_mute.classList.add("sh_mute");
-            sh_fulla.classList.add("sh_fulla");
-            sh_meda.classList.add("sh_meda");
-            sh_lowa.classList.remove("sh_lowa");
-            sh_noa.classList.add("sh_noa");
+            sh_mute.style.display = 'none';
+            sh_fulla.style.display = 'none';
+            sh_meda.style.display = 'none';
+            sh_lowa.style.display = 'block';
+            sh_noa.style.display = 'none';
         }
     } else {
-        sh_mute.classList.remove("sh_mute");
-        sh_fulla.classList.add("sh_fulla");
-        sh_meda.classList.add("sh_meda");
-        sh_lowa.classList.add("sh_lowa");
-        sh_noa.classList.add("sh_noa");
+        sh_mute.style.display = 'block';
+        sh_fulla.style.display = 'none';
+        sh_meda.style.display = 'none';
+        sh_lowa.style.display = 'none';
+        sh_noa.style.display = 'none';
     }
 }
 
@@ -561,7 +555,7 @@ function split_timeline_chapters() {
     // Create sections within the div
     chptdata.slice(0, -1).forEach((time, index) => {
         const nextTime = chptdata[index + 1];
-        const startPercent = Math.min((time / divtimechange_delayLength) * 100, 100)
+        const startPercent = Math.min((time / divLength) * 100, 100)
         const section = document.createElement('div');
         section.classList.add("chapter");
         section.style.left = `${startPercent}%`;
@@ -594,7 +588,7 @@ function double_touch(e) {
         controls.classList.add("show");
         hideControls(timechange_delay);
     } else {
-        touchTimeout = setTimeout(toggleMainState, doubleTouch_delay);
+        touchTimeout = setTimeout(toggleMainState, animation_st_delay);
     }
     lastTouchTime = now;
 }
@@ -618,7 +612,7 @@ async function addrmMLcl() {
 // Window events
 window.addEventListener('resize', scaleVideo);
 window.addEventListener('fullscreenchange', scaleVideo);
-timechange_delay
+
 // Video events
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
@@ -673,12 +667,14 @@ controls.addEventListener("click", () => {
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
+    clearTimeout(voltimeTimeout);
     if (!video.muted) { timeContainer.style.display = "none"; }
     video.muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
+    clearTimeout(voltimeTimeout);
     volumeBar.classList.remove("show");
-    setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
+    voltimeTimeout = setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
 });
 volumeBar.addEventListener('input', (e) => {
     handleVolume(e);
@@ -846,4 +842,3 @@ function chgtime_kdb_helper(mode) {
     handleProgressBar();
     show_main_animation(mode);
 }
-

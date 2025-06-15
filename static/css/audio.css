@@ -37,8 +37,8 @@ img {
     display: flex;
     align-items: center;
     width: 100%;
-    user-select: text;
     -webkit-user-select: text;
+    user-select: text;
 }
 .player-title {
     margin: auto;
@@ -122,7 +122,6 @@ img {
     opacity: 1;
     transform: scale(1);
 }
-
 #current-time, #total-time {
     font-size: 12px;
     font-family: monospace;
@@ -135,7 +134,6 @@ img {
     margin-left: 8px;
     margin-right: 12px;
 }
-
 .playback-controls {
     margin-top: 20px;
     margin-bottom: 16px;
@@ -143,6 +141,11 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+#play-pause img {
+    filter: invert(1);
+    width: 24px;
+    height: 24px;
 }
 .controls {
     width: 100%;
@@ -162,7 +165,7 @@ img {
     width: 24px;
     height: 24px;
 }
-.icon-vol {
+.vol-icons img {
     position: absolute;
     top: 0;
     left: 0;
@@ -171,9 +174,6 @@ img {
     height: 100%;
     cursor: pointer;
     filter: invert(0.9);
-}
-.vol-high {
-    display: block;
 }
 #vol-icon {
     width: 24px;
@@ -220,6 +220,10 @@ img {
     background: none;
     cursor: pointer;
 }
+.extra-controls button img {
+    width: 30px;
+    height: 30px;
+}
 #speed-btn {
     background: none;
     border: none;
@@ -244,13 +248,11 @@ img {
 }
 .control-btn img {
     filter: invert(1);
+    width: 24px;
+    height: 24px;
 }
 .control-btn:hover {
     background: #def6;
-}
-.control-btn img {
-    width: 24px;
-    height: 24px;
 }
 .nav-btn {
     background: none;
@@ -265,6 +267,7 @@ img {
     width: 30px;
     height: 30px;
 }
+
 
 /* RESPONSIVE  ZONE */
 
@@ -349,3 +352,4 @@ img {
         display: none;
     }
 }
+

@@ -1,8 +1,8 @@
 /* Code by Sergio00166 */
 
 const audio = document.getElementById('audio');
-const iconPlay = document.querySelector('.icon-play');
-const iconPause = document.querySelector('.icon-pause');
+const iconPlay = document.querySelector('#play-pause img:first-child');
+const iconPause = document.querySelector('#play-pause img:last-child');
 const duration = document.querySelector(".duration");
 const currentTime = document.querySelector(".current-time");
 const hoverTime = document.querySelector(".hover-time");
@@ -17,13 +17,13 @@ const nextLink = document.getElementById('next');
 const randomLink = document.getElementById('random');
 const downloadLink = document.getElementById('download-link');
 const volBtn = document.querySelector('.vol-icons');
-const volHighIcon = document.querySelector('.vol-high');
-const volMedIcon = document.querySelector('.vol-medium');
-const volLowIcon = document.querySelector('.vol-low');
-const volZeroIcon = document.querySelector('.vol-zero');
-const volMutedIcon = document.querySelector('.vol-muted');
-const loopImg = document.getElementById('loop');
-const loopSameImg = document.getElementById('loopSame');
+const volHighIcon = document.querySelector('.vol-icons img:nth-child(1)');
+const volMedIcon = document.querySelector('.vol-icons img:nth-child(2)');
+const volLowIcon = document.querySelector('.vol-icons img:nth-child(3)');
+const volZeroIcon = document.querySelector('.vol-icons img:nth-child(4)');
+const volMutedIcon = document.querySelector('.vol-icons img:nth-child(5)');
+const loopImg = document.querySelector('#loop-btn img:first-child');
+const loopSameImg = document.querySelector('#loop-btn img:last-child');
 
 let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
 let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
@@ -139,9 +139,10 @@ audio.addEventListener('loadeddata', () => {
         if (isNaN(audio.duration) || audio.duration === 0) {
             return setTimeout(wait4ready, 25);
         }
+        audio.play().catch(() => {});
+        if (audio.paused) pause();
         totalTimeElem.textContent = formatTime(audio.duration);
         audio.addEventListener('timeupdate', updateSeekBar);
-        toggleMainState(); // Try play & update play btn
     })();
 });
 
@@ -298,12 +299,10 @@ function showHover(clientX) {
   const { pct, pos, height } = getPct(clientX);
   hoverTime.style.width = `${pct * 100}%`;
   hoverDuration.textContent = showDuration(pct * audio.duration);
-  hoverDuration.style.cssText = `
-    bottom: ${height + 6}px;
-    left: ${pos - hoverDuration.offsetWidth/2}px;
-    visibility: ${hoverDuration.offsetWidth ? 'visible' : 'hidden'};
-    display: block;
-  `;
+  hoverDuration.style.display = 'block';
+  hoverDuration.style.bottom = `${height + 6}px`;
+  hoverDuration.style.left = `${pos - hoverDuration.offsetWidth/2}px`;
+  hoverDuration.style.visibility = hoverDuration.offsetWidth ? 'visible' : 'hidden';
 }
 
 function clearHover() {

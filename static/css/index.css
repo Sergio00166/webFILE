@@ -9,11 +9,11 @@
 body {
     margin: 0;
     color: #f0f0f0;
-    user-select: none;
     background-color: #000;
     font-family: 'Segoe UI', sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
+    user-select: none;
     word-break: break-all;
 }
 img {
@@ -24,8 +24,8 @@ pre {
     font-family: inherit;
     font-size: inherit;
     margin: 0;
-    user-select: text;
     -webkit-user-select: text;
+    user-select: text;
 }
 button {
     flex: 1;
@@ -36,6 +36,7 @@ button {
     color: #fff;
     font-weight: 600;
     cursor: pointer;
+    line-height: 1.5;
 }
 button:hover {
     background: linear-gradient(145deg, #262a33, #101e1f);

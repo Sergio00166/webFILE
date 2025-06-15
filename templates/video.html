@@ -25,22 +25,21 @@
           <canvas></canvas>
       </div>
       <div id="touch-box"></div>
-      <span class="custom-loader">
-      </span>
+      <span class="custom-loader"></span>
       <span class="main-state">
-        <img class="fullimg sh_play_st" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
-        <img class="fullimg sh_pause_st" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
-        <img class="fullimg sh_mute_st" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
-        <img class="fullimg sh_unmute_st" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
-        <img class="fullimg sh_fordward_st" src="{{ url_for('index', static='svg/videoplayer/chevron-forward-outline.svg') }}">
-        <img class="fullimg sh_back_st" src="{{ url_for('index', static='svg/videoplayer/chevron-back-outline.svg') }}">
-        <div class="vol_val_st sh_volume_st"></div>
+        <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: none;">
+        <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
+        <img src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" style="display: none;">
+        <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: none;">
+        <img src="{{ url_for('index', static='svg/videoplayer/chevron-forward-outline.svg') }}" style="display: none;">
+        <img src="{{ url_for('index', static='svg/videoplayer/chevron-back-outline.svg') }}" style="display: none;">
+        <div class="vol_val_st" style="display: none;"></div>
       </span>
       <div class="controls">
         <div class="duration">
           <div class="current-time"></div>
           <div class="hover-time">
-            <span class="hover-duration"></span>
+            <span class="hover-duration" style="display: none;"></span>
           </div>
           <div class="chapter-container"></div>
           <div class="buffer"></div>
@@ -48,16 +47,16 @@
         <div class="btn-controls">
           <div class="side-controls">
             <button class="round-button play-pause" onclick="toggleMainState()" title="Play/Pause">
-              <img class="sh_play" src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
-              <img class="sh_pause" src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}">
+              <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: none;">
+              <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
             </button>
             <span class="volume">
               <button class="round-button" onclick="toggleMuteUnmute()" title="Volume">
-                <img class="sh_mute" src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}">
-                <img class="sh_fulla" src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}">
-                <img class="sh_meda" src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}">
-                <img class="sh_lowa" src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}">
-                <img class="sh_noa" src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}">
+                <img src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" style="display: none;">
+                <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: none;">
+                <img src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" style="display: none;">
+                <img src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}" style="display: none;">
+                <img src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}" style="display: none;">
               </button>
               <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1" />
             </span>

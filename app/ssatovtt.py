@@ -4,7 +4,6 @@
 
 def convert(source):
     ass = source.split("\n")
-    # Process text into sections
     sections, section = {}, []
     for i in ass:
         if not i:
@@ -19,7 +18,6 @@ def convert(source):
     if section:
         sections[key] = section
 
-    # Process info
     info = {}
     for i in sections["Script Info"]:
         line = i.split(":")
@@ -32,11 +30,8 @@ def convert(source):
     info["PlayResX"] = int(info["PlayResX"])
     info["PlayResY"] = int(info["PlayResY"])
 
-    # Process styles
     styles = {}
-    FORMAT = "Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,TertiaryColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,AlphaLevel,Encoding".split(
-        ","
-    )
+    FORMAT = "Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,TertiaryColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,AlphaLevel,Encoding".split(",")
     for line in sections["V4+ Styles"]:
         if line[:7] == "Format:":
             FORMAT = [i.strip() for i in line[7:].strip().split(",")]
@@ -47,7 +42,6 @@ def convert(source):
                 style[FORMAT[i]] = value
             styles[style.pop("Name").replace(" ", "")] = style
 
-    # Process captions
     captions = []
     FORMAT = "Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text".split(",")
     format_length = len(FORMAT) - 1
@@ -65,7 +59,6 @@ def convert(source):
                 dialogue[FORMAT[i]] = value
             captions.append(dialogue)
 
-    # Rewrite timestamps
     def rewrite_timestamp(timestamp):
         first_split = timestamp.split(".")
         hhmmss = first_split[0].split(":")
@@ -81,7 +74,6 @@ def convert(source):
         styles[style]["MarginL"] = int(styles[style]["MarginL"])
         styles[style]["MarginV"] = int(styles[style]["MarginV"])
 
-    # Reprocess captions (handle local styling and positions)
     insert_list = []
     for line_number, line in enumerate(captions):
         line["Start"] = rewrite_timestamp(line["Start"])
@@ -94,7 +86,6 @@ def convert(source):
         for i, part in enumerate(parts):
             if not part:
                 continue
-            # Clean style spaces
             current_line["Style"] = current_line["Style"].replace(" ", "")
             local_style = {
                 "Italic": styles[current_line["Style"]]["Italic"] == "-1",
@@ -104,11 +95,13 @@ def convert(source):
             }
             part_text = part
             if i:
-                # Si no se encuentra "}", se elimina el bloque no convertible
                 if "}" not in part:
                     continue
                 more_parts = part.split("}", 1)
                 local_flags = more_parts[0].split("\\")
+                # Ignorar bloques de dibujo {\p1...}{\p0}
+                if any(f.startswith("p") and len(f) > 1 and f[1].isdigit() for f in local_flags):
+                    continue
                 part_text = more_parts[1]
                 for flag in local_flags:
                     if flag in ["i", "i1"]:
@@ -152,7 +145,6 @@ def convert(source):
         else:
             line["Text"] = full_text
 
-    # Remove duplicated lines (same pos and time)
     seen, unique_captions = set(), []
     for cap in captions:
         key = (
@@ -169,7 +161,6 @@ def convert(source):
         unique_captions.append(cap)
     captions = unique_captions
 
-    # Final rewrite
     vtt = "WEBVTT\n\n"
     for style in styles:
         font = []

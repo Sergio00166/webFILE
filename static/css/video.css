@@ -45,10 +45,6 @@ img {
     vertical-align: middle;
     filter: brightness(0) invert(1);
 }
-.fullimg {
-    width: 67%;
-    height: 67%;
-}
 .round-button {
     width: 40px;
     height: 40px;
@@ -64,6 +60,7 @@ img {
     margin-right: 4px;
     margin-left: 4px;
     cursor: pointer;
+    flex-shrink: 0;
 }
 .round-button:hover {
     background: linear-gradient(120deg, #8f9faf, #3f4f5f);
@@ -125,6 +122,10 @@ body {
     background: rgba(48,48,56,0.75);
     border: 1px solid #222;
     transition: all 0.3s;
+}
+.main-state img {
+    width: 67%;
+    height: 67%;
 }
 .main-state.show {
   opacity: 1;
@@ -244,7 +245,6 @@ body {
 }
 .time-container {
     font-size: 13px;
-    font-weight: 500;
     padding-right: 8px;
 }
 .volume {
@@ -258,21 +258,21 @@ body {
 #volume-bar {
     height: 3px;
     cursor: pointer;
-    appearance: none;
     border-radius: 2px;
     visibility: hidden;
     width: 0 !important;
     background: #e1e1e1;
     transition: all 0.1s;
     -webkit-appearance: none;
+    appearance: none;
 }
 #volume-bar::-webkit-slider-thumb {
     width: 10px;
     height: 10px;
-    appearance: none;
     border-radius: 50%;
     background: #007aff;
     -webkit-appearance: none;
+    appearance: none;
 }
 #volume-bar::-moz-range-thumb {
     width: 10px;
@@ -317,6 +317,13 @@ body {
     font-weight: 500;
     cursor: pointer;
 }
+.setting-menu li:focus-within {
+    background-color: #888;
+}
+#liD:focus {
+    outline: none;
+    background-color: #888;
+}
 .setting-menu li:hover {
     background: #666 !important;
 }
@@ -324,13 +331,6 @@ body {
     content: "Subs";
     color: #ffffff;
     position: absolute;
-}
-.setting-menu li:focus-within {
-    background-color: #888;
-}
-#liD:focus {
-    outline: none;
-    background-color: #888;
 }
 .setting-menu li:nth-child(2)::before {
     content: "Tracks";
@@ -346,8 +346,8 @@ select {
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
-    background-image: none;
     appearance: none;
+    background-image: none;
     width: 100%;
     text-align: center;
     font-size: 1rem;
@@ -382,34 +382,13 @@ select option {
     display: flex;
     align-items: center;
 }
-.full,.contract {
-    display: none;
-}
-.video-container:not(.fullscreen) .full {
-    display: flex;
-}
-.video-container.fullscreen .contract {
-    display: flex;
-}
 
 /* Define default values */
-.sh_mute { display: none; }
-.sh_unmute { display: none; }
-.sh_pause { display: none; }
-.sh_play { display: none; }
-.sh_play_st { display: none; }
-.sh_pause_st { display: none; }
-.sh_mute_st { display: none; }
-.sh_unmute_st { display: none; }
-.sh_volume_st { display: none; }
-.sh_fordward_st { display: none; }
-.sh_back_st { display: none; }
-.sh_fulla { display: none; }
-.sh_meda { display: none; }
-.sh_lowa { display: none; }
-.sh_noa { display: none; }
-.transition { transition: opacity 0.25s ease; }
 .vol_val_st { font-size: 1.3rem; }
+.full,.contract { display: none; }
+.transition { transition: opacity 0.25s ease; }
+.video-container:not(.fullscreen) .full { display: block; }
+.video-container.fullscreen .contract { display: block; }
 
 
 /* RESPONSIVE (pain) ZONE */
@@ -444,6 +423,9 @@ select option {
         display: flex;
         align-items: center;
         flex-direction: column;
+    }
+    .setting-menu {
+        bottom: 100px;
     }
 }
 @media (max-width: 320px) {
@@ -497,3 +479,4 @@ select option {
         display: none;
     }
 }
+
