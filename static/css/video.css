@@ -424,6 +424,9 @@ select option {
         align-items: center;
         flex-direction: column;
     }
+    .setting-menu {
+        bottom: 100px;
+    }
 }
 @media (max-width: 320px) {
     .duration {
