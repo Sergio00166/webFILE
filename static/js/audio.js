@@ -139,9 +139,10 @@ audio.addEventListener('loadeddata', () => {
         if (isNaN(audio.duration) || audio.duration === 0) {
             return setTimeout(wait4ready, 25);
         }
+        audio.play().catch(() => {});
+        if (audio.paused) pause();
         totalTimeElem.textContent = formatTime(audio.duration);
         audio.addEventListener('timeupdate', updateSeekBar);
-        toggleMainState(); // Try play & update play btn
     })();
 });
 

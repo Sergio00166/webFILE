@@ -137,9 +137,7 @@ video.addEventListener('loadeddata', () => {
             return setTimeout(wait4ready, 25);
         }
         video.play().catch(() => {});
-        if (video.paused) {
-            pause();
-        }
+        if (video.paused) pause();
         totalDuration.innerHTML = showDuration(video.duration);
         video.ontimeupdate = handleProgressBar;
         video.onended = handleVideoEnded;
