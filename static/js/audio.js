@@ -140,6 +140,7 @@ audio.addEventListener('loadeddata', () => {
             return setTimeout(wait4ready, 25);
         }
         play(); // Try to play it
+        if (audio.paused) pause();
         totalTimeElem.textContent = formatTime(audio.duration);
         audio.addEventListener('timeupdate', updateSeekBar);
     })();
@@ -186,10 +187,8 @@ function pause() {
 
 function play() {
     audio.play().catch(()=>{});
-    if (!audio.paused) {
-        iconPlay.style.display = 'none';
-        iconPause.style.display = 'block';
-    }
+    iconPlay.style.display = 'none';
+    iconPause.style.display = 'block';
 }
 
 function toggleMainState() {
