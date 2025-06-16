@@ -131,7 +131,7 @@ if (muted != null) {
 }
 handleVideoIcon();
 
-video.addEventListener('loadeddata', () => {
+video.addEventListener('canplaythrough', () => {
     (function wait4ready() {
         if (isNaN(video.duration) || video.duration === 0) {
             return setTimeout(wait4ready, 25);

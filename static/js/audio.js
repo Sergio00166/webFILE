@@ -134,7 +134,7 @@ volBtn.addEventListener('click', ()=>{
 });
 
 
-audio.addEventListener('loadeddata', () => {
+audio.addEventListener('canplaythrough', () => {
     (function wait4ready() {
         if (isNaN(audio.duration) || audio.duration === 0) {
             return setTimeout(wait4ready, 25);
