@@ -285,7 +285,7 @@ function showCursor() {
 }
 
 function play() {
-    video.play();
+    video.play().catch(()=>{});
     sh_pause.style.display = 'none';
     sh_play.style.display = 'block';
     show_main_animation("play");
