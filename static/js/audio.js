@@ -139,19 +139,16 @@ audio.addEventListener('loadeddata', () => {
         if (isNaN(audio.duration) || audio.duration === 0) {
             return setTimeout(wait4ready, 25);
         }
-        play(); // Try to play
-        if (audio.paused) pause();
+        play(); // Try to play it
         totalTimeElem.textContent = formatTime(audio.duration);
         audio.addEventListener('timeupdate', updateSeekBar);
     })();
 });
 
 audio.addEventListener('ended', () => {
-    if (loopMode === 2) {
-        audio.play();
-    } else if (loopMode === 1) {
-        next();
-    } else {
+    if (loopMode === 2) play();
+    else if (loopMode === 1) next();
+    else {
         iconPause.style.display = 'none';
         iconPlay.style.display = 'block';
     }
@@ -186,14 +183,18 @@ function pause() {
     iconPause.style.display = 'none';
     iconPlay.style.display = 'block';
 }
+
 function play() {
     audio.play().catch(()=>{});
-    iconPlay.style.display = 'none';
-    iconPause.style.display = 'block';
+    if (!audio.paused) {
+        iconPlay.style.display = 'none';
+        iconPause.style.display = 'block';
+    }
 }
 
 function toggleMainState() {
-    audio.paused ? play() : pause();
+    if (audio.paused) { play();  }
+    else { pause(); }
 }
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);

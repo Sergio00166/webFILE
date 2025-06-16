@@ -136,8 +136,7 @@ video.addEventListener('loadeddata', () => {
         if (isNaN(video.duration) || video.duration === 0) {
             return setTimeout(wait4ready, 25);
         }
-        video.play().catch(() => {});
-        if (video.paused) pause();
+        play(); // Try to play it
         totalDuration.innerHTML = showDuration(video.duration);
         video.ontimeupdate = handleProgressBar;
         video.onended = handleVideoEnded;
@@ -263,13 +262,9 @@ function saveVolume() {
 }
 
 function handleVideoEnded() {
-    if (currentMode === 1) {
-        next();
-    } else if (currentMode === 2) {
-        video.play();
-    } else {
-        pause();
-    }
+    if (currentMode === 1) next();
+    else if (currentMode === 2)  play();
+    else  pause();
 }
 
 function showCursor() {
