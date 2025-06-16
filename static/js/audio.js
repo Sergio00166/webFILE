@@ -76,7 +76,16 @@ window.addEventListener('pageshow', () => {
     volumeBar.value = audio.volume;
     updateVolumeIcon(audio.volume);
     updateVolumeBar();
+    (function wait4ready() {
+        if (isNaN(audio.duration) || audio.duration === 0) {
+            return setTimeout(wait4ready, 25);
+        }
+        play(); if (audio.paused) pause();
+        totalTimeElem.textContent = formatTime(audio.duration);
+        audio.addEventListener('timeupdate', updateSeekBar);
+    })();
 });
+
 
 function updateSpeedDisplay() {
     speedBtn.textContent = speedOptions[speedIndex] + 'x';
@@ -131,19 +140,6 @@ volumeBar.addEventListener('input', (e) => {
 
 volBtn.addEventListener('click', ()=>{
     toggleMuteUnmute();
-});
-
-
-audio.addEventListener('canplaythrough', () => {
-    (function wait4ready() {
-        if (isNaN(audio.duration) || audio.duration === 0) {
-            return setTimeout(wait4ready, 25);
-        }
-        play(); // Try to play it
-        if (audio.paused) pause();
-        totalTimeElem.textContent = formatTime(audio.duration);
-        audio.addEventListener('timeupdate', updateSeekBar);
-    })();
 });
 
 audio.addEventListener('ended', () => {

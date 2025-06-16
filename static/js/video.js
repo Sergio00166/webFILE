@@ -119,11 +119,6 @@ if (currentMode != null) {
     currentMode = 0;
 }
 
-window.addEventListener('pageshow', () => {
-    volumeBar.value = video.volume;
-    updateVolumeBar();
-});
-
 if (muted != null) {
     video.muted = (muted == "true")
 } else {
@@ -131,13 +126,14 @@ if (muted != null) {
 }
 handleVideoIcon();
 
-video.addEventListener('canplaythrough', () => {
+window.addEventListener('pageshow', () => {
+    volumeBar.value = video.volume;
+    updateVolumeBar();
     (function wait4ready() {
         if (isNaN(video.duration) || video.duration === 0) {
             return setTimeout(wait4ready, 25);
         }
-        play(); // Try to play it
-        if (video.paused) pause();
+        play(); if (video.paused) pause();
         totalDuration.innerHTML = showDuration(video.duration);
         video.ontimeupdate = handleProgressBar;
         video.onended = handleVideoEnded;
