@@ -186,7 +186,7 @@ function play() {
 }
 
 function toggleMainState() {
-    video.paused ? play() : pause();
+    audio.paused ? play() : pause();
 }
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
