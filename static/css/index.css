@@ -18,6 +18,7 @@ body {
 }
 img {
     pointer-events: none;
+    width: 16px;
 }
 pre {
     white-space: pre-wrap;
