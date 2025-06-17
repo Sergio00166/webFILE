@@ -87,18 +87,13 @@ body {
 .custom-loader {
     width: 108px;
     height: 108px;
-    opacity: 0;
     border: 10px solid #FFF;
     border-bottom-color: transparent;
     border-radius: 50%;
-    display: inline-block;
     box-sizing: border-box;
     animation: rotation 1s linear infinite;
     position: absolute;
     transition: all 0.5s;
-}
-.custom-loader.show {
-    opacity: 1 !important;
 }
 @keyframes rotation {
     0% {

@@ -607,10 +607,10 @@ window.addEventListener('fullscreenchange', scaleVideo);
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
 video.addEventListener("waiting", () => {
-    loader.classList.add("show");
+    loader.style.display = "block";
 });
 video.addEventListener("playing", () => {
-    loader.classList.remove("show");
+    loader.style.display = "none";
 });
 
 // Video container events
