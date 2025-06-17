@@ -681,9 +681,8 @@ settingsBtn.addEventListener("mouseup", () => {
 settingsBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     mber = setTimeout(addrmMLcl, 600);
-}, {
-    passive: false
-});
+}, {passive: false});
+
 settingsBtn.addEventListener("touchend", () => {
     clearTimeout(mber);
 });

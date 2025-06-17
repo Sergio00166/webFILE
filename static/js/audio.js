@@ -138,9 +138,7 @@ volumeBar.addEventListener('input', (e) => {
     updateVolumeBar();
 });
 
-volBtn.addEventListener('click', ()=>{
-    toggleMuteUnmute();
-});
+volBtn.addEventListener('click', toggleMuteUnmute);
 
 audio.addEventListener('ended', () => {
     if (loopMode === 2) play();
@@ -188,8 +186,7 @@ function play() {
 }
 
 function toggleMainState() {
-    if (audio.paused) { play();  }
-    else { pause(); }
+    video.paused ? play() : pause();
 }
 audio.addEventListener("play", play);
 audio.addEventListener("pause", pause);
