@@ -48,7 +48,6 @@ const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 const touchBox = document.getElementById("touch-box");
 
-sh_pause.style.display = 'none';
 var video = document.querySelector("video");
 var videoContainer = document.querySelector(".video-container");
 var saved_speed = localStorage.getItem("videoSpeed");
@@ -127,6 +126,7 @@ if (muted != null) {
 handleVideoIcon();
 
 window.addEventListener('pageshow', () => {
+    sh_play.style.display = 'block';
     volumeBar.value = video.volume;
     updateVolumeBar();
     (function wait4ready() {

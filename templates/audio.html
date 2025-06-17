@@ -32,7 +32,7 @@
             <img src="{{ url_for('index', static='svg/audioplayer/round-double-alt-arrow-left.svg') }}">
           </button>
           <button id="play-pause" class="control-btn" onclick="toggleMainState()" title="Play/Pause">
-            <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}">
+            <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: none;">
             <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
           </button>
           <button class="nav-btn next" onclick="next()" title="Next track">
@@ -60,7 +60,7 @@
         </button>
         <button id="speed-btn" title="Playback Speed">1x</button>
         <button onclick="download()" title="Download">
-            <img src="{{ url_for('index', static='svg/audioplayer/down-arrow.svg') }}">
+            <img src="{{ url_for('index', static='svg/audioplayer/down-arrow.svg') }}" />
         </button>
       </div>
     </div>
