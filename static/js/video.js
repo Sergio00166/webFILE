@@ -124,10 +124,10 @@ if (muted != null) {
     video.muted = false;
 }
 handleVideoIcon();
-volumeBar.value = video.volume;
-updateVolumeBar();
 
 window.addEventListener('pageshow', () => {
+    volumeBar.value = video.volume;
+    updateVolumeBar();
     (function wait4ready() {
         if (isNaN(video.duration) || video.duration === 0) {
             return setTimeout(wait4ready, 25);

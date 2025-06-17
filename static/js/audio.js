@@ -72,11 +72,10 @@ if (savedMuted !== null) {
     audio.muted = savedMuted === 'true';
 }
 
-volumeBar.value = audio.volume;
-updateVolumeIcon(audio.volume);
-updateVolumeBar();
-
 window.addEventListener('pageshow', () => {
+    volumeBar.value = audio.volume;
+    updateVolumeIcon(audio.volume);
+    updateVolumeBar();
     (function wait4ready() {
         if (isNaN(audio.duration) || audio.duration === 0) {
             return setTimeout(wait4ready, 25);
