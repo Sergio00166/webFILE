@@ -73,7 +73,6 @@ if (savedMuted !== null) {
 }
 
 window.addEventListener('pageshow', () => {
-    iconPlay.style.display = 'block';
     volumeBar.value = audio.volume;
     updateVolumeIcon(audio.volume);
     updateVolumeBar();

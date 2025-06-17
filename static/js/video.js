@@ -126,7 +126,6 @@ if (muted != null) {
 handleVideoIcon();
 
 window.addEventListener('pageshow', () => {
-    sh_play.style.display = 'block';
     volumeBar.value = video.volume;
     updateVolumeBar();
     (function wait4ready() {
