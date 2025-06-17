@@ -18,7 +18,8 @@ body {
 }
 img {
     pointer-events: none;
-    width: 16px;
+    max-width: 16px;
+    height: 16px;
 }
 pre {
     white-space: pre-wrap;
@@ -81,6 +82,7 @@ h2 {
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
+    align-items: center;
 }
 .name {
     text-align: left;
