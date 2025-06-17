@@ -47,12 +47,12 @@ const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 const touchBox = document.getElementById("touch-box");
+const video = document.querySelector("video");
+const videoContainer = document.querySelector(".video-container");
+const mode = document.getElementById("mode");
 
-var video = document.querySelector("video");
-var videoContainer = document.querySelector(".video-container");
 var saved_speed = localStorage.getItem("videoSpeed");
 var volumeVal = localStorage.getItem("videoVolume");
-var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 var subs_legacy = localStorage.getItem("subsLegacy");
