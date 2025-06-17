@@ -88,6 +88,12 @@ if (subs_legacy != null) {
 } else {
     subs_legacy = false;
 }
+if (muted != null) {
+    video.muted = (muted == "true")
+} else {
+    video.muted = false;
+}
+handleVideoIcon();
 
 for (var i = 0; i < subtitleSelect.options.length; i++) {
     if (subtitleSelect.options[i].text ===
@@ -117,13 +123,6 @@ if (currentMode != null) {
 } else {
     currentMode = 0;
 }
-
-if (muted != null) {
-    video.muted = (muted == "true")
-} else {
-    video.muted = false;
-}
-handleVideoIcon();
 
 window.addEventListener('pageshow', () => {
     volumeBar.value = video.volume;

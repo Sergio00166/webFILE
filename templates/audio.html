@@ -41,7 +41,7 @@
         </div>
         <div class="volume-control">
           <div class="vol-icons" tabindex="0" onclick="toggleMuteUnmute()">
-            <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: none;">
+            <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: block;">
             <img src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" style="display: none;">
             <img src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}" style="display: none;">
             <img src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}" style="display: none;">
@@ -55,7 +55,7 @@
             <img src="{{ url_for('index', static='svg/audioplayer/shuffle-tracks-button.svg') }}">
         </button>
         <button id="loop-btn" onclick="cycleLoop()" title="Loop Mode">
-            <img src="{{ url_for('index', static='svg/audioplayer/repeat-button.svg') }}" style="display: none;">
+            <img src="{{ url_for('index', static='svg/audioplayer/repeat-button.svg') }}" style="display: block;">
             <img src="{{ url_for('index', static='svg/audioplayer/repeat-single-button.svg') }}" style="display: none;">
         </button>
         <button id="speed-btn" title="Playback Speed">1x</button>

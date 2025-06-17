@@ -27,6 +27,8 @@ const loopSameImg = document.querySelector('#loop-btn img:last-child');
 
 let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
 let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
+const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
+const savedMuted = localStorage.getItem('audioMuted');
 const speedBtn = document.getElementById('speed-btn');
 const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 let speedIndex = speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0 ?
@@ -36,6 +38,14 @@ audio.playbackRate = speedOptions[speedIndex];
 let speedBtn_startY = 0;
 let fixTouchHover = false;
 
+
+if (!isNaN(savedVolume)) {
+    audio.volume = savedVolume;
+}
+if (savedMuted !== null) {
+    audio.muted = savedMuted === 'true';
+}
+updateVolumeIcon(audio.volume);
 
 function updateLoopButton() {
     if (loopMode === 0) {
@@ -62,16 +72,6 @@ function updateLoopButton() {
 updateLoopButton();
 
 shuffleBtn.style.opacity = isShuffled ? 1 : 0.4;
-
-const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
-const savedMuted = localStorage.getItem('audioMuted');
-if (!isNaN(savedVolume)) {
-    audio.volume = savedVolume;
-}
-if (savedMuted !== null) {
-    audio.muted = savedMuted === 'true';
-}
-updateVolumeIcon(audio.volume);
 
 window.addEventListener('pageshow', () => {
     volumeBar.value = audio.volume;
