@@ -1,6 +1,7 @@
 # Original code by pmdevita
 # Modified by Sergio00166
 
+import re
 
 def convert(source):
     ass = source.split("\n")
@@ -74,76 +75,13 @@ def convert(source):
         styles[style]["MarginL"] = int(styles[style]["MarginL"])
         styles[style]["MarginV"] = int(styles[style]["MarginV"])
 
-    insert_list = []
-    for line_number, line in enumerate(captions):
+    for line in captions:
         line["Start"] = rewrite_timestamp(line["Start"])
         line["End"] = rewrite_timestamp(line["End"])
-        line["Text"] = line["Text"].replace("\\N", "\n")
-        full_text = ""
-        parts = line["Text"].split("{")
-        current_line = line
-        extra_lines = 0
-        for i, part in enumerate(parts):
-            if not part:
-                continue
-            current_line["Style"] = current_line["Style"].replace(" ", "")
-            local_style = {
-                "Italic": styles[current_line["Style"]]["Italic"] == "-1",
-                "Bold": styles[current_line["Style"]]["Bold"] == "-1",
-                "Position": None,
-                "Newline": False,
-            }
-            part_text = part
-            if i:
-                if "}" not in part:
-                    continue
-                more_parts = part.split("}", 1)
-                local_flags = more_parts[0].split("\\")
-                # Ignorar bloques de dibujo {\p1...}{\p0}
-                if any(f.startswith("p") and len(f) > 1 and f[1].isdigit() for f in local_flags):
-                    continue
-                part_text = more_parts[1]
-                for flag in local_flags:
-                    if flag in ["i", "i1"]:
-                        local_style["Italic"] = True
-                    elif flag == "i0":
-                        local_style["Italic"] = False
-                    elif flag.startswith("pos"):
-                        try:
-                            local_style["Position"] = [
-                                float(coord) for coord in flag[4:-1].split(",")
-                            ]
-                            local_style["Newline"] = True
-                        except:
-                            local_style["Position"] = None
-            if local_style["Bold"]:
-                part_text = "<b>{}</b>".format(part_text)
-            if local_style["Italic"]:
-                part_text = "<i>{}</i>".format(part_text)
-            if local_style["Newline"]:
-                if extra_lines:
-                    current_line["Text"] = full_text
-                    insert_list.append([line_number, current_line])
-                    full_text = ""
-                    current_line = current_line.copy()
-                extra_lines += 1
-            if local_style["Position"]:
-                current_line["MarginL"] = round(
-                    local_style["Position"][0] - (info["PlayResX"] / 2) + 1
-                )
-                current_line["MarginR"] = 1
-                current_line["MarginV"] = info["PlayResY"] - round(
-                    local_style["Position"][1]
-                )
-            full_text += part_text
-        if extra_lines > 1:
-            current_line["Text"] = full_text
-            insert_list.append([line_number, current_line])
-            reversed(insert_list)
-            for l in insert_list:
-                captions.insert(l[0], l[1])
-        else:
-            line["Text"] = full_text
+        text = line["Text"].replace("\\N", "\n")
+        text = re.sub(r'\{\\p\d+.*?\\p0\}.*?\{\\p0\}', "", text, flags=re.DOTALL)  # eliminar dibujo
+        text = re.sub(r'\{[^}]*\}', "", text)  # eliminar overrides, conservar texto
+        line["Text"] = text
 
     seen, unique_captions = set(), []
     for cap in captions:
