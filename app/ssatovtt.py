@@ -78,7 +78,7 @@ def convert(source):
     for line_number, line in enumerate(captions):
         line["Start"] = rewrite_timestamp(line["Start"])
         line["End"] = rewrite_timestamp(line["End"])
-        line["Text"] = line["Text"].replace("\\N", "\n")
+        line["Text"] = line["Text"].replace("\\N", "\n").replace("\\h", "&nbsp;")
         full_text = ""
         parts = line["Text"].split("{")
         current_line = line
