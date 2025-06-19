@@ -201,6 +201,18 @@ h2 {
 .disk { filter: brightness(0) invert(1) brightness(67%); }
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
+.menu-toggle {
+    display: none;
+    width: 100%;
+    padding: 10px;
+    background: #222;
+    color: #fff;
+    border: none;
+    font-size: 1.2em;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+}
 
 @media (max-width: 1300px) {
     .controls { flex-direction: column; }
@@ -213,15 +225,18 @@ h2 {
 }
 @media (max-width: 800px) {
     .ctrl_group { flex-direction: column; }
+    .menu-toggle { display: block; }
     button { padding: 4px; }
+    #collapsibleControls { display: none; }
+    #collapsibleControls.open { display: block; }
 }
 @media (max-width: 650px) {
     .size { display: none; }
 }
 @media (max-width: 400px) {
+    button { padding: 10px; }
     .ctrl_flex { flex-direction: column; }
     .ctrl_group { flex-direction: row; }
-    button { padding: 10px; }
 }
 @media (max-width: 240px) {
     .filename { padding: 5px 0; border-bottom: 2px solid #000; }

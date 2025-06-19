@@ -257,6 +257,12 @@ function moveFocus(direction) {
     items[index].focus();
 }
 
+function toggleMenu() {
+    const controls = document.getElementById('collapsibleControls');
+    controls.classList.toggle('open');
+}
+
+
 document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
 
