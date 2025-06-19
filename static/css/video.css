@@ -195,14 +195,17 @@ body {
 }
 .hover-time .hover-duration {
     position: absolute;
+    width: max-content;
+    max-width: min(150px,40vw) !important;
     background: #202020f0;
-    padding: 0.2rem;
+    padding: 0.3rem;
     border-radius: 5px;
     font-size: 0.8rem;
     visibility: hidden;
     font-weight: bold;
     text-align: center;
     pointer-events: none;
+}
 }
 .duration .current-time {
     inset: 0;
