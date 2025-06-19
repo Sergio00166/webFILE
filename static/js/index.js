@@ -1,8 +1,7 @@
+/* Code by Sergio00166 */
+
 function $(sel) { return document.querySelector(sel); }
 function $$(sel) { return Array.from(document.querySelectorAll(sel)); }
-
-let selectMode = false;
-const selected = new Map();
 
 const buttons = {
     select: $('#selectBtn'),
@@ -12,6 +11,12 @@ const buttons = {
     ren: $('#renBtn'),
     invert: $('#invertBtn'),
 };
+const selected = new Map();
+// Fix for Firefox enabling by itself the buttons
+// I will disable the buttons & set selectMode to false
+let selectMode = true;
+toggleSelectMode();
+
 
 function showLoader() {
     $('#loader').style.display = '';
