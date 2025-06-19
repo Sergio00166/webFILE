@@ -114,7 +114,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(48,48,56,0.75);
+   background: linear-gradient(145deg, #363a43c0, #000e0fc0);
     border: 1px solid #222;
     transition: all 0.3s;
 }
@@ -197,9 +197,10 @@ body {
     position: absolute;
     width: max-content;
     max-width: min(150px,40vw) !important;
-    background: #202020f0;
+    background: #202020d0;
+    border: 2px solid #111;
     padding: 0.3rem;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 0.8rem;
     visibility: hidden;
     font-weight: bold;
