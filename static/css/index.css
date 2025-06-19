@@ -205,13 +205,8 @@ h2 {
     display: none;
     width: 100%;
     padding: 10px;
-    background: #222;
-    color: #fff;
-    border: none;
     font-size: 1.2em;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    cursor: pointer;
+    margin-bottom: 10px;
 }
 
 @media (max-width: 1300px) {
