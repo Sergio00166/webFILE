@@ -226,7 +226,7 @@ h2 {
 @media (max-width: 800px) {
     .ctrl_group { flex-direction: column; }
     .menu-toggle { display: block; }
-    button { padding: 4px; }
+    button { padding: 0px; }
     #collapsibleControls { display: none; }
     #collapsibleControls.open { display: block; }
 }
