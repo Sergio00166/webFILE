@@ -229,9 +229,7 @@ function next() {
     }
 }
 
-function download() {
-    downloadLink.click();
-}
+function download() { downloadLink.click(); }
 
 speedBtn.addEventListener('touchstart', e => {
     e.preventDefault();
@@ -274,48 +272,53 @@ function showDuration(time) {
 // Time bar control funcs
 
 const getPct = clientX => {
-  const { x, width, height } = duration.getBoundingClientRect();
-  const pos = Math.min(Math.max(0, clientX - x), width);
-  return { pct: pos / width, pos, height };
+    const { x, width, height } = duration.getBoundingClientRect();
+    const pos = Math.min(Math.max(0, clientX - x), width);
+    return { pct: pos / width, pos, height };
 };
 
 function updateTime(pct) {
-  currentTime.style.width = `${pct * 100}%`;
-  audio.currentTime = pct * audio.duration;
+    currentTime.style.width = `${pct * 100}%`;
+    audio.currentTime = pct * audio.duration;
 }
 
 function showHover(clientX) {
-  const { pct, pos, height } = getPct(clientX);
-  hoverTime.style.width = `${pct * 100}%`;
-  hoverDuration.textContent = showDuration(pct * audio.duration);
-  hoverDuration.style.display = 'block';
-  hoverDuration.style.bottom = `${height + 6}px`;
-  hoverDuration.style.left = `${pos - hoverDuration.offsetWidth/2}px`;
-  hoverDuration.style.visibility = hoverDuration.offsetWidth ? 'visible' : 'hidden';
+    const { pct, pos, height } = getPct(clientX);
+    hoverTime.style.width = `${pct * 100}%`;
+    hoverDuration.textContent = showDuration(pct * audio.duration);
+    hoverDuration.style.display = 'block';
+    hoverDuration.style.bottom = `${height + 6}px`;
+    const barRect = duration.getBoundingClientRect();
+    const tooltipWidth = hoverDuration.offsetWidth;
+    let left = pos - tooltipWidth / 2;
+    if (left < 0) left = 0;
+    if (left + tooltipWidth > barRect.width) left = barRect.width - tooltipWidth;
+    hoverDuration.style.left = `${left}px`;
+    hoverDuration.style.visibility = tooltipWidth ? 'visible' : 'hidden';
 }
 
 function clearHover() {
-  hoverTime.style.width = '0';
-  hoverDuration.style.display = 'none';
+    hoverTime.style.width = '0';
+    hoverDuration.style.display = 'none';
 }
 
 function drag(handlerMove) {
-  const end = () => document.removeEventListener('mousemove', handlerMove);
-  document.addEventListener('mousemove', handlerMove);
-  document.addEventListener('mouseup', end, { once: true });
+    const end = () => document.removeEventListener('mousemove', handlerMove);
+    document.addEventListener('mousemove', handlerMove);
+    document.addEventListener('mouseup', end, { once: true });
 }
 
 function touchDrag(handlerMove) {
-  const end = () => document.removeEventListener('touchmove', handlerMove);
-  document.addEventListener('touchmove', handlerMove, { passive: true });
-  document.addEventListener('touchend', end, { once: true, passive: true });
+    const end = () => document.removeEventListener('touchmove', handlerMove);
+    document.addEventListener('touchmove', handlerMove, { passive: true });
+    document.addEventListener('touchend', end, { once: true, passive: true });
 }
 
 duration.addEventListener('mousedown', e =>
-  drag(eMove => updateTime(getPct(eMove.clientX).pct))
+    drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-  touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+    touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
 );
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
