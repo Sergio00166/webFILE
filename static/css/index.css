@@ -201,7 +201,7 @@ h2 {
 .disk { filter: brightness(0) invert(1) brightness(67%); }
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
-.menu-toggle {
+#menu-toggle {
     display: none;
     width: 100%;
     padding: 10px;

@@ -263,7 +263,7 @@ function moveFocus(direction) {
 }
 
 function toggleMenu() {
-    const controls = document.getElementById('collapsibleControls');
+    const controls = $('#collapsibleControls');
     controls.classList.toggle('open');
 }
 
