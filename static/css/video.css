@@ -114,7 +114,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(145deg, #363a4360, #000e0f60);
+    background: linear-gradient(145deg, #363a4360, #1b242960);
     transition: all 0.3s;
 }
 .main-state img {
@@ -196,7 +196,7 @@ body {
     position: absolute;
     width: max-content;
     max-width: min(150px,40vw) !important;
-    background: linear-gradient(145deg, #363a4380, #000e0f80);
+    background: linear-gradient(145deg, #363a4380, #1b242980);
     padding: 0.3rem;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -292,7 +292,7 @@ body {
     position: absolute;
     bottom: 84px;
     transition: all 0.2s;
-    background: linear-gradient(145deg, #363a4370, #000e0f70);
+    background: linear-gradient(145deg, #363a4370, #1b242970);
     transform: scaleY(0);
     transform-origin: bottom;
     border-radius: 12px;
@@ -313,14 +313,14 @@ body {
     cursor: pointer;
 }
 .setting-menu li:focus-within {
-    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fe0);
+    background: linear-gradient(120deg, #8f9fafe0, #677787e0);
 }
 #liD:focus {
     outline: none;
-    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fe0);
+    background: linear-gradient(120deg, #8f9fafe0, #677787e0);
 }
 .setting-menu li:hover {
-    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fe0) !important;
+    background: linear-gradient(120deg, #8f9fafe0, #677787e0) !important;
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
