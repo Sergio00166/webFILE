@@ -50,8 +50,8 @@ img {
     height: 40px;
     border-radius: 50%;
     color: #fafafa;
-    background: linear-gradient(145deg, #363a43, #000e0f);
-    border: 2px solid black;
+    background: linear-gradient(145deg, #363a4360, #000e0f6a);
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,13 +63,13 @@ img {
     flex-shrink: 0;
 }
 .round-button:hover {
-    background: linear-gradient(120deg, #8f9faf, #3f4f5f);
+    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fea);
 }
 .lmbsl {
-    background: linear-gradient(120deg, #6f7f10, #3f4f0a);
+    background: linear-gradient(120deg, #6f7f10c0, #3f4f0aca);
 }
 .lmbsl:hover {
-    background: linear-gradient(120deg, #9f9f10, #afaf00);
+    background: linear-gradient(120deg, #9f9f10e0, #afaf00ea);
 }
 body {
     margin: 0;
@@ -114,8 +114,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-   background: linear-gradient(145deg, #363a43c0, #000e0fc0);
-    border: 1px solid #222;
+    background: linear-gradient(145deg, #363a4360, #000e0f6a);
     transition: all 0.3s;
 }
 .main-state img {
@@ -146,7 +145,7 @@ body {
     margin-right: auto;
     width: calc((100% - 64px));
     height: 10px;
-    background: #62626274;
+    background: #62626250;
     cursor: pointer;
     border-radius: 4px;
 }
@@ -186,7 +185,7 @@ body {
     height: 100%;
     position: absolute;
     inset: 0;
-    background: #ffffff9a;
+    background: #ffffff60;
     display: flex;
     align-items: center;
     width: 0;
@@ -197,8 +196,7 @@ body {
     position: absolute;
     width: max-content;
     max-width: min(150px,40vw) !important;
-    background: #202020d0;
-    border: 2px solid #111;
+    background: #202020a0;
     padding: 0.3rem;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -213,7 +211,7 @@ body {
     height: 100%;
     display: flex;
     position: absolute;
-    background: #ff4a10;
+    background: #ff4a10a0;
     align-items: center;
     border-radius: 5px;
 }
@@ -225,7 +223,7 @@ body {
     height: 14px;
     position: absolute;
     right: calc((-13px / 2));
-    background: #ff6a00;
+    background: #ff6a00e0;
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
@@ -286,7 +284,6 @@ body {
 }
 .setting-menu {
     opacity: 0;
-    border: 2px solid black;
     visibility: hidden;
     list-style: none;
     padding-inline-start: 0;
@@ -295,7 +292,7 @@ body {
     position: absolute;
     bottom: 84px;
     transition: all 0.2s;
-    background: rgba(40,40,40,0.9);
+    background: rgba(40,40,40,0.6);
     transform: scaleY(0);
     transform-origin: bottom;
     border-radius: 12px;
@@ -316,14 +313,14 @@ body {
     cursor: pointer;
 }
 .setting-menu li:focus-within {
-    background-color: #888;
+    background-color: #8888;
 }
 #liD:focus {
     outline: none;
-    background-color: #888;
+    background-color: #8888;
 }
 .setting-menu li:hover {
-    background: #666 !important;
+    background: #8888 !important;
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
