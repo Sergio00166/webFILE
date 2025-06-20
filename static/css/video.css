@@ -145,7 +145,7 @@ body {
     margin-right: auto;
     width: calc((100% - 64px));
     height: 10px;
-    background: #62626250;
+    background: #626262a0;
     cursor: pointer;
     border-radius: 4px;
 }
@@ -185,7 +185,7 @@ body {
     height: 100%;
     position: absolute;
     inset: 0;
-    background: #ffffff60;
+    background: #ffffffa0;
     display: flex;
     align-items: center;
     width: 0;
@@ -196,7 +196,7 @@ body {
     position: absolute;
     width: max-content;
     max-width: min(150px,40vw) !important;
-    background: #202020a0;
+    background: #363a43a0;
     padding: 0.3rem;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -211,7 +211,7 @@ body {
     height: 100%;
     display: flex;
     position: absolute;
-    background: #ff4a10a0;
+    background: #ff4a10e0;
     align-items: center;
     border-radius: 5px;
 }
@@ -292,7 +292,7 @@ body {
     position: absolute;
     bottom: 84px;
     transition: all 0.2s;
-    background: rgba(40,40,40,0.6);
+    background: #363a4390;
     transform: scaleY(0);
     transform-origin: bottom;
     border-radius: 12px;
@@ -313,14 +313,14 @@ body {
     cursor: pointer;
 }
 .setting-menu li:focus-within {
-    background-color: #8888;
+    background-color: #8f9fafe0;
 }
 #liD:focus {
     outline: none;
-    background-color: #8888;
+    background-color: #8f9fafe0;
 }
 .setting-menu li:hover {
-    background: #8888 !important;
+    background: #8f9fafe0 !important;
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
