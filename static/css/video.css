@@ -313,11 +313,7 @@ body {
     cursor: pointer;
 }
 .setting-menu li:focus-within {
-    background: linear-gradient(120deg, #8f9fafd0, #677787da);
-}
-#liD:focus {
-    outline: none;
-    background: linear-gradient(120deg, #8f9fafd0, #677787da);
+    outline: auto;
 }
 .setting-menu li:hover {
     background: linear-gradient(120deg, #8f9fafd0, #677787da) !important;
