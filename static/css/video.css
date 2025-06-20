@@ -196,7 +196,7 @@ body {
     position: absolute;
     width: max-content;
     max-width: min(150px,40vw) !important;
-    background: #363a43a0;
+    background: linear-gradient(145deg, #363a4380, #000e0f80);
     padding: 0.3rem;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -292,7 +292,7 @@ body {
     position: absolute;
     bottom: 84px;
     transition: all 0.2s;
-    background: #363a4390;
+    background: linear-gradient(145deg, #363a4370, #000e0f70);
     transform: scaleY(0);
     transform-origin: bottom;
     border-radius: 12px;
@@ -313,14 +313,14 @@ body {
     cursor: pointer;
 }
 .setting-menu li:focus-within {
-    background-color: #8f9fafe0;
+    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fe0);
 }
 #liD:focus {
     outline: none;
-    background-color: #8f9fafe0;
+    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fe0);
 }
 .setting-menu li:hover {
-    background: #8f9fafe0 !important;
+    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fe0) !important;
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
