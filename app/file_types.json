@@ -28,7 +28,7 @@
     ],
     "virtualdisk": [
         ".iso", ".img", ".vdi", ".vmdk", ".vhd",
-        ".vhdx", ".dmg", ".raw", ".qcow2"
+        ".vhdx", ".dmg", ".raw", ".qcow2", ".pkg"
     ],
     "compressed": [
         ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", 
