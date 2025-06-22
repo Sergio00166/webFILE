@@ -1,72 +1,158 @@
-# Web Server with custom video and audio player #
+# Web Server with Custom Video & Audio Player
 
-## For what this is ##
-This web server facilitates file sharing via a web browser, allowing users to stream videos, music, and other file types.    
-It supports file uploads, creation, and deletion, all managed under a single "write" permission group. Access control is
-handled through ACLs (Access Control Lists), enabling administrators to set permissions for each resource.
-Users can be granted or denied read-only access, write permissions (upload, create, delete), or complete access restriction to specific resources.   
+A lightweight Python‐based HTTP file server with built-in streaming for video and audio.     
+Supports ACL-based access control, uploads, and file operations.    
 
-## Multimedia (video) ##
- - All video/audio codecs supported by the browser (this server does not use transcoding)
- - Uses caching to avoid calling ffmpeg too many times.
- - Ability to change audio track (enable experimental web platform features)
- - SSA/ASS subtitles support by using JASSUB on the client    
- - Convert SSA in a safe way to webVTT, to do it hold the settings button
- - Extract embeded subtitles in a video container like .mkv, mp4, etc.
- - Loads subtitles from an external .mks file with the same name as the video.    
-   Note: it will disable all subtitles from the original video file.
- - Main video container must contain all metadata and audio tracks.
+---
 
-## ACL permissions and Users ##
-  Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.    
-  See the [documentation](aclmgr.md) for how to use it.
+## Table of Contents
+- [Overview](#overview)  
+- [Multimedia Streaming](#multimedia-streaming)  
+- [ACL & User Management](#acl--user-management)  
+- [Requirements](#requirements)  
+- [Configuration](#configuration)  
+- [File Listing API](#file-listing-api)  
+- [Endpoints](#endpoints)
+- [Other HTTP Methods](#other-http-methods)  
+- [CLI & Legacy Browser Support](#cli--legacy-browser-support)  
+- [HTML vs .web Extensions](#html-vs-web-extensions)  
+- [Official Plugins](#official-plugins)  
+- [Running the Server](#running-the-server)  
+- [License](#license)  
 
-## Extra ##
-Also if an html file with extension ```.web``` will actuate as an HTML page as .html is interpreted as plain text by default.
-    
-If inside a folder there is a file ```index.web``` it will be autoloaded when opening the folder.  
-It wont work on text-based or old browsers (MSIE), to force disable add ```?noauto``` to the folder URL.    
+---
 
-Se available plugins at [offical plugins](https://github.com/Sergio00166/webFILE-plugins)
+## Overview
+This service exposes a filesystem directory over HTTP, enabling:  
+- **Streaming**: direct streaming of media via browser-supported formats. No transcoding, no overhead.
+- **File operations**: upload, create, delete (controlled by write ACL).  
+- **Access control** via JSON-based ACLs (read/write/deny per resource).    
+Also it detects if a directory is an mount point and changes its type (and icon).  
 
-## Requirements: ##
- Install all requirements with
- ```pip install -r requirements.txt```    
- For the video player to work: ```ffmpeg``` (as system package)
+## Multimedia Streaming
+- Leverages browser-native codecs only.  
+- Caches metadata and subtitles to minimize `ffmpeg` calls.  
+- Switch audio tracks in-browser (requires experimental Web Platform flags).  
+- SSA/ASS subtitle support via `JASSUB` on the client.  
+- On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    
+  To enable, press and hold the settings button in the player until it changes color.
+- Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.  
+- Auto-loads external `.mks` subtitles matching video basename.
 
-## Config ##
-The following environment variables are used to configure the server:
+## ACL & User Management
+- Managed by `aclmgr.py` in the `app/` directory.  
+- ACLs define per-path permissions: read-only, write, or denied.  
+- User accounts stored in JSON (`data/users.json`).  
+- See [aclmgr documentation](aclmgr.md).
 
-  - SERVE_PATH   (required/mandatory):    
-      Specifies the directory that will be served.
+## Requirements
+```bash
+pip install -r requirements.txt
+```  
+Install `ffmpeg` at the system level for media playback.
 
-  - ERRLOG_FILE  (optional, default: data/error.log):     
-      Defines the file where server error logs will be stored.
+## Configuration
+Configure via environment variables:
 
-  - ACL_FILE     (optional, default: data/acl.json):    
-      Specifies the file that contains the Access Control List (ACL) rules.
+| Variable       | Required | Default            | Description                                     |
+| -------------- | -------- | ------------------ | ----------------------------------------------- |
+| SERVE_PATH     | Yes      | —                  | Directory to serve.                             |
+| ERRLOG_FILE    | No       | data/error.log     | Server error log.                               |
+| ACL_FILE       | No       | data/acl.json      | ACL rules file.                                 |
+| USERS_FILE     | No       | data/users.json    | User accounts file.                             |
+| SESSIONS_DB    | No       | data/sessions.db   | Session store.                                  |
+| SECRET_KEY     | No       | Auto-generated     | Secret key for multi-worker setups.             |
+| SHOW_DIRSIZE   | No       | False              | Display directory sizes.                        |
+| MAX_CACHE (MB) | No       | 256                | RAM limit for metadata/subtitle caching/process |
 
-  - USERS_FILE   (optional, default: data/users.json):    
-      Specifies the file where user account data is stored.
+## File Listing API
+All directory listings (not recursive) return JSON when the client sends `Accept: application/json`.  
+Valid `type` values are defined in `app/file_types.json` and the internal `disk`, `directory`, `text` and `file`.
 
-  - SESSIONS_DB  (optional, default: data/sessions. db):    
-      Defines the file used for storing session-related data.
+**Example of response for /**  
+```json
+[
+  {
+    "name": "media",
+    "path": "/media",
+    "type": "directory",
+    "mtime": 1750592302.2184954,
+    "size": 0
+  },
+  {
+    "name": "something.txt",
+    "path": "/something.txt",
+    "type": "text",
+    "mtime": 1750589251.4473305,
+    "size": 9823
+  },
+  {
+    "name": "STORAGE",
+    "path": "/STORAGE",
+    "type": "disk",
+    "capacity": 2147483648000,
+    "size": 509872014832,
+    "mtime": null
+  }
+]
+```
 
-  - SECRET_KEY   (optional, default: autogenerated):    
-      Defines the secret key, useful in scenarios with multiworkers.
+## Endpoints
+- `GET /path?login`  
+  Returns the login page. Form posts to `/path?login`.  
+- `POST /path?login`  
+  Accepts form data (`username`, `password`) to authenticate.  
+- `GET /path?logout`  
+  Logs out the current session and redirects to login.  
+- `POST /path?upfile`  
+  Uploads a file (multipart/form-data).  
+- `POST /path?updir`  
+  Uploads a directory (webkitdirectory).  
+- `GET /path?raw`  
+  Streams the raw video/audio file; without `?raw`, returns the player page.  
+- `GET /videopath?subs=index`  
+  Returns the `index` subtitle track. Add `legacy` to the end to convert SSA→WebVTT.  
+- `GET /path?sort=XY`  
+  Sorts directory listing by `X` (n=name, s=size, d=date) and order `Y` (p=ascending, d=descending).  
 
-  - SHOW_DIRSIZE (optional, default: False):    
-      If set to True, the server will display the total size of directories.
+## Other HTTP Methods
+The server internally uses some WebDAV methods to handle file and folder operations in a more standard way.   
+**Note:** This is not full WebDAV support—these methods are adopted for internal use only.    
 
-  - MAX_CACHE    (optional, default: 256) [per process]:   
-      Specify the max RAM (in MB) used for metadata/subs caching for videos.
+| Method | Action performed            |
+|--------|-----------------------------|
+| DELETE | Delete a file or folder     |
+| MKCOL  | Create a new folder         |
+| MOVE   | Rename or move an item      |
+| COPY   | Duplicate a file or folder  |
 
 
-## To run the web server: ##  
-   **If using a reverse proxy ensure that POST buffering is disabled, in NGINX is proxy_request_buffering off;**     
-   
-  - To run via flask internal HTTP server via CLI (will run in localhost and port 8000)    
-    ```python3 app.py```
+## CLI & Legacy Browser Support
+When accessed by a CLI or legacy browser, a simplified “text-only” view is served.  
+— Video/audio players and file-operation controls are disabled.
 
-  - To use a WSGI for deployment -> (for example gunicorn)    
-    ```gunicorn -b IP_addr app:app```
+## HTML vs .web Extensions
+Since `.html` files are treated as plain text, the server recognizes `.web` files as HTML pages.  
+- Placing `index.web` in any folder auto-loads that page instead of the default listing.  
+- Legacy CLI view ignores `.web` pages.
+
+## Official Plugins
+Plugins allow you to create new pages and customize the frontend GUI by dropping `.web` extensions into served directories.  
+More available at: [webFILE-plugins](https://github.com/Sergio00166/webFILE-plugins)
+
+## Running the Server
+**Development** (Flask builtin, `127.0.0.1:8000`):
+```bash
+python3 app.py
+```
+
+**Production** (WSGI, e.g., Gunicorn):
+```bash
+gunicorn -b 127.0.0.1:8000 app:app
+```
+
+> If behind NGINX or another reverse proxy, disable POST buffering:  
+> `proxy_request_buffering off;`
+
+## License
+Distributed under the GPL License. See `LICENSE` for details.

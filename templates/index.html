@@ -16,46 +16,49 @@
             <h1>Processing</h1>
             <div class="progress-bar"></div>
             <h3>Please wait...</h3>
-          </div>
+        </div>
     </div>
     <div class="list-group">
         <h2><pre>Index of&nbsp;{{ folder_path }}</pre></h2>
-        <div class="controls">
-            <div class="ctrl_group">
-                <div class="ctrl_flex">
-                    <button id="sortName" onclick="changeURL({% if sort=='np' %}'nd'{% else %}'np'{% endif %})">
-                        NAME{% if sort=="np" %}&nbsp;&uarr;{% elif sort=="nd" %}&nbsp;&darr;{% endif %}
-                    </button>
-                    <button id="sortSize" onclick="changeURL({% if sort=='sp' %}'sd'{% else %}'sp'{% endif %})">
-                        SIZE{% if sort=="sp" %}&nbsp;&uarr;{% elif sort=="sd" %}&nbsp;&darr;{% endif %}
-                    </button>
-                    <button id="sortDate" onclick="changeURL({% if sort=='dp' %}'dd'{% else %}'dp'{% endif %})">
-                        DATE{% if sort=="dp" %}&nbsp;&uarr;{% elif sort=="dd" %}&nbsp;&darr;{% endif %}
-                    </button>
+        <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+        <div id="collapsibleControls">
+            <div class="controls">
+                <div class="ctrl_group">
+                    <div class="ctrl_flex">
+                        <button id="sortName" onclick="changeURL('{% if sort=='np' %}nd{% else %}np{% endif %}')">
+                            NAME{% if sort=="np" %}&nbsp;&uarr;{% elif sort=="nd" %}&nbsp;&darr;{% endif %}
+                        </button>
+                        <button id="sortSize" onclick="changeURL('{% if sort=='sp' %}sd{% else %}sp{% endif %}')">
+                            SIZE{% if sort=="sp" %}&nbsp;&uarr;{% elif sort=="sd" %}&nbsp;&darr;{% endif %}
+                        </button>
+                        <button id="sortDate" onclick="changeURL('{% if sort=='dp' %}dd{% else %}dp{% endif %}')">
+                            DATE{% if sort=="dp" %}&nbsp;&uarr;{% elif sort=="dd" %}&nbsp;&darr;{% endif %}
+                        </button>
+                    </div>
+                    <div class="ctrl_flex">
+                        <button id="selectBtn" onclick="toggleSelectMode()">SELECT</button>
+                        <button id="invertBtn" onclick="invertSelection()" disabled>*</button>
+                        <button onclick="executeDownloads()">DWNLD</button>
+                        {% if 'user' in session %}
+                            <button onclick='window.location.href="?logout"' id="login">LOGOUT</button>
+                        {% else %}
+                            <button onclick='window.location.href="?login"' id="login">LOGIN</button>
+                        {% endif %} 
+                    </div>
                 </div>
-                <div class="ctrl_flex">
-                    <button id="selectBtn" onclick="toggleSelectMode()">SELECT</button>
-                    <button id="invertBtn" onclick="invertSelection()" disabled>*</button>
-                    <button onclick="executeDownloads()">DWNLD</button>
-                    {% if 'user' in session %}
-                        <button onclick='window.location.href="?logout"' id="login">LOGOUT</button>
-                    {% else %}
-                        <button onclick='window.location.href="?login"' id="login">LOGIN</button>
-                    {% endif %} 
-                </div>
-            </div>
-            <div class="ctrl_group">
-                <div class="ctrl_flex">
-                    <button onclick='mkdir()'>MKDIR</button>
-                    <button onclick='openFileMenu()'>UPFILE</button>
-                    <button onclick='openFileMenu(true)'>UPDIR</button>
-                    <button onclick="pasteFiles()">PASTE</button>
-                </div>
-                <div class="ctrl_flex">
-                    <button id="copyBtn" onclick="copyFiles()" disabled>COPY</button>
-                    <button id="moveBtn" onclick="moveFiles()" disabled>MOVE</button>
-                    <button id="renBtn" onclick="renameFiles()" disabled>REN</button>
-                    <button id="delBtn" onclick="executeDeletes()" disabled>DEL</button>
+                <div class="ctrl_group">
+                    <div class="ctrl_flex">
+                        <button onclick='mkdir()'>MKDIR</button>
+                        <button onclick='openFileMenu()'>UPFILE</button>
+                        <button onclick='openFileMenu(true)'>UPDIR</button>
+                        <button onclick="pasteFiles()">PASTE</button>
+                    </div>
+                    <div class="ctrl_flex">
+                        <button id="copyBtn" onclick="copyFiles()" disabled>COPY</button>
+                        <button id="moveBtn" onclick="moveFiles()" disabled>MOVE</button>
+                        <button id="renBtn" onclick="renameFiles()" disabled>REN</button>
+                        <button id="delBtn" onclick="executeDeletes()" disabled>DEL</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -126,3 +129,4 @@
     </div>
 </body>
 </html>
+

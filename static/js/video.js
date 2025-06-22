@@ -47,13 +47,12 @@ const prevLink = document.getElementById("prev");
 const nextLink = document.getElementById("next");
 const canvas = document.querySelector("canvas");
 const touchBox = document.getElementById("touch-box");
+const video = document.querySelector("video");
+const videoContainer = document.querySelector(".video-container");
+const mode = document.getElementById("mode");
 
-sh_pause.style.display = 'none';
-var video = document.querySelector("video");
-var videoContainer = document.querySelector(".video-container");
 var saved_speed = localStorage.getItem("videoSpeed");
 var volumeVal = localStorage.getItem("videoVolume");
-var mode = document.getElementById("mode");
 var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 var subs_legacy = localStorage.getItem("subsLegacy");
@@ -89,6 +88,12 @@ if (subs_legacy != null) {
 } else {
     subs_legacy = false;
 }
+if (muted != null) {
+    video.muted = (muted == "true")
+} else {
+    video.muted = false;
+}
+handleVideoIcon();
 
 for (var i = 0; i < subtitleSelect.options.length; i++) {
     if (subtitleSelect.options[i].text ===
@@ -122,22 +127,11 @@ if (currentMode != null) {
 window.addEventListener('pageshow', () => {
     volumeBar.value = video.volume;
     updateVolumeBar();
-});
-
-if (muted != null) {
-    video.muted = (muted == "true")
-} else {
-    video.muted = false;
-}
-handleVideoIcon();
-
-video.addEventListener('loadeddata', () => {
     (function wait4ready() {
         if (isNaN(video.duration) || video.duration === 0) {
             return setTimeout(wait4ready, 25);
         }
-        video.play().catch(() => {});
-        if (video.paused) pause();
+        play(); if (video.paused) pause();
         totalDuration.innerHTML = showDuration(video.duration);
         video.ontimeupdate = handleProgressBar;
         video.onended = handleVideoEnded;
@@ -228,13 +222,8 @@ function scaleVideo() {
 
 /* Main functions zone */
 
-function next() {
-    nextLink.click();
-}
-
-function prev() {
-    prevLink.click();
-}
+function next() { nextLink.click(); }
+function prev() { prevLink.click(); }
 
 function chMode() {
     const modes = ["1", "»", "&orarr;"];
@@ -263,13 +252,9 @@ function saveVolume() {
 }
 
 function handleVideoEnded() {
-    if (currentMode === 1) {
-        next();
-    } else if (currentMode === 2) {
-        video.play();
-    } else {
-        pause();
-    }
+    if (currentMode === 1) next();
+    else if (currentMode === 2)  play();
+    else  pause();
 }
 
 function showCursor() {
@@ -285,7 +270,7 @@ function showCursor() {
 }
 
 function play() {
-    video.play();
+    video.play().catch(()=>{});
     sh_pause.style.display = 'none';
     sh_play.style.display = 'block';
     show_main_animation("play");
@@ -308,7 +293,6 @@ function handleProgressBar() {
     currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentDuration.innerHTML = showDuration(video.currentTime);
 }
-
 
 function showDuration(time) {
     const hours = Math.floor(time / 60 ** 2);
@@ -340,8 +324,6 @@ function toggleMuteUnmute() {
     timeContainer.style.display = "block";
     localStorage.setItem("videoMuted", video.muted);
 }
-
-
 
 function hideControls(delay) {
     clearTimeout(ctrlsTimeout);
@@ -393,48 +375,52 @@ function getchptname(timeInSeconds) {
 }
 
 const getPct = clientX => {
-  const { x, width, height } = duration.getBoundingClientRect();
-  const pos = Math.min(Math.max(0, clientX - x), width);
-  return { pct: pos / width, pos, height };
+    const { x, width, height } = duration.getBoundingClientRect();
+    const pos = Math.min(Math.max(0, clientX - x), width);
+    return { pct: pos / width, pos, height };
 };
 
 function updateTime(pct) {
-  currentTime.style.width = `${pct * 100}%`;
-  video.currentTime = pct * video.duration;
+    currentTime.style.width = `${pct * 100}%`;
+    video.currentTime = pct * video.duration;
 }
 
 
 // Time bar control funcs
 
 function showHover(clientX) {
-  const { pct, pos, height } = getPct(clientX);
-  hoverTime.style.width = `${pct * 100}%`;
-  const hovtime = pct * video.duration;
-  const timeStr = showDuration(hovtime);
-  const chapter = getchptname(hovtime);
-  hoverDuration.innerHTML = chapter ? `${timeStr}<br>${chapter}` : timeStr;
-  const offset = hoverDuration.offsetWidth / 2;
-  hoverDuration.style.display = 'block';
-  hoverDuration.style.bottom = `${height + 8}px`;
-  hoverDuration.style.left = `${pos - offset}px`;
-  hoverDuration.style.visibility = offset ? 'visible' : 'hidden';
+    const { pct, pos, height } = getPct(clientX);
+    hoverTime.style.width = `${pct * 100}%`;
+    const hovtime = pct * video.duration;
+    const timeStr = showDuration(hovtime);
+    const chapter = getchptname(hovtime);
+    hoverDuration.innerHTML = chapter ? `${timeStr}<br>${chapter}` : timeStr;
+    hoverDuration.style.display = 'block';
+    hoverDuration.style.bottom = `${height + 8}px`;
+    const barRect = duration.getBoundingClientRect();
+    const tooltipWidth = hoverDuration.offsetWidth;
+    let left = pos - tooltipWidth / 2;
+    if (left < 0) left = 0;
+    if (left + tooltipWidth > barRect.width) left = barRect.width - tooltipWidth;
+    hoverDuration.style.left = `${left}px`;
+    hoverDuration.style.visibility = tooltipWidth ? 'visible' : 'hidden';
 }
 
 function clearHover() {
-  hoverTime.style.width = '0';
-  hoverDuration.style.display = 'none';
+    hoverTime.style.width = '0';
+    hoverDuration.style.display = 'none';
 }
 
 function drag(handlerMove) {
-  const end = () => document.removeEventListener('mousemove', handlerMove);
-  document.addEventListener('mousemove', handlerMove);
-  document.addEventListener('mouseup', end, { once: true });
+    const end = () => document.removeEventListener('mousemove', handlerMove);
+    document.addEventListener('mousemove', handlerMove);
+    document.addEventListener('mouseup', end, { once: true });
 }
 
 function touchDrag(handlerMove) {
-  const end = () => document.removeEventListener('touchmove', handlerMove);
-  document.addEventListener('touchmove', handlerMove, { passive: true });
-  document.addEventListener('touchend', end, { once: true, passive: true });
+    const end = () => document.removeEventListener('touchmove', handlerMove);
+    document.addEventListener('touchmove', handlerMove, { passive: true });
+    document.addEventListener('touchend', end, { once: true, passive: true });
 }
 
 let anim_timeout;
@@ -617,10 +603,10 @@ window.addEventListener('fullscreenchange', scaleVideo);
 video.addEventListener("play", play);
 video.addEventListener("pause", pause);
 video.addEventListener("waiting", () => {
-    loader.classList.add("show");
+    loader.style.display = "block";
 });
 video.addEventListener("playing", () => {
-    loader.classList.remove("show");
+    loader.style.display = "none";
 });
 
 // Video container events
@@ -652,9 +638,7 @@ videoContainer.addEventListener('touchmove', () => {
     touchFix = true;
     controls.classList.add("show");
     hideControls(touch_ctrl_delay);
-}, {
-    passive: false
-});
+}, { passive: false });
 
 // Duration and navigation events
 
@@ -691,9 +675,8 @@ settingsBtn.addEventListener("mouseup", () => {
 settingsBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     mber = setTimeout(addrmMLcl, 600);
-}, {
-    passive: false
-});
+}, {passive: false});
+
 settingsBtn.addEventListener("touchend", () => {
     clearTimeout(mber);
 });
@@ -764,10 +747,10 @@ liD.addEventListener("keydown", function(e) {
 });
 
 duration.addEventListener('mousedown', e =>
-  drag(eMove => updateTime(getPct(eMove.clientX).pct))
+    drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-  touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+    touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
 );
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });

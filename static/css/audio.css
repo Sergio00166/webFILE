@@ -59,7 +59,7 @@ img {
     position: relative;
     margin: auto;
     width: calc((100% - 64px));
-    height: 10px;
+    height: 8px;
     background: #62626274;
     cursor: pointer;
     border-radius: 4px;
@@ -125,6 +125,7 @@ img {
 #current-time, #total-time {
     font-size: 12px;
     font-family: monospace;
+    line-height: 1 !important;
 }
 #total-time {
     margin-left: 12px;

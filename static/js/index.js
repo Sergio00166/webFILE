@@ -1,10 +1,7 @@
 /* Code by Sergio00166 */
 
-const $ = sel => document.querySelector(sel);
-const $$ = sel => Array.from(document.querySelectorAll(sel));
-
-let selectMode = false;
-const selected = new Map();
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return Array.from(document.querySelectorAll(sel)); }
 
 const buttons = {
     select: $('#selectBtn'),
@@ -14,32 +11,38 @@ const buttons = {
     ren: $('#renBtn'),
     invert: $('#invertBtn'),
 };
+const selected = new Map();
+// Fix for Firefox enabling by itself the buttons
+// I will disable the buttons & set selectMode to false
+let selectMode = true;
+toggleSelectMode();
 
-const showLoader = () => {
+
+function showLoader() {
     $('#loader').style.display = '';
     $('.list-group').style.display = 'none';
-};
+}
 
-const changeURL = mode => {
+function changeURL(mode) {
     const url = new URL(window.location.href);
     url.searchParams.set('sort', mode);
     history.replaceState({}, document.title, url);
     location.reload();
-};
+}
 
-const toggleSelectMode = () => {
+function toggleSelectMode() {
     selectMode = !selectMode;
     buttons.select.textContent = selectMode ? 'CANCEL' : 'SELECT';
     Object.values(buttons).slice(1).forEach(btn => btn.disabled = !selectMode);
     if (!selectMode) deselectAll();
-};
+}
 
-const deselectAll = () => {
+function deselectAll() {
     selected.forEach((div, id) => div.classList.remove('selected'));
     selected.clear();
-};
+}
 
-const selectDiv = div => {
+function selectDiv(div) {
     const id = div.id;
     if (selected.has(id)) {
         div.classList.remove('selected');
@@ -48,16 +51,16 @@ const selectDiv = div => {
         div.classList.add('selected');
         selected.set(id, div);
     }
-};
+}
 
-const handleDivClick = div => {
+function handleDivClick(div) {
     if (selectMode) return selectDiv(div);
     const url = div.dataset.value;
     if (!url) return;
     div.hasAttribute('isdir') ?
         location.href = url :
         window.open(url, '_blank');
-};
+}
 
 enableDelegation();
 
@@ -75,9 +78,11 @@ function enableDelegation() {
     });
 }
 
-const delay = ms => new Promise(r => setTimeout(r, ms));
+function delay(ms) {
+    return new Promise(r => setTimeout(r, ms));
+}
 
-const downloadURL = url => {
+function downloadURL(url) {
     const a = document.createElement('a');
     a.href = url;
     a.download = '';
@@ -85,7 +90,7 @@ const downloadURL = url => {
     document.body.append(a);
     a.click();
     a.remove();
-};
+}
 
 async function executeDownloads() {
     if (selectMode) {
@@ -119,22 +124,32 @@ async function executeDeletes() {
     location.reload();
 }
 
-const invertSelection = () => {
+function invertSelection() {
     if (!selectMode) return;
     $$('.filename').forEach(div => selectDiv(div));
-};
+}
 
-const storageOp = (key, list) => {
+function storageOp(key, list) {
     if (selectMode) toggleSelectMode();
     if (list?.length) localStorage.setItem(key, JSON.stringify(list));
-};
+}
 
-const getURLlist = () => Array.from(selected.values())
-    .map(div => div.dataset.value).filter(Boolean);
+function getURLlist() {
+    return Array.from(selected.values())
+        .map(div => div.dataset.value).filter(Boolean);
+}
 
-const copyFiles = () => storageOp('copy', getURLlist());
-const moveFiles = () => storageOp('move', getURLlist());
-const clearAllMvCp = () => ['copy', 'move'].forEach(k => localStorage.removeItem(k));
+function copyFiles() {
+    storageOp('copy', getURLlist());
+}
+
+function moveFiles() {
+    storageOp('move', getURLlist());
+}
+
+function clearAllMvCp() {
+    ['copy', 'move'].forEach(k => localStorage.removeItem(k));
+}
 
 async function sendRequest(path, dest, method) {
     try {
@@ -234,7 +249,6 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
 }
 enableDragAndDropUpload(document);
 
-
 /* Keyboard Shorthands */
 
 function moveFocus(direction) {
@@ -247,6 +261,12 @@ function moveFocus(direction) {
     index = (index + direction + items.length) % items.length;
     items[index].focus();
 }
+
+function toggleMenu() {
+    const controls = $('#collapsibleControls');
+    controls.classList.toggle('open');
+}
+
 
 document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;

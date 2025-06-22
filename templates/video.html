@@ -25,7 +25,7 @@
           <canvas></canvas>
       </div>
       <div id="touch-box"></div>
-      <span class="custom-loader"></span>
+      <span class="custom-loader" style="display: none;"></span>
       <span class="main-state">
         <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: none;">
         <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
@@ -47,18 +47,18 @@
         <div class="btn-controls">
           <div class="side-controls">
             <button class="round-button play-pause" onclick="toggleMainState()" title="Play/Pause">
-              <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: none;">
+              <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: block;">
               <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
             </button>
             <span class="volume">
               <button class="round-button" onclick="toggleMuteUnmute()" title="Volume">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" style="display: none;">
-                <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: none;">
+                <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: block;">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" style="display: none;">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}" style="display: none;">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-off-outline.svg') }}" style="display: none;">
               </button>
-              <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1" />
+              <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
             </span>
             <span class="time-container">
               <span class="current-duration">00:00</span>

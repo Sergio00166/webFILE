@@ -18,6 +18,8 @@ body {
 }
 img {
     pointer-events: none;
+    max-width: 16px;
+    height: 16px;
 }
 pre {
     white-space: pre-wrap;
@@ -80,6 +82,7 @@ h2 {
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s;
+    align-items: center;
 }
 .name {
     text-align: left;
@@ -198,6 +201,13 @@ h2 {
 .disk { filter: brightness(0) invert(1) brightness(67%); }
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
+.menu-toggle {
+    display: none;
+    width: 100%;
+    padding: 10px;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
 
 @media (max-width: 1300px) {
     .controls { flex-direction: column; }
@@ -210,15 +220,18 @@ h2 {
 }
 @media (max-width: 800px) {
     .ctrl_group { flex-direction: column; }
-    button { padding: 4px; }
+    .menu-toggle { display: block; }
+    button { padding: 0px; }
+    #collapsibleControls { display: none; }
+    #collapsibleControls.open { display: block; }
 }
 @media (max-width: 650px) {
     .size { display: none; }
 }
 @media (max-width: 400px) {
+    button { padding: 10px; }
     .ctrl_flex { flex-direction: column; }
     .ctrl_group { flex-direction: row; }
-    button { padding: 10px; }
 }
 @media (max-width: 240px) {
     .filename { padding: 5px 0; border-bottom: 2px solid #000; }
