@@ -36,7 +36,7 @@ Also it detects if a directory is an mount point and changes its type (and icon)
 - SSA/ASS subtitle support via `JASSUB` on the client.  
 - On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    
   To enable, press and hold the settings button in the player until it changes color.
-- Extracts embedded subtitles from `.mkv`, `.mp4`, etc.  
+- Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.  
 - Auto-loads external `.mks` subtitles matching video basename.
 
 ## ACL & User Management
