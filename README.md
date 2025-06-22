@@ -27,7 +27,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 - **Streaming**: direct streaming of media via browser-supported formats. No transcoding, no overhead.
 - **File operations**: upload, create, delete (controlled by write ACL).  
 - **Access control** via JSON-based ACLs (read/write/deny per resource).
-- Detects if a directory is an mount point.  
+Also it detects if a directory is an mount point and changes its type (and icon).  
 
 ## Multimedia Streaming
 - Leverages browser-native codecs only.  
@@ -66,7 +66,7 @@ Configure via environment variables:
 
 ## File Listing API
 All directory listings (not recursive) return JSON when the client sends `Accept: application/json`.  
-Valid `type` values are defined in `app/file_types.json`: `disk`, `directory`, `text`, `file`.
+Valid `type` values are defined in `app/file_types.json` and the internal `disk`, `directory`, `text` and `file`.
 
 **Example of response for /**  
 ```json
