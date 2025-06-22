@@ -26,7 +26,8 @@ Supports ACL-based access control, uploads, and file operations.
 This service exposes a filesystem directory over HTTP, enabling:  
 - **Streaming**: direct streaming of media via browser-supported formats. No transcoding, no overhead.
 - **File operations**: upload, create, delete (controlled by write ACL).  
-- **Access control** via JSON-based ACLs (read/write/deny per resource).  
+- **Access control** via JSON-based ACLs (read/write/deny per resource).
+- Detects if a directory is an mount point.  
 
 ## Multimedia Streaming
 - Leverages browser-native codecs only.  
