@@ -33,8 +33,9 @@ Also it detects if a directory is an mount point and changes its type (and icon)
 - Leverages browser-native codecs only.  
 - Caches metadata and subtitles to minimize `ffmpeg` calls.  
 - Switch audio tracks in-browser (requires experimental Web Platform flags).  
-- SSA/ASS subtitle support via `jassub.js`.  
-- On-demand SSA/ASS → WebVTT conversion.  
+- SSA/ASS subtitle support via `JASSUB` on the client.  
+- On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    
+  To enable, press and hold the settings button in the player until it changes color.
 - Extracts embedded subtitles from `.mkv`, `.mp4`, etc.  
 - Auto-loads external `.mks` subtitles matching video basename.
 
@@ -106,7 +107,7 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 - `POST /path?upfile`  
   Uploads a file (multipart/form-data).  
 - `POST /path?updir`  
-  Uploads a directory (zipped).  
+  Uploads a directory (webkitdirectory).  
 - `GET /path?raw`  
   Streams the raw video/audio file; without `?raw`, returns the player page.  
 - `GET /videopath?subs=index`  
@@ -118,12 +119,12 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 The server internally uses some WebDAV methods to handle file and folder operations in a more standard way.   
 **Note:** This is not full WebDAV support—these methods are adopted for internal use only.    
 
-| Method | Action performed              |
-|--------|-------------------------------|
-| DELETE | Delete a file or folder       |
-| MKCOL  | Create a new folder (collection) |
-| MOVE   | Rename or move an item        |
-| COPY   | Duplicate a file or folder    |
+| Method | Action performed            |
+|--------|-----------------------------|
+| DELETE | Delete a file or folder     |
+| MKCOL  | Create a new folder         |
+| MOVE   | Rename or move an item      |
+| COPY   | Duplicate a file or folder  |
 
 
 ## CLI & Legacy Browser Support
