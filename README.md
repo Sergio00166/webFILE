@@ -1,72 +1,74 @@
-# Web Server with custom video and audio player #
+# Web Server with Custom Video & Audio Player
 
-## For what this is ##
-This web server facilitates file sharing via a web browser, allowing users to stream videos, music, and other file types.    
-It supports file uploads, creation, and deletion, all managed under a single "write" permission group. Access control is
-handled through ACLs (Access Control Lists), enabling administrators to set permissions for each resource.
-Users can be granted or denied read-only access, write permissions (upload, create, delete), or complete access restriction to specific resources.   
+A lightweight Python-based HTTP file server with built-in streaming for video and audio. Supports ACL-based access control, uploads, file operations, and extensible via plugins.
 
-## Multimedia (video) ##
- - All video/audio codecs supported by the browser (this server does not use transcoding)
- - Uses caching to avoid calling ffmpeg too many times.
- - Ability to change audio track (enable experimental web platform features)
- - SSA/ASS subtitles support by using JASSUB on the client    
- - Convert SSA in a safe way to webVTT, to do it hold the settings button
- - Extract embeded subtitles in a video container like .mkv, mp4, etc.
- - Loads subtitles from an external .mks file with the same name as the video.    
-   Note: it will disable all subtitles from the original video file.
- - Main video container must contain all metadata and audio tracks.
+## Table of Contents
+- [Overview](#overview)  
+- [Multimedia Streaming](#multimedia-streaming)  
+- [ACL & User Management](#acl--user-management)  
+- [Plugins](#plugins)  
+- [Requirements](#requirements)  
+- [Configuration](#configuration)  
+- [Running the Server](#running-the-server)  
+- [License](#license)  
 
-## ACL permissions and Users ##
-  Both ACLs and users are managed through a script called aclmgr.py, located in the app directory.    
-  See the [documentation](aclmgr.md) for how to use it.
+## Overview
+This service exposes a filesystem directory over HTTP, enabling:  
+- **Streaming** of browser-supported video and audio (no transcoding).  
+- **File operations**: upload, create, delete (controlled by write ACL).  
+- **Access control** via JSON-based ACLs (read/write/deny per resource).  
 
-## Extra ##
-Also if an html file with extension ```.web``` will actuate as an HTML page as .html is interpreted as plain text by default.
-    
-If inside a folder there is a file ```index.web``` it will be autoloaded when opening the folder.  
-It wont work on text-based or old browsers (MSIE), to force disable add ```?noauto``` to the folder URL.    
+## Multimedia Streaming
+- Leverages browser-native codecs only—no transcoding.  
+- Caches metadata and subtitles to minimize `ffmpeg` calls.  
+- Switch audio tracks in-browser (requires experimental Web Platform features).  
+- SSA/ASS subtitle support via `jassub.js` on the client.  
+- On-demand SSA/ASS → WebVTT conversion (toggle in settings).  
+- Extracts embedded subs from containers (`.mkv`, `.mp4`, etc.).  
+- Auto-loads external subtitle files (`.mks`) with matching basename (disables embedded subs).
 
-Se available plugins at [offical plugins](https://github.com/Sergio00166/webFILE-plugins)
+## ACL & User Management
+- Managed by `aclmgr.py` in the `app/` directory.  
+- ACLs define per-path permissions: read-only, write, or denied.  
+- Users and groups stored in JSON files.  
+- See [aclmgr documentation](aclmgr.md) for usage.
 
-## Requirements: ##
- Install all requirements with
- ```pip install -r requirements.txt```    
- For the video player to work: ```ffmpeg``` (as system package)
+## Plugins
+Extend functionality with community plugins:  
+https://github.com/Sergio00166/webFILE-plugins
 
-## Config ##
-The following environment variables are used to configure the server:
+## Requirements
+```bash
+pip install -r requirements.txt
+```  
+Install `ffmpeg` at the system level for video playback.
 
-  - SERVE_PATH   (required/mandatory):    
-      Specifies the directory that will be served.
+## Configuration
+Configure via environment variables (defaults shown):
 
-  - ERRLOG_FILE  (optional, default: data/error.log):     
-      Defines the file where server error logs will be stored.
+| Variable       | Required | Default            | Description                                    |
+| -------------- | -------- | ------------------ | ---------------------------------------------- |
+| SERVE_PATH     | Yes      | —                  | Directory to serve.                            |
+| ERRLOG_FILE    | No       | data/error.log     | Path to server error log.                      |
+| ACL_FILE       | No       | data/acl.json      | ACL rules file.                                |
+| USERS_FILE     | No       | data/users.json    | User account definitions.                      |
+| SESSIONS_DB    | No       | data/sessions.db   | Session store.                                 |
+| SECRET_KEY     | No       | Auto-generated     | Secret key for multi-worker setups.            |
+| SHOW_DIRSIZE   | No       | False              | Display directory size in listings.            |
+| MAX_CACHE (MB) | No       | 256                | RAM limit for metadata/subtitle caching/process|
 
-  - ACL_FILE     (optional, default: data/acl.json):    
-      Specifies the file that contains the Access Control List (ACL) rules.
+## Running the Server
+**Development** (Flask builtin, `127.0.0.1:8000`):
+```bash
+python3 app.py
+```
 
-  - USERS_FILE   (optional, default: data/users.json):    
-      Specifies the file where user account data is stored.
+**Production** (WSGI, e.g., Gunicorn):
+```bash
+gunicorn -b 0.0.0.0:8000 app:app
+```
 
-  - SESSIONS_DB  (optional, default: data/sessions. db):    
-      Defines the file used for storing session-related data.
+> If deploying behind NGINX or another reverse proxy, disable POST buffering (e.g., `proxy_request_buffering off;`).
 
-  - SECRET_KEY   (optional, default: autogenerated):    
-      Defines the secret key, useful in scenarios with multiworkers.
-
-  - SHOW_DIRSIZE (optional, default: False):    
-      If set to True, the server will display the total size of directories.
-
-  - MAX_CACHE    (optional, default: 256) [per process]:   
-      Specify the max RAM (in MB) used for metadata/subs caching for videos.
-
-
-## To run the web server: ##  
-   **If using a reverse proxy ensure that POST buffering is disabled, in NGINX is proxy_request_buffering off;**     
-   
-  - To run via flask internal HTTP server via CLI (will run in localhost and port 8000)    
-    ```python3 app.py```
-
-  - To use a WSGI for deployment -> (for example gunicorn)    
-    ```gunicorn -b IP_addr app:app```
+## License
+Distributed under the GPL License. See `LICENSE` for details.
