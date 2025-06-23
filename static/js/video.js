@@ -157,9 +157,8 @@ async function create_ass_worker(url) {
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
         useLocalFonts: true,
-        fallbackFont: "arial",
         availableFonts: {
-            'arial': '/?static=jassub/arial.ttf'
+            'liberation sans': '/?static=jassub/default.woff2'
         }
     });
 }
