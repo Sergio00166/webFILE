@@ -157,6 +157,7 @@ async function create_ass_worker(url) {
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
         useLocalFonts: true,
+        fallbackFont: "liberation sans",
         availableFonts: {
             'liberation sans': '/?static=jassub/default.woff2'
         }
