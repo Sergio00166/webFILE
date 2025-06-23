@@ -352,10 +352,10 @@ document.addEventListener('keydown', (e) => {
             cycleLoop();
             break;
         case "arrowdown":
-            prev();
+            next();
             break;
         case "arrowup":
-            next();
+            prev();
             break;
         case "arrowright":
             audio.currentTime += 2;
