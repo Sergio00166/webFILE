@@ -209,6 +209,7 @@ img {
 .extra-controls {
     width: 100%;
     margin-top: 24px;
+    margin-bottom: 8px;
     display: flex;
     align-items: space-between;
     justify-content: space-around;
