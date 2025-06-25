@@ -138,7 +138,7 @@ img {
 .playback-controls {
     margin-top: 20px;
     margin-bottom: 16px;
-    width: 100%;
+    width: calc(100% - 16px);
     display: flex;
     align-items: center;
     justify-content: space-between;
