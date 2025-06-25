@@ -148,6 +148,7 @@ body {
     background: #363a4360;
     cursor: pointer;
     border-radius: 4px;
+    box-shadow: 0 0 2px #FFFA;
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
