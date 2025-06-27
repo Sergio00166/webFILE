@@ -451,7 +451,7 @@ select option {
 }
 
 /* Disable hover on touch devices */
-@media (hover: hover) and (pointer: fine) {
+@media (hover: hover) {
     .setting-menu li:hover {
         background: #6674;
     }

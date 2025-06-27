@@ -40,9 +40,6 @@ button {
     cursor: pointer;
     line-height: 1.5;
 }
-button:hover {
-    background: linear-gradient(145deg, #262a33, #101e1f);
-}
 button:disabled {
     background: #111;
     color: gray;
@@ -243,4 +240,11 @@ h2 {
 }
 @media (max-width: 120px) {
     .list-group { display: none; }
+}
+
+/* Disable hover on touch devices */
+@media (hover: hover) {
+    button:hover {
+        background: linear-gradient(145deg, #262a33, #101e1f);
+    }
 }
