@@ -19,10 +19,10 @@ body {
 .audio-player {
     max-width: 500px;
     width: 90vw;
-    background: #fff2;
+    background: #ffffff1a;
     border-radius: 20px;
-    border: 1px solid #fff5;
-    box-shadow: 0 4px 16px #0004;
+    border: 1px solid #ffffff4d;
+    box-shadow: 0 4px 16px #ffffff33;
     display: flex;
     padding: 12px;
     box-sizing: border-box;
