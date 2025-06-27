@@ -16,7 +16,6 @@ const prevLink = document.getElementById('prev');
 const nextLink = document.getElementById('next');
 const randomLink = document.getElementById('random');
 const downloadLink = document.getElementById('download-link');
-const volBtn = document.querySelector('.vol-icons');
 const volHighIcon = document.querySelector('.vol-icons img:nth-child(1)');
 const volMedIcon = document.querySelector('.vol-icons img:nth-child(2)');
 const volLowIcon = document.querySelector('.vol-icons img:nth-child(3)');
@@ -137,8 +136,6 @@ volumeBar.addEventListener('input', (e) => {
     updateVolumeIcon(audio.volume);
     updateVolumeBar();
 });
-
-volBtn.addEventListener('click', toggleMuteUnmute);
 
 audio.addEventListener('ended', () => {
     if (loopMode === 2) play();

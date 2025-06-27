@@ -266,13 +266,15 @@ img {
     width: 30px;
     height: 30px;
 }
-button,.vol-icons {
-    transition: filter 0.2s ease;
+button:hover img {
+   filter: drop-shadow(0 0 2px white);
 }
-button:hover,.vol-icons:hover {
-   filter: grayscale(10%) brightness(120%) drop-shadow(0 0 2px white);
+.control-btn:hover {
+    background: #def6;
 }
-
+#speed-btn:hover {
+    color: #aad4ff;
+}
 
 /* RESPONSIVE  ZONE */
 
