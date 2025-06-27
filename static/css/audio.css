@@ -267,15 +267,6 @@ img {
     width: 30px;
     height: 30px;
 }
-button:hover img {
-   filter: drop-shadow(0 0 2px white);
-}
-.control-btn:hover {
-    background: #def6;
-}
-#speed-btn:hover {
-    color: #aad4ff;
-}
 
 /* RESPONSIVE  ZONE */
 
@@ -358,3 +349,15 @@ button:hover img {
     }
 }
 
+/* Disable hover on touch devices */
+@media (hover: hover) and (pointer: fine) {
+    button:hover img {
+    filter: drop-shadow(0 0 2px white);
+    }
+    .control-btn:hover {
+        background: #def6;
+    }
+    #speed-btn:hover {
+        color: #aad4ff;
+    }
+}

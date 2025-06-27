@@ -62,11 +62,8 @@ img {
     cursor: pointer;
     flex-shrink: 0;
 }
-.round-button:hover {
-    background: #6675;
-}
 .lmbsl {
-    background: linear-gradient(120deg, #6f7f10c0, #3f4f0ac0);
+    background: linear-gradient(120deg, #8f9f3050, #5f6f2a50);
 }
 body {
     margin: 0;
@@ -313,9 +310,6 @@ body {
 .setting-menu li:focus-within {
     outline: auto;
 }
-.setting-menu li:hover {
-    background: #6674;
-}
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
     color: #ffffff;
@@ -456,3 +450,12 @@ select option {
     }
 }
 
+/* Disable hover on touch devices */
+@media (hover: hover) and (pointer: fine) {
+    .setting-menu li:hover {
+        background: #6674;
+    }
+    .round-button:hover {
+        background: #6675;
+    }
+}
