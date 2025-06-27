@@ -25,7 +25,7 @@ canvas { position: absolute; }
     width: 90vw;
     height: 90vh;
     height: 90dvh;
-    color: #fff;
+    color: white;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -49,8 +49,8 @@ img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    color: #fafafa;
-    background: linear-gradient(145deg, #363a4360, #000e0f6a);
+    color: white;
+    background: linear-gradient(145deg, #363a4360, #000e0f60);
     border: none;
     display: flex;
     align-items: center;
@@ -63,13 +63,10 @@ img {
     flex-shrink: 0;
 }
 .round-button:hover {
-    background: linear-gradient(120deg, #8f9fafe0, #3f4f5fea);
+    background: #6675;
 }
 .lmbsl {
-    background: linear-gradient(120deg, #6f7f10c0, #3f4f0aca);
-}
-.lmbsl:hover {
-    background: linear-gradient(120deg, #9f9f10e0, #afaf00ea);
+    background: linear-gradient(120deg, #6f7f10c0, #3f4f0ac0);
 }
 body {
     margin: 0;
@@ -79,7 +76,7 @@ body {
     justify-content: center;
     height: 100vh;
     height: 100dvh;
-    background: #000000;
+    background: black;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -87,7 +84,7 @@ body {
 .custom-loader {
     width: 108px;
     height: 108px;
-    border: 10px solid #FFF;
+    border: 10px solid white;
     border-bottom-color: transparent;
     border-radius: 50%;
     box-sizing: border-box;
@@ -134,7 +131,7 @@ body {
     transition: all 0.3s;
     box-sizing: border-box;
     padding: 0.5rem 1rem 0.5rem 1rem;
-    background: linear-gradient(to top, #000000c0 -100%, transparent);
+    background: linear-gradient(to top, #000c -100%, transparent);
 }
 .controls.show {
     opacity: 1 !important;
@@ -173,7 +170,7 @@ body {
     height: 100%;
     width: 2px;
     margin-left: -1px;
-    background-color: #000;
+    background-color: black;
 }
 .duration .buffer {
     height: 100%;
@@ -186,7 +183,7 @@ body {
     height: 100%;
     position: absolute;
     inset: 0;
-    background: #fff8;
+    background: #fff6;
     display: flex;
     align-items: center;
     width: 0;
@@ -197,7 +194,7 @@ body {
     position: absolute;
     width: max-content;
     max-width: min(150px,40vw) !important;
-    background: linear-gradient(145deg, #363a4380, #1b242980);
+    background: linear-gradient(145deg, #363a4370, #1b242970);
     padding: 0.3rem;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -258,7 +255,7 @@ body {
     border-radius: 2px;
     visibility: hidden;
     width: 0 !important;
-    background: #e1e1e1;
+    background: #eee;
     transition: all 0.1s;
     -webkit-appearance: none;
     appearance: none;
@@ -317,7 +314,7 @@ body {
     outline: auto;
 }
 .setting-menu li:hover {
-    background: linear-gradient(120deg, #8f9fafd0, #677787da) !important;
+    background: #6674;
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
@@ -352,22 +349,13 @@ select option {
     background-color: rgba(40,40,40,0.9);
     color: #eee;
 }
-.speed-active {
-    background: rgb(64, 64, 64);
-}
-.setting-menu li:hover {
-    background: rgb(36, 36, 36);
-}
-.setting-btn {
-    display: flex;
-}
 .fullscreen {
     position: absolute !important;
     max-width: 100% !important;
     width: 100% !important;
     height: 100% !important;
     display: flex !important;
-    background: #000 !important;
+    background: black !important;
     align-items: center !important;
 }
 .side-controls {
@@ -393,8 +381,6 @@ select option {
     .custom-loader {
         height: 90px;
         width: 90px;
-        border: 8px solid #FFF;
-        border-bottom-color: transparent;
     }
 }
 @media (max-width: 500px) {
@@ -436,8 +422,6 @@ select option {
     .custom-loader {
         height: 70px;
         width: 70px;
-        border: 7px solid #FFF;
-        border-bottom-color: transparent;
     }
     .vol_val_st { 
         font-size: 1rem;
