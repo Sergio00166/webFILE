@@ -528,7 +528,7 @@ function split_timeline_chapters() {
 function double_touch(e) {
     e.preventDefault();
     clearTimeout(touchTimeout);
-    if (touchFix) touchFix = false; return;
+    if (touchFix){ touchFix = false; return; }
 
     const now = Date.now();
     const touchInterval = now - lastTouchTime;
