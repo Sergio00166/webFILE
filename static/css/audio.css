@@ -165,6 +165,7 @@ img {
     position: relative;
     width: 24px;
     height: 24px;
+    cursor: pointer;
 }
 .vol-icons img {
     position: absolute;
