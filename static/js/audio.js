@@ -217,7 +217,7 @@ speedBtn.addEventListener('touchend', e => {
 
     if (speedBtn_deltaY > 10 && speedIndex < speedOptions.length - 1) speedIndex++;
     else if (speedBtn_deltaY < -10 && speedIndex > 0) speedIndex--;
-    else speedBtn.click();
+    else if (Math.abs(speedBtn_deltaY) < 10) speedBtn.click();
 
     audio.playbackRate = speedOptions[speedIndex];
     localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
