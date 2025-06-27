@@ -237,11 +237,9 @@ speedBtn.addEventListener('touchend', e => {
     const speedBtn_endY = e.changedTouches[0].clientY;
     const speedBtn_deltaY = speedBtn_endY - speedBtn_startY;
 
-    if (speedBtn_deltaY > 10 && speedIndex < speedOptions.length - 1) {
-        speedIndex++;
-    } else if (speedBtn_deltaY < -10 && speedIndex > 0) {
-        speedIndex--;
-    }
+    if (speedBtn_deltaY > 10 && speedIndex < speedOptions.length - 1) speedIndex++;
+    else if (speedBtn_deltaY < -10 && speedIndex > 0) speedIndex--;
+    else speedBtn.click();
 
     audio.playbackRate = speedOptions[speedIndex];
     localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
