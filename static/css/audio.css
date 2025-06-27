@@ -237,9 +237,6 @@ img {
     transition: all 0.1s;
     line-height: 1;
 }
-#speed-btn:hover {
-    color: #aad4ff;
-}
 .control-btn {
     border: none;
     background: #def3;
@@ -250,9 +247,6 @@ img {
     align-items: center;
     justify-content: center;
     transition: all 0.1s;
-}
-.control-btn:hover {
-    background: #def6;
 }
 .nav-btn {
     background: none;
@@ -271,6 +265,12 @@ img {
 .icon-menu {
     width: 30px;
     height: 30px;
+}
+button,.vol-icons {
+    transition: filter 0.2s ease;
+}
+button:hover,.vol-icons:hover {
+   filter: grayscale(10%) brightness(120%) drop-shadow(0 0 2px white);
 }
 
 
