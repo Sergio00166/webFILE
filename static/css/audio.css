@@ -262,6 +262,7 @@ img {
     padding: 0;
     width: 40px;
     height: 40px;
+    border-radius: 100%;
 }
 .nav-btn img {
     width: 40px;
@@ -289,9 +290,6 @@ img {
     }
     .audio-player {
         padding: 8px;
-    }
-    .nav-btn {
-        font-size: 0.75rem;
     }
     .control-btn {
         padding: 5px;
