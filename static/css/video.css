@@ -346,7 +346,7 @@ select {
     border: none;
 }
 select option {
-    background-color: rgba(40,40,40,0.9);
+    background-color: #282828e6;
     color: #eee;
 }
 .fullscreen {
