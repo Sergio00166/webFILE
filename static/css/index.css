@@ -89,7 +89,7 @@ h2 {
 }
 .filename:hover {
     background-color: #333;
-    box-shadow: 0 3px 24px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 2px 16px #000a;
 }
 .backdir {
     color: white;
@@ -244,7 +244,7 @@ h2 {
 
 /* Disable hover on touch devices */
 @media (hover: hover) {
-    button:hover {
-        background:#363a43;
+    button:not(:disabled):hover {
+        background:#262a33;
     }
 }
