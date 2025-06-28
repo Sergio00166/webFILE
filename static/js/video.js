@@ -493,7 +493,7 @@ function loadTracks() {
             audioTracksSelect.appendChild(option);
             if (subs_name === saved) {
                 audioTracksSelect.selectedIndex = i;
-                changeTrack();
+                changeTrack(i);
             } else audioTracksSelect.selectedIndex = 0;
         }
     } catch {}
