@@ -109,13 +109,6 @@ function formatTime(sec) {
 function updateSeekBar() {
     currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
     currentTimeElem.textContent = formatTime(audio.currentTime);
-    if ('mediaSession' in navigator) {
-        navigator.mediaSession.setPositionState({
-            position: audio.currentTime,
-            playbackRate: audio.playbackRate,
-            duration: audio.duration
-        });
-    }
 }
 
 volumeBar.addEventListener('input', (e) => {

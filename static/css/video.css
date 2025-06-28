@@ -108,7 +108,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(145deg, #363a4360, #1b242960);
+    background: linear-gradient(145deg, #363a4370, #1b24290);
     transition: all 0.3s;
 }
 .main-state img {
@@ -404,18 +404,17 @@ select option {
     .duration {
         width: 90%;
     }
-}
-@media (max-width: 280px) {
     #mode {
         display: none;
     }
     .main-state {
-        height: 45px;
-        width: 45px;
+        height: 40px;
+        width: 40px;
     }
     .custom-loader {
-        height: 70px;
-        width: 70px;
+        height: 56px;
+        width: 56px;
+        border-width: 5px;
     }
     .vol_val_st { 
         font-size: 1rem;
@@ -457,5 +456,8 @@ select option {
     }
     .round-button:hover {
         background: #6675;
+    }
+    .lmbsl:hover {
+        background: #6d65 !important;
     }
 }
