@@ -88,7 +88,7 @@ h2 {
     margin-left: 0.4rem;
 }
 .filename:hover {
-    background-color: #333;
+    background-color: #3b3b3b;
     box-shadow: 0 2px 16px #000a;
 }
 .backdir {
