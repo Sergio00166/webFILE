@@ -108,7 +108,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(145deg, #363a4370, #1b24290);
+    background: linear-gradient(145deg, #363a4370, #1b242970);
     transition: all 0.3s;
 }
 .main-state img {
