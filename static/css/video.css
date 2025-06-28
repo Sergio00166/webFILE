@@ -351,6 +351,9 @@ select option {
     display: flex !important;
     background: black !important;
     align-items: center !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
 }
 .side-controls {
     display: flex;
