@@ -109,7 +109,7 @@ def logout():
 
 
 def error(e, error_file):
-    fromAPI = "application/json" in\ 
+    fromAPI = "application/json" in\
         request.headers.get("Accept", "").lower()
 
     if isinstance(e, PermissionError):
