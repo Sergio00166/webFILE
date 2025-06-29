@@ -43,7 +43,7 @@ img {
 .player-title {
     margin: auto;
     margin-top: 6px;
-    margin-bottom: 36px;
+    margin-bottom: 30px;
     text-align: center;
     font-size: 24px;
     font-weight: 600;
@@ -136,8 +136,8 @@ img {
     margin-right: 12px;
 }
 .playback-controls {
-    margin-top: 20px;
-    margin-bottom: 16px;
+    margin-top: 24px;
+    margin-bottom: 20px;
     width: calc(100% - 16px);
     display: flex;
     align-items: center;
