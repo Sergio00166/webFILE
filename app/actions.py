@@ -60,7 +60,7 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
         # Autoload index.web if available (plugins-like)
         if (
             isfile(path + sep + autoload_webpage)
-            and not ("noauto" in request.args and useApi)
+            and not ("noauto" in request.args or useApi)
         ):
             url_sep = "" if request.path.endswith("/") else "/"
             return redirect(request.path + url_sep + autoload_webpage)
