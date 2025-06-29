@@ -60,30 +60,29 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
         # Autoload index.web if available (plugins-like)
         if (
             isfile(path + sep + autoload_webpage)
-            and not "noauto" in request.args
-            and client == "normal"
+            and not ("noauto" in request.args and useApi)
         ):
             url_sep = "" if request.path.endswith("/") else "/"
             return redirect(request.path + url_sep + autoload_webpage)
 
         # Redirect to have /$ (it means dir)
-        if not request.path.endswith("/") and client != "json":
+        if not request.path.endswith("/") and not useApi:
             query = request.query_string.decode()
             query = "?" + query if query else ""
             return redirect(request.path + "/" + query)
 
         # Return the directory explorer
         sort = request.args["sort"] if "sort" in request.args else ""
-        return directory(path, root, folder_size, sort, client, ACL, useApi)
+        return directory(path, root, folder_size, sort, ACL, useApi)
 
 
 
-def serveRoot_page(ACL, root, client, folder_size, useApi):
+def serveRoot_page(ACL, root, folder_size, useApi):
     path = safe_path("/", root)  # Check if we can access it
     sort = request.args["sort"] if "sort" in request.args else ""
     if "tar" in request.args:
         return send_dir(path, root, ACL, "index")
-    return directory(path, root, folder_size, sort, client, ACL, useApi)
+    return directory(path, root, folder_size, sort, ACL, useApi)
 
 
 def login(USERS):
