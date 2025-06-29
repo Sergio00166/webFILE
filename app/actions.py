@@ -14,7 +14,7 @@ from functions import *
 autoload_webpage = "index" + webpage_file_ext
 
 
-def serveFiles_page(path, ACL, root, client, folder_size):
+def serveFiles_page(path, ACL, root, folder_size, useApi):
     validate_acl(path, ACL)
     path = safe_path(path, root)
     file_type = get_file_type(path)
@@ -24,7 +24,7 @@ def serveFiles_page(path, ACL, root, client, folder_size):
     if not file_type in ["directory", "disk"]:
         
         # Serve page (for plugin-like stuff)
-        if file_type == "webpage" and client == "normal":
+        if file_type == "webpage" and not useApi:
             return send_file(path, mimetype="text/html")
 
         # Those are the sub-endpoints
@@ -36,15 +36,15 @@ def serveFiles_page(path, ACL, root, client, folder_size):
             return subtitles(path, request.args["subs"])
 
         # For main pages redirect without /$
-        if request.path.endswith("/") and client != "json":
+        if request.path.endswith("/") and not useApi:
             return redirect(request.path[:-1])
 
         # Serve the files depending of filetype
-        if file_type == "video" and client == "normal":
+        if file_type == "video" and not useApi:
             check_ffmpeg_installed()
             return video(path, root, file_type, ACL)
 
-        elif file_type == "audio" and client == "normal":
+        elif file_type == "audio" and not useApi:
             return audio(path, root, file_type, ACL)
 
         else:  # Send the file and set mime for text
@@ -60,30 +60,29 @@ def serveFiles_page(path, ACL, root, client, folder_size):
         # Autoload index.web if available (plugins-like)
         if (
             isfile(path + sep + autoload_webpage)
-            and not "noauto" in request.args
-            and client == "normal"
+            and not ("noauto" in request.args or useApi)
         ):
             url_sep = "" if request.path.endswith("/") else "/"
             return redirect(request.path + url_sep + autoload_webpage)
 
         # Redirect to have /$ (it means dir)
-        if not request.path.endswith("/") and client != "json":
+        if not request.path.endswith("/") and not useApi:
             query = request.query_string.decode()
             query = "?" + query if query else ""
             return redirect(request.path + "/" + query)
 
         # Return the directory explorer
         sort = request.args["sort"] if "sort" in request.args else ""
-        return directory(path, root, folder_size, sort, client, ACL)
+        return directory(path, root, folder_size, sort, ACL, useApi)
 
 
 
-def serveRoot_page(ACL, root, client, folder_size):
+def serveRoot_page(ACL, root, folder_size, useApi):
     path = safe_path("/", root)  # Check if we can access it
     sort = request.args["sort"] if "sort" in request.args else ""
     if "tar" in request.args:
         return send_dir(path, root, ACL, "index")
-    return directory(path, root, folder_size, sort, client, ACL)
+    return directory(path, root, folder_size, sort, ACL, useApi)
 
 
 def login(USERS):
@@ -108,21 +107,18 @@ def logout():
     return redirect_no_query()
 
 
-def error(e, client, error_file):
+def error(e, error_file, useApi):
     if isinstance(e, PermissionError):
-        if client == "json":
-            return "[]", 403
+        if useApi: return "[]", 403
         return render_template("403.html"), 403
 
     elif isinstance(e, FileNotFoundError):
-        if client == "json":
-            return "[]", 404
+        if useApi: return "[]", 404
         return render_template("404.html"), 404
 
     else:
         printerr(e, error_file)  # Log the error
-        if client == "json":
-            return "[]", 500
+        if useApi: return "[]", 500
         return render_template("500.html"), 500
 
 
@@ -247,19 +243,19 @@ def humanize_all(data):
 
 
 
-def directory(path, root, folder_size, sort, client, ACL):
+def directory(path, root, folder_size, sort, ACL, useApi):
     # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
 
     folder_content, folder_path, parent_directory, is_root =\
     get_index_data(path, root, folder_size, sort, ACL)
 
-    if client == "json":
+    if useApi:
         return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
     else:
-        file = "index_cli.html" if client == "legacy" else "index.html"
         humanize_all(folder_content)  # The arg is a reference
         return minify(stream_template(
-            file, folder_content=folder_content,folder_path=folder_path,
+            "index.html", folder_content=folder_content,folder_path=folder_path,
             parent_directory=parent_directory, is_root=is_root, sort=sort
         ))
+

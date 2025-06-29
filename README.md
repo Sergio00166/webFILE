@@ -14,7 +14,6 @@ Supports ACL-based access control, uploads, and file operations.
 - [File Listing API](#file-listing-api)  
 - [Endpoints](#endpoints)
 - [Other HTTP Methods](#other-http-methods)  
-- [CLI & Legacy Browser Support](#cli--legacy-browser-support)  
 - [HTML vs .web Extensions](#html-vs-web-extensions)  
 - [Official Plugins](#official-plugins)  
 - [Running the Server](#running-the-server)  
@@ -99,7 +98,7 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 
 ## Endpoints
 - `GET /path?login`  
-  Returns the login page. Form posts to `/path?login`.  
+  Returns the login page. 
 - `POST /path?login`  
   Accepts form data (`username`, `password`) to authenticate.  
 - `GET /path?logout`  
@@ -115,6 +114,8 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 - `GET /path?sort=XY`  
   Sorts directory listing by `X` (n=name, s=size, d=date) and order `Y` (p=ascending, d=descending).  
 
+**NOTE**: The API ignores the `?sort` and `?raw` is not necessary.    
+
 ## Other HTTP Methods
 The server internally uses some WebDAV methods to handle file and folder operations in a more standard way.   
 **Note:** This is not full WebDAV support—these methods are adopted for internal use only.    
@@ -126,15 +127,11 @@ The server internally uses some WebDAV methods to handle file and folder operati
 | MOVE   | Rename or move an item      |
 | COPY   | Duplicate a file or folder  |
 
-
-## CLI & Legacy Browser Support
-When accessed by a CLI or legacy browser, a simplified “text-only” view is served.  
-— Video/audio players and file-operation controls are disabled.
-
 ## HTML vs .web Extensions
 Since `.html` files are treated as plain text, the server recognizes `.web` files as HTML pages.  
-- Placing `index.web` in any folder auto-loads that page instead of the default listing.  
-- Legacy CLI view ignores `.web` pages.
+- Placing `index.web` in any folder auto-loads that page instead of the default listing.    
+
+**NOTE**: Browser based only (disable with `?noauto`), it does not affect the API.
 
 ## Official Plugins
 Plugins allow you to create new pages and customize the frontend GUI by dropping `.web` extensions into served directories.  

@@ -74,7 +74,7 @@ let fixTouchHover = false;
 
 /* Inicialitate everything */
 
-if (volumeVal === null) { volumeVal = 1; }
+if (volumeVal === null) volumeVal = 1;
 volumeVal = parseFloat(volumeVal);
 video.volume = volumeVal;
 
@@ -82,17 +82,12 @@ if (subs_legacy != null) {
     if (subs_legacy == "true") {
         subs_legacy = true;
         settingsBtn.classList.add('lmbsl');
-    } else {
-        subs_legacy = false;
-    }
-} else {
-    subs_legacy = false;
-}
-if (muted != null) {
-    video.muted = (muted == "true")
-} else {
-    video.muted = false;
-}
+    } else subs_legacy = false;
+} else subs_legacy = false;
+
+if (muted != null) video.muted = (muted == "true")
+else video.muted = false;
+
 handleVideoIcon();
 
 for (var i = 0; i < subtitleSelect.options.length; i++) {
@@ -113,16 +108,12 @@ if (saved_speed != null) {
             break;
         }
     }
-} else {
-    speedSelect.selectedIndex = 3;
-}
+} else speedSelect.selectedIndex = 3;
 
 if (currentMode != null) {
     currentMode = parseInt(currentMode);
     mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
-} else {
-    currentMode = 0;
-}
+} else currentMode = 0;
 
 window.addEventListener('pageshow', () => {
     volumeBar.value = video.volume;
@@ -157,9 +148,9 @@ async function create_ass_worker(url) {
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
         useLocalFonts: true,
-        fallbackFont: "arial",
+        fallbackFont: "liberation sans",
         availableFonts: {
-            'arial': '/?static=jassub/arial.ttf'
+            'liberation sans': '/?static=jassub/default.woff2'
         }
     });
 }
@@ -181,18 +172,15 @@ function webvtt_subs(url) {
 async function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    if (ass_worker) { ass_worker.destroy(); }
+    if (ass_worker) ass_worker.destroy();
     if (existingTrack) {
         existingTrack.track.mode = 'disabled';
         existingTrack.remove();
     }
     if (value > -1) {
         url = window.location.pathname + "?subs=" + value;
-        if (subs_legacy) { 
-            webvtt_subs(url + "legacy");
-        } else { 
-            ass_worker = await create_ass_worker(url);
-        }
+        if (subs_legacy) webvtt_subs(url + "legacy");
+        else ass_worker = await create_ass_worker(url);
     }
 }
 
@@ -237,9 +225,8 @@ function toggleMainState() {
 }
 
 function handleSettingMenu() {
-    if (sttbtnpress) {
-        sttbtnpress = false;
-    } else {
+    if (sttbtnpress) sttbtnpress = false;
+    else {
         settingMenu.classList.toggle("show");
         isCursorOnControls = !isCursorOnControls;
     }
@@ -253,7 +240,7 @@ function saveVolume() {
 
 function handleVideoEnded() {
     if (currentMode === 1) next();
-    else if (currentMode === 2)  play();
+    else if (currentMode === 2) play();
     else  pause();
 }
 
@@ -262,9 +249,7 @@ function showCursor() {
     document.body.style.cursor = 'auto';
     if (!video.paused) {
         cursorTimeout = setTimeout(function() {
-            if (!video.paused) {
-                document.body.style.cursor = 'none';
-            }
+            if (!video.paused) document.body.style.cursor = 'none';
         }, mouse_ctrl_delay);
     }
 }
@@ -284,9 +269,7 @@ function pause() {
     sh_pause.style.display = 'block';
     sh_play.style.display = 'none';
     handleVideoIcon();
-    if (video.ended) {
-        currentTime.style.width = 100 + "%";
-    }
+    if (video.ended) currentTime.style.width = 100 + "%";
 }
 
 function handleProgressBar() {
@@ -298,11 +281,8 @@ function showDuration(time) {
     const hours = Math.floor(time / 60 ** 2);
     const min = Math.floor((time / 60) % 60);
     const sec = Math.floor(time % 60);
-    if (hours > 0) {
-        return `${formatter(hours)}:${formatter(min)}:${formatter(sec)}`;
-    } else {
-        return `${formatter(min)}:${formatter(sec)}`;
-    }
+    if (hours > 0) return `${formatter(hours)}:${formatter(min)}:${formatter(sec)}`;
+    else return `${formatter(min)}:${formatter(sec)}`;
 }
 
 function formatter(number) {
@@ -355,9 +335,7 @@ function handleVolume(e) {
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         videoContainer.requestFullscreen();
-    } else {
-        document.exitFullscreen();
-    }
+    } else document.exitFullscreen();
 }
 
 function getchptname(timeInSeconds) {
@@ -515,10 +493,8 @@ function loadTracks() {
             audioTracksSelect.appendChild(option);
             if (subs_name === saved) {
                 audioTracksSelect.selectedIndex = i;
-                changeTrack();
-            } else {
-                audioTracksSelect.selectedIndex = 0;
-            }
+                changeTrack(i);
+            } else audioTracksSelect.selectedIndex = 0;
         }
     } catch {}
 }
@@ -552,17 +528,17 @@ function split_timeline_chapters() {
 function double_touch(e) {
     e.preventDefault();
     clearTimeout(touchTimeout);
-    if (touchFix) {
-        touchFix = false;
-        return;
-    }
+    if (touchFix){ touchFix = false; return; }
+
     const now = Date.now();
     const touchInterval = now - lastTouchTime;
     const divRect = touchBox.getBoundingClientRect();
+
     if (touchInterval < doubleTouch_delay) {
         const touchX = e.changedTouches[0].clientX;
         const centerX = divRect.left + (divRect.width / 2);
         const p = touchX < centerX;
+
         if (p) {
             video.currentTime -= 5;
             show_main_animation("back");
@@ -573,11 +549,11 @@ function double_touch(e) {
         handleProgressBar();
         controls.classList.add("show");
         hideControls(timechange_delay);
-    } else {
-        touchTimeout = setTimeout(toggleMainState, animation_st_delay);
-    }
+
+    } else touchTimeout = setTimeout(toggleMainState, animation_st_delay);
     lastTouchTime = now;
 }
+
 
 async function addrmMLcl() {
     sttbtnpress = true;
@@ -630,10 +606,9 @@ videoContainer.addEventListener("fullscreenchange", () => {
     videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
     if (video.videoWidth >= video.videoHeight) {
         screen.orientation.lock('landscape').catch(() => {});
-    } else {
-        screen.orientation.lock('portrait').catch(() => {});
-    }
+    } else screen.orientation.lock('portrait').catch(() => {});
 });
+
 videoContainer.addEventListener('touchmove', () => {
     touchFix = true;
     controls.classList.add("show");
@@ -652,7 +627,7 @@ controls.addEventListener("click", () => {
 // Volume events
 volume.addEventListener("mouseenter", () => {
     clearTimeout(voltimeTimeout);
-    if (!video.muted) { timeContainer.style.display = "none"; }
+    if (!video.muted) timeContainer.style.display = "none";
     video.muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
@@ -684,17 +659,13 @@ settingsBtn.addEventListener("click", (e) => {
     if (sttbtnpress) {
         e.preventDefault();
         sttbtnpress = false;
-    } else {
-        handleSettingMenu();
-    }
+    } else handleSettingMenu();
 });
 settingsBtn.addEventListener("touchend", (e) => {
     if (sttbtnpress) {
         e.preventDefault();
         sttbtnpress = false;
-    } else {
-        handleSettingMenu();
-    }
+    } handleSettingMenu();
 });
 
 // Track selection events
@@ -707,9 +678,8 @@ audioTracksSelect.addEventListener('change', function() {
 });
 subtitleSelect.addEventListener('change', async function() {
     subtitleId = parseInt(this.value);
-    if (subtitleId == -1) {
-        localStorage.removeItem("videoSubs");
-    } else {
+    if (subtitleId == -1) localStorage.removeItem("videoSubs");
+    else {
         text = subtitleSelect.options[subtitleId + 1].text;
         localStorage.setItem("videoSubs", text);
     }
@@ -755,7 +725,7 @@ duration.addEventListener('touchstart', e =>
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
+duration.addEventListener('mousemove', e => { if (!fixTouchHover) showHover(e.clientX); });
 duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
 
 
@@ -825,3 +795,14 @@ function chgtime_kdb_helper(mode) {
     handleProgressBar();
     show_main_animation(mode);
 }
+
+// Hide the outline when click
+[s0, s1, s2].forEach((s) => {
+    s.addEventListener('pointerdown',()=>{
+        s.dataset.focus = 'true';
+    });
+    s.addEventListener('focus',()=>{
+        if (s.dataset.focus === 'true') s.blur();
+        delete s.dataset.focus;
+    });
+});

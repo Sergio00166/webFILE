@@ -198,19 +198,6 @@ def sort_contents(folder_content, sort, root):
         dirs, files = dirs[::-1], files[::-1]
     return dirs + files
 
-
-def getclient(request):
-    ua = request.headers.get("User-Agent", "").lower()
-    ah = request.headers.get("Accept", "").lower()
-    json = (
-        any(x in ua for x in ["wget", "curl", "fetch", "powershell"])
-        or "application/json" in ah
-    )
-    normal = ua.startswith("mozilla/5.0") and not any(
-        x in ua for x in ["msie", "trident"]
-    )
-    return "json" if json else "normal" if normal else "legacy"
-
 def load_userACL(USERS, ACL, users_file, acl_file):
     USERS.clear()
     ACL.clear()

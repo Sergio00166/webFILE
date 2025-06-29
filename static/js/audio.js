@@ -16,7 +16,6 @@ const prevLink = document.getElementById('prev');
 const nextLink = document.getElementById('next');
 const randomLink = document.getElementById('random');
 const downloadLink = document.getElementById('download-link');
-const volBtn = document.querySelector('.vol-icons');
 const volHighIcon = document.querySelector('.vol-icons img:nth-child(1)');
 const volMedIcon = document.querySelector('.vol-icons img:nth-child(2)');
 const volLowIcon = document.querySelector('.vol-icons img:nth-child(3)');
@@ -38,13 +37,8 @@ audio.playbackRate = speedOptions[speedIndex];
 let speedBtn_startY = 0;
 let fixTouchHover = false;
 
-
-if (!isNaN(savedVolume)) {
-    audio.volume = savedVolume;
-}
-if (savedMuted !== null) {
-    audio.muted = savedMuted === 'true';
-}
+if (!isNaN(savedVolume)) audio.volume = savedVolume;
+if (savedMuted !== null) audio.muted = savedMuted === 'true';
 updateVolumeIcon(audio.volume);
 
 function updateLoopButton() {
@@ -99,11 +93,8 @@ speedBtn.addEventListener('click', () => {
 });
 speedBtn.addEventListener('wheel', e => {
     e.preventDefault();
-    if (e.deltaY < 0 && speedIndex < speedOptions.length - 1) {
-        speedIndex++;
-    } else if (e.deltaY > 0 && speedIndex > 0) {
-        speedIndex--;
-    }
+    if (e.deltaY < 0 && speedIndex < speedOptions.length - 1) speedIndex++;
+    else if (e.deltaY > 0 && speedIndex > 0) speedIndex--;
     audio.playbackRate = speedOptions[speedIndex];
     localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
     updateSpeedDisplay();
@@ -118,13 +109,6 @@ function formatTime(sec) {
 function updateSeekBar() {
     currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
     currentTimeElem.textContent = formatTime(audio.currentTime);
-    if ('mediaSession' in navigator) {
-        navigator.mediaSession.setPositionState({
-            position: audio.currentTime,
-            playbackRate: audio.playbackRate,
-            duration: audio.duration
-        });
-    }
 }
 
 volumeBar.addEventListener('input', (e) => {
@@ -138,8 +122,6 @@ volumeBar.addEventListener('input', (e) => {
     updateVolumeBar();
 });
 
-volBtn.addEventListener('click', toggleMuteUnmute);
-
 audio.addEventListener('ended', () => {
     if (loopMode === 2) play();
     else if (loopMode === 1) next();
@@ -151,26 +133,17 @@ audio.addEventListener('ended', () => {
 
 function updateVolumeBar() {
     const percent = volumeBar.value * 100;
-    if (audio.muted) {
-        volumeBar.style.background = '#e1e1e1';
-    } else {
-        volumeBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
-    }
+    if (audio.muted) volumeBar.style.background = '#e1e1e1';
+    else volumeBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
 }
 
 function updateVolumeIcon(vol) {
     [volHighIcon, volMedIcon, volLowIcon, volZeroIcon, volMutedIcon].forEach(el => el.style.display = 'none');
-    if (audio.muted) {
-        volMutedIcon.style.display = 'block';
-    } else if (vol === 0) {
-        volZeroIcon.style.display = 'block';
-    } else if (vol > 0.66) {
-        volHighIcon.style.display = 'block';
-    } else if (vol > 0.33) {
-        volMedIcon.style.display = 'block';
-    } else {
-        volLowIcon.style.display = 'block';
-    }
+    if (audio.muted) volMutedIcon.style.display = 'block';
+    else if (vol === 0) volZeroIcon.style.display = 'block';
+    else if (vol > 0.66) volHighIcon.style.display = 'block';
+    else if (vol > 0.33) volMedIcon.style.display = 'block';
+    else volLowIcon.style.display = 'block';
 }
 
 function pause() {
@@ -211,11 +184,8 @@ function cycleLoop() {
 }
 
 function prev() {
-    if (isShuffled) {
-        window.history.go(-1);
-    } else {
-        prevLink.click();
-    }
+    if (isShuffled) window.history.go(-1);
+    else prevLink.click();
 }
 
 function next() {
@@ -224,9 +194,7 @@ function next() {
         setTimeout(() => {
             randomLink.click();
         }, 250);
-    } else {
-        nextLink.click();
-    }
+    } else nextLink.click();
 }
 
 function download() { downloadLink.click(); }
@@ -240,11 +208,9 @@ speedBtn.addEventListener('touchend', e => {
     const speedBtn_endY = e.changedTouches[0].clientY;
     const speedBtn_deltaY = speedBtn_endY - speedBtn_startY;
 
-    if (speedBtn_deltaY > 10 && speedIndex < speedOptions.length - 1) {
-        speedIndex++;
-    } else if (speedBtn_deltaY < -10 && speedIndex > 0) {
-        speedIndex--;
-    }
+    if (speedBtn_deltaY > 10 && speedIndex < speedOptions.length - 1) speedIndex++;
+    else if (speedBtn_deltaY < -10 && speedIndex > 0) speedIndex--;
+    else if (Math.abs(speedBtn_deltaY) < 10) speedBtn.click();
 
     audio.playbackRate = speedOptions[speedIndex];
     localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
@@ -261,11 +227,8 @@ function showDuration(time) {
     const hours = Math.floor(time / 60 ** 2);
     const min = Math.floor((time / 60) % 60);
     const sec = Math.floor(time % 60);
-    if (hours > 0) {
-        return `${formatter(hours)}:${formatter(min)}:${formatter(sec)}`;
-    } else {
-        return `${formatter(min)}:${formatter(sec)}`;
-    }
+    if (hours > 0) return `${formatter(hours)}:${formatter(min)}:${formatter(sec)}`;
+    else return `${formatter(min)}:${formatter(sec)}`;
 }
 
 
@@ -323,7 +286,7 @@ duration.addEventListener('touchstart', e =>
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-duration.addEventListener('mousemove', e => { if (!fixTouchHover) { showHover(e.clientX); } });
+duration.addEventListener('mousemove', e => { if (!fixTouchHover) showHover(e.clientX); });
 duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
 
 
@@ -352,10 +315,10 @@ document.addEventListener('keydown', (e) => {
             cycleLoop();
             break;
         case "arrowdown":
-            prev();
+            next();
             break;
         case "arrowup":
-            next();
+            prev();
             break;
         case "arrowright":
             audio.currentTime += 2;
