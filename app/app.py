@@ -6,7 +6,6 @@ from init import *
 
 @app.route('/<path:path>', methods=['GET','POST','DELETE','MKCOL','COPY','MOVE'])
 def explorer(path):
-    client = getclient(request)
     try:
         # User login/logout stuff
         if "logout" in request.args:  return logout()
@@ -35,15 +34,14 @@ def explorer(path):
             return updir(dps,path,ACL,root)
 
         # Send/stream files or directory listing
-        return serveFiles_page(path,ACL,root,client,folder_size)
+        return serveFiles_page(path,ACL,root,folder_size)
   
-    except Exception as e: return error(e,client,error_file)
+    except Exception as e: return error(e,error_file)
 
 
 
 @app.route('/', methods=['GET','POST'])
 def index():
-    client = getclient(request)
     try:
         # User login/logout stuff
         if "logout" in request.args: return logout()
@@ -63,9 +61,10 @@ def index():
             if not isfile(path): raise FileNotFoundError
             return send_file( path, cache=True )
 
-        return serveRoot_page(ACL,root,client,folder_size)
+        return serveRoot_page(ACL,root,folder_size)
 
-    except Exception as e: return error(e,client,error_file)
+    except Exception as e: return error(e,error_file)
 
 
 if __name__=="__main__": app.run(host="127.0.0.1", port=8000, debug=False)
+

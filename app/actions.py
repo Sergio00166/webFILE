@@ -108,21 +108,21 @@ def logout():
     return redirect_no_query()
 
 
-def error(e, client, error_file):
+def error(e, error_file):
+    fromAPI = "application/json" in\ 
+        request.headers.get("Accept", "").lower()
+
     if isinstance(e, PermissionError):
-        if client == "json":
-            return "[]", 403
+        if fromAPI: return "[]", 403
         return render_template("403.html"), 403
 
     elif isinstance(e, FileNotFoundError):
-        if client == "json":
-            return "[]", 404
+        if fromAPI: return "[]", 404
         return render_template("404.html"), 404
 
     else:
         printerr(e, error_file)  # Log the error
-        if client == "json":
-            return "[]", 500
+        if fromAPI: return "[]", 500
         return render_template("500.html"), 500
 
 
@@ -247,19 +247,19 @@ def humanize_all(data):
 
 
 
-def directory(path, root, folder_size, sort, client, ACL):
+def directory(path, root, folder_size, sort, ACL):
     # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
 
     folder_content, folder_path, parent_directory, is_root =\
     get_index_data(path, root, folder_size, sort, ACL)
 
-    if client == "json":
+    if "application/json" in request.headers.get("Accept", "").lower():
         return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
     else:
-        file = "index_cli.html" if client == "legacy" else "index.html"
         humanize_all(folder_content)  # The arg is a reference
         return minify(stream_template(
-            file, folder_content=folder_content,folder_path=folder_path,
+            "index.html", folder_content=folder_content,folder_path=folder_path,
             parent_directory=parent_directory, is_root=is_root, sort=sort
         ))
+
