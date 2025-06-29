@@ -126,11 +126,6 @@ The server internally uses some WebDAV methods to handle file and folder operati
 | MOVE   | Rename or move an item      |
 | COPY   | Duplicate a file or folder  |
 
-
-## CLI & Legacy Browser Support
-When accessed by a CLI or legacy browser, a simplified “text-only” view is served.  
-— Video/audio players and file-operation controls are disabled.
-
 ## HTML vs .web Extensions
 Since `.html` files are treated as plain text, the server recognizes `.web` files as HTML pages.  
 - Placing `index.web` in any folder auto-loads that page instead of the default listing.  
