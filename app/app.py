@@ -43,6 +43,7 @@ def explorer(path):
 
 @app.route('/', methods=['GET','POST'])
 def index():
+    useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
         # User login/logout stuff
         if "logout" in request.args: return logout()
