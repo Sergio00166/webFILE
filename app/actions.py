@@ -99,10 +99,8 @@ def login(USERS):
 
 
 def logout():
-    try:
-        session.pop("user")
-    except:
-        pass
+    try: session.pop("user")
+    except: pass
     return redirect_no_query()
 
 

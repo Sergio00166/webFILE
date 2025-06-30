@@ -4,7 +4,7 @@ from functions import validate_acl, safe_path
 from shutil import move as sh_move, copy as sh_copy
 from os.path import exists, isdir, relpath, dirname
 from os import sep, remove, walk, makedirs
-from shutil import rmtree, copytree
+from shutil import rmtree, copytree, copyfileobj
 from flask import request
 
 
@@ -47,11 +47,9 @@ def handle_upload(path,ACL,root):
 
         if exists(dpath): raise FileExistsError
         makedirs(dirname(dpath), exist_ok=True)
+
         with open(dpath,"wb") as f:
-            while True:
-                chunk = request.stream.read(64*1024)
-                if not chunk: break
-                f.write(chunk)
+            copyfileobj(request.stream, f, length=1024*1204)
 
     except PermissionError:   return "Forbidden",          403
     except NameError:         return "Bad Request",        400
