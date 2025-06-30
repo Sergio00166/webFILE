@@ -4,7 +4,7 @@ from os.path import isfile
 from init import *
 
 
-@app.route('/<path:path>', methods=['GET','POST','DELETE','MKCOL','COPY','MOVE'])
+@app.route('/<path:path>', methods=['GET','POST','DELETE','MKCOL','COPY','MOVE','PUT'])
 def explorer(path):
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
@@ -28,12 +28,9 @@ def explorer(path):
         if request.method.lower() == "mkcol":
             return mkdir(path,ACL,root)
 
-        if "upfile" in request.args:
-            return upfile(dps,path,ACL,root)
+        if request.method.lower() == "put":
+            return handle_upload(path,ACL,root)
         
-        if "updir" in request.args:
-            return updir(dps,path,ACL,root)
-
         # Send/stream files or directory listing
         return serveFiles_page(path,ACL,root,folder_size,useApi)
   
@@ -51,10 +48,10 @@ def index():
 
         # Files management stuff for users
         if "upfile" in request.args:
-            return upfile(dps,"",ACL,root)
+            return upfile("",ACL,root)
         
         if "updir" in request.args:
-            return updir(dps,"",ACL,root)
+            return updir("",ACL,root)
 
         # Check if static page is requested
         if "static" in request.args:

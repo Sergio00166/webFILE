@@ -103,10 +103,8 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
   Accepts form data (`username`, `password`) to authenticate.  
 - `GET /path?logout`  
   Logs out the current session and redirects to login.  
-- `POST /path?upfile`  
-  Uploads a file (multipart/form-data).  
-- `POST /path?updir`  
-  Uploads a directory (webkitdirectory).  
+- `PUT /dest`  
+  Uploads a file.   
 - `GET /path?raw`  
   Streams the raw video/audio file; without `?raw`, returns the player page.  
 - `GET /videopath?subs=index`  
