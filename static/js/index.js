@@ -244,6 +244,7 @@ async function uploadFiles(files, isDir) {
                 507: 'Not enough free space'
             };
             alert(msgs[status] || 'Server error');
+            break;
         }
     }
     location.reload();
@@ -317,3 +318,4 @@ document.addEventListener('keydown', function (e) {
         case '3': var el3 = document.getElementById('sortDate'); if (el3) el3.click(); break;
     }
 });
+
