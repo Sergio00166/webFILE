@@ -554,19 +554,27 @@ function double_touch(e) {
     lastTouchTime = now;
 }
 
+// Legacy subtitle toggle
+let mber; let inputLock = false;
 
-async function addrmMLcl() {
-    sttbtnpress = true;
-    if (settingsBtn.classList.contains('lmbsl')) {
-        subs_legacy = false;
-        settingsBtn.classList.remove('lmbsl');
-    } else {
-        subs_legacy = true;
-        settingsBtn.classList.add('lmbsl');
-    }
-    localStorage.setItem("subsLegacy", subs_legacy);
-    await changeSubs(subtitleId);
-}
+settingsBtn.addEventListener("mouseup", () => { clearTimeout(mber); });
+settingsBtn.addEventListener("touchend", () => { clearTimeout(mber); });
+function clearInputLock() { setTimeout(() => inputLock = false, 100); }
+
+settingsBtn.addEventListener("mousedown", (e) => {
+    if (inputLock) return;
+    inputLock = true;
+    e.preventDefault();
+    mber = setTimeout(addrmMLcl, 600);
+    clearInputLock();
+});
+settingsBtn.addEventListener("touchstart", (e) => {
+    if (inputLock) return;
+    inputLock = true;
+    e.preventDefault();
+    mber = setTimeout(addrmMLcl, 600);
+    clearInputLock();
+}, { passive: false });
 
 
 /* Event listeners */
@@ -720,7 +728,7 @@ duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+    touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
 );
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
@@ -795,14 +803,3 @@ function chgtime_kdb_helper(mode) {
     handleProgressBar();
     show_main_animation(mode);
 }
-
-// Hide the outline when click
-[s0, s1, s2].forEach((s) => {
-    s.addEventListener('pointerdown',()=>{
-        s.dataset.focus = 'true';
-    });
-    s.addEventListener('focus',()=>{
-        if (s.dataset.focus === 'true') s.blur();
-        delete s.dataset.focus;
-    });
-});

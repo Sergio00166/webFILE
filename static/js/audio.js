@@ -235,8 +235,10 @@ function showDuration(time) {
 // Time bar control funcs
 
 const getPct = clientX => {
-    const { x, width, height } = duration.getBoundingClientRect();
-    const pos = Math.min(Math.max(0, clientX - x), width);
+    const rect = duration.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const pos = Math.min(Math.max(0, clientX - rect.left), width);
     return { pct: pos / width, pos, height };
 };
 
@@ -274,14 +276,14 @@ function drag(handlerMove) {
 function touchDrag(handlerMove) {
     const end = () => document.removeEventListener('touchmove', handlerMove);
     document.addEventListener('touchmove', handlerMove, { passive: true });
-    document.addEventListener('touchend', end, { once: true, passive: true });
+    document.addEventListener('touchend', end, { once: true });
 }
 
 duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+    touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
 );
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
