@@ -60,6 +60,7 @@ var subs_legacy = localStorage.getItem("subsLegacy");
 var mber = undefined;
 var sttbtnpress = false;
 let isCursorOnControls = false;
+let inputLock = false;
 let lastTouchTime = 0;
 let originalTime = 0;
 let touchFix;
@@ -555,8 +556,6 @@ function double_touch(e) {
 }
 
 // Legacy subtitle toggle
-let mber; let inputLock = false;
-
 settingsBtn.addEventListener("mouseup", () => { clearTimeout(mber); });
 settingsBtn.addEventListener("touchend", () => { clearTimeout(mber); });
 function clearInputLock() { setTimeout(() => inputLock = false, 100); }
