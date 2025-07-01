@@ -57,19 +57,19 @@ var currentMode = localStorage.getItem("videoMode");
 var muted = localStorage.getItem("videoMuted");
 var subs_legacy = localStorage.getItem("subsLegacy");
 
-var mber = undefined;
+let mber;
+let ass_worker;
 var sttbtnpress = false;
 let isCursorOnControls = false;
-let inputLock = false;
-let lastTouchTime = 0;
+let isPressing = false;
+let hasTriggered = false;
 let originalTime = 0;
 let touchFix;
 let ctrlsTimeout;
 let voltimeTimeout;
 let touchTimeout;
 let cursorTimeout;
-var subtitleId = 0;
-let ass_worker;
+let subtitleId = 0;
 let fixTouchHover = false;
 
 
@@ -555,25 +555,55 @@ function double_touch(e) {
     lastTouchTime = now;
 }
 
-// Legacy subtitle toggle
-settingsBtn.addEventListener("mouseup", () => { clearTimeout(mber); });
-settingsBtn.addEventListener("touchend", () => { clearTimeout(mber); });
-function clearInputLock() { setTimeout(() => inputLock = false, 100); }
 
+// Legacy subtitle toggle
+
+async function addrmMLcl() {
+    sttbtnpress = true;
+    if (settingsBtn.classList.contains('lmbsl')) {
+        subs_legacy = false;
+        settingsBtn.classList.remove('lmbsl');
+    } else {
+        subs_legacy = true;
+        settingsBtn.classList.add('lmbsl');
+    }
+    localStorage.setItem("subsLegacy", subs_legacy);
+    await changeSubs(subtitleId);
+}
+
+function startPressTimer() {
+    if (isPressing || hasTriggered) return;
+    isPressing = true;
+    mber = setTimeout(() => {
+        addrmMLcl();
+        hasTriggered = true;
+    }, 600);
+}
+
+function cancelPressTimer() {
+    clearTimeout(mber);
+    mber = null;
+    isPressing = false;
+    hasTriggered = false;
+}
+
+// Mouse events
 settingsBtn.addEventListener("mousedown", (e) => {
-    if (inputLock) return;
-    inputLock = true;
     e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-    clearInputLock();
+    startPressTimer();
 });
+
+settingsBtn.addEventListener("mouseup", cancelPressTimer);
+settingsBtn.addEventListener("mouseleave", cancelPressTimer);
+
+// Touch events
 settingsBtn.addEventListener("touchstart", (e) => {
-    if (inputLock) return;
-    inputLock = true;
     e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-    clearInputLock();
+    startPressTimer();
 }, { passive: false });
+
+settingsBtn.addEventListener("touchend", cancelPressTimer);
+settingsBtn.addEventListener("touchcancel", cancelPressTimer);
 
 
 /* Event listeners */
@@ -647,21 +677,6 @@ volumeBar.addEventListener('input', (e) => {
 });
 
 // Settings events
-settingsBtn.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-});
-settingsBtn.addEventListener("mouseup", () => {
-    clearTimeout(mber);
-});
-settingsBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-}, {passive: false});
-
-settingsBtn.addEventListener("touchend", () => {
-    clearTimeout(mber);
-});
 settingsBtn.addEventListener("click", (e) => {
     if (sttbtnpress) {
         e.preventDefault();
