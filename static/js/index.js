@@ -215,33 +215,27 @@ function openFileMenu(selectDir = false) {
         ...(selectDir && { webkitdirectory: true })
     });
     inp.onchange = () => {
-        if (inp.files.length && (selectDir || confirm(`Upload ${inp.files.length} item(s)?`))) {
-            uploadFiles(inp.files, selectDir);
-        }
+        if (inp.files.length && (selectDir || confirm(`Upload ${inp.files.length} item(s)?`))) uploadFiles(inp.files, selectDir);
     };
     inp.click();
 }
 
-function uploadFiles(fileList, isDir = false) {
+async function uploadFiles(files, isDir = false) {
     showLoader();
-    const files = Array.from(fileList);
-    const uploads = files.map(f => {
-        const path = isDir ? f.webkitRelativePath : f.name;
-        return fetch(encodeURIComponent(path), { method: 'PUT',body: f })
-        .then(r => { if (!r.ok) return Promise.reject(r.status); });
-    });
-    Promise.allSettled(uploads)
-        .then(results => {
-            const failed = results.filter(r => r.status === 'rejected').map(r => r.reason);
-            if (failed.length) {
-                const msgs = {
-                    403: 'You don’t have permission to do that',
-                    409: 'It already exists',
-                    507: 'Not enough free space'
-                };
-                alert(msgs[failed[0]] || 'Server error');
-            }
-        }).finally(() => location.reload());
+    for (const f of files) {
+        const path =  encodeURIComponent(isDir ? f.webkitRelativePath : f.name);
+        try {
+            const r = await fetch(path, { method: 'PUT', body: f });
+            if (!r.ok) throw r.status;
+        } catch (status) {
+            const msgs = {
+                403: 'You don’t have permission to do that',
+                409: 'It already exists',
+                507: 'Not enough free space'
+            };
+            alert(msgs[status] || 'Server error');
+        }
+    } location.reload();
 }
 
 function enableDragAndDropUpload(dropArea, selectDirectory = false) {
@@ -249,7 +243,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
     dropArea.addEventListener("drop", e => {
         e.preventDefault();
         const files = Array.from(e.dataTransfer.files);
-        if (files.length && confirm(`¿Upload ${files.length} file(s)?`)) {
+        if(files.length && confirm(`¿Upload ${files.length} item(s)?`)) {
             uploadFiles(files, selectDirectory);
         }
     });
