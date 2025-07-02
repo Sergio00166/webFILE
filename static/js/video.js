@@ -779,10 +779,10 @@ function handleShorthand(e) {
             video.currentTime -= 2;
             chgtime_kdb_helper("back");
             break;
-        case "arrowup":
+        case "p":
             prev();
             break;
-        case "arrowdown":
+        case "n":
             next();
             break;
         case "l":
@@ -791,11 +791,11 @@ function handleShorthand(e) {
         case "m":
             toggleMuteUnmute();
             break;
-        case "+": 
+        case "arrowup": 
             video.volume = Math.min(video.volume + 0.02, 1);
             volume_kbd_helper();
             break;
-        case "-":
+        case "arrowdown":
             video.volume = Math.max(video.volume - 0.02, 0);
             volume_kbd_helper();
             break;

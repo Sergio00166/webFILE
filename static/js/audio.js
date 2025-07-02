@@ -45,19 +45,16 @@ function updateLoopButton() {
     if (loopMode === 0) {
         audio.loop = false;
         loopBtn.style.opacity = 0.4;
-        loopBtn.title = 'No Loop';
         loopImg.style.display = "block";
         loopSameImg.style.display = "none";
     } else if (loopMode === 1) {
         audio.loop = false;
         loopBtn.style.opacity = 1;
-        loopBtn.title = 'Loop Playlist';
         loopImg.style.display = "block";
         loopSameImg.style.display = "none";
     } else {
         audio.loop = true;
         loopBtn.style.opacity = 1;
-        loopBtn.title = 'Repeat One';
         loopImg.style.display = "none";
         loopSameImg.style.display = "block";
     }
@@ -316,10 +313,10 @@ document.addEventListener('keydown', (e) => {
         case 'l':
             cycleLoop();
             break;
-        case "arrowdown":
+        case "n":
             next();
             break;
-        case "arrowup":
+        case "p":
             prev();
             break;
         case "arrowright":
@@ -328,11 +325,11 @@ document.addEventListener('keydown', (e) => {
         case "arrowleft":
             audio.currentTime -= 2;
             break;
-        case "+":
+        case "arrowup":
             audio.volume = Math.min(audio.volume + 0.02, 1);
             volume_kbd_helper();
             break;
-        case "-":
+        case "arrowdown":
             audio.volume = Math.max(audio.volume - 0.02, 0);
             volume_kbd_helper();
             break;

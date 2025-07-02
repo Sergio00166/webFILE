@@ -28,19 +28,19 @@
           <span id="total-time">00:00</span>
         </div>
         <div class="playback-controls">
-          <button class="nav-btn prev" onclick="prev()" title="Previous track">
+          <button class="nav-btn prev" onclick="prev()" title="(P)rev">
             <img src="{{ url_for('index', static='svg/audioplayer/round-double-alt-arrow-left.svg') }}">
           </button>
-          <button id="play-pause" class="control-btn" onclick="toggleMainState()" title="Play/Pause">
+          <button id="play-pause" class="control-btn" onclick="toggleMainState()" title="Play">
             <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: block;">
             <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
           </button>
-          <button class="nav-btn next" onclick="next()" title="Next track">
+          <button class="nav-btn next" onclick="next()" title="(N)ext">
             <img src="{{ url_for('index', static='svg/audioplayer/round-double-alt-arrow-right.svg') }}" />
           </button>
         </div>
         <div class="volume-control">
-          <div class="vol-icons" tabindex="0" onclick="toggleMuteUnmute()">
+          <div class="vol-icons" tabindex="0" onclick="toggleMuteUnmute()" title="(M)ute">
             <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: block;">
             <img src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" style="display: none;">
             <img src="{{ url_for('index', static='svg/videoplayer/volume-low-outline.svg') }}" style="display: none;">
@@ -51,14 +51,14 @@
         </div>
       </div>
       <div class="extra-controls">
-        <button id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle">
+        <button id="shuffle-btn" onclick="toggleShuffle()" title="(S)huffle">
             <img src="{{ url_for('index', static='svg/audioplayer/shuffle-tracks-button.svg') }}">
         </button>
-        <button id="loop-btn" onclick="cycleLoop()" title="Loop Mode">
+        <button id="loop-btn" onclick="cycleLoop()" title="(L)oop">
             <img src="{{ url_for('index', static='svg/audioplayer/repeat-button.svg') }}" style="display: block;">
             <img src="{{ url_for('index', static='svg/audioplayer/repeat-single-button.svg') }}" style="display: none;">
         </button>
-        <button id="speed-btn" title="Playback Speed">1x</button>
+        <button id="speed-btn" title="Speed">1x</button>
         <button onclick="download()" title="Download">
             <img src="{{ url_for('index', static='svg/audioplayer/down-arrow.svg') }}" />
         </button>
