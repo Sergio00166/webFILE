@@ -307,7 +307,7 @@ document.addEventListener('keydown', function (e) {
         case 'x': moveFiles(); break;
         case 'p': pasteFiles(); break;
         case 'u': openFileMenu(); break;
-        case 'i': openFileMenu(true); break;
+        case 'f': openFileMenu(true); break;
         case 's': toggleSelectMode(); break;
         case 'n': renameFiles(); break;
         case 'r': executeDeletes(); break;
