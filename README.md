@@ -64,8 +64,9 @@ Configure via environment variables:
 | SHOW_DIRSIZE   | No       | False              | Display directory sizes.                        |
 | MAX_CACHE (MB) | No       | 256                | RAM limit for metadata/subtitle caching/process |
 
+
 ## File Listing API
-All directory listings (not recursive) return JSON when the client sends `Accept: application/json`.  
+When using the API (with the header `Accept: application/json`) the DIR contents will be returned as JSON.  
 Valid `type` values are defined in `app/file_types.json` and the internal `disk`, `directory`, `text` and `file`.
 
 **Example of response for /**  
@@ -112,7 +113,8 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 - `GET /path?sort=XY`  
   Sorts directory listing by `X` (n=name, s=size, d=date) and order `Y` (p=ascending, d=descending).  
 
-**NOTE**: The API ignores the `?sort` and `?raw` is not necessary.    
+**NOTE**: When using the API (`Accept: application/json`) it ignores the `?sort`, and `?raw` is not necessary as it sends directly the file).    
+
 
 ## Other HTTP Methods
 The server internally uses some WebDAV methods to handle file and folder operations in a more standard way.   
