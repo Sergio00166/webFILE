@@ -43,17 +43,14 @@ updateVolumeIcon(audio.volume);
 
 function updateLoopButton() {
     if (loopMode === 0) {
-        audio.loop = false;
         loopBtn.style.opacity = 0.4;
         loopImg.style.display = "block";
         loopSameImg.style.display = "none";
     } else if (loopMode === 1) {
-        audio.loop = false;
         loopBtn.style.opacity = 1;
         loopImg.style.display = "block";
         loopSameImg.style.display = "none";
     } else {
-        audio.loop = true;
         loopBtn.style.opacity = 1;
         loopImg.style.display = "none";
         loopSameImg.style.display = "block";
