@@ -32,7 +32,7 @@ pre {
 button {
     flex: 1;
     padding: 10px;
-    background: linear-gradient(145deg, #1f2f3f, #4d5f75);
+    background: linear-gradient(145deg, #1f2f3f, #4d5f75, #1f2f3f);
     border: none;
     border-radius: 10px;
     color: #fff;
