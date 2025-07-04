@@ -8,10 +8,29 @@ const buttons = {
     ren: document.getElementById('renBtn'),
     invert: document.getElementById('invertBtn'),
 };
+const base = location.pathname.replace(/\/$/, '') || '/';
 
 const selected = new Map();
 let selectMode = true;
 toggleSelectMode();
+
+
+function copyFiles() {
+    storageOp('copy', getURLlist());
+}
+function moveFiles() {
+    storageOp('move', getURLlist());
+}
+function clearAllMvCp() {
+    ['copy', 'move'].forEach(function (k) { localStorage.removeItem(k); });
+}
+
+function encodePath(path) {
+    return path.split('/').map(encodeURIComponent).join('/');
+}
+function delay(ms) {
+    return new Promise(function (r) { setTimeout(r, ms); });
+}
 
 function showLoader() {
     var loader = document.getElementById('loader');
@@ -81,10 +100,6 @@ function enableDelegation() {
     });
 }
 
-function delay(ms) {
-    return new Promise(function (r) { setTimeout(r, ms); });
-}
-
 function downloadURL(url) {
     var a = document.createElement('a');
     a.href = url;
@@ -146,27 +161,15 @@ function getURLlist() {
         .filter(Boolean);
 }
 
-function copyFiles() {
-    storageOp('copy', getURLlist());
-}
-
-function moveFiles() {
-    storageOp('move', getURLlist());
-}
-
-function clearAllMvCp() {
-    ['copy', 'move'].forEach(function (k) { localStorage.removeItem(k); });
-}
-
 async function sendRequest(path, dest, method) {
     try {
-        var opts = { method: method };
-        if (dest) opts.headers = { Destination: decodeURIComponent(dest) };
-        var res = await fetch(path, opts);
+        const opts = { method };
+        if (dest) opts.headers = { Destination: dest };
+        const res = await fetch(path, opts);
         if (res.status !== 200) throw res.status;
         return true;
     } catch (status) {
-        var msgs = {
+        const msgs = {
             403: 'You don’t have permission to do that',
             404: 'That file/folder does not exist',
             409: 'It already exists',
@@ -184,7 +187,8 @@ async function renameFiles() {
         var name = decodeURIComponent(url.split('/').pop());
         var destName = prompt('New Name for ' + name);
         if (!destName) break;
-        var dest = url.substring(0, url.lastIndexOf('/')) + '/' + destName;
+        destName = encodeURIComponent(destName);
+        var dest = url.substring(0, url.lastIndexOf('/'))+'/'+destName;
         if (!await sendRequest(url, dest, 'MOVE')) break;
     }
     clearAllMvCp();
@@ -198,7 +202,6 @@ async function pasteFiles() {
     if (!toPaste.list) return;
     showLoader();
     await delay(250);
-    var base = location.pathname.replace(/\/$/, '') || '/';
     for (var i = 0; i < toPaste.list.length; i++) {
         var p = toPaste.list[i].replace(/\/$/, '');
         var dest = base + '/' + p.split('/').pop();
@@ -211,8 +214,9 @@ async function pasteFiles() {
 async function mkdir() {
     var name = prompt('Create dir');
     if (!name) return;
-    var base = location.pathname.replace(/\/$/, '');
-    if (await sendRequest(base + '/' + name, null, 'MKCOL')) location.reload();
+
+    name = encodeURIComponent(name);
+    if (await sendRequest(base+'/'+name, null, 'MKCOL')) location.reload();
 }
 
 function openFileMenu(selectDir) {
@@ -222,18 +226,39 @@ function openFileMenu(selectDir) {
     if (selectDir) inp.setAttribute('webkitdirectory', true);
 
     inp.onchange = function () {
-        if (inp.files.length && (selectDir || confirm('Upload ' + inp.files.length + ' item(s)?'))) {
+        if (inp.files.length && (selectDir || confirm('Upload '+inp.files.length+' item(s)?'))) {
             uploadFiles(inp.files, selectDir);
         }
     };
     inp.click();
 }
 
+async function createFolders(files) {
+    const dirs = new Set();
+
+    for (const f of files) {
+        const parts = f.webkitRelativePath.split('/');
+        for (let i = 1; i < parts.length; i++) {
+            const dirPath = parts.slice(0, i).join('/');
+            dirs.add(dirPath);
+        }
+    }
+    for (const dir of dirs) {
+        var path = base+"/"+encodePath(dir);
+        var r = await fetch(path, { method: 'MKCOL' });
+        if (!r.ok) throw r.status;
+    }
+}
+
 async function uploadFiles(files, isDir) {
     showLoader();
+    if (isDir) await createFolders(files);
+
     for (var i = 0; i < files.length; i++) {
         var f = files[i];
-        var path = encodeURIComponent(isDir ? f.webkitRelativePath : f.name);
+        var path = isDir ? f.webkitRelativePath : f.name;
+        path = base+"/"+encodePath(path);
+
         try {
             var r = await fetch(path, { method: 'PUT', body: f });
             if (!r.ok) throw r.status;
@@ -247,7 +272,7 @@ async function uploadFiles(files, isDir) {
             break;
         }
     }
-    location.reload();
+   location.reload();
 }
 
 function enableDragAndDropUpload(dropArea, selectDirectory) {
@@ -291,31 +316,44 @@ document.addEventListener('keydown', function (e) {
             e.preventDefault();
             moveFocus(-1);
             break;
-        case 'arrowright':
-            document.activeElement.click();
-            break;
-        case 'arrowleft': {
+        case 'enter':
+        case ' ':
             var active = document.activeElement;
-            var backdir = document.querySelector('.backdir');
-            if (selectMode) active.click();
-            else if (backdir) backdir.click();
+            if (active.classList.contains('filename')) {
+                e.preventDefault();
+                handleDivClick(active);
+            }
             break;
-        }
-        case 'a': invertSelection(); break;
-        case 'd': executeDownloads(); break;
-        case 'c': copyFiles(); break;
-        case 'x': moveFiles(); break;
-        case 'p': pasteFiles(); break;
-        case 'u': openFileMenu(); break;
-        case 'f': openFileMenu(true); break;
-        case 's': toggleSelectMode(); break;
-        case 'n': renameFiles(); break;
-        case 'r': executeDeletes(); break;
-        case 'm': mkdir(); break;
-        case 'l': var el = document.getElementById('login'); if (el) el.click(); break;
-        case '1': var el1 = document.getElementById('sortName'); if (el1) el1.click(); break;
-        case '2': var el2 = document.getElementById('sortSize'); if (el2) el2.click(); break;
-        case '3': var el3 = document.getElementById('sortDate'); if (el3) el3.click(); break;
+        case 'escape':
+            if (!selectMode) toggleSelectMode();
+            break;
+        case 's':
+            toggleSelectMode();
+            break;
+        case 'd':
+            if (!selectMode) break;
+            executeDeletes();
+            break;
+        case 'c':
+            if (!selectMode) break;
+            copyFiles();
+            break;
+        case 'v':
+            if (!selectMode) break;
+            pasteFiles();
+            break;
+        case 'm':
+            if (!selectMode) break;
+            moveFiles();
+            break;
+        case 'r':
+            if (!selectMode) break;
+            renameFiles();
+            break;
+        case 'n':
+            if (!selectMode) break;
+            mkdir();
+            break;
     }
 });
 
