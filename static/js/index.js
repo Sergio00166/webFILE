@@ -131,7 +131,7 @@ async function executeDeletes() {
     var msg = null;
     for (var div of selected.values()) {
         var res = await fetch(div.dataset.value, { method: 'DELETE' });
-        if (res.status !== 200 && res.status !== 204) {
+        if (!res.ok) {
             msg = res.status === 403 ? 'You dont have permission to do that' :
                   res.status === 404 ? 'That file/folder does not exist' :
                   'Something went wrong on the server.';
@@ -166,7 +166,7 @@ async function sendRequest(path, dest, method) {
         const opts = { method };
         if (dest) opts.headers = { Destination: dest };
         const res = await fetch(path, opts);
-        if (res.status !== 200) throw res.status;
+        if (!res.ok) throw res.status;
         return true;
     } catch (status) {
         const msgs = {

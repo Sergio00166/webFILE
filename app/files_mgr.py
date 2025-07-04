@@ -58,7 +58,7 @@ def handle_upload(path,ACL,root):
         if e.errno == 28:     return "Not enough Storage", 507
         else:                 return "Server Error",       500
     except Exception:         return "Server Error",       500
-    else:                     return "Successful",         200
+    else:                     return "Created",            201
 
 
 def mkdir(path, ACL, root):
@@ -78,7 +78,7 @@ def mkdir(path, ACL, root):
         if e.errno == 28:     return "Not enough Storage", 507
         else:                 return "Server Error",       500
     except Exception:         return "Server Error",       500
-    else:                     return "Successful",         200
+    else:                     return "Created",            201
 
 
 def delfile(path, ACL, root):
@@ -120,6 +120,6 @@ def mvcp_worker(ACL, path, destination, root, mv):
         if e.errno == 28:     return "Not enough Storage", 507
         else:                 return "Server Error",       500
     except Exception:         return "Server Error",       500
-    else:                     return "Successful",         200
+    else:                     return "Created",            201
 
 
