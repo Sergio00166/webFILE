@@ -316,44 +316,31 @@ document.addEventListener('keydown', function (e) {
             e.preventDefault();
             moveFocus(-1);
             break;
-        case 'enter':
-        case ' ':
+        case 'arrowright':
+            document.activeElement.click();
+            break;
+        case 'arrowleft': {
             var active = document.activeElement;
-            if (active.classList.contains('filename')) {
-                e.preventDefault();
-                handleDivClick(active);
-            }
+            var backdir = document.querySelector('.backdir');
+            if (selectMode) active.click();
+            else if (backdir) backdir.click();
             break;
-        case 'escape':
-            if (!selectMode) toggleSelectMode();
-            break;
-        case 's':
-            toggleSelectMode();
-            break;
-        case 'd':
-            if (!selectMode) break;
-            executeDeletes();
-            break;
-        case 'c':
-            if (!selectMode) break;
-            copyFiles();
-            break;
-        case 'v':
-            if (!selectMode) break;
-            pasteFiles();
-            break;
-        case 'm':
-            if (!selectMode) break;
-            moveFiles();
-            break;
-        case 'r':
-            if (!selectMode) break;
-            renameFiles();
-            break;
-        case 'n':
-            if (!selectMode) break;
-            mkdir();
-            break;
+        }
+        case 'a': invertSelection(); break;
+        case 'd': executeDownloads(); break;
+        case 'c': copyFiles(); break;
+        case 'x': moveFiles(); break;
+        case 'p': pasteFiles(); break;
+        case 'u': openFileMenu(); break;
+        case 'f': openFileMenu(true); break;
+        case 's': toggleSelectMode(); break;
+        case 'n': renameFiles(); break;
+        case 'r': executeDeletes(); break;
+        case 'm': mkdir(); break;
+        case 'l': var el = document.getElementById('login'); if (el) el.click(); break;
+        case '1': var el1 = document.getElementById('sortName'); if (el1) el1.click(); break;
+        case '2': var el2 = document.getElementById('sortSize'); if (el2) el2.click(); break;
+        case '3': var el3 = document.getElementById('sortDate'); if (el3) el3.click(); break;
     }
 });
 
