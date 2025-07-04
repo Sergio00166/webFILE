@@ -26,7 +26,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 - **Streaming**: direct streaming of media via browser-supported formats. No transcoding, no overhead.
 - **File operations**: upload, create, delete (controlled by write ACL).  
 - **Access control** via JSON-based ACLs (read/write/deny per resource).    
-Also it detects if a directory is an mount point and changes its type (and icon).  
+- Also it detects if a directory is an mount point and changes its type (and icon).  
 
 ## Multimedia Streaming
 - Leverages browser-native codecs only.  
@@ -103,7 +103,7 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 - `POST /path?login`  
   Accepts form data (`username`, `password`) to authenticate.  
 - `GET /path?logout`  
-  Logs out the current session and redirects to login.  
+  Logs out the current session and redirects to the current page.  
 - `PUT /dest`  
   Uploads a file.   
 - `GET /path?raw`  
