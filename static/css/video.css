@@ -125,13 +125,13 @@ body {
     width: 100%;
     z-index: 99;
     position: absolute;
-    transition: all 0.3s;
+    transition: opacity 0.3s;
     box-sizing: border-box;
     padding: 0.5rem 1rem 0.5rem 1rem;
     background: linear-gradient(to top, #000c -100%, transparent);
 }
 .controls.show {
-    opacity: 1 !important;
+    opacity: 1;
 }
 .duration {
     position: relative;
@@ -214,7 +214,7 @@ body {
     z-index: 9;
     opacity: 0;
     content: "";
-    width: 13px;
+    width: 14px;
     height: 14px;
     position: absolute;
     right: calc((-13px / 2));
@@ -363,7 +363,6 @@ select option {
 /* Define default values */
 .vol_val_st { font-size: 1.3rem; }
 .full,.contract { display: none; }
-.transition { transition: opacity 0.25s ease; }
 .video-container:not(.fullscreen) .full { display: block; }
 .video-container.fullscreen .contract { display: block; }
 

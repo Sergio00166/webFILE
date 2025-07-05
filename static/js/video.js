@@ -51,41 +51,43 @@ const video = document.querySelector("video");
 const videoContainer = document.querySelector(".video-container");
 const mode = document.getElementById("mode");
 
-var saved_speed = localStorage.getItem("videoSpeed");
-var volumeVal = localStorage.getItem("videoVolume");
-var currentMode = localStorage.getItem("videoMode");
-var muted = localStorage.getItem("videoMuted");
-var subs_legacy = localStorage.getItem("subsLegacy");
+var savedPlaybackSpeed = localStorage.getItem("videoSpeed");
+var savedVolumeValue = localStorage.getItem("videoVolume");
+var playbackMode = localStorage.getItem("videoMode");
+var savedMutedState = localStorage.getItem("videoMuted");
+var legacySubtitlesEnabled = localStorage.getItem("subsLegacy");
 
-var mber = undefined;
-var sttbtnpress = false;
+let pressTimer;
+let assSubtitleWorker;
+var settingsButtonPressed = false;
 let isCursorOnControls = false;
-let lastTouchTime = 0;
-let originalTime = 0;
-let touchFix;
-let ctrlsTimeout;
-let voltimeTimeout;
-let touchTimeout;
-let cursorTimeout;
-var subtitleId = 0;
-let ass_worker;
-let fixTouchHover = false;
+let isPressing = false;
+let pressHasTriggered = false;
+let previousVideoTime = 0;
+let touchInteractionActive;
+let controlsHideTimeout;
+let volumeHideTimeout;
+let touchActionTimeout;
+let cursorHideTimeout;
+let selectedSubtitleIndex = 0;
+let lastTouchTimestamp = 0;
+let touchHoverActive = false;
 
 
 /* Inicialitate everything */
 
-if (volumeVal === null) volumeVal = 1;
-volumeVal = parseFloat(volumeVal);
-video.volume = volumeVal;
+if (savedVolumeValue === null) savedVolumeValue = 1;
+savedVolumeValue = parseFloat(savedVolumeValue);
+video.volume = savedVolumeValue;
 
-if (subs_legacy != null) {
-    if (subs_legacy == "true") {
-        subs_legacy = true;
+if (legacySubtitlesEnabled != null) {
+    if (legacySubtitlesEnabled == "true") {
+        legacySubtitlesEnabled = true;
         settingsBtn.classList.add('lmbsl');
-    } else subs_legacy = false;
-} else subs_legacy = false;
+    } else legacySubtitlesEnabled = false;
+} else legacySubtitlesEnabled = false;
 
-if (muted != null) video.muted = (muted == "true")
+if (savedMutedState != null) video.muted = (savedMutedState == "true")
 else video.muted = false;
 
 handleVideoIcon();
@@ -93,27 +95,27 @@ handleVideoIcon();
 for (var i = 0; i < subtitleSelect.options.length; i++) {
     if (subtitleSelect.options[i].text ===
         localStorage.getItem("videoSubs")) {
-        subtitleId = i;  break;
+        selectedSubtitleIndex = i;  break;
     }
 }
-subtitleSelect.selectedIndex = subtitleId;
-subtitleId = subtitleId - 1;
-changeSubs(subtitleId);
+subtitleSelect.selectedIndex = selectedSubtitleIndex;
+selectedSubtitleIndex = selectedSubtitleIndex - 1;
+changeSubs(selectedSubtitleIndex);
 
-if (saved_speed != null) {
-    video.playbackRate = parseFloat(saved_speed);
+if (savedPlaybackSpeed != null) {
+    video.playbackRate = parseFloat(savedPlaybackSpeed);
     for (let i = 0; i < speedSelect.options.length; i++) {
-        if (speedSelect.options[i].value === saved_speed) {
+        if (speedSelect.options[i].value === savedPlaybackSpeed) {
             speedSelect.selectedIndex = i;
             break;
         }
     }
 } else speedSelect.selectedIndex = 3;
 
-if (currentMode != null) {
-    currentMode = parseInt(currentMode);
-    mode.innerHTML = ["1", "»", "&orarr;"][currentMode] || "1";
-} else currentMode = 0;
+if (playbackMode != null) {
+    playbackMode = parseInt(playbackMode);
+    mode.innerHTML = ["1", "»", "&orarr;"][playbackMode] || "1";
+} else playbackMode = 0;
 
 window.addEventListener('pageshow', () => {
     volumeBar.value = video.volume;
@@ -172,15 +174,15 @@ function webvtt_subs(url) {
 async function changeSubs(value) {
     var existingTrack = video.querySelector('track[kind="subtitles"]');
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    if (ass_worker) ass_worker.destroy();
+    if (assSubtitleWorker) assSubtitleWorker.destroy();
     if (existingTrack) {
         existingTrack.track.mode = 'disabled';
         existingTrack.remove();
     }
     if (value > -1) {
         url = window.location.pathname + "?subs=" + value;
-        if (subs_legacy) webvtt_subs(url + "legacy");
-        else ass_worker = await create_ass_worker(url);
+        if (legacySubtitlesEnabled) webvtt_subs(url + "legacy");
+        else assSubtitleWorker = await create_ass_worker(url);
     }
 }
 
@@ -215,9 +217,9 @@ function prev() { prevLink.click(); }
 
 function chMode() {
     const modes = ["1", "»", "&orarr;"];
-    currentMode = (currentMode + 1) % 3;
-    mode.innerHTML = modes[currentMode];
-    localStorage.setItem("videoMode", currentMode);
+    playbackMode = (playbackMode + 1) % 3;
+    mode.innerHTML = modes[playbackMode];
+    localStorage.setItem("videoMode", playbackMode);
 }
 
 function toggleMainState() {
@@ -225,7 +227,7 @@ function toggleMainState() {
 }
 
 function handleSettingMenu() {
-    if (sttbtnpress) sttbtnpress = false;
+    if (settingsButtonPressed) settingsButtonPressed = false;
     else {
         settingMenu.classList.toggle("show");
         isCursorOnControls = !isCursorOnControls;
@@ -239,16 +241,16 @@ function saveVolume() {
 }
 
 function handleVideoEnded() {
-    if (currentMode === 1) next();
-    else if (currentMode === 2) play();
+    if (playbackMode === 1) next();
+    else if (playbackMode === 2) play();
     else  pause();
 }
 
 function showCursor() {
-    clearTimeout(cursorTimeout);
+    clearTimeout(cursorHideTimeout);
     document.body.style.cursor = 'auto';
     if (!video.paused) {
-        cursorTimeout = setTimeout(function() {
+        cursorHideTimeout = setTimeout(function() {
             if (!video.paused) document.body.style.cursor = 'none';
         }, mouse_ctrl_delay);
     }
@@ -306,8 +308,8 @@ function toggleMuteUnmute() {
 }
 
 function hideControls(delay) {
-    clearTimeout(ctrlsTimeout);
-    ctrlsTimeout = setTimeout(() => {
+    clearTimeout(controlsHideTimeout);
+    controlsHideTimeout = setTimeout(() => {
         if (!video.paused) {
             if (isCursorOnControls) return;
             controls.classList.remove("show");
@@ -501,11 +503,11 @@ function loadTracks() {
 
 function changeTrack(selectedIndex) {
     if (!isNaN(selectedIndex)) {
-        originalTime = video.currentTime;
+        previousVideoTime = video.currentTime;
         for (let i = 0; i < audioTracks.length; i++) {
             audioTracks[i].enabled = (i === selectedIndex);
         }
-        video.currentTime = originalTime;
+        video.currentTime = previousVideoTime;
     }
 }
 
@@ -527,11 +529,11 @@ function split_timeline_chapters() {
 
 function double_touch(e) {
     e.preventDefault();
-    clearTimeout(touchTimeout);
-    if (touchFix){ touchFix = false; return; }
+    clearTimeout(touchActionTimeout);
+    if (touchInteractionActive){ touchInteractionActive = false; return; }
 
     const now = Date.now();
-    const touchInterval = now - lastTouchTime;
+    const touchInterval = now - lastTouchTimestamp;
     const divRect = touchBox.getBoundingClientRect();
 
     if (touchInterval < doubleTouch_delay) {
@@ -550,23 +552,59 @@ function double_touch(e) {
         controls.classList.add("show");
         hideControls(timechange_delay);
 
-    } else touchTimeout = setTimeout(toggleMainState, animation_st_delay);
-    lastTouchTime = now;
+    } else touchActionTimeout = setTimeout(toggleMainState, animation_st_delay);
+    lastTouchTimestamp = now;
 }
 
+
+// Legacy subtitle toggle
 
 async function addrmMLcl() {
-    sttbtnpress = true;
+    settingsButtonPressed = true;
     if (settingsBtn.classList.contains('lmbsl')) {
-        subs_legacy = false;
+        legacySubtitlesEnabled = false;
         settingsBtn.classList.remove('lmbsl');
     } else {
-        subs_legacy = true;
+        legacySubtitlesEnabled = true;
         settingsBtn.classList.add('lmbsl');
     }
-    localStorage.setItem("subsLegacy", subs_legacy);
-    await changeSubs(subtitleId);
+    localStorage.setItem("subsLegacy", legacySubtitlesEnabled);
+    await changeSubs(selectedSubtitleIndex);
 }
+
+function startPressTimer() {
+    if (isPressing || pressHasTriggered) return;
+    isPressing = true;
+    pressTimer = setTimeout(() => {
+        addrmMLcl();
+        pressHasTriggered = true;
+    }, 600);
+}
+
+function cancelPressTimer() {
+    clearTimeout(pressTimer);
+    pressTimer = null;
+    isPressing = false;
+    pressHasTriggered = false;
+}
+
+// Mouse events
+settingsBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    startPressTimer();
+});
+
+settingsBtn.addEventListener("mouseup", cancelPressTimer);
+settingsBtn.addEventListener("mouseleave", cancelPressTimer);
+
+// Touch events
+settingsBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    startPressTimer();
+}, { passive: false });
+
+settingsBtn.addEventListener("touchend", cancelPressTimer);
+settingsBtn.addEventListener("touchcancel", cancelPressTimer);
 
 
 /* Event listeners */
@@ -587,7 +625,7 @@ video.addEventListener("playing", () => {
 
 // Video container events
 videoContainer.addEventListener("mouseleave", () => {
-    clearTimeout(cursorTimeout);
+    clearTimeout(cursorHideTimeout);
     document.body.style.cursor = 'auto';
     hideControls(50);
 });
@@ -610,7 +648,7 @@ videoContainer.addEventListener("fullscreenchange", () => {
 });
 
 videoContainer.addEventListener('touchmove', () => {
-    touchFix = true;
+    touchInteractionActive = true;
     controls.classList.add("show");
     hideControls(touch_ctrl_delay);
 }, { passive: false });
@@ -626,45 +664,30 @@ controls.addEventListener("click", () => {
 
 // Volume events
 volume.addEventListener("mouseenter", () => {
-    clearTimeout(voltimeTimeout);
+    clearTimeout(volumeHideTimeout);
     if (!video.muted) timeContainer.style.display = "none";
     video.muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
 });
 volume.addEventListener("mouseleave", () => {
-    clearTimeout(voltimeTimeout);
+    clearTimeout(volumeHideTimeout);
     volumeBar.classList.remove("show");
-    voltimeTimeout = setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
+    volumeHideTimeout = setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
 });
 volumeBar.addEventListener('input', (e) => {
     handleVolume(e);
 });
 
 // Settings events
-settingsBtn.addEventListener("mousedown", (e) => {
-    e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-});
-settingsBtn.addEventListener("mouseup", () => {
-    clearTimeout(mber);
-});
-settingsBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    mber = setTimeout(addrmMLcl, 600);
-}, {passive: false});
-
-settingsBtn.addEventListener("touchend", () => {
-    clearTimeout(mber);
-});
 settingsBtn.addEventListener("click", (e) => {
-    if (sttbtnpress) {
+    if (settingsButtonPressed) {
         e.preventDefault();
-        sttbtnpress = false;
+        settingsButtonPressed = false;
     } else handleSettingMenu();
 });
 settingsBtn.addEventListener("touchend", (e) => {
-    if (sttbtnpress) {
+    if (settingsButtonPressed) {
         e.preventDefault();
-        sttbtnpress = false;
+        settingsButtonPressed = false;
     } handleSettingMenu();
 });
 
@@ -677,13 +700,13 @@ audioTracksSelect.addEventListener('change', function() {
     handleSettingMenu();
 });
 subtitleSelect.addEventListener('change', async function() {
-    subtitleId = parseInt(this.value);
-    if (subtitleId == -1) localStorage.removeItem("videoSubs");
+    selectedSubtitleIndex = parseInt(this.value);
+    if (selectedSubtitleIndex == -1) localStorage.removeItem("videoSubs");
     else {
-        text = subtitleSelect.options[subtitleId + 1].text;
+        text = subtitleSelect.options[selectedSubtitleIndex + 1].text;
         localStorage.setItem("videoSubs", text);
     }
-    await changeSubs(subtitleId);
+    await changeSubs(selectedSubtitleIndex);
     handleSettingMenu();
 });
 speedSelect.addEventListener('change', function() {
@@ -720,13 +743,13 @@ duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+    touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
 );
 
-document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
+document.addEventListener('touchstart', () => { touchHoverActive = true; clearHover(); }, { passive: true });
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-duration.addEventListener('mousemove', e => { if (!fixTouchHover) showHover(e.clientX); });
-duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
+duration.addEventListener('mousemove', e => { if (!touchHoverActive) showHover(e.clientX); });
+duration.addEventListener('mouseleave', () => { touchHoverActive = false; clearHover(); });
 
 
 /* Keyboard events */
@@ -757,10 +780,10 @@ function handleShorthand(e) {
             video.currentTime -= 2;
             chgtime_kdb_helper("back");
             break;
-        case "arrowup":
+        case "p":
             prev();
             break;
-        case "arrowdown":
+        case "n":
             next();
             break;
         case "l":
@@ -769,11 +792,11 @@ function handleShorthand(e) {
         case "m":
             toggleMuteUnmute();
             break;
-        case "+": 
+        case "arrowup": 
             video.volume = Math.min(video.volume + 0.02, 1);
             volume_kbd_helper();
             break;
-        case "-":
+        case "arrowdown":
             video.volume = Math.max(video.volume - 0.02, 0);
             volume_kbd_helper();
             break;
@@ -796,13 +819,3 @@ function chgtime_kdb_helper(mode) {
     show_main_animation(mode);
 }
 
-// Hide the outline when click
-[s0, s1, s2].forEach((s) => {
-    s.addEventListener('pointerdown',()=>{
-        s.dataset.focus = 'true';
-    });
-    s.addEventListener('focus',()=>{
-        if (s.dataset.focus === 'true') s.blur();
-        delete s.dataset.focus;
-    });
-});

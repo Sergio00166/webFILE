@@ -1,30 +1,50 @@
 /* Code by Sergio00166 */
-
-function $(sel) { return document.querySelector(sel); }
-function $$(sel) { return Array.from(document.querySelectorAll(sel)); }
+/*
+All paths are (and must be) encoded by default, also the items dataset
+Except the Destination Header THAT MUST BE NOT ENCODED.
+*/
 
 const buttons = {
-    select: $('#selectBtn'),
-    del: $('#delBtn'),
-    copy: $('#copyBtn'),
-    move: $('#moveBtn'),
-    ren: $('#renBtn'),
-    invert: $('#invertBtn'),
+    select: document.getElementById('selectBtn'),
+    del: document.getElementById('delBtn'),
+    copy: document.getElementById('copyBtn'),
+    move: document.getElementById('moveBtn'),
+    ren: document.getElementById('renBtn'),
+    invert: document.getElementById('invertBtn'),
 };
+const base = location.pathname.replace(/\/$/, '') || '/';
+
 const selected = new Map();
-// Fix for Firefox enabling by itself the buttons
-// I will disable the buttons & set selectMode to false
 let selectMode = true;
 toggleSelectMode();
 
 
+function copyFiles() {
+    storageOp('copy', getURLlist());
+}
+function moveFiles() {
+    storageOp('move', getURLlist());
+}
+function clearAllMvCp() {
+    ['copy', 'move'].forEach(function (k) { localStorage.removeItem(k); });
+}
+
+function encodePath(path) {
+    return path.split('/').map(encodeURIComponent).join('/');
+}
+function delay(ms) {
+    return new Promise(function (r) { setTimeout(r, ms); });
+}
+
 function showLoader() {
-    $('#loader').style.display = '';
-    $('.list-group').style.display = 'none';
+    var loader = document.getElementById('loader');
+    if (loader) loader.style.display = '';
+    var list = document.getElementsByClassName('list-group');
+    if (list.length) list[0].style.display = 'none';
 }
 
 function changeURL(mode) {
-    const url = new URL(window.location.href);
+    var url = new URL(window.location.href);
     url.searchParams.set('sort', mode);
     history.replaceState({}, document.title, url);
     location.reload();
@@ -33,17 +53,21 @@ function changeURL(mode) {
 function toggleSelectMode() {
     selectMode = !selectMode;
     buttons.select.textContent = selectMode ? 'CANCEL' : 'SELECT';
-    Object.values(buttons).slice(1).forEach(btn => btn.disabled = !selectMode);
+    Object.keys(buttons).forEach(function (k) {
+        if (k !== 'select') buttons[k].disabled = !selectMode;
+    });
     if (!selectMode) deselectAll();
 }
 
 function deselectAll() {
-    selected.forEach((div, id) => div.classList.remove('selected'));
+    selected.forEach(function (div, id) {
+        div.classList.remove('selected');
+    });
     selected.clear();
 }
 
 function selectDiv(div) {
-    const id = div.id;
+    var id = div.id;
     if (selected.has(id)) {
         div.classList.remove('selected');
         selected.delete(id);
@@ -55,22 +79,24 @@ function selectDiv(div) {
 
 function handleDivClick(div) {
     if (selectMode) return selectDiv(div);
-    const url = div.dataset.value;
+    var url = div.dataset.value;
     if (!url) return;
-    div.hasAttribute('isdir') ?
-        location.href = url :
-        window.open(url, '_blank');
+    if (div.hasAttribute('isdir')) location.href = url;
+    else window.open(url, '_blank');
 }
 
 enableDelegation();
 
 function enableDelegation() {
-    const container = $('div.container');
-    container.addEventListener('click', e => {
-        const d = e.target.closest('.filename');
+    var container = document.querySelector('div.container');
+    if (!container) return;
+
+    container.addEventListener('click', function (e) {
+        var d = e.target.closest('.filename');
         if (d) handleDivClick(d);
     });
-    container.addEventListener('keydown', e => {
+
+    container.addEventListener('keydown', function (e) {
         if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.filename')) {
             e.preventDefault();
             handleDivClick(e.target.closest('.filename'));
@@ -78,45 +104,38 @@ function enableDelegation() {
     });
 }
 
-function delay(ms) {
-    return new Promise(r => setTimeout(r, ms));
-}
-
 function downloadURL(url) {
-    const a = document.createElement('a');
+    var a = document.createElement('a');
     a.href = url;
     a.download = '';
     a.style.display = 'none';
-    document.body.append(a);
+    document.body.appendChild(a);
     a.click();
     a.remove();
 }
 
 async function executeDownloads() {
     if (selectMode) {
-        for (const div of selected.values()) {
-            let url = div.dataset.value;
+        for (var div of selected.values()) {
+            var url = div.dataset.value;
             if (!url) continue;
-            suffix = div.hasAttribute('isdir') ? "?tar" : "?raw";
+            var suffix = div.hasAttribute('isdir') ? "?tar" : "?raw";
             downloadURL(url + suffix);
             await delay(100);
         }
-    } else {
-        let path = new URL(location.href).pathname;
-        downloadURL(path + '?tar');
-    }
+    } else downloadURL(base + '?tar');
 }
 
 async function executeDeletes() {
     if (!selectMode || !selected.size) return;
     if (!confirm('Are you sure to delete?')) return;
-    let msg = null;
-    for (const div of selected.values()) {
-        const res = await fetch(div.dataset.value, { method: 'DELETE' });
-        if (![200, 204].includes(res.status)) {
+    var msg = null;
+    for (var div of selected.values()) {
+        var res = await fetch(div.dataset.value, { method: 'DELETE' });
+        if (!res.ok) {
             msg = res.status === 403 ? 'You dont have permission to do that' :
-                res.status === 404 ? 'That file/folder does not exist' :
-                'Something went wrong on the server.';
+                  res.status === 404 ? 'That file/folder does not exist' :
+                  'Something went wrong on the server.';
         }
         await delay(100);
     }
@@ -126,37 +145,31 @@ async function executeDeletes() {
 
 function invertSelection() {
     if (!selectMode) return;
-    $$('.filename').forEach(div => selectDiv(div));
+    var elements = document.getElementsByClassName('filename');
+    for (var i = 0; i < elements.length; i++) {
+        selectDiv(elements[i]);
+    }
 }
 
 function storageOp(key, list) {
     if (selectMode) toggleSelectMode();
-    if (list?.length) localStorage.setItem(key, JSON.stringify(list));
+    if (list && list.length) localStorage.setItem(key, JSON.stringify(list));
 }
 
 function getURLlist() {
     return Array.from(selected.values())
-        .map(div => div.dataset.value).filter(Boolean);
-}
-
-function copyFiles() {
-    storageOp('copy', getURLlist());
-}
-
-function moveFiles() {
-    storageOp('move', getURLlist());
-}
-
-function clearAllMvCp() {
-    ['copy', 'move'].forEach(k => localStorage.removeItem(k));
+        .map(function (div) { return div.dataset.value; })
+        .filter(Boolean);
 }
 
 async function sendRequest(path, dest, method) {
     try {
         const opts = { method };
-        if (dest) opts.headers = { Destination: decodeURIComponent(dest) };
+        if (dest) opts.headers = { 
+            Destination: decodeURIComponent(dest)
+        };
         const res = await fetch(path, opts);
-        if (res.status !== 200) throw res.status;
+        if (!res.ok) throw res.status;
         return true;
     } catch (status) {
         const msgs = {
@@ -172,12 +185,13 @@ async function sendRequest(path, dest, method) {
 
 async function renameFiles() {
     if (!selectMode || !selected.size) return;
-    for (const item of getURLlist()) {
-        const url = item.replace(/\/$/, '');
-        const name = decodeURIComponent(url.split('/').pop());
-        const destName = prompt(`New Name for ${name}`);
+    for (var item of getURLlist()) {
+        var url = item.replace(/\/$/, '');
+        var name = decodeURIComponent(url.split('/').pop());
+        var destName = prompt('New Name for ' + name);
         if (!destName) break;
-        const dest = `${url.substring(0, url.lastIndexOf('/'))}/${destName}`;
+        destName = encodeURIComponent(destName);
+        var dest = url.substring(0, url.lastIndexOf('/'))+'/'+destName;
         if (!await sendRequest(url, dest, 'MOVE')) break;
     }
     clearAllMvCp();
@@ -185,90 +199,114 @@ async function renameFiles() {
 }
 
 async function pasteFiles() {
-    const cp = JSON.parse(localStorage.getItem('copy') || '[]');
-    const mv = JSON.parse(localStorage.getItem('move') || '[]');
-    const toPaste = cp.length ? { list: cp, mode: 'COPY' } : mv.length ? { list: mv, mode: 'MOVE' } : {};
+    var cp = JSON.parse(localStorage.getItem('copy') || '[]');
+    var mv = JSON.parse(localStorage.getItem('move') || '[]');
+    var toPaste = cp.length ? { list: cp, mode: 'COPY' } : mv.length ? { list: mv, mode: 'MOVE' } : {};
     if (!toPaste.list) return;
     showLoader();
     await delay(250);
-    const base = location.pathname.replace(/\/$/, '') || '/';
-    for (const p of toPaste.list) {
-        const path = p.replace(/\/$/, '');
-        const dest = `${base}/${path.split('/').pop()}`;
-        if (!await sendRequest(path, dest, toPaste.mode)) break;
+    for (var i = 0; i < toPaste.list.length; i++) {
+        var p = toPaste.list[i].replace(/\/$/, '');
+        var dest = base + '/' + p.split('/').pop();
+        if (!await sendRequest(p, dest, toPaste.mode)) break;
     }
     clearAllMvCp();
     location.reload();
 }
 
 async function mkdir() {
-    const name = prompt('Create dir');
+    var name = prompt('Create dir');
     if (!name) return;
-    const base = location.pathname.replace(/\/$/, '');
-    if (await sendRequest(`${base}/${name}`, null, 'MKCOL')) location.reload();
+    name = encodeURIComponent(name);
+    if (await sendRequest(base+'/'+name, null, 'MKCOL')) location.reload();
 }
 
-function openFileMenu(selectDir = false) {
-    const inp = Object.assign(document.createElement('input'), {
-        type: 'file',
-        multiple: !selectDir,
-        ...(selectDir && { webkitdirectory: true })
-    });
-    inp.onchange = () => {
-        if (inp.files.length && (selectDir || confirm(`Upload ${inp.files.length} item(s)?`))) uploadFiles(inp.files, selectDir);
+function openFileMenu(selectDir) {
+    var inp = document.createElement('input');
+    inp.type = 'file';
+    inp.multiple = !selectDir;
+    if (selectDir) inp.setAttribute('webkitdirectory', true);
+
+    inp.onchange = function () {
+        if (inp.files.length && (selectDir || confirm('Upload '+inp.files.length+' item(s)?'))) {
+            uploadFiles(inp.files, selectDir);
+        }
     };
     inp.click();
 }
 
-function uploadFiles(files, isDir = false) {
-    const fd = new FormData();
-    Array.from(files).forEach(f => fd.append('upload', f));
+async function createFolders(files) {
+    const dirs = new Set();
+
+    for (const f of files) {
+        const parts = f.webkitRelativePath.split('/');
+        for (let i = 1; i < parts.length; i++) {
+            const dirPath = parts.slice(0, i).join('/');
+            dirs.add(dirPath);
+        }
+    }
+    for (const dir of dirs) {
+        var path = base+"/"+encodePath(dir);
+        var r = await fetch(path, { method: 'MKCOL' });
+        if (!r.ok) throw r.status;
+    }
+}
+
+async function uploadFiles(files, isDir) {
     showLoader();
-    fetch(isDir ? '?updir' : '?upfile', { method: 'POST', body: fd })
-        .then(r => r.ok || Promise.reject(r.status))
-        .catch(status => {
-            const msgs = {
+    if (isDir) await createFolders(files);
+
+    for (var i = 0; i < files.length; i++) {
+        var f = files[i];
+        var path = isDir ? f.webkitRelativePath : f.name;
+        path = base+"/"+encodePath(path);
+
+        try {
+            var r = await fetch(path, { method: 'PUT', body: f });
+            if (!r.ok) throw r.status;
+        } catch (status) {
+            var msgs = {
                 403: 'You don’t have permission to do that',
                 409: 'It already exists',
                 507: 'Not enough free space'
             };
             alert(msgs[status] || 'Server error');
-        })
-        .finally(() => location.reload());
+            break;
+        }
+    }
+   location.reload();
 }
 
-function enableDragAndDropUpload(dropArea, selectDirectory = false) {
-    dropArea.addEventListener("dragover", e => e.preventDefault());
-    dropArea.addEventListener("drop", e => {
+function enableDragAndDropUpload(dropArea, selectDirectory) {
+    dropArea.addEventListener("dragover", function (e) { e.preventDefault(); });
+    dropArea.addEventListener("drop", function (e) {
         e.preventDefault();
-        const files = Array.from(e.dataTransfer.files);
-        if(files.length && confirm(`¿Subir ${files.length} archivo(s)?`)) {
+        var files = Array.prototype.slice.call(e.dataTransfer.files);
+        if (files.length && confirm('¿Upload ' + files.length + ' item(s)?')) {
             uploadFiles(files, selectDirectory);
         }
     });
 }
 enableDragAndDropUpload(document);
 
-/* Keyboard Shorthands */
-
 function moveFocus(direction) {
-    const container = $('.container');
-    const items = Array.from(container.children)
-        .filter(el => !el.classList.contains('backdir'));
-    if (items.length == 0) return;
-    const active = document.activeElement;
-    let index = items.indexOf(active);
+    var container = document.querySelector('.container');
+    var items = Array.prototype.filter.call(container.children, function (el) {
+        return !el.classList.contains('backdir');
+    });
+    if (items.length === 0) return;
+    var active = document.activeElement;
+    var index = items.indexOf(active);
     index = (index + direction + items.length) % items.length;
     items[index].focus();
 }
 
 function toggleMenu() {
-    const controls = $('#collapsibleControls');
-    controls.classList.toggle('open');
+    var controls = document.getElementById('collapsibleControls');
+    if (controls) controls.classList.toggle('open');
 }
 
-
-document.addEventListener('keydown', e => {
+document.addEventListener('keydown', function (e) {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
 
     switch (e.key.toLowerCase()) {
@@ -284,59 +322,27 @@ document.addEventListener('keydown', e => {
             document.activeElement.click();
             break;
         case 'arrowleft': {
-            const active = document.activeElement;
-            const backdir = $(".backdir");
+            var active = document.activeElement;
+            var backdir = document.querySelector('.backdir');
             if (selectMode) active.click();
             else if (backdir) backdir.click();
             break;
         }
-        case 'a':
-            invertSelection();
-            break;
-        case 'd':
-            executeDownloads();
-            break;
-        case 'c':
-            copyFiles();
-            break;
-        case 'x':
-            moveFiles();
-            break;
-        case 'p':
-            pasteFiles();
-            break;
-        case 'u':
-            openFileMenu();
-            break;
-        case 'i':
-            openFileMenu(true);
-            break;
-        case 's':
-            toggleSelectMode();
-            break;
-        case 'n':
-            renameFiles();
-            break;
-        case 'r':
-            executeDeletes();
-            break;
-        case 'm':
-            mkdir();
-            break;
-        case 'l':
-            $("#login").click();
-            break;
-        case '1':
-            $("#sortName").click();
-            break;
-        case '2':
-            $("#sortSize").click();
-            break;
-        case '3':
-            $("#sortDate").click();
-            break;
-        default:
-            break;
+        case 'a': invertSelection(); break;
+        case 'd': executeDownloads(); break;
+        case 'c': copyFiles(); break;
+        case 'x': moveFiles(); break;
+        case 'p': pasteFiles(); break;
+        case 'u': openFileMenu(); break;
+        case 'f': openFileMenu(true); break;
+        case 's': toggleSelectMode(); break;
+        case 'n': renameFiles(); break;
+        case 'r': executeDeletes(); break;
+        case 'm': mkdir(); break;
+        case 'l': var el = document.getElementById('login'); if (el) el.click(); break;
+        case '1': var el1 = document.getElementById('sortName'); if (el1) el1.click(); break;
+        case '2': var el2 = document.getElementById('sortSize'); if (el2) el2.click(); break;
+        case '3': var el3 = document.getElementById('sortDate'); if (el3) el3.click(); break;
     }
 });
 

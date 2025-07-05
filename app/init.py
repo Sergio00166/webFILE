@@ -2,9 +2,9 @@
 
 if __name__=="__main__": exit(0)
 
+from files_mgr import handle_upload, mkdir, delfile, move, copy
 from functions import load_userACL,safe_path
 from os import sep,getenv,urandom,makedirs
-from override import CustomFormDataParser
 from flask import redirect,request,Flask
 from send_file import send_file,send_dir
 from flask_sqlalchemy import SQLAlchemy
@@ -66,12 +66,4 @@ app.config['PERMANENT_SESSION_LIFETIME'] = 3600
 db = SQLAlchemy(app)
 app.config['SESSION_SQLALCHEMY'] = db
 Session(app)
-
-# Modify default behaviour
-app.request_class.\
-form_data_parser_class =\
-CustomFormDataParser
-
-# Get current parser object
-dps = app.request_class.form_data_parser_class
 

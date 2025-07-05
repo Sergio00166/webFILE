@@ -32,6 +32,7 @@ body {
 }
 img {
     pointer-events: none;
+    transition: filter 0.1s;
 }
 .player-header {
     display: flex;
@@ -235,7 +236,7 @@ img {
     cursor: pointer;
     font-size: 18px;
     color: #0a84ff;
-    transition: all 0.1s;
+    transition: color 0.2s;
     line-height: 1;
 }
 .control-btn {
@@ -247,7 +248,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.1s;
+    transition: background-color 0.2s;
 }
 .nav-btn {
     background: none;
@@ -352,7 +353,7 @@ img {
 /* Disable hover on touch devices */
 @media (hover: hover) {
     button:hover img {
-    filter: drop-shadow(0 0 2px white);
+        filter: drop-shadow(0 0 2px white);
     }
     .control-btn:hover {
         background: #def6;
@@ -361,3 +362,4 @@ img {
         color: #aad4ff;
     }
 }
+

@@ -43,21 +43,15 @@ updateVolumeIcon(audio.volume);
 
 function updateLoopButton() {
     if (loopMode === 0) {
-        audio.loop = false;
         loopBtn.style.opacity = 0.4;
-        loopBtn.title = 'No Loop';
         loopImg.style.display = "block";
         loopSameImg.style.display = "none";
     } else if (loopMode === 1) {
-        audio.loop = false;
         loopBtn.style.opacity = 1;
-        loopBtn.title = 'Loop Playlist';
         loopImg.style.display = "block";
         loopSameImg.style.display = "none";
     } else {
-        audio.loop = true;
         loopBtn.style.opacity = 1;
-        loopBtn.title = 'Repeat One';
         loopImg.style.display = "none";
         loopSameImg.style.display = "block";
     }
@@ -235,8 +229,10 @@ function showDuration(time) {
 // Time bar control funcs
 
 const getPct = clientX => {
-    const { x, width, height } = duration.getBoundingClientRect();
-    const pos = Math.min(Math.max(0, clientX - x), width);
+    const rect = duration.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const pos = Math.min(Math.max(0, clientX - rect.left), width);
     return { pct: pos / width, pos, height };
 };
 
@@ -274,14 +270,14 @@ function drag(handlerMove) {
 function touchDrag(handlerMove) {
     const end = () => document.removeEventListener('touchmove', handlerMove);
     document.addEventListener('touchmove', handlerMove, { passive: true });
-    document.addEventListener('touchend', end, { once: true, passive: true });
+    document.addEventListener('touchend', end, { once: true });
 }
 
 duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(eMove.touches[0]?.clientX).pct))
+    touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
 );
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
@@ -314,10 +310,10 @@ document.addEventListener('keydown', (e) => {
         case 'l':
             cycleLoop();
             break;
-        case "arrowdown":
+        case "n":
             next();
             break;
-        case "arrowup":
+        case "p":
             prev();
             break;
         case "arrowright":
@@ -326,11 +322,11 @@ document.addEventListener('keydown', (e) => {
         case "arrowleft":
             audio.currentTime -= 2;
             break;
-        case "+":
+        case "arrowup":
             audio.volume = Math.min(audio.volume + 0.02, 1);
             volume_kbd_helper();
             break;
-        case "-":
+        case "arrowdown":
             audio.volume = Math.max(audio.volume - 0.02, 0);
             volume_kbd_helper();
             break;

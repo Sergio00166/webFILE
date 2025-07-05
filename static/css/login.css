@@ -16,8 +16,9 @@ body {
     flex-direction: column;
     color: white;
     user-select: none;
-    transition: 0.2s;
     -webkit-tap-highlight-color: transparent;
+    /* For when the keyboard opens on mobile */
+    transition: 0.2s; 
 }
 #error {
     text-align: center;
@@ -46,14 +47,15 @@ form {
     flex-direction: column;
 }
 input {
-    padding: 20px;
-    border: none;
+    padding: 18px;
+    border: 2px solid transparent;
     border-radius: 10px;
     font-size: 1em;
     background-color: #333;
     color: white;
     outline: none;
     box-shadow: 4px 4px 24px #0006;
+    transition: border-color 0.3s, background-color 0.2s;
 }
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
@@ -64,9 +66,10 @@ input:-webkit-autofill:focus {
 }
 input:hover {
     background-color: #4a4a4a;
+    border: 2px solid #555;
 }
 button {
-    padding: 18px;
+    padding: 16px;
     border: none;
     border-radius: 10px;
     color: white;
@@ -74,19 +77,24 @@ button {
     font-size: 1em;
     font-weight: 600;
     box-shadow: 4px 4px 24px #0006;
+    transition: border-color 0.3s, background-color 0.2s;
 }
 .button-upload {
-  background-color: #0d6efd;
+    background-color: #1a73e8;
+    border: 2px solid transparent;
 }
 .button-upload:hover {
-  background-color: #0b4eb7;
+    background-color: #1558b0;
+    border: 2px solid #0f7eff;
 }
 .button-danger {
-  background-color: #ff2535;
-  margin-top: 12px;
+    background-color: #e53935;
+    border: 2px solid transparent;
+    margin-top: 12px;
 }
 .button-danger:hover {
-  background-color: #b81323;
+    background-color: #b71c1c;
+    border: 2px solid #ff2535;
 }
 
 @media (max-height: 600px) {
@@ -106,3 +114,4 @@ button {
         display: none;
     }
 }
+

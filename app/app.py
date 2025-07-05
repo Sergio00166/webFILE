@@ -4,13 +4,13 @@ from os.path import isfile
 from init import *
 
 
-@app.route('/<path:path>', methods=['GET','POST','DELETE','MKCOL','COPY','MOVE'])
+@app.route('/<path:path>', methods=['GET','POST','DELETE','MKCOL','COPY','MOVE','PUT'])
 def explorer(path):
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
         # User login/logout stuff
-        if "logout" in request.args:  return logout()
-        if "login"  in request.args:  return login(USERS)
+        if "logout" in request.args: return logout(useApi)
+        if "login"  in request.args: return login(USERS, useApi)
 
         # Paths must not end on slash
         if path.endswith("/"): path = path[:-1]
@@ -28,12 +28,9 @@ def explorer(path):
         if request.method.lower() == "mkcol":
             return mkdir(path,ACL,root)
 
-        if "upfile" in request.args:
-            return upfile(dps,path,ACL,root)
+        if request.method.lower() == "put":
+            return handle_upload(path,ACL,root)
         
-        if "updir" in request.args:
-            return updir(dps,path,ACL,root)
-
         # Send/stream files or directory listing
         return serveFiles_page(path,ACL,root,folder_size,useApi)
   
@@ -46,15 +43,8 @@ def index():
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
         # User login/logout stuff
-        if "logout" in request.args: return logout()
-        if "login"  in request.args: return login(USERS)
-
-        # Files management stuff for users
-        if "upfile" in request.args:
-            return upfile(dps,"",ACL,root)
-        
-        if "updir" in request.args:
-            return updir(dps,"",ACL,root)
+        if "logout" in request.args: return logout(useApi)
+        if "login"  in request.args: return login(USERS, useApi)
 
         # Check if static page is requested
         if "static" in request.args:
@@ -69,4 +59,5 @@ def index():
 
 
 if __name__=="__main__": app.run(host="127.0.0.1", port=8000, debug=False)
+
 
