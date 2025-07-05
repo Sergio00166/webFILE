@@ -9,8 +9,8 @@ def explorer(path):
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
         # User login/logout stuff
-        if "logout" in request.args:  return logout(useApi)
-        if "login"  in request.args:  return login(USERS,useApi)
+        if "logout" in request.args:  return logout()
+        if "login"  in request.args:  return login(USERS)
 
         # Paths must not end on slash
         if path.endswith("/"): path = path[:-1]
@@ -43,13 +43,18 @@ def index():
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
         # User login/logout stuff
-        if "logout" in request.args: return logout(useApi)
-        if "login"  in request.args: return login(USERS,useApi)
+        if "logout" in request.args: return logout()
+        if "login"  in request.args: return login(USERS)
+
+        # Files management stuff for users
+        if "upfile" in request.args:
+            return upfile("",ACL,root)
+        
+        if "updir" in request.args:
+            return updir("",ACL,root)
 
         # Check if static page is requested
         if "static" in request.args:
-            if request.method != "GET": 
-                return "Method Not Allowed", 405
             path = request.args["static"]
             path = safe_path(path,sroot)
             if not isfile(path): raise FileNotFoundError

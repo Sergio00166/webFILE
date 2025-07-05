@@ -14,9 +14,6 @@ autoload_webpage = "index" + webpage_file_ext
 
 
 def serveFiles_page(path, ACL, root, folder_size, useApi):
-    if request.method != "GET": 
-        return "Method Not Allowed", 405
- 
     validate_acl(path, ACL)
     path = safe_path(path, root)
     file_type = get_file_type(path)
@@ -80,7 +77,6 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
 
 
 def serveRoot_page(ACL, root, folder_size, useApi):
-    if request.method != "GET": return "Method Not Allowed", 405
     path = safe_path("/", root)  # Check if we can access it
     sort = request.args["sort"] if "sort" in request.args else ""
     if "tar" in request.args:
@@ -88,30 +84,24 @@ def serveRoot_page(ACL, root, folder_size, useApi):
     return directory(path, root, folder_size, sort, ACL, useApi)
 
 
-def login(USERS,useApi):
+def login(USERS):
     if request.method == "POST":
         user = request.form.get("username")
         password = request.form.get("password")
         hashed_password = sha256(password.encode()).hexdigest()
- 
         if USERS.get(user) == hashed_password:
             session["user"] = user
             return redirect_no_query()
-
-        elif useApi: return "Invalid Login", 401
-        else: return render_template("login.html", error="Invalid username or password.")
-
-    elif useApi: return "Method Not Allowed", 405
-    else: return render_template("login.html")
+        else:
+            return render_template("login.html", error="Invalid username or password.")
+    else:
+        return render_template("login.html")
 
 
-def logout(useApi):
-    if request.method != "GET": 
-        return "Method Not Allowed", 405
+def logout():
     try: session.pop("user")
-    except: return "Not logged in", 204
-    if not useApi: return redirect_no_query()
-
+    except: pass
+    return redirect_no_query()
 
 
 def error(e, error_file, useApi):
