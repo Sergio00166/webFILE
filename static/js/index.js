@@ -123,10 +123,7 @@ async function executeDownloads() {
             downloadURL(url + suffix);
             await delay(100);
         }
-    } else {
-        var path = new URL(location.href).pathname;
-        downloadURL(path + '?tar');
-    }
+    } else downloadURL(base + '?tar');
 }
 
 async function executeDeletes() {
