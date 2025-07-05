@@ -1,4 +1,8 @@
 /* Code by Sergio00166 */
+/*
+All paths are (and must be) encoded by default, also the items dataset
+Except the Destination Header THAT MUST BE NOT ENCODED.
+*/
 
 const buttons = {
     select: document.getElementById('selectBtn'),
