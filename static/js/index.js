@@ -164,6 +164,7 @@ function getURLlist() {
 async function sendRequest(path, dest, method) {
     try {
         const opts = { method };
+        dest = decodeUriComponent(dest);
         if (dest) opts.headers = { Destination: dest };
         const res = await fetch(path, opts);
         if (!res.ok) throw res.status;
