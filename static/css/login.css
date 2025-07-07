@@ -55,21 +55,14 @@ input {
     color: white;
     outline: none;
     box-shadow: 4px 4px 24px #0006;
-    transition: border-color 0.3s, background-color 0.2s;
+    transition: background-color 0.3s;
 }
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 86px 16px #111 inset;
+input:-webkit-autofill {
+    box-shadow: 0 0 0 2em #333 inset;
     -webkit-text-fill-color: #fff !important;
-    border: 2px solid #260;
-}
-input:hover {
-    background-color: #4a4a4a;
-    border: 2px solid #555;
 }
 button {
-    padding: 16px;
+    padding: 18px;
     border: none;
     border-radius: 10px;
     color: white;
@@ -77,25 +70,16 @@ button {
     font-size: 1em;
     font-weight: 600;
     box-shadow: 4px 4px 24px #0006;
-    transition: border-color 0.3s, background-color 0.2s;
+    transition: background 0.5s;
 }
 .button-upload {
-    background-color: #1a73e8;
-    border: 2px solid transparent;
-}
-.button-upload:hover {
-    background-color: #1558b0;
-    border: 2px solid #0f7eff;
+    background: #34a;
 }
 .button-danger {
-    background-color: #e53935;
-    border: 2px solid transparent;
+    background: #c32;
     margin-top: 12px;
 }
-.button-danger:hover {
-    background-color: #b71c1c;
-    border: 2px solid #ff2535;
-}
+
 
 @media (max-height: 600px) {
     .container {
@@ -112,6 +96,18 @@ button {
 @media (max-width: 120px) {
     .container {
         display: none;
+    }
+}
+
+@media (hover: hover) {
+    .button-upload:hover {
+        background: #445;
+    }
+    .button-danger:hover {
+        background: #544;
+    }
+    input:hover {
+        background-color: #444;
     }
 }
 

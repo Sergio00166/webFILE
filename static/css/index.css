@@ -87,10 +87,6 @@ h2 {
     margin-right: 10px;
     margin-left: 0.4rem;
 }
-.filename:hover {
-    background-color: #3b3b3b;
-    box-shadow: 0 2px 16px #000a;
-}
 .backdir {
     color: white;
     text-decoration: none;
@@ -99,9 +95,6 @@ h2 {
     display: flex;
     align-items: center;
     border-radius: 10px;
-}
-.backdir:hover {
-    background-color: #2e2e2e;
 }
 .controls {
     display: flex;
@@ -123,10 +116,6 @@ h2 {
 .selected {
     background-color: #aa0000;
 }
-.selected:hover {
-    background-color: #880000;
-}
-
 .load_container {
     inset: 0;
     height: 100vh;
@@ -246,6 +235,16 @@ h2 {
 @media (hover: hover) {
     button:not(:disabled):hover {
         background: #162636;
+    }
+    .selected:hover {
+        background-color: #880000;
+    }
+    .filename:hover {
+        background-color: #3b3b3b;
+        box-shadow: 0 2px 16px #000a;
+    }
+    .backdir:hover {
+        background-color: #2e2e2e;
     }
 }
 
