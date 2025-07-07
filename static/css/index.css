@@ -236,15 +236,5 @@ h2 {
     button:not(:disabled):hover {
         background: #162636;
     }
-    .selected:hover {
-        background-color: #880000;
-    }
-    .filename:hover {
-        background-color: #3b3b3b;
-        box-shadow: 0 2px 16px #000a;
-    }
-    .backdir:hover {
-        background-color: #2e2e2e;
-    }
 }
 
