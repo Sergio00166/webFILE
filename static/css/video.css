@@ -258,16 +258,16 @@ body {
     appearance: none;
 }
 #volume-bar::-webkit-slider-thumb {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     background: #007aff;
     -webkit-appearance: none;
     appearance: none;
 }
 #volume-bar::-moz-range-thumb {
-    width: 10px;
-    height: 10px;
+    width: 9px;
+    height: 9px;
     border-radius: 50%;
     background: #007aff;
 }
