@@ -10,13 +10,15 @@ body {
     font-family: 'Segoe UI', sans-serif;
     min-height: 100vh;
     min-height: 100dvh;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    color: white;
-    user-select: none;
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    word-break: break-all;
     /* For when the keyboard opens on mobile */
     transition: 0.2s; 
 }
