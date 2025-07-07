@@ -32,7 +32,7 @@ pre {
 button {
     flex: 1;
     padding: 10px;
-    background: linear-gradient(90deg, #2f3f4f, #3d4f65, #2f3f4f);
+    background: linear-gradient(90deg, #1f2f3f, #4d5f75, #1f2f3f);
     border: none;
     border-radius: 10px;
     color: #fff;
@@ -87,6 +87,10 @@ h2 {
     margin-right: 10px;
     margin-left: 0.4rem;
 }
+.filename:hover {
+    background-color: #3b3b3b;
+    box-shadow: 0 2px 16px #000a;
+}
 .backdir {
     color: white;
     text-decoration: none;
@@ -95,6 +99,9 @@ h2 {
     display: flex;
     align-items: center;
     border-radius: 10px;
+}
+.backdir:hover {
+    background-color: #2e2e2e;
 }
 .controls {
     display: flex;
@@ -116,6 +123,10 @@ h2 {
 .selected {
     background-color: #aa0000;
 }
+.selected:hover {
+    background-color: #880000;
+}
+
 .load_container {
     inset: 0;
     height: 100vh;
