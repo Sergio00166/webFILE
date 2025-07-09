@@ -81,7 +81,6 @@ button {
     margin-top: 12px;
 }
 
-
 @media (max-height: 600px) {
     .container {
         margin-bottom: 0;
@@ -103,10 +102,10 @@ button {
 
 @media (hover: hover) {
     .button-upload:hover {
-        background: #445;
+        background: #446;
     }
     .button-danger:hover {
-        background: #544;
+        background: #643;
     }
     input:hover {
         background-color: #444;
