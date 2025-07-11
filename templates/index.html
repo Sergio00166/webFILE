@@ -21,44 +21,42 @@
     <div class="list-group">
         <h2><pre>Index of&nbsp;{{ folder_path }}</pre></h2>
         <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
-        <div id="collapsibleControls">
-            <div class="controls">
-                <div class="ctrl_group">
-                    <div class="ctrl_flex">
-                        <button id="sortName" onclick="changeURL('{% if sort=='np' %}nd{% else %}np{% endif %}')">
-                            NAME{% if sort=="np" %}&nbsp;&uarr;{% elif sort=="nd" %}&nbsp;&darr;{% endif %}
-                        </button>
-                        <button id="sortSize" onclick="changeURL('{% if sort=='sp' %}sd{% else %}sp{% endif %}')">
-                            SIZE{% if sort=="sp" %}&nbsp;&uarr;{% elif sort=="sd" %}&nbsp;&darr;{% endif %}
-                        </button>
-                        <button id="sortDate" onclick="changeURL('{% if sort=='dp' %}dd{% else %}dp{% endif %}')">
-                            DATE{% if sort=="dp" %}&nbsp;&uarr;{% elif sort=="dd" %}&nbsp;&darr;{% endif %}
-                        </button>
-                    </div>
-                    <div class="ctrl_flex">
-                        <button id="selectBtn" onclick="toggleSelectMode()">SELECT</button>
-                        <button id="invertBtn" onclick="invertSelection()" disabled>*</button>
-                        <button onclick="executeDownloads()">DWNLD</button>
-                        {% if 'user' in session %}
-                            <button onclick='window.location.href="?logout"' id="login">LOGOUT</button>
-                        {% else %}
-                            <button onclick='window.location.href="?login"' id="login">LOGIN</button>
-                        {% endif %} 
-                    </div>
+        <div class="controls">
+            <div class="ctrl_group">
+                <div class="ctrl_flex">
+                    <button id="sortName" onclick="changeURL('{% if sort=='np' %}nd{% else %}np{% endif %}')" title="Sort by name (1)">
+                        NAME{% if sort=="np" %}&nbsp;&uarr;{% elif sort=="nd" %}&nbsp;&darr;{% endif %}
+                    </button>
+                    <button id="sortSize" onclick="changeURL('{% if sort=='sp' %}sd{% else %}sp{% endif %}')" title="Sort by size (2)">
+                        SIZE{% if sort=="sp" %}&nbsp;&uarr;{% elif sort=="sd" %}&nbsp;&darr;{% endif %}
+                    </button>
+                    <button id="sortDate" onclick="changeURL('{% if sort=='dp' %}dd{% else %}dp{% endif %}')" title="Sort by date (3)">
+                        DATE{% if sort=="dp" %}&nbsp;&uarr;{% elif sort=="dd" %}&nbsp;&darr;{% endif %}
+                    </button>
                 </div>
-                <div class="ctrl_group">
-                    <div class="ctrl_flex">
-                        <button onclick="mkdir()">MKDIR</button>
-                        <button onclick="openFileMenu()">UPFILE</button>
-                        <button onclick="openFileMenu(true)">UPDIR</button>
-                        <button onclick="pasteFiles()">PASTE</button>
-                    </div>
-                    <div class="ctrl_flex">
-                        <button id="copyBtn" onclick="copyFiles()" disabled>COPY</button>
-                        <button id="moveBtn" onclick="moveFiles()" disabled>MOVE</button>
-                        <button id="renBtn" onclick="renameFiles()" disabled>REN</button>
-                        <button id="delBtn" onclick="executeDeletes()" disabled>DEL</button>
-                    </div>
+                <div class="ctrl_flex">
+                    <button id="selectBtn" onclick="toggleSelectMode()" title="Toggle select mode (S)">SELECT</button>
+                    <button id="invertBtn" onclick="invertSelection()" disabled title="Select all (A)">*</button>
+                    <button onclick="executeDownloads()" title="Download selection(D)">DWNLD</button>
+                    {% if 'user' in session %}
+                        <button onclick='window.location.href="?logout"' id="login" title="Logout (L)">LOGOUT</button>
+                    {% else %}
+                        <button onclick='window.location.href="?login"' id="login" title="Login page (L)">LOGIN</button>
+                    {% endif %} 
+                </div>
+            </div>
+            <div class="ctrl_group">
+                <div class="ctrl_flex">
+                    <button onclick="mkdir()" title="Create directory (M)">MKDIR</button>
+                    <button onclick="openFileMenu()" title="Upload files (U)">UPFILE</button>
+                    <button onclick="openFileMenu(true)" title="Upload directory (F)">UPDIR</button>
+                    <button onclick="pasteFiles()" title="Paste files (P)">PASTE</button>
+                </div>
+                <div class="ctrl_flex">
+                    <button id="copyBtn" onclick="copyFiles()" disabled title="Copy selection (C)">COPY</button>
+                    <button id="moveBtn" onclick="moveFiles()" disabled title="Move selection (X)">MOVE</button>
+                    <button id="renBtn" onclick="renameFiles()" disabled title="Rename selection (N)">REN</button>
+                    <button id="delBtn" onclick="executeDeletes()" disabled title="Delete selection (R)">DEL</button>
                 </div>
             </div>
         </div>

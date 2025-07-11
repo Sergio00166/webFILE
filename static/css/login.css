@@ -10,13 +10,14 @@ body {
     font-family: 'Segoe UI', sans-serif;
     min-height: 100vh;
     min-height: 100dvh;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    color: white;
-    user-select: none;
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
     /* For when the keyboard opens on mobile */
     transition: 0.2s; 
 }
@@ -55,21 +56,14 @@ input {
     color: white;
     outline: none;
     box-shadow: 4px 4px 24px #0006;
-    transition: border-color 0.3s, background-color 0.2s;
+    transition: background-color 0.3s;
 }
-input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 86px 16px #111 inset;
+input:-webkit-autofill {
+    box-shadow: 0 0 0 2em #333 inset;
     -webkit-text-fill-color: #fff !important;
-    border: 2px solid #260;
-}
-input:hover {
-    background-color: #4a4a4a;
-    border: 2px solid #555;
 }
 button {
-    padding: 16px;
+    padding: 18px;
     border: none;
     border-radius: 10px;
     color: white;
@@ -77,24 +71,14 @@ button {
     font-size: 1em;
     font-weight: 600;
     box-shadow: 4px 4px 24px #0006;
-    transition: border-color 0.3s, background-color 0.2s;
+    transition: background 0.5s;
 }
 .button-upload {
-    background-color: #1a73e8;
-    border: 2px solid transparent;
-}
-.button-upload:hover {
-    background-color: #1558b0;
-    border: 2px solid #0f7eff;
+    background: #34a;
 }
 .button-danger {
-    background-color: #e53935;
-    border: 2px solid transparent;
+    background: #c32;
     margin-top: 12px;
-}
-.button-danger:hover {
-    background-color: #b71c1c;
-    border: 2px solid #ff2535;
 }
 
 @media (max-height: 600px) {
@@ -108,10 +92,23 @@ button {
         padding-top: 16px;
         padding-bottom: 20px;
     }
+    #error { word-break: break-all; }
 }
 @media (max-width: 120px) {
     .container {
         display: none;
+    }
+}
+
+@media (hover: hover) {
+    .button-upload:hover {
+        background: #446;
+    }
+    .button-danger:hover {
+        background: #643;
+    }
+    input:hover {
+        background-color: #444;
     }
 }
 
