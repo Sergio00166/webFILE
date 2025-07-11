@@ -302,7 +302,7 @@ function moveFocus(direction) {
 }
 
 function toggleMenu() {
-    var controls = document.getElementById('collapsibleControls');
+    var controls = document.querySelector('.controls');
     if (controls) controls.classList.toggle('open');
 }
 

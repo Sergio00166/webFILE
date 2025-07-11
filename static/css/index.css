@@ -208,8 +208,8 @@ h2 {
     .ctrl_group { flex-direction: column; }
     .menu-toggle { display: block; }
     button { padding: 0px; }
-    #collapsibleControls { display: none; }
-    #collapsibleControls.open { display: block; }
+    .controls { display: none; }
+    .controls.open { display: flex; }
 }
 @media (max-width: 650px) {
     .size { display: none; }
