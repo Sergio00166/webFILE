@@ -1,114 +1,466 @@
 /* Code by Sergio00166 */
 
-#fileInput { display: none; }
-.username { margin-bottom: 13px; }
-.password { margin-bottom: 18px; }
+/* Just to add a border to the subtitles */
+video::cue {
+    background: none !important;
+    line-height: 1.1 !important;
+    text-shadow: 0.07em 0.07em 0.05em black, -0.07em 0.07em 0.05em black,
+        0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
+        0.07em 0 0.05em black, -0.07em 0 0.05em black, 0 0.07em 0.05em black,
+        0 -0.07em 0.05em black !important;
+}
+/* Dont cut the bottom of the bottom subtitles */
+video::-webkit-media-text-track-display {
+    padding: 0.25em !important;
+}
+/* Dont fucking show native video controls */
+video::-webkit-media-controls { display: none !important; }
+video::-moz-media-controls    { display: none !important; }
 
+.video-box { position: relative; }
+canvas { position: absolute; }
+
+.video-container {
+    position: relative;
+    width: 90vw;
+    height: 90vh;
+    height: 90dvh;
+    color: white;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#touch-box {
+    position: absolute;
+    z-index: 9;
+    width: 100%;
+    height: 100%;
+}
+img {
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    filter: brightness(0) invert(1);
+}
+.round-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    color: white;
+    background: linear-gradient(145deg, #363a4360, #000e0f60);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    position: relative;
+    margin-right: 4px;
+    margin-left: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.lmbsl {
+    background: linear-gradient(120deg, #8f9f3050, #5f6f2a50);
+}
 body {
     margin: 0;
-    background-color: #111;
-    font-family: 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    min-height: 100dvh;
-    color: white;
+    font-family: sans-serif;
     display: flex;
-    justify-content: center;
     align-items: center;
-    flex-direction: column;
+    justify-content: center;
+    height: 100vh;
+    height: 100dvh;
+    background: black;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
-    /* For when the keyboard opens on mobile */
-    transition: 0.2s; 
 }
-#error {
-    text-align: center;
-    color: #f21;
-    margin-top: 0;
-    background: #3a3a3a;
-    padding: 10px;
-    padding-bottom: 12px;
-    border-radius: 8px;
-    max-width: 100%;
-}
-.container {
-    background-color: #222;
-    border-radius: 15px;
-    padding: 30px;
-    padding-top: 26px;
-    padding-bottom: 30px;
-    box-shadow: 0 0 24px #000;
-    display: flex;
-    flex-direction: column;
-    width: min(95%, 400px);
+.custom-loader {
+    width: 108px;
+    height: 108px;
+    border: 10px solid white;
+    border-bottom-color: transparent;
+    border-radius: 50%;
     box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    position: absolute;
+    transition: all 0.5s;
 }
-form {
-    display: flex;
-    flex-direction: column;
-}
-input {
-    padding: 18px;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    font-size: 1em;
-    background-color: #333;
-    color: white;
-    outline: none;
-    box-shadow: 4px 4px 24px #0006;
-    transition: background-color 0.3s;
-}
-input:-webkit-autofill {
-    box-shadow: 0 0 0 2em #333 inset;
-    -webkit-text-fill-color: #fff !important;
-}
-button {
-    padding: 18px;
-    border: none;
-    border-radius: 10px;
-    color: white;
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
+.main-state {
+    opacity: 0;
+    transform: scale(0);
+    height: 75px;
+    width: 75px;
+    position: absolute; 
     cursor: pointer;
-    font-size: 1em;
-    font-weight: 600;
-    box-shadow: 4px 4px 24px #0006;
-    transition: background 0.5s;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #363a4360, #1b242960);
+    transition: all 0.3s;
 }
-.button-upload {
-    background: #34a;
+.main-state img {
+    width: 67%;
+    height: 67%;
 }
-.button-danger {
-    background: #c32;
-    margin-top: 12px;
+.main-state.show {
+  opacity: 1;
+  transform: scale(1);
+}
+.controls {
+    bottom: 0;
+    opacity: 0;
+    width: 100%;
+    z-index: 99;
+    position: absolute;
+    transition: opacity 0.3s;
+    box-sizing: border-box;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    background: linear-gradient(to top, #000c -100%, transparent);
+}
+.controls.show {
+    opacity: 1;
+}
+.duration {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    width: calc((100% - 64px));
+    height: 8px;
+    background: #363a4360;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 0 2px #FFFA;
+}
+/* This weird shit is only to let the */
+/* user select easily the start and end */
+/* and also try to fix one bug */
+.duration::before {
+    position: absolute;
+    content: '';
+    height: 100%;
+    left: -10%;
+    width: 120%;
+    height: 150%;
+    top: -25%;
+}
+.chapter-container {
+    position: relative;
+    height: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+}
+.chapter {
+    position: absolute;
+    height: 100%;
+    width: 2px;
+    margin-left: -1px;
+    background-color: black;
+}
+.duration .buffer {
+    height: 100%;
+    position: absolute;
+    background-color: #ff6a0045;
+    width: 0;
+}
+.hover-time {
+    overflow: show;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    background: #fff6;
+    display: flex;
+    align-items: center;
+    width: 0;
+    border-radius: 5px;
+    z-index: -1;
+}
+.hover-time .hover-duration {
+    position: absolute;
+    width: max-content;
+    max-width: min(150px,40vw) !important;
+    background: linear-gradient(145deg, #363a4370, #1b242970);
+    padding: 0.3rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    visibility: hidden;
+    font-weight: bold;
+    text-align: center;
+    pointer-events: none;
+}
+.duration .current-time {
+    inset: 0;
+    width: 0;
+    height: 100%;
+    display: flex;
+    position: absolute;
+    background: #ff4a10c0;
+    align-items: center;
+    border-radius: 5px;
+}
+.current-time::before {
+    z-index: 9;
+    opacity: 0;
+    content: '';
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    right: calc((-13px / 2));
+    background: #ff6a00e0;
+    border-radius: 50%;
+    transition: all 0.2s;
+    transform: scale(0);
+}
+.duration:hover .current-time::before {
+    opacity: 1;
+    transform: scale(1);
+}
+.btn-controls {
+    padding-top: 1rem;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.time-container {
+    font-size: 13px;
+    padding-right: 8px;
+}
+.volume {
+    display: flex;
+    align-items: center;
+}
+.mute-unmute {
+    display: flex;
+    cursor: pointer;
+}
+#volume-bar {
+    height: 3px;
+    cursor: pointer;
+    border-radius: 2px;
+    visibility: hidden;
+    width: 0 !important;
+    background: #eee;
+    transition: all 0.1s;
+    -webkit-appearance: none;
+    appearance: none;
+}
+#volume-bar::-webkit-slider-thumb {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #007aff;
+    -webkit-appearance: none;
+    appearance: none;
+}
+#volume-bar::-moz-range-thumb {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #007aff;
+}
+#volume-bar.show {
+    width: 48px !important;
+    visibility: visible;
+    transform: scaleX(1);
+    margin-right: 16px;
+}
+.setting-menu {
+    opacity: 0;
+    visibility: hidden;
+    list-style: none;
+    padding-inline-start: 0;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    position: absolute;
+    bottom: 84px;
+    transition: all 0.2s;
+    background: linear-gradient(145deg, #363a4370, #1b242970);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    border-radius: 12px;
+    margin-left: -50px;
+}
+.setting-menu.show {
+    opacity: 1;
+    transform: scaleY(1);
+    visibility: visible;
+}
+.setting-menu li {
+    padding: 0.33rem 0.5rem;
+    margin: 0.25rem;
+    transition: all 0.2s;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+.setting-menu li:focus-within {
+    outline: auto;
+}
+.setting-menu li:nth-child(1)::before {
+    content: 'Subs';
+    color: #ffffff;
+    position: absolute;
+}
+.setting-menu li:nth-child(2)::before {
+    content: 'Tracks';
+    color: #ffffff;
+    position: absolute;
+}
+.setting-menu li:nth-child(3)::before {
+    content: 'Speed';
+    color: #ffffff;
+    position: absolute;
+}
+select {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none;
+    width: 100%;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 500;
+    width: 64px;
+    opacity: 0;
+    border: none;
+}
+select option {
+    background-color: #282828e6;
+    color: #eee;
+}
+.fullscreen {
+    position: absolute !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    background: black !important;
+    align-items: center !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+.side-controls {
+    display: flex;
+    align-items: center;
 }
 
-@media (max-height: 600px) {
-    .container {
-        margin-bottom: 0;
+/* Define default values */
+.vol_val_st { font-size: 1.3rem; }
+.full,.contract { display: none; }
+.video-container:not(.fullscreen) .full { display: block; }
+.video-container.fullscreen .contract { display: block; }
+
+
+/* RESPONSIVE (pain) ZONE */
+
+@media (max-width: 900px) {
+    .main-state {
+        height: 64px;
+        width: 64px;
+    }
+    .custom-loader {
+        height: 90px;
+        width: 90px;
     }
 }
-@media (max-width: 300px) {
-    .container {
-        padding: 10px;
-        padding-top: 16px;
-        padding-bottom: 20px;
+@media (max-width: 500px) {
+    .play-pause {
+        display: none;
     }
-    #error { word-break: break-all; }
 }
-@media (max-width: 120px) {
-    .container {
+@media (max-width: 450px) {
+    .time-container {
+        margin-bottom: 6px;
+    }
+    .volume {
+        display: none;
+    }
+    .btn-controls {
+        padding-top: 0.67rem;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .setting-menu {
+        bottom: 100px;
+    }
+}
+@media (max-width: 320px) {
+    .duration {
+        width: 90%;
+    }
+    #mode {
+        display: none;
+    }
+    .main-state {
+        height: 40px;
+        width: 40px;
+    }
+    .custom-loader {
+        height: 56px;
+        width: 56px;
+        border-width: 5px;
+    }
+    .vol_val_st { 
+        font-size: 1rem;
+    }
+}
+@media (max-width: 220px) {
+    .settings {
+        display: none;
+    }
+}
+@media (max-height: 320px) {
+    .btn-controls {
+        display: none;
+    }
+    .video-box, .main-state, .custom-loader {
+        margin-bottom: 8px !important;
+    }
+}
+@media (max-aspect-ratio: 1/1) {
+    .video-box, .main-state, .custom-loader {
+        margin-bottom: 30px;
+    }
+}
+@media (min-aspect-ratio: 1/1) and (max-height: 320px) {
+    .hover-time .hover-duration {
+        font-size: 0.5rem;
+    }
+}
+@media ((max-width: 160px) or (max-height: 160px)) {
+    .video-container {
         display: none;
     }
 }
 
+/* Disable hover on touch devices */
 @media (hover: hover) {
-    .button-upload:hover {
-        background: #446;
+    .setting-menu li:hover {
+        background: #6674;
     }
-    .button-danger:hover {
-        background: #643;
+    .round-button:hover {
+        background: #6675;
     }
-    input:hover {
-        background-color: #444;
+    .lmbsl:hover {
+        background: #6d65 !important;
     }
 }
 
