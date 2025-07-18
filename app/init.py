@@ -3,19 +3,16 @@
 if __name__=="__main__": exit(0)
 
 from files_mgr import handle_upload, mkdir, delfile, move, copy
-from functions import load_userACL,safe_path
 from os import sep,getenv,urandom,makedirs
-from flask import redirect,request,Flask
-from send_file import send_file,send_dir
 from flask_sqlalchemy import SQLAlchemy
+from os.path import abspath, isfile
 from secrets import token_hex
-from os.path import abspath
+from flask import Flask
 from actions import *
-from sys import path
 
 
 # Set the paths of templates and static
-parent_path = abspath(path[0]+sep+"..")+sep
+parent_path = abspath(pypath[0]+sep+"..")+sep
 templates = parent_path+"templates"
 sroot = parent_path+"static"
 

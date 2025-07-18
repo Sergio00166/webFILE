@@ -1,8 +1,8 @@
 # Code by Sergio00166
 
 from video import get_subtitles, get_chapters, get_info, check_ffmpeg_installed
-from flask import render_template, stream_template, redirect, request
-from os.path import join, relpath, pardir, abspath, isfile
+from flask import render_template, stream_template
+from os.path import pardir, isfile
 from urllib.parse import quote as encurl
 from send_file import send_file, send_dir
 from flask_session import Session
