@@ -20,12 +20,12 @@ templates = parent_path+"templates"
 sroot = parent_path+"static"
 
 # Get all the args from the Enviorment
-root        = getenv('SERVE_PATH'  ,None)
-error_file  = getenv('ERRLOG_FILE' ,None)
-users_file  = getenv('USERS_FILE'  ,None)
-acl_file    = getenv('ACL_FILE'    ,None)
-sessions_db = getenv('SESSIONS_DB' ,None)
-folder_size = getenv('SHOW_DIRSIZE',"FALSE").upper()=="TRUE"
+root        = getenv("SERVE_PATH"  ,None)
+error_file  = getenv("ERRLOG_FILE" ,None)
+users_file  = getenv("USERS_FILE"  ,None)
+acl_file    = getenv("ACL_FILE"    ,None)
+sessions_db = getenv("SESSIONS_DB" ,None)
+folder_size = getenv("SHOW_DIRSIZE","FALSE").upper()=="TRUE"
 # MAX_CACHE is inside video.py
 
 if root: root = abspath(root)
@@ -52,18 +52,18 @@ except Exception as e:
 
 # Initialize main flask app
 app = Flask(__name__,static_folder=None,template_folder=templates)
-app.secret_key = getenv('SECRET_KEY',urandom(24).hex())
+app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
 
 # Configure SQLite for session storage
-app.config['SESSION_TYPE'] = 'sqlalchemy'
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{sessions_db}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_USE_SIGNER'] = True
-app.config['PERMANENT_SESSION_LIFETIME'] = 3600
+app.config["SESSION_TYPE"] = "sqlalchemy"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{sessions_db}"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_USE_SIGNER"] = True
+app.config["PERMANENT_SESSION_LIFETIME"] = 3600
 
 # Initialize database and session
 db = SQLAlchemy(app)
-app.config['SESSION_SQLALCHEMY'] = db
+app.config["SESSION_SQLALCHEMY"] = db
 Session(app)
 

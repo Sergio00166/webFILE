@@ -4,7 +4,7 @@ from os.path import isfile
 from init import *
 
 
-@app.route('/<path:path>', methods=['GET','POST','DELETE','MKCOL','COPY','MOVE','PUT'])
+@app.route("/<path:path>", methods=["GET","POST","DELETE","MKCOL","COPY","MOVE","PUT"])
 def explorer(path):
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
@@ -38,7 +38,7 @@ def explorer(path):
 
 
 
-@app.route('/', methods=['GET','POST'])
+@app.route("/", methods=["GET","POST"])
 def index():
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
