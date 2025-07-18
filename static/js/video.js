@@ -172,7 +172,7 @@ function webvtt_subs(url) {
 }
 
 async function changeSubs(value) {
-    var existingTrack = video.querySelector('track[kind='subtitles']');
+    var existingTrack = video.querySelector('track[kind="subtitles"]');
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     if (assSubtitleWorker) assSubtitleWorker.destroy();
     if (existingTrack) {
