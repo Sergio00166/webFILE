@@ -447,13 +447,9 @@ select {
 
 /* Disable hover on touch devices */
 @media (hover: hover) {
-    .setting-menu li:hover {
-        background: #eee5;
+    .setting-menu li:hover, .round-button:hover {
+        background: #aaa6;
         box-shadow: 0 0 4px black;
-    }
-    .round-button:hover {
-        background: #eee5;
-        box-shadow: 0 0 4px 1px black;
     }
     .lmbsl:hover {
         background: #6d65 !important;
