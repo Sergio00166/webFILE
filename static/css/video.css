@@ -50,7 +50,6 @@ img {
     height: 40px;
     border-radius: 50%;
     color: white;
-    background: linear-gradient(145deg, #363a4360, #000e0f60);
     border: none;
     display: flex;
     align-items: center;
@@ -63,7 +62,7 @@ img {
     flex-shrink: 0;
 }
 .lmbsl {
-    background: linear-gradient(120deg, #8f9f3050, #5f6f2a50);
+    background: #8f9f3050 !important;
 }
 body {
     margin: 0;
@@ -108,8 +107,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(145deg, #363a4360, #1b242960);
     transition: all 0.3s;
+    background: linear-gradient(145deg, #363a4360, #1b242960);
 }
 .main-state img {
     width: 67%;
@@ -142,7 +141,6 @@ body {
     background: #363a4360;
     cursor: pointer;
     border-radius: 4px;
-    box-shadow: 0 0 2px #FFFA;
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
@@ -169,12 +167,6 @@ body {
     margin-left: -1px;
     background-color: black;
 }
-.duration .buffer {
-    height: 100%;
-    position: absolute;
-    background-color: #ff6a0045;
-    width: 0;
-}
 .hover-time {
     overflow: show;
     height: 100%;
@@ -191,7 +183,6 @@ body {
     position: absolute;
     width: max-content;
     max-width: min(150px,40vw) !important;
-    background: linear-gradient(145deg, #363a4370, #1b242970);
     padding: 0.3rem;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -200,13 +191,13 @@ body {
     text-align: center;
     pointer-events: none;
 }
-.duration .current-time {
+.current-time {
     inset: 0;
     width: 0;
     height: 100%;
     display: flex;
     position: absolute;
-    background: #ff4a10c0;
+    background: #ff4a10;
     align-items: center;
     border-radius: 5px;
 }
@@ -218,7 +209,7 @@ body {
     height: 14px;
     position: absolute;
     right: calc((-13px / 2));
-    background: #ff6a00e0;
+    background: #ff6a00;
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
@@ -287,7 +278,6 @@ body {
     position: absolute;
     bottom: 84px;
     transition: all 0.2s;
-    background: linear-gradient(145deg, #363a4370, #1b242970);
     transform: scaleY(0);
     transform-origin: bottom;
     border-radius: 12px;
@@ -306,42 +296,39 @@ body {
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
+    color: white;
 }
-.setting-menu li:focus-within {
+.setting-menu li:nth-child(-n+3):focus-within {
     outline: auto;
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
-    color: #ffffff;
     position: absolute;
 }
 .setting-menu li:nth-child(2)::before {
     content: "Tracks";
-    color: #ffffff;
     position: absolute;
 }
 .setting-menu li:nth-child(3)::before {
     content: "Speed";
-    color: #ffffff;
     position: absolute;
 }
 select {
+    position: relative;
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: none;
-    width: 100%;
     text-align: center;
     font-size: 1rem;
     font-weight: 500;
-    width: 64px;
+    width: 70px;
     opacity: 0;
     border: none;
 }
 select option {
-    background-color: #282828e6;
-    color: #eee;
+    background: #363a43;
+    color: white;
 }
 .fullscreen {
     position: absolute !important;
@@ -358,6 +345,14 @@ select option {
 .side-controls {
     display: flex;
     align-items: center;
+}
+.round-button, .setting-menu, .hover-duration {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+.duration, .round-button, .setting-menu, .hover-duration {
+    background: linear-gradient(145deg, #363a4360, #1b242960);
+    box-shadow: 0 0 2px #FFFA;
 }
 
 /* Define default values */
@@ -453,13 +448,12 @@ select option {
 
 /* Disable hover on touch devices */
 @media (hover: hover) {
-    .setting-menu li:hover {
-        background: #6674;
-    }
-    .round-button:hover {
-        background: #6675;
+    .setting-menu li:hover, .round-button:hover {
+        background: #aaa6;
+        box-shadow: 0 0 4px black;
     }
     .lmbsl:hover {
         background: #6d65 !important;
     }
 }
+

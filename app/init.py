@@ -3,29 +3,26 @@
 if __name__=="__main__": exit(0)
 
 from files_mgr import handle_upload, mkdir, delfile, move, copy
-from functions import load_userACL,safe_path
 from os import sep,getenv,urandom,makedirs
-from flask import redirect,request,Flask
-from send_file import send_file,send_dir
 from flask_sqlalchemy import SQLAlchemy
+from os.path import abspath, isfile
 from secrets import token_hex
-from os.path import abspath
+from flask import Flask
 from actions import *
-from sys import path
 
 
 # Set the paths of templates and static
-parent_path = abspath(path[0]+sep+"..")+sep
+parent_path = abspath(pypath[0]+sep+"..")+sep
 templates = parent_path+"templates"
 sroot = parent_path+"static"
 
 # Get all the args from the Enviorment
-root        = getenv('SERVE_PATH'  ,None)
-error_file  = getenv('ERRLOG_FILE' ,None)
-users_file  = getenv('USERS_FILE'  ,None)
-acl_file    = getenv('ACL_FILE'    ,None)
-sessions_db = getenv('SESSIONS_DB' ,None)
-folder_size = getenv('SHOW_DIRSIZE',"FALSE").upper()=="TRUE"
+root        = getenv("SERVE_PATH"  ,None)
+error_file  = getenv("ERRLOG_FILE" ,None)
+users_file  = getenv("USERS_FILE"  ,None)
+acl_file    = getenv("ACL_FILE"    ,None)
+sessions_db = getenv("SESSIONS_DB" ,None)
+folder_size = getenv("SHOW_DIRSIZE","FALSE").upper()=="TRUE"
 # MAX_CACHE is inside video.py
 
 if root: root = abspath(root)
@@ -52,18 +49,18 @@ except Exception as e:
 
 # Initialize main flask app
 app = Flask(__name__,static_folder=None,template_folder=templates)
-app.secret_key = getenv('SECRET_KEY',urandom(24).hex())
+app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
 
 # Configure SQLite for session storage
-app.config['SESSION_TYPE'] = 'sqlalchemy'
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{sessions_db}"
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SESSION_PERMANENT'] = False
-app.config['SESSION_USE_SIGNER'] = True
-app.config['PERMANENT_SESSION_LIFETIME'] = 3600
+app.config["SESSION_TYPE"] = "sqlalchemy"
+app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{sessions_db}"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_USE_SIGNER"] = True
+app.config["PERMANENT_SESSION_LIFETIME"] = 3600
 
 # Initialize database and session
 db = SQLAlchemy(app)
-app.config['SESSION_SQLALCHEMY'] = db
+app.config["SESSION_SQLALCHEMY"] = db
 Session(app)
 

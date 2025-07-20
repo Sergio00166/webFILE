@@ -3,10 +3,10 @@
 const audio = document.getElementById('audio');
 const iconPlay = document.querySelector('#play-pause img:first-child');
 const iconPause = document.querySelector('#play-pause img:last-child');
-const duration = document.querySelector(".duration");
-const currentTime = document.querySelector(".current-time");
-const hoverTime = document.querySelector(".hover-time");
-const hoverDuration = document.querySelector(".hover-duration");
+const duration = document.querySelector('.duration');
+const currentTime = document.querySelector('.current-time');
+const hoverTime = document.querySelector('.hover-time');
+const hoverDuration = document.querySelector('.hover-duration');
 const currentTimeElem = document.getElementById('current-time');
 const totalTimeElem = document.getElementById('total-time');
 const volumeBar = document.getElementById('volume-bar');
@@ -44,16 +44,16 @@ updateVolumeIcon(audio.volume);
 function updateLoopButton() {
     if (loopMode === 0) {
         loopBtn.style.opacity = 0.4;
-        loopImg.style.display = "block";
-        loopSameImg.style.display = "none";
+        loopImg.style.display = 'block';
+        loopSameImg.style.display = 'none';
     } else if (loopMode === 1) {
         loopBtn.style.opacity = 1;
-        loopImg.style.display = "block";
-        loopSameImg.style.display = "none";
+        loopImg.style.display = 'block';
+        loopSameImg.style.display = 'none';
     } else {
         loopBtn.style.opacity = 1;
-        loopImg.style.display = "none";
-        loopSameImg.style.display = "block";
+        loopImg.style.display = 'none';
+        loopSameImg.style.display = 'block';
     }
     localStorage.setItem('audioLoopMode', loopMode);
 }
@@ -101,7 +101,7 @@ function formatTime(sec) {
 }
 
 function updateSeekBar() {
-    currentTime.style.width = (audio.currentTime / audio.duration) * 100 + "%";
+    currentTime.style.width = (audio.currentTime / audio.duration) * 100 + '%';
     currentTimeElem.textContent = formatTime(audio.currentTime);
 }
 
@@ -155,8 +155,8 @@ function play() {
 function toggleMainState() {
     audio.paused ? play() : pause();
 }
-audio.addEventListener("play", play);
-audio.addEventListener("pause", pause);
+audio.addEventListener('play', play);
+audio.addEventListener('pause', pause);
 
 
 function toggleMuteUnmute() {
@@ -310,23 +310,23 @@ document.addEventListener('keydown', (e) => {
         case 'l':
             cycleLoop();
             break;
-        case "n":
+        case 'n':
             next();
             break;
-        case "p":
+        case 'p':
             prev();
             break;
-        case "arrowright":
+        case 'arrowright':
             audio.currentTime += 2;
             break;
-        case "arrowleft":
+        case 'arrowleft':
             audio.currentTime -= 2;
             break;
-        case "arrowup":
+        case 'arrowup':
             audio.volume = Math.min(audio.volume + 0.02, 1);
             volume_kbd_helper();
             break;
-        case "arrowdown":
+        case 'arrowdown':
             audio.volume = Math.max(audio.volume - 0.02, 0);
             volume_kbd_helper();
             break;

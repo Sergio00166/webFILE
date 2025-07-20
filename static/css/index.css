@@ -149,7 +149,7 @@ h2 {
     margin-bottom: 2rem;
 }
 .load_container .progress-bar::before {
-    content: "";
+    content: '';
     position: absolute;
     height: 100%;
     width: 30%;

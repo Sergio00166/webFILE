@@ -11,7 +11,7 @@ body {
     justify-content: center;
     background-color: black;
     color: #eee;
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -71,7 +71,7 @@ img {
 /* and also try to fix one bug */
 .duration::before {
     position: absolute;
-    content: "";
+    content: '';
     height: 100%;
     left: -10%;
     width: 120%;
@@ -110,7 +110,7 @@ img {
 .current-time::before {
     z-index: 9;
     opacity: 0;
-    content: "";
+    content: '';
     width: 14px;
     height: 14px;
     position: absolute;

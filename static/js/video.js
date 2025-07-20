@@ -6,56 +6,56 @@ const timechange_delay = 750;
 const doubleTouch_delay = 400;
 const animation_st_delay = 400;
 
-const volume = document.querySelector(".volume");
-const currentTime = document.querySelector(".current-time");
-const duration = document.querySelector(".duration");
-const buffer = document.querySelector(".buffer");
-const totalDuration = document.querySelector(".total-duration");
-const timeContainer = document.querySelector(".time-container");
-const currentDuration = document.querySelector(".current-duration");
-const controls = document.querySelector(".controls");
-const volumeBar = document.getElementById("volume-bar");
-const mainState = document.querySelector(".main-state");
-const hoverTime = document.querySelector(".hover-time");
-const hoverDuration = document.querySelector(".hover-duration");
-const settingMenu = document.querySelector(".setting-menu");
-const settingsBtn = document.getElementById("settings");
-const menuButtons = document.querySelectorAll(".setting-menu li");
-const loader = document.querySelector(".custom-loader");
+const volume = document.querySelector('.volume');
+const currentTime = document.querySelector('.current-time');
+const duration = document.querySelector('.duration');
+const buffer = document.querySelector('.buffer');
+const totalDuration = document.querySelector('.total-duration');
+const timeContainer = document.querySelector('.time-container');
+const currentDuration = document.querySelector('.current-duration');
+const controls = document.querySelector('.controls');
+const volumeBar = document.getElementById('volume-bar');
+const mainState = document.querySelector('.main-state');
+const hoverTime = document.querySelector('.hover-time');
+const hoverDuration = document.querySelector('.hover-duration');
+const settingMenu = document.querySelector('.setting-menu');
+const settingsBtn = document.getElementById('settings');
+const menuButtons = document.querySelectorAll('.setting-menu li');
+const loader = document.querySelector('.custom-loader');
 const subtitleSelect = document.getElementById('s0');
 const audioTracksSelect = document.getElementById('s1');
 const speedSelect = document.getElementById('s2');
-const sh_mute = document.querySelector(".volume img:nth-child(1)");
-const sh_unmute = document.querySelector(".volume img:nth-child(2)");
-const sh_pause = document.querySelector(".play-pause img:nth-child(1)");
-const sh_play = document.querySelector(".play-pause img:nth-child(2)");
-const sh_play_st = document.querySelector(".main-state img:nth-child(1)");
-const sh_volume_st = document.querySelector(".vol_val_st");
-const sh_pause_st = document.querySelector(".main-state img:nth-child(2)");
-const sh_mute_st = document.querySelector(".main-state img:nth-child(3)");
-const sh_unmute_st = document.querySelector(".main-state img:nth-child(4)");
-const sh_fordward_st = document.querySelector(".main-state img:nth-child(5)");
-const sh_back_st = document.querySelector(".main-state img:nth-child(6)");
-const sh_fulla = document.querySelector(".volume img:nth-child(2)");
-const sh_lowa = document.querySelector(".volume img:nth-child(4)");
-const sh_meda = document.querySelector(".volume img:nth-child(3)");
-const sh_noa = document.querySelector(".volume img:nth-child(5)");
-const liD = document.getElementById("liD");
-const download_video = document.getElementById("download_video");
-const download_subs = document.getElementById("download_subs");
-const prevLink = document.getElementById("prev");
-const nextLink = document.getElementById("next");
-const canvas = document.querySelector("canvas");
-const touchBox = document.getElementById("touch-box");
-const video = document.querySelector("video");
-const videoContainer = document.querySelector(".video-container");
-const mode = document.getElementById("mode");
+const sh_mute = document.querySelector('.volume img:nth-child(1)');
+const sh_unmute = document.querySelector('.volume img:nth-child(2)');
+const sh_pause = document.querySelector('.play-pause img:nth-child(1)');
+const sh_play = document.querySelector('.play-pause img:nth-child(2)');
+const sh_play_st = document.querySelector('.main-state img:nth-child(1)');
+const sh_volume_st = document.querySelector('.vol_val_st');
+const sh_pause_st = document.querySelector('.main-state img:nth-child(2)');
+const sh_mute_st = document.querySelector('.main-state img:nth-child(3)');
+const sh_unmute_st = document.querySelector('.main-state img:nth-child(4)');
+const sh_fordward_st = document.querySelector('.main-state img:nth-child(5)');
+const sh_back_st = document.querySelector('.main-state img:nth-child(6)');
+const sh_fulla = document.querySelector('.volume img:nth-child(2)');
+const sh_lowa = document.querySelector('.volume img:nth-child(4)');
+const sh_meda = document.querySelector('.volume img:nth-child(3)');
+const sh_noa = document.querySelector('.volume img:nth-child(5)');
+const liD = document.getElementById('liD');
+const download_video = document.getElementById('download_video');
+const download_subs = document.getElementById('download_subs');
+const prevLink = document.getElementById('prev');
+const nextLink = document.getElementById('next');
+const canvas = document.querySelector('canvas');
+const touchBox = document.getElementById('touch-box');
+const video = document.querySelector('video');
+const videoContainer = document.querySelector('.video-container');
+const mode = document.getElementById('mode');
 
-var savedPlaybackSpeed = localStorage.getItem("videoSpeed");
-var savedVolumeValue = localStorage.getItem("videoVolume");
-var playbackMode = localStorage.getItem("videoMode");
-var savedMutedState = localStorage.getItem("videoMuted");
-var legacySubtitlesEnabled = localStorage.getItem("subsLegacy");
+var savedPlaybackSpeed = localStorage.getItem('videoSpeed');
+var savedVolumeValue = localStorage.getItem('videoVolume');
+var playbackMode = localStorage.getItem('videoMode');
+var savedMutedState = localStorage.getItem('videoMuted');
+var legacySubtitlesEnabled = localStorage.getItem('subsLegacy');
 
 let pressTimer;
 let assSubtitleWorker;
@@ -81,20 +81,20 @@ savedVolumeValue = parseFloat(savedVolumeValue);
 video.volume = savedVolumeValue;
 
 if (legacySubtitlesEnabled != null) {
-    if (legacySubtitlesEnabled == "true") {
+    if (legacySubtitlesEnabled == 'true') {
         legacySubtitlesEnabled = true;
         settingsBtn.classList.add('lmbsl');
     } else legacySubtitlesEnabled = false;
 } else legacySubtitlesEnabled = false;
 
-if (savedMutedState != null) video.muted = (savedMutedState == "true")
+if (savedMutedState != null) video.muted = (savedMutedState == 'true')
 else video.muted = false;
 
 handleVideoIcon();
 
 for (var i = 0; i < subtitleSelect.options.length; i++) {
     if (subtitleSelect.options[i].text ===
-        localStorage.getItem("videoSubs")) {
+        localStorage.getItem('videoSubs')) {
         selectedSubtitleIndex = i;  break;
     }
 }
@@ -114,7 +114,7 @@ if (savedPlaybackSpeed != null) {
 
 if (playbackMode != null) {
     playbackMode = parseInt(playbackMode);
-    mode.innerHTML = ["1", "»", "&orarr;"][playbackMode] || "1";
+    mode.innerHTML = ['1', '»', '&orarr;'][playbackMode] || '1';
 } else playbackMode = 0;
 
 window.addEventListener('pageshow', () => {
@@ -140,7 +140,7 @@ window.addEventListener('pageshow', () => {
 async function create_ass_worker(url) {
     const response = await fetch(url);
     if (!response.ok) {
-        alert("Cannot load subtitle [normal mode]");
+        alert('Cannot load subtitle [normal mode]');
         return;
     }
     return new JASSUB({
@@ -150,7 +150,7 @@ async function create_ass_worker(url) {
         workerUrl: '/?static=jassub/worker.js',
         wasmUrl: '/?static=jassub/worker.wasm',
         useLocalFonts: true,
-        fallbackFont: "liberation sans",
+        fallbackFont: 'liberation sans',
         availableFonts: {
             'liberation sans': '/?static=jassub/default.woff2'
         }
@@ -163,12 +163,12 @@ function webvtt_subs(url) {
     track.src = url;
     track.default = true;
     track.onerror = ()=>{
-        alert("Cannot load subtitle [legacy mode]");
+        alert('Cannot load subtitle [legacy mode]');
     }
     video.appendChild(track);
     track.mode = 'showing';
     // Firefox you are a joke
-    video.textTracks[0].mode = "showing";
+    video.textTracks[0].mode = 'showing';
 }
 
 async function changeSubs(value) {
@@ -180,8 +180,8 @@ async function changeSubs(value) {
         existingTrack.remove();
     }
     if (value > -1) {
-        url = window.location.pathname + "?subs=" + value;
-        if (legacySubtitlesEnabled) webvtt_subs(url + "legacy");
+        url = window.location.pathname + '?subs=' + value;
+        if (legacySubtitlesEnabled) webvtt_subs(url + 'legacy');
         else assSubtitleWorker = await create_ass_worker(url);
     }
 }
@@ -192,8 +192,8 @@ function fix_aspect_ratio() {
     } else {
         if (video.videoWidth < video.videoHeight) {
             var vCont = videoContainer.style;
-            vCont.marginTop = "0 !important";
-            vCont.paddingBottom = "0 !important";
+            vCont.marginTop = '0 !important';
+            vCont.paddingBottom = '0 !important';
         }
         scaleVideo();
     }
@@ -205,8 +205,8 @@ function scaleVideo() {
     const vw = video.videoWidth;
     const vh = video.videoHeight;
     const scale = Math.min(cw / vw, ch / vh);
-    video.style.width = (vw * scale) + "px";
-    video.style.height = (vh * scale) + "px";
+    video.style.width = (vw * scale) + 'px';
+    video.style.height = (vh * scale) + 'px';
 }
 
 
@@ -216,10 +216,10 @@ function next() { nextLink.click(); }
 function prev() { prevLink.click(); }
 
 function chMode() {
-    const modes = ["1", "»", "&orarr;"];
+    const modes = ['1', '»', '&orarr;'];
     playbackMode = (playbackMode + 1) % 3;
     mode.innerHTML = modes[playbackMode];
-    localStorage.setItem("videoMode", playbackMode);
+    localStorage.setItem('videoMode', playbackMode);
 }
 
 function toggleMainState() {
@@ -229,13 +229,13 @@ function toggleMainState() {
 function handleSettingMenu() {
     if (settingsButtonPressed) settingsButtonPressed = false;
     else {
-        settingMenu.classList.toggle("show");
+        settingMenu.classList.toggle('show');
         isCursorOnControls = !isCursorOnControls;
     }
 }
 
 function saveVolume() {
-    localStorage.setItem("videoVolume", 
+    localStorage.setItem('videoVolume', 
         video.volume.toString()
     );
 }
@@ -260,22 +260,22 @@ function play() {
     video.play().catch(()=>{});
     sh_pause.style.display = 'none';
     sh_play.style.display = 'block';
-    show_main_animation("play");
+    show_main_animation('play');
     hideControls(mouse_ctrl_delay);
 }
 
 function pause() {
     video.pause();
-    controls.classList.add("show");
-    show_main_animation("pause");
+    controls.classList.add('show');
+    show_main_animation('pause');
     sh_pause.style.display = 'block';
     sh_play.style.display = 'none';
     handleVideoIcon();
-    if (video.ended) currentTime.style.width = 100 + "%";
+    if (video.ended) currentTime.style.width = 100 + '%';
 }
 
 function handleProgressBar() {
-    currentTime.style.width = (video.currentTime / video.duration) * 100 + "%";
+    currentTime.style.width = (video.currentTime / video.duration) * 100 + '%';
     currentDuration.innerHTML = showDuration(video.currentTime);
 }
 
@@ -294,17 +294,17 @@ function formatter(number) {
 }
 
 function toggleMuteUnmute() {
-    volumeBar.classList.remove("show");
+    volumeBar.classList.remove('show');
     video.muted = !video.muted;
     if (video.muted) {
         handleVideoIcon();
-        show_main_animation("mute");
+        show_main_animation('mute');
     } else {
         handleVideoIcon();
-        show_main_animation("unmute");
+        show_main_animation('unmute');
     }
-    timeContainer.style.display = "block";
-    localStorage.setItem("videoMuted", video.muted);
+    timeContainer.style.display = 'block';
+    localStorage.setItem('videoMuted', video.muted);
 }
 
 function hideControls(delay) {
@@ -312,10 +312,10 @@ function hideControls(delay) {
     controlsHideTimeout = setTimeout(() => {
         if (!video.paused) {
             if (isCursorOnControls) return;
-            controls.classList.remove("show");
-            settingMenu.classList.remove("show");
+            controls.classList.remove('show');
+            settingMenu.classList.remove('show');
             for (let i = 0; i < menuButtons.length; i++) {
-                menuButtons[i].style.display = "block";
+                menuButtons[i].style.display = 'block';
             }
             document.activeElement.blur();
         }
@@ -410,37 +410,37 @@ function show_main_animation(mode) {
     [sh_play_st, sh_pause_st, sh_mute_st, sh_unmute_st, sh_back_st, sh_fordward_st, sh_volume_st].forEach(el => el.style.display = 'none');
 
     switch (mode) {
-        case "play":
+        case 'play':
             sh_play_st.style.display = 'block';
-            mainState.classList.add("show");
+            mainState.classList.add('show');
             break;
-        case "pause":
+        case 'pause':
             sh_pause_st.style.display = 'block';
-            mainState.classList.add("show");
+            mainState.classList.add('show');
             break;
-        case "mute":
+        case 'mute':
             sh_mute_st.style.display = 'block';
-            mainState.classList.add("show");
+            mainState.classList.add('show');
             break;
-        case "unmute":
+        case 'unmute':
             sh_unmute_st.style.display = 'block';
-            mainState.classList.add("show");
+            mainState.classList.add('show');
             break;
-        case "back":
+        case 'back':
             sh_back_st.style.display = 'block';
-            mainState.classList.add("show");
+            mainState.classList.add('show');
             break;
-        case "fordward":
+        case 'fordward':
             sh_fordward_st.style.display = 'block';
-            mainState.classList.add("show");
+            mainState.classList.add('show');
             break;
-        case "show_vol":
-            sh_volume_st.innerText = Math.round(video.volume * 100) + "%";
+        case 'show_vol':
+            sh_volume_st.innerText = Math.round(video.volume * 100) + '%';
             sh_volume_st.style.display = 'block';
-            mainState.classList.add("show");
+            mainState.classList.add('show');
             break;
         default:
-            mainState.classList.remove("show");
+            mainState.classList.remove('show');
             return;
     }
     anim_timeout = setTimeout(show_main_animation, 400);
@@ -484,13 +484,13 @@ function handleVideoIcon() {
 
 function loadTracks() {
     try {
-        saved = localStorage.getItem("videoAudio");
+        saved = localStorage.getItem('videoAudio');
         audioTracks = video.audioTracks;
         for (let i = 0; i < audioTracks.length; i++) {
             const track = audioTracks[i];
             const option = document.createElement('option');
             option.value = i;
-            subs_name = (track.label || track.language || "Track " + (i + 1));
+            subs_name = (track.label || track.language || 'Track ' + (i + 1));
             option.textContent = subs_name;
             audioTracksSelect.appendChild(option);
             if (subs_name === saved) {
@@ -513,7 +513,7 @@ function changeTrack(selectedIndex) {
 
 function split_timeline_chapters() {
     const divLength = video.duration;
-    const container = document.querySelector(".chapter-container");
+    const container = document.querySelector('.chapter-container');
     // Sort times and add the initial time (0 seconds)
     chptdata = [...chapters.map(item => item.start_time), divLength];
     // Create sections within the div
@@ -521,7 +521,7 @@ function split_timeline_chapters() {
         const nextTime = chptdata[index + 1];
         const startPercent = Math.min((time / divLength) * 100, 100)
         const section = document.createElement('div');
-        section.classList.add("chapter");
+        section.classList.add('chapter');
         section.style.left = `${startPercent}%`;
         container.appendChild(section);
     });
@@ -543,13 +543,13 @@ function double_touch(e) {
 
         if (p) {
             video.currentTime -= 5;
-            show_main_animation("back");
+            show_main_animation('back');
         } else {
             video.currentTime += 5;
-            show_main_animation("fordward");
+            show_main_animation('fordward');
         }
         handleProgressBar();
-        controls.classList.add("show");
+        controls.classList.add('show');
         hideControls(timechange_delay);
 
     } else touchActionTimeout = setTimeout(toggleMainState, animation_st_delay);
@@ -568,7 +568,7 @@ async function addrmMLcl() {
         legacySubtitlesEnabled = true;
         settingsBtn.classList.add('lmbsl');
     }
-    localStorage.setItem("subsLegacy", legacySubtitlesEnabled);
+    localStorage.setItem('subsLegacy', legacySubtitlesEnabled);
     await changeSubs(selectedSubtitleIndex);
 }
 
@@ -589,22 +589,22 @@ function cancelPressTimer() {
 }
 
 // Mouse events
-settingsBtn.addEventListener("mousedown", (e) => {
+settingsBtn.addEventListener('mousedown', (e) => {
     e.preventDefault();
     startPressTimer();
 });
 
-settingsBtn.addEventListener("mouseup", cancelPressTimer);
-settingsBtn.addEventListener("mouseleave", cancelPressTimer);
+settingsBtn.addEventListener('mouseup', cancelPressTimer);
+settingsBtn.addEventListener('mouseleave', cancelPressTimer);
 
 // Touch events
-settingsBtn.addEventListener("touchstart", (e) => {
+settingsBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
     startPressTimer();
 }, { passive: false });
 
-settingsBtn.addEventListener("touchend", cancelPressTimer);
-settingsBtn.addEventListener("touchcancel", cancelPressTimer);
+settingsBtn.addEventListener('touchend', cancelPressTimer);
+settingsBtn.addEventListener('touchcancel', cancelPressTimer);
 
 
 /* Event listeners */
@@ -614,34 +614,34 @@ window.addEventListener('resize', scaleVideo);
 window.addEventListener('fullscreenchange', scaleVideo);
 
 // Video events
-video.addEventListener("play", play);
-video.addEventListener("pause", pause);
-video.addEventListener("waiting", () => {
-    loader.style.display = "block";
+video.addEventListener('play', play);
+video.addEventListener('pause', pause);
+video.addEventListener('waiting', () => {
+    loader.style.display = 'block';
 });
-video.addEventListener("playing", () => {
-    loader.style.display = "none";
+video.addEventListener('playing', () => {
+    loader.style.display = 'none';
 });
 
 // Video container events
-videoContainer.addEventListener("mouseleave", () => {
+videoContainer.addEventListener('mouseleave', () => {
     clearTimeout(cursorHideTimeout);
     document.body.style.cursor = 'auto';
     hideControls(50);
 });
-videoContainer.addEventListener("mousemove", (e) => {
-    controls.classList.add("show");
+videoContainer.addEventListener('mousemove', (e) => {
+    controls.classList.add('show');
     showCursor();
     hideControls(mouse_ctrl_delay);
 });
 
-videoContainer.addEventListener("focusin", (e) => {
-    controls.classList.add("show");
+videoContainer.addEventListener('focusin', (e) => {
+    controls.classList.add('show');
     hideControls(mouse_ctrl_delay);
 });
 
-videoContainer.addEventListener("fullscreenchange", () => {
-    videoContainer.classList.toggle("fullscreen", document.fullscreenElement);
+videoContainer.addEventListener('fullscreenchange', () => {
+    videoContainer.classList.toggle('fullscreen', document.fullscreenElement);
     if (video.videoWidth >= video.videoHeight) {
         screen.orientation.lock('landscape').catch(() => {});
     } else screen.orientation.lock('portrait').catch(() => {});
@@ -649,42 +649,40 @@ videoContainer.addEventListener("fullscreenchange", () => {
 
 videoContainer.addEventListener('touchmove', () => {
     touchInteractionActive = true;
-    controls.classList.add("show");
+    controls.classList.add('show');
     hideControls(touch_ctrl_delay);
 }, { passive: false });
 
-// Duration and navigation events
-
 // Controls events
-controls.addEventListener("click", () => {
-    controls.classList.add("show");
+controls.addEventListener('click', () => {
+    controls.classList.add('show');
     showCursor();
     hideControls(mouse_ctrl_delay);
 });
 
 // Volume events
-volume.addEventListener("mouseenter", () => {
+volume.addEventListener('mouseenter', () => {
     clearTimeout(volumeHideTimeout);
-    if (!video.muted) timeContainer.style.display = "none";
-    video.muted ? volumeBar.classList.remove("show") : volumeBar.classList.add("show");
+    if (!video.muted) timeContainer.style.display = 'none';
+    video.muted ? volumeBar.classList.remove('show') : volumeBar.classList.add('show');
 });
-volume.addEventListener("mouseleave", () => {
+volume.addEventListener('mouseleave', () => {
     clearTimeout(volumeHideTimeout);
-    volumeBar.classList.remove("show");
-    volumeHideTimeout = setTimeout(()=>{ timeContainer.style.display = "block"; }, 100);
+    volumeBar.classList.remove('show');
+    volumeHideTimeout = setTimeout(()=>{ timeContainer.style.display = 'block'; }, 100);
 });
 volumeBar.addEventListener('input', (e) => {
     handleVolume(e);
 });
 
 // Settings events
-settingsBtn.addEventListener("click", (e) => {
+settingsBtn.addEventListener('click', (e) => {
     if (settingsButtonPressed) {
         e.preventDefault();
         settingsButtonPressed = false;
     } else handleSettingMenu();
 });
-settingsBtn.addEventListener("touchend", (e) => {
+settingsBtn.addEventListener('touchend', (e) => {
     if (settingsButtonPressed) {
         e.preventDefault();
         settingsButtonPressed = false;
@@ -696,48 +694,57 @@ audioTracksSelect.addEventListener('change', function() {
     selectedIndex = parseInt(this.value, 10);
     changeTrack(selectedIndex);
     text = audioTracksSelect[selectedIndex].text;
-    localStorage.setItem("videoAudio", text);
+    localStorage.setItem('videoAudio', text);
     handleSettingMenu();
 });
 subtitleSelect.addEventListener('change', async function() {
     selectedSubtitleIndex = parseInt(this.value);
-    if (selectedSubtitleIndex == -1) localStorage.removeItem("videoSubs");
+    if (selectedSubtitleIndex == -1) localStorage.removeItem('videoSubs');
     else {
         text = subtitleSelect.options[selectedSubtitleIndex + 1].text;
-        localStorage.setItem("videoSubs", text);
+        localStorage.setItem('videoSubs', text);
     }
     await changeSubs(selectedSubtitleIndex);
     handleSettingMenu();
 });
 speedSelect.addEventListener('change', function() {
     video.playbackRate = parseFloat(this.value);
-    localStorage.setItem("videoSpeed", video.playbackRate);
+    localStorage.setItem('videoSpeed', video.playbackRate);
     handleSettingMenu();
 });
 
 // Touch interaction events
 touchBox.addEventListener('touchend', double_touch);
-touchBox.addEventListener("click", (e) => {
+touchBox.addEventListener('click', (e) => {
     e.preventDefault();
     toggleMainState();
     showCursor();
 });
 
-// Keyboard events
-document.addEventListener("keydown", handleShorthand);
+
+// Fix outline when clicking
+[s0, s1, s2].forEach(el => {
+    el.addEventListener("click", (e)=> {
+         if (e.detail === 0) return;
+        setTimeout(()=>{el.parentElement.style.outline="none"},200);
+        el.addEventListener("blur",()=>{el.parentElement.style="";});
+    });
+});
 
 // Download events
-liD.addEventListener("click", () => {
+liD.addEventListener('click', () => {
     download_video.click();
     download_subs.click();
     setTimeout(handleSettingMenu, 100);
 });
-liD.addEventListener("keydown", function(e) {
-    if (e.key === "Enter" || e.key === " ") {
+liD.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         liD.click();
     }
 });
+
+/* Keyboard events */
 
 duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
@@ -745,58 +752,56 @@ duration.addEventListener('mousedown', e =>
 duration.addEventListener('touchstart', e =>
     touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
 );
-
 document.addEventListener('touchstart', () => { touchHoverActive = true; clearHover(); }, { passive: true });
-duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
 duration.addEventListener('mousemove', e => { if (!touchHoverActive) showHover(e.clientX); });
 duration.addEventListener('mouseleave', () => { touchHoverActive = false; clearHover(); });
+duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
+document.addEventListener('keydown', handleShorthand);
 
-
-/* Keyboard events */
 
 function handleShorthand(e) {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
     
     if (e.key.match(/[0-9]/gi)) {
         video.currentTime = (video.duration / 100) * (parseInt(e.key) * 10);
-        currentTime.style.width = parseInt(e.key) * 10 + "%";
+        currentTime.style.width = parseInt(e.key) * 10 + '%';
         return;
     }
     switch (e.key.toLowerCase()) {
-        case " ":
+        case ' ':
             if (document.activeElement === document.body) {
                 e.preventDefault();
                 if (e.repeat) break;
                 video.paused ? play() : pause();
             } break;
-        case "f":
+        case 'f':
             toggleFullscreen();
             break;
-        case "arrowright":
+        case 'arrowright':
             video.currentTime += 2;
-            chgtime_kdb_helper("fordward");
+            chgtime_kdb_helper('fordward');
             break;
-        case "arrowleft":
+        case 'arrowleft':
             video.currentTime -= 2;
-            chgtime_kdb_helper("back");
+            chgtime_kdb_helper('back');
             break;
-        case "p":
+        case 'p':
             prev();
             break;
-        case "n":
+        case 'n':
             next();
             break;
-        case "l":
+        case 'l':
             chMode();
             break;
-        case "m":
+        case 'm':
             toggleMuteUnmute();
             break;
-        case "arrowup": 
+        case 'arrowup': 
             video.volume = Math.min(video.volume + 0.02, 1);
             volume_kbd_helper();
             break;
-        case "arrowdown":
+        case 'arrowdown':
             video.volume = Math.max(video.volume - 0.02, 0);
             volume_kbd_helper();
             break;
@@ -810,10 +815,10 @@ function volume_kbd_helper() {
     updateVolumeBar();
     handleVideoIcon();
     saveVolume();
-    show_main_animation("show_vol");
+    show_main_animation('show_vol');
 }
 function chgtime_kdb_helper(mode) {
-    controls.classList.add("show");
+    controls.classList.add('show');
     hideControls(timechange_delay);
     handleProgressBar();
     show_main_animation(mode);

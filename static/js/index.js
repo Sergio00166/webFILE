@@ -2,6 +2,7 @@
 /*
 All paths are (and must be) encoded by default, also the items dataset
 Except the Destination Header THAT MUST BE NOT ENCODED.
+Base path variable (base) ends with '/' always.
 */
 
 const buttons = {
@@ -12,7 +13,7 @@ const buttons = {
     ren: document.getElementById('renBtn'),
     invert: document.getElementById('invertBtn'),
 };
-const base = location.pathname.replace(/\/$/, '') || '/';
+const base = (location.pathname.replace(/\/$/, '') || '') + '/';
 
 const selected = new Map();
 let selectMode = true;
@@ -119,7 +120,7 @@ async function executeDownloads() {
         for (var div of selected.values()) {
             var url = div.dataset.value;
             if (!url) continue;
-            var suffix = div.hasAttribute('isdir') ? "?tar" : "?raw";
+            var suffix = div.hasAttribute('isdir') ? '?tar' : '?raw';
             downloadURL(url + suffix);
             await delay(100);
         }
@@ -246,7 +247,7 @@ async function createFolders(files) {
         }
     }
     for (const dir of dirs) {
-        var path = base+"/"+encodePath(dir);
+        var path = base+'/'+encodePath(dir);
         var r = await fetch(path, { method: 'MKCOL' });
         if (!r.ok) throw r.status;
     }
@@ -259,18 +260,20 @@ async function uploadFiles(files, isDir) {
     for (var i = 0; i < files.length; i++) {
         var f = files[i];
         var path = isDir ? f.webkitRelativePath : f.name;
-        path = base+"/"+encodePath(path);
+        path = base+'/'+encodePath(path);
 
         try {
             var r = await fetch(path, { method: 'PUT', body: f });
             if (!r.ok) throw r.status;
         } catch (status) {
             var msgs = {
+                400: 'Invalid upload data',
                 403: 'You don’t have permission to do that',
                 409: 'It already exists',
-                507: 'Not enough free space'
+                507: 'Not enough free space',
+                500: 'Server Error'
             };
-            alert(msgs[status] || 'Server error');
+            alert(msgs[status] || 'Connection Error');
             break;
         }
     }
@@ -278,8 +281,8 @@ async function uploadFiles(files, isDir) {
 }
 
 function enableDragAndDropUpload(dropArea, selectDirectory) {
-    dropArea.addEventListener("dragover", function (e) { e.preventDefault(); });
-    dropArea.addEventListener("drop", function (e) {
+    dropArea.addEventListener('dragover', function (e) { e.preventDefault(); });
+    dropArea.addEventListener('drop', function (e) {
         e.preventDefault();
         var files = Array.prototype.slice.call(e.dataTransfer.files);
         if (files.length && confirm('¿Upload ' + files.length + ' item(s)?')) {
