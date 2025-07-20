@@ -653,8 +653,6 @@ videoContainer.addEventListener('touchmove', () => {
     hideControls(touch_ctrl_delay);
 }, { passive: false });
 
-// Duration and navigation events
-
 // Controls events
 controls.addEventListener('click', () => {
     controls.classList.add('show');
@@ -723,8 +721,15 @@ touchBox.addEventListener('click', (e) => {
     showCursor();
 });
 
-// Keyboard events
-document.addEventListener('keydown', handleShorthand);
+
+// Fix outline when clicking
+[s0, s1, s2].forEach(el => {
+    el.addEventListener("click", (e)=> {
+         if (e.detail === 0) return;
+        setTimeout(()=>{el.parentElement.style.outline="none"},200);
+        el.addEventListener("blur",()=>{el.parentElement.style="";});
+    });
+});
 
 // Download events
 liD.addEventListener('click', () => {
@@ -739,20 +744,20 @@ liD.addEventListener('keydown', function(e) {
     }
 });
 
+/* Keyboard events */
+
 duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
     touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
 );
-
 document.addEventListener('touchstart', () => { touchHoverActive = true; clearHover(); }, { passive: true });
-duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
 duration.addEventListener('mousemove', e => { if (!touchHoverActive) showHover(e.clientX); });
 duration.addEventListener('mouseleave', () => { touchHoverActive = false; clearHover(); });
+duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
+document.addEventListener('keydown', handleShorthand);
 
-
-/* Keyboard events */
 
 function handleShorthand(e) {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;

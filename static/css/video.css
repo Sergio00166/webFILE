@@ -62,7 +62,7 @@ img {
     flex-shrink: 0;
 }
 .lmbsl {
-    background: #8f9f3050;
+    background: #8f9f3050 !important;
 }
 body {
     margin: 0;
@@ -296,38 +296,39 @@ body {
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
+    color: white;
 }
-.setting-menu li:focus-within {
+.setting-menu li:nth-child(-n+3):focus-within {
     outline: auto;
 }
 .setting-menu li:nth-child(1)::before {
     content: "Subs";
-    color: #ffffff;
     position: absolute;
 }
 .setting-menu li:nth-child(2)::before {
     content: "Tracks";
-    color: #ffffff;
     position: absolute;
 }
 .setting-menu li:nth-child(3)::before {
     content: "Speed";
-    color: #ffffff;
     position: absolute;
 }
 select {
+    position: relative;
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: none;
-    width: 100%;
     text-align: center;
     font-size: 1rem;
     font-weight: 500;
-    width: 64px;
+    width: 70px;
     opacity: 0;
     border: none;
+}
+select option {
+    background: #363a43;
+    color: white;
 }
 .fullscreen {
     position: absolute !important;
