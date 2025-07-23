@@ -1,6 +1,6 @@
 # Code by Sergio00166
 
-from os.path import getsize,getmtime,exists,isfile
+from os.path import getsize,getmtime,exists,isfile,basename
 from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
 from json import loads as jsload
@@ -18,10 +18,15 @@ cache = SelectiveCache(max_memory=cache_limit*1024*1024)
 
 def check_ffmpeg_installed():
     try:
-        result = run(["ffmpeg","-version"],stdout=DEVNULL)
+        result = run(["ffmpeg","-version"],stdout=DEVNULL,stderr=DEVNULL)
         if result.returncode != 0:
             raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
     except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
+
+def external_subs(file):
+    sname = ".".join(file.split(".")[:-1]+["mks"])
+    cond = exists(sname) and isfile(sname)
+    return sname if cond else file
 
 
 @cache.cached("sz","mt")
@@ -30,7 +35,7 @@ def ffmpeg_extract_chapters(file_path,sz,mt):
         ffprobe_output = jsload( run([
             "ffprobe", "-v", "quiet", "-print_format",
             "json", "-show_entries", "chapters", file_path
-        ], stdout=PIPE,stderr=PIPE).stdout.decode() )
+        ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
 
         filtered_chapters = [ {
             "title": chapter["tags"].get("title", "Untitled"),
@@ -49,7 +54,7 @@ def ffmpeg_extract_info(file_path,sz,mt):
         "s", "-show_entries",
         "stream=index:stream_tags=title:stream_tags=language",
         "-of", "json", file_path
-    ], stdout=PIPE,stderr=PIPE).stdout.decode() )
+    ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
 
     subtitles_list = []
     streams = ffprobe_output.get("streams",[])
@@ -75,7 +80,7 @@ def ffmpeg_get_subs(file,index,legacy,sz,mt):
     out = run( [
         "ffmpeg", "-i", file, "-map",
         f"0:s:{index}", "-f", codec, "-"
-    ], stdout=PIPE,stderr=PIPE )
+    ], stdout=PIPE,stderr=DEVNULL )
 
     if out.returncode != 0:
         raise NotImplementedError("Unsupported subtitle codec")
@@ -88,15 +93,13 @@ def ffmpeg_get_subs(file,index,legacy,sz,mt):
 # sz & mt are just to invalidate cache
 
 def extract_subtitles(index,file,legacy):
-    sname = ".".join(file.split(".")[:-1]+["mks"])
-    if exists(sname) and isfile(sname): file = sname
+    file = external_subs(file)
     sz,mt = getsize(file),getmtime(file)
     args = (file,index,legacy,sz,mt)
     return ffmpeg_get_subs(*args)
 
 def get_info(file):
-    sname = ".".join(file.split(".")[:-1]+["mks"])
-    if exists(sname) and isfile(sname): file = sname
+    file = external_subs(file)
     sz,mt = getsize(file), getmtime(file)
     return ffmpeg_extract_info(file,sz,mt)
 
@@ -111,7 +114,7 @@ def get_codec(source,index):
         "-select_streams", f"s:{index}",
         "-show_entries", "stream=codec_name","-of",
         "default=noprint_wrappers=1:nokey=1",source
-    ], stdout=PIPE,stderr=PIPE).stdout.decode().strip() \
+    ], stdout=PIPE,stderr=DEVNULL).stdout.decode().strip() \
     in ["ssa","ass"] else "webvtt"
 
 
@@ -124,3 +127,20 @@ def get_subtitles(index,file,legacy):
     headers = {"Content-Disposition": "attachment;filename="+subsname}
     # Return the subtittle track with the right mime
     return Response(out, mimetype=mime, headers=headers)
+
+
+def combine_vidsubs(file,subs):
+    filename = ".".join(basename(file).split(".")[:-1]+["mkv"])
+    headers = {"Content-Disposition": f"attachment;filename={filename}"}
+
+    def combine_wk(file,subs):
+        proc = Popen([
+            'ffmpeg', '-i', file, '-f', 'matroska', '-i', subs,
+            '-map', '0', '-map', '1', '-f', 'matroska', '-c', 'copy', '-'
+        ],stdout=PIPE, stderr=DEVNULL)
+        while (chunk := proc.stdout.read(262144)): yield chunk
+
+    return Response(combine_wk(file,subs), headers=headers)
+ 
+
+  

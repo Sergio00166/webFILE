@@ -166,8 +166,7 @@ def get_folder_content(folder_path, root, folder_size, ACL):
                 data["capacity"] = get_disk_capacity(root + sep + item_full_path)
 
             content.append(data)
-        except:
-            pass
+        except: pass
     return content
 
 

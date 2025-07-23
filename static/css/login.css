@@ -71,7 +71,7 @@ button {
     font-size: 1em;
     font-weight: 600;
     box-shadow: 4px 4px 24px #0006;
-    transition: background 0.5s;
+    transition: background 0.3s;
 }
 .button-upload {
     background: #34a;

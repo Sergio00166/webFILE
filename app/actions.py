@@ -1,6 +1,7 @@
 # Code by Sergio00166
 
-from video import get_subtitles, get_chapters, get_info, check_ffmpeg_installed
+from video import check_ffmpeg_installed, get_chapters, get_info
+from video import get_subtitles, combine_vidsubs, external_subs
 from flask import render_template, stream_template
 from os.path import pardir, isfile
 from urllib.parse import quote as encurl
@@ -21,6 +22,7 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
     path = safe_path(path, root)
     file_type = get_file_type(path)
     encache = "cache" in request.args
+    ret_raw = request.args.get("raw")
 
     # Check if the path is not a dir
     if not file_type in ["directory", "disk"]:
@@ -30,8 +32,11 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
             return send_file(path, mimetype="text/html")
 
         # Those are the sub-endpoints
-        if "raw" in request.args: 
-            return send_file(path, cache=encache)
+        if ret_raw != None: 
+            if (file_type, ret_raw) == ("video", "full")\
+            and (subs := external_subs(path)) != path:
+                return combine_vidsubs(path, subs)
+            return send_file(path)
 
         if "subs" in request.args and file_type == "video":
             check_ffmpeg_installed()
@@ -224,18 +229,11 @@ def video(path, root, file_type, ACL):
     prev, nxt, name = get_filepage_data(path, root, file_type, ACL, ngtst=True)
     tracks, chapters = get_info(path), get_chapters(path)
 
-    subs_file = ".".join(path.split(".")[:-1]+["mks"])
-    subs_name = subs_file.split("/")[-1]
-    if not isfile(subs_file): subs_file = None
-    else: subs_file = "/"+relpath(subs_file, start=root)
-
     return render_template(
         "video.html", path=path, name=name,
         prev=prev,nxt=nxt, tracks=tracks,
-        chapters=chapters, subs_file=subs_file,
-        subs_name = subs_name
+        chapters=chapters
     )
-
 
 def audio(path, root, file_type, ACL):
     prev, nxt, name, rnd = get_filepage_data(path, root, file_type, ACL, random=True)
