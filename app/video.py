@@ -138,7 +138,11 @@ def combine_vidsubs(file,subs):
             'ffmpeg', '-i', file, '-f', 'matroska', '-i', subs,
             '-map', '0', '-map', '1', '-f', 'matroska', '-c', 'copy', '-'
         ],stdout=PIPE, stderr=DEVNULL)
-        while (chunk := proc.stdout.read(262144)): yield chunk
+        try:
+            while (chunk := proc.stdout.read(262144)): yield chunk
+        finally:
+            proc.stdout.close()
+            proc.wait()
 
     return Response(combine_wk(file,subs), headers=headers)
  
