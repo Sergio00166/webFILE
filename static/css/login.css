@@ -100,15 +100,20 @@ button {
     }
 }
 
+
 @media (hover: hover) {
     .button-upload:hover {
         background: #446;
+        box-shadow: 0 0 3px white;
     }
     .button-danger:hover {
         background: #643;
+        box-shadow: 0 0 3px white;
     }
     input:hover {
         background-color: #444;
+        box-shadow: 0 0 2px white;
     }
 }
+
 
