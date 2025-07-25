@@ -128,7 +128,7 @@ def stream_tar_file(file_path, arcname):
     yield create_tar_header(file_path, arcname)
     # Stream file contents from disk
     with open(file_path, "rb") as f:
-        while (chunk := f.read(262144)): yield chunk
+        while (chunk := f.read(65536)): yield chunk
     # Generate padding for the block
     file_size = getsize(file_path)
     padding_size = (512 - (file_size % 512)) % 512
