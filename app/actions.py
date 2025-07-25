@@ -1,9 +1,9 @@
 # Code by Sergio00166
 
 from video import check_ffmpeg_installed, get_chapters, get_info
-from video import get_subtitles, combine_vidsubs, external_subs
+from video import get_subtitles, external_subs
 from flask import render_template, stream_template
-from os.path import pardir, isfile
+from os.path import pardir, isfile, basename
 from urllib.parse import quote as encurl
 from send_file import send_file, send_dir
 from flask_session import Session
@@ -33,9 +33,6 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
 
         # Those are the sub-endpoints
         if ret_raw != None: 
-            if (file_type, ret_raw) == ("video", "full")\
-            and (subs := external_subs(path)) != path:
-                return combine_vidsubs(path, subs)
             return send_file(path)
 
         if "subs" in request.args and file_type == "video":
@@ -224,17 +221,19 @@ def subtitles(path, mode):
 
     return get_subtitles(index, path, legacy)
 
-
 def video(path, root, file_type, ACL):
     prev, nxt, name = get_filepage_data(path, root, file_type, ACL, ngtst=True)
     tracks, chapters = get_info(path), get_chapters(path)
 
+    subs = external_subs(path)
+    subs = "/" + relpath(subs, start=root) if subs != path else "#"
+
     return render_template(
         "video.html", path=path, name=name,
         prev=prev,nxt=nxt, tracks=tracks,
-        chapters=chapters
+        chapters=chapters, subs_file=subs,
+        subs_name = basename(subs)
     )
-
 def audio(path, root, file_type, ACL):
     prev, nxt, name, rnd = get_filepage_data(path, root, file_type, ACL, random=True)
     return render_template("audio.html", path=path, name=name, prev=prev, nxt=nxt, rnd=rnd)
@@ -269,3 +268,4 @@ def directory(path, root, folder_size, sort, ACL, useApi):
             parent_directory=parent_directory, is_root=is_root, sort=sort
         ))
 
+ 

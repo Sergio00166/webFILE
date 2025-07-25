@@ -129,22 +129,4 @@ def get_subtitles(index,file,legacy):
     return Response(out, mimetype=mime, headers=headers)
 
 
-def combine_vidsubs(file,subs):
-    filename = ".".join(basename(file).split(".")[:-1]+["mkv"])
-    headers = {"Content-Disposition": f"attachment;filename={filename}"}
-
-    def combine_wk(file,subs):
-        proc = Popen([
-            'ffmpeg', '-i', file, '-f', 'matroska', '-i', subs,
-            '-map', '0', '-map', '1', '-f', 'matroska', '-c', 'copy', '-'
-        ],stdout=PIPE, stderr=DEVNULL)
-        try:
-            while (chunk := proc.stdout.read(262144)): yield chunk
-        finally:
-            proc.stdout.close()
-            proc.wait()
-
-    return Response(combine_wk(file,subs), headers=headers)
- 
-
   
