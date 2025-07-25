@@ -82,14 +82,14 @@ def generate(file_path, ranges):
 
 def compute_tar_size(directory):
     return sum(
-        512 + os.path.getsize(path := os.path.join(curdir, f)) + (512 - (os.path.getsize(path) % 512)) % 512
-        for curdir, _, files in os.walk(directory, followlinks=True)
+        512 + getsize(path := join(curdir, f)) + (512 - (getsize(path) % 512)) % 512
+        for curdir, _, files in walk(directory, followlinks=True)
         for f in files
     ) + 1024 # Add tar padding
 
 
 def send_dir(directory, root, ACL, name=None):
-    folder = name if name else os.path.basename(directory)
+    folder = name if name else basename(directory)
 
     validate_directory_tree(directory, root, ACL)
     size = compute_tar_size(directory)
