@@ -2,9 +2,9 @@
 
 from functions import validate_acl, is_binary, readable_size, readable_date
 from os.path import join, isdir, relpath, getsize, getmtime
+from os import sep, listdir, scandir
 from json import load as jsload
 from sys import path as pypath
-from os import sep, listdir
 from pathlib import Path
 from flask import request
 
