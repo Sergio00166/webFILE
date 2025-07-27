@@ -80,15 +80,25 @@ def generate(file_path, ranges):
 
 """ TO SEND FOLDER AS TAR FILES IN REALTIME """
 
+def compute_tar_size(directory):
+    return sum(
+        512 + getsize(path := join(curdir, f)) + (512 - (getsize(path) % 512)) % 512
+        for curdir, _, files in walk(directory, followlinks=True)
+        for f in files
+    ) + 1024 # Add tar padding
+
 
 def send_dir(directory, root, ACL, name=None):
     folder = name if name else basename(directory)
+
     validate_directory_tree(directory, root, ACL)
-    return Response(
-        generate_tar(directory),
-        mimetype="application/x-tar",
-        headers={"Content-Disposition": "attachment;filename=" + folder + ".tar"},
-    )
+    size = compute_tar_size(directory)
+
+    headers={
+        "Content-Disposition": "attachment;filename=" + folder+".tar",
+        "Content-Length": str(size),
+    }
+    return Response(generate_tar(directory), mimetype="application/x-tar", headers=headers)
 
 
 def validate_directory_tree(directory_path, web_root, ACL):
@@ -118,11 +128,7 @@ def stream_tar_file(file_path, arcname):
     yield create_tar_header(file_path, arcname)
     # Stream file contents from disk
     with open(file_path, "rb") as f:
-        while True:
-            chunk = f.read(262144)
-            if not chunk:
-                break
-            yield chunk
+        while (chunk := f.read(65536)): yield chunk
     # Generate padding for the block
     file_size = getsize(file_path)
     padding_size = (512 - (file_size % 512)) % 512
@@ -137,3 +143,5 @@ def generate_tar(directory_path):
             yield from stream_tar_file(file_path, arcname)
 
     yield b"\0" * 1024  # Add TAR end
+
+ 

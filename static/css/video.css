@@ -197,7 +197,7 @@ body {
     height: 100%;
     display: flex;
     position: absolute;
-    background: #ff4a10;
+    background: #ff4a10c0;
     align-items: center;
     border-radius: 5px;
 }
@@ -209,7 +209,7 @@ body {
     height: 14px;
     position: absolute;
     right: calc((-13px / 2));
-    background: #ff6a00;
+    background: #ff6a00c0;
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
@@ -291,7 +291,6 @@ body {
 .setting-menu li {
     padding: 0.33rem 0.5rem;
     margin: 0.25rem;
-    transition: all 0.2s;
     border-radius: 8px;
     font-size: 1rem;
     font-weight: 500;
@@ -449,11 +448,13 @@ select option {
 /* Disable hover on touch devices */
 @media (hover: hover) {
     .setting-menu li:hover, .round-button:hover {
-        background: #aaa6;
-        box-shadow: 0 0 4px black;
+        outline: solid !important;
+        outline-color: #fffa !important;
+        outline-width: 2px !important;
     }
     .lmbsl:hover {
         background: #6d65 !important;
     }
 }
 
+ 

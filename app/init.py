@@ -2,19 +2,22 @@
 
 if __name__=="__main__": exit(0)
 
+from endpoints import serveFiles_page, serveRoot_page, login, logout, error
+from functions import printerr, load_userACL, safe_path, validate_acl
 from files_mgr import handle_upload, mkdir, delfile, move, copy
-from os import sep,getenv,urandom,makedirs
+from os.path import abspath, isfile, join
+from os import getenv, urandom, makedirs
 from flask_sqlalchemy import SQLAlchemy
-from os.path import abspath, isfile
+from flask_session import Session
+from flask import Flask, request
+from send_file import send_file
+from sys import path as pypath
 from secrets import token_hex
-from flask import Flask
-from actions import *
 
 
 # Set the paths of templates and static
-parent_path = abspath(pypath[0]+sep+"..")+sep
-templates = parent_path+"templates"
-sroot = parent_path+"static"
+parent_path = abspath(join(pypath[0],".."))
+sroot = join(parent_path,"static")
 
 # Get all the args from the Enviorment
 root        = getenv("SERVE_PATH"  ,None)
@@ -25,19 +28,20 @@ sessions_db = getenv("SESSIONS_DB" ,None)
 folder_size = getenv("SHOW_DIRSIZE","FALSE").upper()=="TRUE"
 # MAX_CACHE is inside video.py
 
+
 if root: root = abspath(root)
 else:
     print("YOU MUST SPECIFY THE SERVE_PATH")
     exit(1) # Dont continue
 
 if not all((error_file, users_file, acl_file, sessions_db)):
-    data_dir = parent_path+sep+"data"+sep
+    data_dir = join(parent_path,"data")
     makedirs(data_dir, exist_ok=True)
 
-error_file  = error_file  or (data_dir+"error.log")
-users_file  = users_file  or (data_dir+"users.json")
-acl_file    = acl_file    or (data_dir+"acl.json")
-sessions_db = sessions_db or (data_dir+"sessions.db")
+error_file  = error_file  or join(data_dir,"error.log")
+users_file  = users_file  or join(data_dir,"users.json")
+acl_file    = acl_file    or join(data_dir,"acl.json")
+sessions_db = sessions_db or join(data_dir,"sessions.db")
 
 # Load and define the USER/ACL database
 USERS,ACL = {},{}
@@ -48,7 +52,7 @@ except Exception as e:
 
 
 # Initialize main flask app
-app = Flask(__name__,static_folder=None,template_folder=templates)
+app = Flask(__name__,static_folder=None,template_folder=join(parent_path,"templates"))
 app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
 
 # Configure SQLite for session storage
@@ -63,4 +67,5 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 3600
 db = SQLAlchemy(app)
 app.config["SESSION_SQLALCHEMY"] = db
 Session(app)
+
 

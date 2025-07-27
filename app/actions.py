@@ -1,158 +1,31 @@
 # Code by Sergio00166
 
-from video import get_subtitles, get_chapters, get_info, check_ffmpeg_installed
+from os.path import pardir, isfile, basename, abspath, relpath, dirname
 from flask import render_template, stream_template
-from os.path import pardir, isfile
+from video import get_subtitles, external_subs
 from urllib.parse import quote as encurl
-from send_file import send_file, send_dir
-from flask_session import Session
-from hashlib import sha256
+from video import get_chapters, get_info
 from random import choice
-from functions import *
+from explorer import *
 
-autoload_webpage = "index" + webpage_file_ext
-
-
-def serveFiles_page(path, ACL, root, folder_size, useApi):
-    if not request.method.lower() in ["get", "head"]: 
-         return "Method not allowed", 405
-
-    validate_acl(path, ACL)
-    path = safe_path(path, root)
-    file_type = get_file_type(path)
-    encache = "cache" in request.args
-
-    # Check if the path is not a dir
-    if not file_type in ["directory", "disk"]:
-        
-        # Serve page (for plugin-like stuff)
-        if file_type == "webpage" and not useApi:
-            return send_file(path, mimetype="text/html")
-
-        # Those are the sub-endpoints
-        if "raw" in request.args: 
-            return send_file(path, cache=encache)
-
-        if "subs" in request.args and file_type == "video":
-            check_ffmpeg_installed()
-            return subtitles(path, request.args["subs"])
-
-        # For main pages redirect without /$
-        if request.path.endswith("/") and not useApi:
-            return redirect(request.path[:-1])
-
-        # Serve the files depending of filetype
-        if file_type == "video" and not useApi:
-            check_ffmpeg_installed()
-            return video(path, root, file_type, ACL)
-
-        elif file_type == "audio" and not useApi:
-            return audio(path, root, file_type, ACL)
-
-        else:  # Send the file and set mime for text
-            mime = None if is_binary(path) else "text/css"\
-                  if path.endswith(".css") else "text/plain"
-            return send_file(path, mimetype=mime, cache=encache)
-
-    else:
-        # Sub-endpoint to get the dir as tar
-        if "tar" in request.args:
-            return send_dir(path, root, ACL)
-
-        # Autoload index.web if available (plugins-like)
-        if (
-            isfile(path + sep + autoload_webpage)
-            and not ("noauto" in request.args or useApi)
-        ):
-            url_sep = "" if request.path.endswith("/") else "/"
-            return redirect(request.path + url_sep + autoload_webpage)
-
-        # Redirect to have /$ (it means dir)
-        if not request.path.endswith("/") and not useApi:
-            query = request.query_string.decode()
-            query = "?" + query if query else ""
-            return redirect(request.path + "/" + query)
-
-        # Return the directory explorer
-        sort = request.args["sort"] if "sort" in request.args else ""
-        return directory(path, root, folder_size, sort, ACL, useApi)
-
-
-
-def serveRoot_page(ACL, root, folder_size, useApi):
-    if not request.method.lower() in ["get", "head"]: 
-        return "Method not allowed", 405
-    path = safe_path("/", root)  # Check if we can access it
-    sort = request.args["sort"] if "sort" in request.args else ""
-    if "tar" in request.args: return send_dir(path, root, ACL, "index")
-    return directory(path, root, folder_size, sort, ACL, useApi)
-
-
-def login(USERS, useApi):
-    if request.method.lower() == "post":
-        user = request.form.get("username")
-        password = request.form.get("password")
-        hashed_password = sha256(password.encode()).hexdigest()
-
-        if USERS.get(user) == hashed_password:
-            session["user"] = user
-            if useApi: return "Logged in", 200
-            else: return redirect_no_query()
-
-        elif useApi: return "Invalid username or password.", 401
-        else: return render_template("login.html", error="Invalid username or password.")
-
-    elif request.method.lower() == "get": return render_template("login.html")
-    else: return "Method not allowed", 405
-
-
-def logout(useApi):
-    if not request.method.lower() == "get": 
-        return "Method not allowed", 405
-
-    try: session.pop("user")
-    except:
-        if useApi: return "Not logged in", 401
-        else: pass
-
-    if useApi: return "Logged out", 200
-    else: return redirect_no_query()
-
-
-def error(e, error_file, useApi):
-    if isinstance(e, PermissionError):
-        if useApi: return "[]", 403
-        return render_template("403.html"), 403
-
-    elif isinstance(e, FileNotFoundError):
-        if useApi: return "[]", 404
-        return render_template("404.html"), 404
-
-    else:
-        printerr(e, error_file)  # Log the error
-        if useApi: return "[]", 500
-        return render_template("500.html"), 500
+# Function to compress HTML output without modifying contents
+minify = lambda stream: ("".join(map(str.strip, x.split("\n"))) for x in stream)
 
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False):
     # Get relative path from the root dir
     path = relpath(file_path, start=root).replace(sep, "/")
-
     # Get the name of the folder
-    folder = sep.join(file_path.split(sep)[:-1])
-    name = path.split("/")[-1]
+    folder, name = dirname(file_path), basename(path)
 
     # Get all folder contents
     out = get_folder_content(folder, root, False, ACL)
-
     # Get all folder contents that has the same filetype
     lst = [x["path"] for x in out if x["type"] == filetype]
 
     # Get next one
-    try:
-        nxt = lst[lst.index(path) + 1]
-    except:
-        nxt = "#" if ngtst else lst[0]
+    try:    nxt = lst[lst.index(path) + 1]
+    except: nxt = "#" if ngtst else lst[0]
 
     # Get previous one
     if lst.index(path) == 0:
@@ -161,17 +34,11 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False)
         prev = lst[lst.index(path) - 1]
 
     # All should start with /
-    if prev != "#":
-        prev = "/" + prev
-    if nxt != "#":
-        nxt = "/" + nxt
+    if prev != "#": prev = "/"+prev
+    if nxt  != "#": nxt  = "/"+nxt
 
-    # Return random flag
-    if random:
-        rnd = "/" + choice(lst)
-        return prev, nxt, name, rnd
-    else:
-        return prev, nxt, name
+    if not random: return prev, nxt, name
+    else: return prev, nxt, name, "/"+choice(lst)
 
 
 def get_index_data(folder_path, root, folder_size, sort, ACL):
@@ -184,39 +51,31 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
     # Get the parent dir from the folder_path
     parent_directory = abspath(join(folder_path, pardir))
 
-    # Check if the parent directory if root
-    if parent_directory == root:
-        parent_directory = ""
-    else:
-        parent_directory = relpath(parent_directory, start=root) + "/"
+    # Check if the parent directory is root
+    parent_directory = "" if parent_directory == root \
+        else relpath(parent_directory, start=root)+"/"
 
     # Get relative path from root
     folder_path = relpath(folder_path, start=root)
+    if folder_path == ".": folder_path = ""
 
     # Fix and check some things with the paths
-    if folder_path == ".":
-        folder_path = ""
     folder_path = "/" + folder_path.replace(sep, "/")
     parent_directory = parent_directory.replace(sep, "/")
-    folder_content = sort_contents(folder_content, sort, root)
 
+    # Sort the result items
+    folder_content = sort_contents(folder_content, sort, root)
     return folder_content, folder_path, parent_directory, is_root
 
 
 def subtitles(path, mode):
-    if mode.endswith("legacy"):
-        legacy = True
+    if (legacy := mode.endswith("legacy")):
         mode = mode[: mode.find("legacy")]
-    else:
-        legacy = False
 
-    if path.endswith("/"):
-        path = path[:-1]
-    try:
-        index = int(mode)
-    except:
-        raise FileNotFoundError
+    try: index = int(mode)
+    except: raise FileNotFoundError
 
+    if path.endswith("/"): path = path[:-1]
     return get_subtitles(index, path, legacy)
 
 
@@ -224,35 +83,19 @@ def video(path, root, file_type, ACL):
     prev, nxt, name = get_filepage_data(path, root, file_type, ACL, ngtst=True)
     tracks, chapters = get_info(path), get_chapters(path)
 
-    subs_file = ".".join(path.split(".")[:-1]+["mks"])
-    subs_name = subs_file.split("/")[-1]
-    if not isfile(subs_file): subs_file = None
-    else: subs_file = "/"+relpath(subs_file, start=root)
+    subs = external_subs(path)
+    subs = "/" + relpath(subs, start=root) if subs != path else "#"
 
     return render_template(
         "video.html", path=path, name=name,
         prev=prev,nxt=nxt, tracks=tracks,
-        chapters=chapters, subs_file=subs_file,
-        subs_name = subs_name
+        chapters=chapters, subs_file=subs,
+        subs_name = basename(subs)
     )
-
 
 def audio(path, root, file_type, ACL):
     prev, nxt, name, rnd = get_filepage_data(path, root, file_type, ACL, random=True)
     return render_template("audio.html", path=path, name=name, prev=prev, nxt=nxt, rnd=rnd)
-
-
-def humanize_all(data):
-    for item in data:
-        if "capacity" in item:
-            if item["capacity"] == 0: item["used"] = 0
-            else: item["used"] = round(item["size"] / item["capacity"] * 100)
-            item["capacity"] = readable_size(item["capacity"])
-
-        if "mtime" in item:
-            item["mtime"] = readable_date(item["mtime"])
-        item["size"] = readable_size(item["size"])
-
 
 
 def directory(path, root, folder_size, sort, ACL, useApi):
@@ -271,3 +114,4 @@ def directory(path, root, folder_size, sort, ACL, useApi):
             parent_directory=parent_directory, is_root=is_root, sort=sort
         ))
 
+ 

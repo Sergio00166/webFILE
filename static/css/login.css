@@ -71,7 +71,7 @@ button {
     font-size: 1em;
     font-weight: 600;
     box-shadow: 4px 4px 24px #0006;
-    transition: background 0.5s;
+    transition: background 0.3s;
 }
 .button-upload {
     background: #34a;
@@ -100,15 +100,20 @@ button {
     }
 }
 
+
 @media (hover: hover) {
     .button-upload:hover {
         background: #446;
+        box-shadow: 0 0 3px white;
     }
     .button-danger:hover {
         background: #643;
+        box-shadow: 0 0 3px white;
     }
     input:hover {
         background-color: #444;
+        box-shadow: 0 0 2px white;
     }
 }
+
 

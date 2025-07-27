@@ -41,8 +41,6 @@ const sh_lowa = document.querySelector('.volume img:nth-child(4)');
 const sh_meda = document.querySelector('.volume img:nth-child(3)');
 const sh_noa = document.querySelector('.volume img:nth-child(5)');
 const liD = document.getElementById('liD');
-const download_video = document.getElementById('download_video');
-const download_subs = document.getElementById('download_subs');
 const prevLink = document.getElementById('prev');
 const nextLink = document.getElementById('next');
 const canvas = document.querySelector('canvas');
@@ -50,6 +48,8 @@ const touchBox = document.getElementById('touch-box');
 const video = document.querySelector('video');
 const videoContainer = document.querySelector('.video-container');
 const mode = document.getElementById('mode');
+const download_video = document.getElementById("download_video");
+const download_subs = document.getElementById("download_subs");
 
 var savedPlaybackSpeed = localStorage.getItem('videoSpeed');
 var savedVolumeValue = localStorage.getItem('videoVolume');
@@ -61,6 +61,7 @@ let pressTimer;
 let assSubtitleWorker;
 var settingsButtonPressed = false;
 let isCursorOnControls = false;
+let isMouseOnSelect = false;
 let isPressing = false;
 let pressHasTriggered = false;
 let previousVideoTime = 0;
@@ -724,17 +725,28 @@ touchBox.addEventListener('click', (e) => {
 
 // Fix outline when clicking
 [s0, s1, s2].forEach(el => {
-    el.addEventListener("click", (e)=> {
-         if (e.detail === 0) return;
-        setTimeout(()=>{el.parentElement.style.outline="none"},200);
-        el.addEventListener("blur",()=>{el.parentElement.style="";});
+    el.addEventListener('mouseenter', ()=> {
+        isMouseOnSelect = true;
+        el.parentElement.style.outline="none";
+    });
+    el.addEventListener('mouseleave', ()=> {
+        isMouseOnSelect = false;
+    });
+    el.addEventListener('focus', ()=> {
+        if (isMouseOnSelect) return;
+        el.parentElement.style="";
     });
 });
 
+
 // Download events
-liD.addEventListener('click', () => {
+liD.addEventListener("click", () => {
+    const subs_href = download_subs.href; 
+    if (!subs_href || subs_href !== "#") { 
+        alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
+        download_subs.click();
+    }
     download_video.click();
-    download_subs.click();
     setTimeout(handleSettingMenu, 100);
 });
 liD.addEventListener('keydown', function(e) {
@@ -824,3 +836,4 @@ function chgtime_kdb_helper(mode) {
     show_main_animation(mode);
 }
 
+ 
