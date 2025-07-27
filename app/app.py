@@ -49,6 +49,7 @@ def index():
         if "static" in request.args:
             path = request.args["static"]
             path = safe_path(path,sroot)
+
             if not isfile(path): raise FileNotFoundError
             return send_file( path, cache=True )
 

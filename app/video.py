@@ -6,7 +6,7 @@ from ssatovtt import convert as convert_ssa
 from json import loads as jsload
 from cache import SelectiveCache
 from flask import Response
-from os import sep,getenv
+from os import getenv
 
 cache_limit = getenv("MAX_CACHE",None)
 if cache_limit and not cache_limit.isdigit():
@@ -121,7 +121,7 @@ def get_codec(source,index):
 def get_subtitles(index,file,legacy):
     out = extract_subtitles(index,file,legacy)
     # Get filename and for downloading the subtitles
-    subsname = file.split(sep)[-1]+f".track{str(index)}."
+    subsname = basename(file)+f".track{str(index)}."
     subsname += "vtt" if legacy else "ssa"
     mime = "text/vtt" if legacy else "application/x-substation-alpha"
     headers = {"Content-Disposition": "attachment;filename="+subsname}
@@ -129,4 +129,3 @@ def get_subtitles(index,file,legacy):
     return Response(out, mimetype=mime, headers=headers)
 
 
-  
