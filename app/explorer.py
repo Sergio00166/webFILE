@@ -38,7 +38,7 @@ def get_folder_content(folder_path, root, folder_size, ACL):
                 data["size"] = disk["used"]                                                                                                                                                  
             else:                                                                                                                                                                            
                 data["size"] = (                                                                                                                                                             
-                    (get_directory_size(item_path) if folder_size else 0)                                                                                                                    
+                    (get_dir_size(item_path) if folder_size else 0)                                                                                                                    
                     if data["type"] == "directory" else getsize(item_path)                                                                                                                   
                 )                                                                                                                                                                            
                                                                                                                                                                                              
