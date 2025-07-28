@@ -1,7 +1,7 @@
 # Code by Sergio00166
 
+from functions import validate_acl, is_binary, get_disk_stat, get_dir_size
 from os.path import join, isdir, relpath, getsize, getmtime
-from functions import validate_acl, is_binary, get_disk_stat
 from datetime import datetime as dt
 from json import load as jsload
 from sys import path as pypath

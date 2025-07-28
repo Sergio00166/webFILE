@@ -6,6 +6,7 @@ from os import sep, access, R_OK, scandir
 from datetime import datetime as dt
 from json import load as jsload
 from flask import session
+from pathlib import Path
 from sys import stderr
 
 if sep == chr(92): import ctypes
@@ -137,7 +138,7 @@ def get_disk_stat(path):
     return {"size": size, "free": free, "used": size-free}  
 
 
-def get_directory_size(directory):
+def get_dir_size(directory):
     total, stack = 0, [directory]
     while stack:
         current = stack.pop()
