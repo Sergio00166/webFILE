@@ -1,13 +1,15 @@
 # Code by Sergio00166
 
-from flask import request, redirect, session, render_template
 from os.path import exists, normpath, dirname
 from os.path import commonpath, join, abspath
-from urllib.parse import urlparse, urlunparse
+from os import sep, access, R_OK, scandir
 from datetime import datetime as dt
-from os import sep, access, R_OK
 from json import load as jsload
+from flask import session
 from sys import stderr
+
+if sep == chr(92): import ctypes
+else: from os import statvfs
 
 is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
 # A list of a secuence of bytes to identify the UTF-x using their BOMs
@@ -120,25 +122,34 @@ def is_binary(filepath):
     return False
 
 
-def redirect_no_query():
-    parsed_url = urlparse(request.url)
-    return redirect(urlunparse(("", "", parsed_url.path, "", "", "")))
-
-
-def readable_size(num, suffix="B"):
-    # Connverts byte values to a human readable format
-    for unit in ("", "Ki", "Mi", "Gi", "Ti"):
-        if num < 1024:
-            return f"{num:.1f} {unit}{suffix}"
-        num /= 1024
-    return f"{num:.1f} Yi{suffix}"
-
-
-def readable_date(date):
-    if date is not None:
-        cd = dt.fromtimestamp(date)
-        return [cd.strftime("%d/%m/%Y"), cd.strftime("%H:%M")]
+def get_disk_capacity(disk):
+    if sep == chr(92):
+        size_bytes = windll.kernel32.GetDiskFreeSpaceExW.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(drive_path), None, ctypes.byref(c_ulonglong()), None
+        ).value
     else:
-        return ["##/##/####", "##:##:##"]
+        disk_obj = statvfs(disk)
+        size_bytes = disk_obj.f_frsize * disk_obj.f_blocks
+    return size_bytes
+
+
+def get_directory_size(directory):
+    total, stack = 0, [directory]
+    while stack:
+        current = stack.pop()
+        try:
+            for entry in scandir(current):
+                if entry.is_file():
+                    total += entry.stat().st_size
+                elif Path(entry.path).is_mount():
+                    pass # Ignore it
+                elif entry.is_dir():
+                    stack.append(entry.path)
+
+        except NotADirectoryError:
+            total += getsize(current)
+        except PermissionError: pass
+    return total
+
 
 

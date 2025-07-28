@@ -1,8 +1,9 @@
 # Code by Sergio00166
 
-from os.path import pardir, isfile, basename, abspath, relpath, dirname
-from flask import render_template, stream_template
+from os.path import pardir, basename, abspath, relpath, dirname
+from flask import render_template, stream_template, redirect
 from video import get_subtitles, external_subs
+from urllib.parse import urlparse, urlunparse
 from urllib.parse import quote as encurl
 from video import get_chapters, get_info
 from random import choice
@@ -10,6 +11,11 @@ from explorer import *
 
 # Function to compress HTML output without modifying contents
 minify = lambda stream: ("".join(map(str.strip, x.split("\n"))) for x in stream)
+
+
+def redirect_no_query():
+    parsed_url = urlparse(request.url)
+    return redirect(urlunparse(("", "", parsed_url.path, "", "", "")))
 
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False):

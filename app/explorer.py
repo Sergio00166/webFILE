@@ -1,15 +1,11 @@
 # Code by Sergio00166
 
-from functions import validate_acl, is_binary, readable_size, readable_date
 from os.path import join, isdir, relpath, getsize, getmtime
-from os import sep, listdir, scandir
+from functions import validate_acl, is_binary
 from json import load as jsload
 from sys import path as pypath
+from os import sep, listdir
 from pathlib import Path
-from flask import request
-
-if sep == chr(92): import ctypes
-else: from os import statvfs
 
 # Load database of file type and extensions
 file_types = jsload(open(join(pypath[0],"file_types.json")))
@@ -88,36 +84,6 @@ def get_file_type(path):
     return "file" if is_binary(path) else "text"
 
 
-def get_directory_size(directory):
-    total, stack = 0, [directory]
-    while stack:
-        current = stack.pop()
-        try:
-            for entry in scandir(current):
-                if entry.is_file():
-                    total += entry.stat().st_size
-                elif Path(entry.path).is_mount():
-                    pass # Ignore it
-                elif entry.is_dir():
-                    stack.append(entry.path)
-
-        except NotADirectoryError:
-            total += getsize(current)
-        except PermissionError: pass
-    return total
-
-
-def get_disk_capacity(disk):
-    if sep == chr(92):
-        size_bytes = windll.kernel32.GetDiskFreeSpaceExW.GetDiskFreeSpaceExW(
-            ctypes.c_wchar_p(drive_path), None, ctypes.byref(c_ulonglong()), None
-        ).value
-    else:
-        disk_obj = statvfs(disk)
-        size_bytes = disk_obj.f_frsize * disk_obj.f_blocks
-    return size_bytes
-
-
 def humanize_all(data):
     for item in data:
         if "capacity" in item:
@@ -128,5 +94,22 @@ def humanize_all(data):
         if "mtime" in item:
             item["mtime"] = readable_date(item["mtime"])
         item["size"] = readable_size(item["size"])
+
+
+def readable_size(num, suffix="B"):
+    # Connverts byte values to a human readable format
+    for unit in ("", "Ki", "Mi", "Gi", "Ti"):
+        if num < 1024:
+            return f"{num:.1f} {unit}{suffix}"
+        num /= 1024
+    return f"{num:.1f} Yi{suffix}"
+
+
+def readable_date(date):
+    if date is not None:
+        cd = dt.fromtimestamp(date)
+        return [cd.strftime("%d/%m/%Y"), cd.strftime("%H:%M")]
+    else:
+        return ["##/##/####", "##:##:##"]
 
 

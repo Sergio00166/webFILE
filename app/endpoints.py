@@ -1,9 +1,9 @@
 # Code by Sergio00166
 
-from functions import safe_path, validate_acl, printerr, redirect_no_query
+from functions import safe_path, validate_acl, printerr
+from flask import redirect, session, request
 from video import check_ffmpeg_installed
 from send_file import send_file, send_dir
-from flask import redirect, session
 from hashlib import sha256
 from actions import *
 
