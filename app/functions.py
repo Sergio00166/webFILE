@@ -122,15 +122,19 @@ def is_binary(filepath):
     return False
 
 
-def get_disk_capacity(disk):
-    if sep == chr(92):
-        size_bytes = windll.kernel32.GetDiskFreeSpaceExW.GetDiskFreeSpaceExW(
-            ctypes.c_wchar_p(drive_path), None, ctypes.byref(c_ulonglong()), None
-        ).value
-    else:
-        disk_obj = statvfs(disk)
-        size_bytes = disk_obj.f_frsize * disk_obj.f_blocks
-    return size_bytes
+def get_disk_stat(path):                                                                                                                                                                     
+    if sep == chr(92):                                                                                                                                                                       
+        size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()                                                                                                                              
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(                                                                                                                                          
+            path, None, ctypes.byref(total), ctypes.byref(free)                                                                                                                              
+        )                                                                                                                                                                                    
+        total, free = total.value, free.value                                                                                                                                                
+    else:                                                                                                                                                                                    
+        st = statvfs(path)                                                                                                                                                                
+        size = st.f_frsize * st.f_blocks                                                                                                                                                     
+        free = st.f_frsize * st.f_bfree                                                                                                                                                      
+                                                                                                                                                                                             
+    return {"size": size, "free": free, "used": size-free}  
 
 
 def get_directory_size(directory):
