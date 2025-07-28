@@ -16,38 +16,38 @@ file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 webpage_file_ext = file_types.get("webpage")[0]
 
 
-def get_folder_content(folder_path, root, folder_size, ACL):                                                                                                                                 
-    dirs, files, content = [], [], []                                                                                                                                                        
-    for x in sorted(listdir(folder_path)):                                                                                                                                                   
-        (dirs if isdir(join(folder_path, x)) else files).append(x)                                                                                                                           
-                                                                                                                                                                                             
-    for item in dirs + files:                                                                                                                                                                
-        data = {}                                                                                                                                                                            
-        try:                                                                                                                                                                                 
-            item_path = join(folder_path, item)                                                                                                                                              
-            rel_path = relpath(item_path, start=root).replace(sep, "/")                                                                                                                      
-            validate_acl(rel_path,ACL)                                                                                                                                                       
-                                                                                                                                                                                             
-            data["name"] = item                                                                                                                                                              
-            data["path"] = rel_path                                                                                                                                                          
-            data["type"] = get_file_type(item_path)                                                                                                                                          
-                                                                                                                                                                                             
-            if data["type"] == "disk":                                                                                                                                                       
-                disk = get_disk_stat(item_path)                                                                                                                                              
-                data["capacity"] = disk["size"]                                                                                                                                              
-                data["size"] = disk["used"]                                                                                                                                                  
-            else:                                                                                                                                                                            
-                data["size"] = (                                                                                                                                                             
-                    (get_dir_size(item_path) if folder_size else 0)                                                                                                                    
-                    if data["type"] == "directory" else getsize(item_path)                                                                                                                   
-                )                                                                                                                                                                            
-                                                                                                                                                                                             
-            try:    data["mtime"] = getmtime(item_path)                                                                                                                                      
-            except: data["mtime"] = None                                                                                                                                                     
-                                                                                                                                                                                             
-            content.append(data)                                                                                                                                                             
-        except: pass                                                                                                                                                                         
-    return content   
+def get_folder_content(folder_path, root, folder_size, ACL):
+    dirs, files, content = [], [], []
+    for x in sorted(listdir(folder_path)):
+        (dirs if isdir(join(folder_path, x)) else files).append(x)
+
+    for item in dirs + files:
+        data = {}
+        try:
+            item_path = join(folder_path, item)
+            rel_path = relpath(item_path, start=root).replace(sep, "/")
+            validate_acl(rel_path,ACL)
+
+            data["name"] = item
+            data["path"] = rel_path
+            data["type"] = get_file_type(item_path)
+
+            if data["type"] == "disk":
+                disk = get_disk_stat(item_path)
+                data["capacity"] = disk["size"]
+                data["size"] = disk["used"]
+            else:
+                data["size"] = (
+                    (get_dir_size(item_path) if folder_size else 0)
+                    if data["type"] == "directory" else getsize(item_path)
+                )
+
+            try:    data["mtime"] = getmtime(item_path)
+            except: data["mtime"] = None
+                            
+            content.append(data)
+        except: pass
+    return content
 
 
 def sort_contents(folder_content, sort, root):

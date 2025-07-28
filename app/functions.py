@@ -123,18 +123,18 @@ def is_binary(filepath):
     return False
 
 
-def get_disk_stat(path):                                                                                                                                                                     
-    if sep == chr(92):                                                                                                                                                                       
-        size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()                                                                                                                              
-        ctypes.windll.kernel32.GetDiskFreeSpaceExW(                                                                                                                                          
-            path, None, ctypes.byref(total), ctypes.byref(free)                                                                                                                              
-        )                                                                                                                                                                                    
-        total, free = total.value, free.value                                                                                                                                                
-    else:                                                                                                                                                                                    
-        st = statvfs(path)                                                                                                                                                                
-        size = st.f_frsize * st.f_blocks                                                                                                                                                     
-        free = st.f_frsize * st.f_bfree                                                                                                                                                      
-                                                                                                                                                                                             
+def get_disk_stat(path):
+    if sep == chr(92):
+        size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+            path, None, ctypes.byref(total), ctypes.byref(free)
+        )
+        total, free = total.value, free.value
+    else:
+        st = statvfs(path)
+        size = st.f_frsize * st.f_blocks
+        free = st.f_frsize * st.f_bfree
+
     return {"size": size, "free": free, "used": size-free}  
 
 

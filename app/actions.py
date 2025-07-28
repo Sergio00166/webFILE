@@ -1,7 +1,7 @@
 # Code by Sergio00166
 
+from flask import render_template, stream_template, redirect, request
 from os.path import pardir, basename, abspath, relpath, dirname
-from flask import render_template, stream_template, redirect
 from video import get_subtitles, external_subs
 from urllib.parse import urlparse, urlunparse
 from urllib.parse import quote as encurl
