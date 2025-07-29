@@ -2,4 +2,4 @@ Flask>=3.1.0
 # Uncomment this if Flask-Session does not install
 # msgspec @ git+https://github.com/jcrist/msgspec.git
 Flask-Session>=0.8.0
-redis==6.0.0
+redis>=6.0.0
