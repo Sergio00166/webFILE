@@ -20,12 +20,8 @@ def check_rec_chg_parent(path, ACL, root, new_parent):
     new_parent = new_parent.split("/")
     for fulldir, dirs, files in walk(path):
         for item in dirs + files:
-            item_path = relpath(fulldir+sep+item, start=root)
-            item_path = item_path.replace(sep, "/")
-            path_parts = item_path.split("/")
-            path_parts = path_parts[parent:]
-            path_parts = new_parent+path_parts
-            item_path = "/".join(path_parts)
+            item_path = relpath(fulldir+sep+item, start=root).replace(sep, "/")
+            item_path = "/".join(new_parent + item_path.split("/")[parent:])
             validate_acl(item_path, ACL, True)
 
 
@@ -33,7 +29,7 @@ def move(path,ACL,root):
     destination = request.headers.get('Destination')
     if not destination: return "Bad Request", 400
     return mvcp_worker(ACL,path,destination,root,True)
-    
+
 def copy(path,ACL,root):  
     destination = request.headers.get('Destination')
     if not destination: return "Bad Request", 400
