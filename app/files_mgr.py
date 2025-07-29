@@ -65,7 +65,7 @@ def mkdir(path, ACL, root):
     try:
         validate_acl(path, ACL, True)
         full_path = safe_path(path,root,True)
-        parent_dir = sep.join(full_path.split(sep)[:-1])
+        parent_dir = dirname(full_path)
 
         if not exists(parent_dir): raise FileNotFoundError
         elif   exists(full_path):  raise FileExistsError

@@ -54,6 +54,7 @@ def sort_contents(folder_content, sort, root):
     dirs, files = [], []
 
     for x in folder_content:
+        # path is a relative path 
         path = x["path"].replace("/", sep)
         if isdir(join(root,path)):
             dirs.append(x)

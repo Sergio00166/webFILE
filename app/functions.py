@@ -1,7 +1,7 @@
 # Code by Sergio00166
 
 from os.path import exists, normpath, dirname
-from os.path import commonpath, join, abspath
+from os.path import commonpath, abspath
 from os import sep, access, R_OK, scandir
 from datetime import datetime as dt
 from json import load as jsload
@@ -23,7 +23,7 @@ def safe_path(path, root, igntf=False):
     # Checks if the path is inside the root dir
     # else raise an exception depending on the case
     path = path.replace("/", sep)
-    path = abspath(join(root,path))
+    path = abspath(sep.join([root,path]))
 
     if is_subdirectory(root, path):
         if igntf:

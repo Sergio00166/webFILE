@@ -55,7 +55,7 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
     folder_content = get_folder_content(folder_path, root, folder_size, ACL)
 
     # Get the parent dir from the folder_path
-    parent_directory = abspath(join(folder_path, pardir))
+    parent_directory = dirname(folder_path)
 
     # Check if the parent directory is root
     parent_directory = "" if parent_directory == root \
