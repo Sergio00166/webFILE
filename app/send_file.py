@@ -92,7 +92,7 @@ def compute_tar_size(directory):
 def send_dir(directory, root, ACL, name=None):
     folder = name if name else basename(directory)
 
-    check_recursive(directory, root, ACL)
+    check_recursive(directory, ACL, root)
     size = compute_tar_size(directory)
 
     headers={
