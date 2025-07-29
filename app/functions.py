@@ -13,8 +13,6 @@ if sep == chr(92): import ctypes
 else: from os import statvfs
 
 is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
-# A list of a secuence of bytes to identify the UTF-x using their BOMs
-boms = ( b"\xef\xbb\xbf", b"\xff\xfe", b"\xfe\xff", b"\xff\xfe\x00\x00", b"\x00\x00\xfe\xff")
 
 
 """ Global functions """
@@ -109,19 +107,6 @@ def printerr(e, log_path, override_msg=None):
 
 
 """ Extra functions """
-
-def is_binary(filepath):
-    with open(filepath, "rb") as f:
-        head = f.read(4)
-        if any(head.startswith(bom) for bom in boms):
-            return False
-        if b"\x00" in head:
-            return True
-        while chunk := f.read(1024):
-            if b"\x00" in chunk:
-                return True
-    return False
-
 
 def get_disk_stat(path):
     if sep == chr(92):
