@@ -55,7 +55,8 @@ This service exposes a filesystem directory over HTTP, enabling:
 pip install -r requirements.txt
 ```
 
-Install `ffmpeg` at the system level for media playback.
+Install `ffmpeg` at the system level for media playback.   
+A redis sever for session storage (Edit `app/init.py` to change the session storage settings).    
 
 ## ⚙️ Configuration
 
@@ -70,7 +71,7 @@ Configure via environment variables:
 | SESSIONS\_DB    | No       | data/sessions.db | Session store.                                  |
 | SECRET\_KEY     | No       | Auto-generated   | Secret key for multi-worker setups.             |
 | SHOW\_DIRSIZE   | No       | False            | Display directory sizes.                        |
-| MAX\_CACHE (MB) | No       | 256              | RAM limit for metadata/subtitle caching/process |
+| MAX\_CACHE (MB) | No       | 256              | RAM limit for video metadata/subtitle cache     |
 
 ## 🔢 File Listing API
 
