@@ -7,6 +7,7 @@ from re import compile as re_compile
 from flask import Response, request
 from os import sep, stat, walk
 from functions import validate_acl
+from files_mgr import check_recursive
 import tarfile
 
 RANGE_REGEX = re_compile(r"bytes=(\d+)-(\d*)")
@@ -91,7 +92,7 @@ def compute_tar_size(directory):
 def send_dir(directory, root, ACL, name=None):
     folder = name if name else basename(directory)
 
-    validate_directory_tree(directory, root, ACL)
+    check_recursive(directory, root, ACL)
     size = compute_tar_size(directory)
 
     headers={
@@ -99,17 +100,6 @@ def send_dir(directory, root, ACL, name=None):
         "Content-Length": str(size),
     }
     return Response(generate_tar(directory), mimetype="application/x-tar", headers=headers)
-
-
-def validate_directory_tree(directory_path, web_root, ACL):
-    for root, _, files in walk(directory_path, followlinks=True):
-        for file in files:
-            file_path = join(root, file)
-            with open(file_path, "rb"):
-                pass
-            file_path = relpath(file_path, start=web_root)
-            file_path = file_path.replace(sep, "/")
-            validate_acl(file_path, ACL)
 
 
 def create_tar_header(file_path, arcname):
@@ -144,4 +134,5 @@ def generate_tar(directory_path):
 
     yield b"\0" * 1024  # Add TAR end
 
+ 
  
