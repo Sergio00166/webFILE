@@ -4,24 +4,23 @@ from os.path import getsize,getmtime,exists,isfile,basename
 from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
 from json import loads as jsload
-from cache import SelectiveCache
+from cache import setup_cache
 from flask import Response
-from os import getenv
 
-cache_limit = getenv("MAX_CACHE",None)
-if cache_limit and not cache_limit.isdigit():
-    print("MAX_CACHE MUST BE AN INT VALUE")
-    exit(1) # Dont continue
-cache_limit = int(cache_limit) if cache_limit else 256
-cache = SelectiveCache(max_memory=cache_limit*1024*1024)
+cache = setup_cache()
+ffmpeg_check = False
 
 
 def check_ffmpeg_installed():
+    global ffmpeg_check
+    if ffmpeg_check: return
     try:
         result = run(["ffmpeg","-version"],stdout=DEVNULL,stderr=DEVNULL)
         if result.returncode != 0:
             raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
     except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
+    else: ffmpeg_check = True # Flag it to dont re-run
+
 
 def external_subs(file):
     sname = ".".join(file.split(".")[:-1]+["mks"])
@@ -127,5 +126,6 @@ def get_subtitles(index,file,legacy):
     headers = {"Content-Disposition": "attachment;filename="+subsname}
     # Return the subtittle track with the right mime
     return Response(out, mimetype=mime, headers=headers)
+
 
 
