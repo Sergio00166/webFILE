@@ -8,12 +8,14 @@ from json import loads as jsload
 from cache import setup_cache
 from flask import Response
 
-
 cache = setup_cache()
+is_ffmpeg_available = False
 
 def check_ffmpeg_installed():
-    if find_proc("ffmpeg") is None:
-        raise ModuleNotFoundError("FFMPEG is not installed")
+    global is_ffmpeg_available
+    if is_ffmpeg_available: return
+    if find_proc("ffmpeg"): is_ffmpeg_available = True
+    else: raise ModuleNotFoundError("FFMPEG is not installed")
 
 def external_subs(file):
     sname = ".".join(file.split(".")[:-1]+["mks"])
