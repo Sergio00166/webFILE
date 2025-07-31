@@ -26,7 +26,7 @@ def ffmpeg_extract_chapters(file_path,sz,mt):
     ffprobe_output = jsload( run([
         "ffprobe", "-v", "quiet", "-show_entries",
         "chapters",  "-of", "json", file_path
-    ], stdout=PIPE,stderr=DEVNULL).stdout.decode
+    ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
     try:
         return [ {
             "title": chapter["tags"].get("title", "Untitled"),
