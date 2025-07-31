@@ -17,17 +17,19 @@ if cache_limit and not cache_limit.isdigit():
 cache_limit = int(cache_limit) if cache_limit else 256
 cache_limit *= 1024 * 1024 # MB -> bytes
 
-
 # Connect to Redis server. DB0 is used for sessions
 def setup_cache(host="127.0.0.1", port=6379, db=1):
     pool = ConnectionPool(host=host, port=port, db=db)
     redis_client = Redis(connection_pool=pool)
 
     if redis_client.set("app:redis_configured", "1", nx=True, ex=60):
-        configure_redis_memory(redis_client, cache_limit, "allkeys-lru")
+        lock_key = "app:redis_memory_configured"
+        acquired = redis_client.set(lock_key, "1", nx=True, ex=60)
+        if acquired:
+            redis_client.config_set("maxmemory", cache_limit)
+            redis_client.config_set("maxmemory-policy", "allkeys-lru")
 
     return SelectiveRedisCache(redis_client)
-
 
 
 class SelectiveRedisCache:
