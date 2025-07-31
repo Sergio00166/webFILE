@@ -1,13 +1,12 @@
 # Code by Sergio00166
 
-from flask import send_file as df_send_file
+from os.path import basename, getmtime, isfile
 from os.path import getsize, relpath, join
-from os.path import basename, getmtime
+from flask import send_file as df_send_file
 from re import compile as re_compile
 from flask import Response, request
 from os import sep, stat, walk
 from functions import validate_acl
-from files_mgr import check_recursive
 import tarfile
 
 RANGE_REGEX = re_compile(r"bytes=(\d+)-(\d*)")
@@ -79,21 +78,29 @@ def generate(file_path, ranges):
 
 
 
+
 """ TO SEND FOLDER AS TAR FILES IN REALTIME """
 
-def compute_tar_size(directory):
-    return sum(
-        512 + getsize(path := join(curdir, f)) + (512 - (getsize(path) % 512)) % 512
-        for curdir, _, files in walk(directory, followlinks=True)
-        for f in files
-    ) + 1024 # Add tar padding
+
+def safe_calc_tar_size(directory, ACL, root):
+    total_size = 0
+
+    for curdir, dirs, files in walk(directory, followlinks=True):
+        for name in dirs + files:
+            path = join(curdir, name)
+            rel = relpath(path, start=root).replace(sep, "/")
+            validate_acl(rel, ACL)
+
+            if isfile(path):
+                size = getsize(path) # Also checks if readable
+                total_size += 512 + size + (512 - (size % 512)) % 512
+
+    return total_size + 1024  # tar EOF padding
 
 
 def send_dir(directory, root, ACL, name=None):
     folder = name if name else basename(directory)
-
-    check_recursive(directory, ACL, root)
-    size = compute_tar_size(directory)
+    size = safe_calc_tar_size(directory, ACL, root)
 
     headers={
         "Content-Disposition": "attachment;filename=" + folder+".tar",

@@ -3,24 +3,17 @@
 from os.path import getsize,getmtime,exists,isfile,basename
 from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
+from shutil import which as find_proc
 from json import loads as jsload
 from cache import setup_cache
 from flask import Response
 
-cache = setup_cache()
-ffmpeg_check = False
 
+cache = setup_cache()
 
 def check_ffmpeg_installed():
-    global ffmpeg_check
-    if ffmpeg_check: return
-    try:
-        result = run(["ffmpeg","-version"],stdout=DEVNULL,stderr=DEVNULL)
-        if result.returncode != 0:
-            raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
-    except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
-    else: ffmpeg_check = True # Flag it to dont re-run
-
+    if find_proc("ffmpeg") is None:
+        raise ModuleNotFoundError("FFMPEG is not installed")
 
 def external_subs(file):
     sname = ".".join(file.split(".")[:-1]+["mks"])
@@ -30,18 +23,16 @@ def external_subs(file):
 
 @cache.cached("sz","mt")
 def ffmpeg_extract_chapters(file_path,sz,mt):
+    ffprobe_output = jsload( run([
+        "ffprobe", "-v", "quiet", "-show_entries",
+        "chapters",  "-of", "json", file_path
+    ], stdout=PIPE,stderr=DEVNULL).stdout.decode
     try:
-        ffprobe_output = jsload( run([
-            "ffprobe", "-v", "quiet", "-print_format",
-            "json", "-show_entries", "chapters", file_path
-        ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
-
-        filtered_chapters = [ {
+        return [ {
             "title": chapter["tags"].get("title", "Untitled"),
             "start_time": int(float(chapter["start_time"]))
         } for chapter in ffprobe_output["chapters"] ]
 
-        return filtered_chapters
     except: return ""
 
 
