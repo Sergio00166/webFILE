@@ -56,7 +56,7 @@ pip install -r requirements.txt
 ```
 
 Install `ffmpeg` at the system level for media playback.   
-A `Redis` sever for session storage.   
+A `Redis` sever for session storage and other cache.   
 
 ## Configuration
 
