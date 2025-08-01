@@ -137,9 +137,9 @@ def stream_tar_file(file_path, arcname):
 def generate_tar(directory_path):
     root_len = len(directory_path.rstrip(sep)) + 1
 
-    for root, _, files in os.walk(directory_path, followlinks=True):
+    for root, _, files in walk(directory_path, followlinks=True):
         for name in files:
-            file_path = os.path.join(root, name)
+            file_path = join(root, name)
             arcname = file_path[root_len:]
             yield from stream_tar_file(file_path, arcname)
 
