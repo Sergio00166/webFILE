@@ -124,7 +124,7 @@ def get_disk_stat(path):
 
 
 def get_dir_size(root):
-    try: root_dev = stat(root, follow_symlinks=True).st_dev
+    try: root_dev = stat(root).st_dev
     except: return 0
 
     total, stack = 0, [root]
@@ -132,10 +132,10 @@ def get_dir_size(root):
         path = stack.pop()
         for e in scandir(path):
             try:
-                st = e.stat(follow_symlinks=True)
-                if e.is_file(follow_symlinks=True):
+                st = e.stat()
+                if e.is_file():
                     total += st.st_size
-                elif e.is_dir(follow_symlinks=True) and st.st_dev == root_dev:
+                elif e.is_dir() and st.st_dev == root_dev:
                     stack.append(e.path)
             except: pass
     return total

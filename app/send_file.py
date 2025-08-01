@@ -87,16 +87,15 @@ def safe_calc_tar_size(directory, ACL, root):
 
     while stack:
         curdir = stack.pop()
-        with scandir(curdir) as it:
-            for entry in it:
-                path = entry.path
-                validate_acl(relpath(path, start=root).replace(sep, "/"), ACL)
+        for entry in scandir(curdir):
+            path = entry.path
+            validate_acl(relpath(path, start=root).replace(sep, "/"), ACL)
 
-                st = entry.stat(follow_symlinks=True)
-                total_size += 512 + ((st.st_size + 511) & ~0x1FF)
+            st = entry.stat(follow_symlinks=True)
+            total_size += 512 + ((st.st_size + 511) & ~0x1FF)
 
-                if entry.is_dir(follow_symlinks=True):
-                    stack.append(path)
+            if entry.is_dir(follow_symlinks=True):
+                stack.append(path)
 
     return total_size + 1024
 
@@ -136,13 +135,14 @@ def stream_tar_file(file_path, arcname):
 
 
 def generate_tar(directory_path):
-    for root, _, files in walk(directory_path, followlinks=True):
-        for file in files:
-            file_path = join(root, file)
-            arcname = relpath(file_path, directory_path)
+    root_len = len(directory_path.rstrip(sep)) + 1
+
+    for root, _, files in os.walk(directory_path, followlinks=True):
+        for name in files:
+            file_path = os.path.join(root, name)
+            arcname = file_path[root_len:]
             yield from stream_tar_file(file_path, arcname)
 
-    yield b"\0" * 1024  # Add TAR end
+    yield b"\0" * 1024
 
- 
  
