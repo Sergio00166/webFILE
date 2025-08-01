@@ -95,9 +95,9 @@ def video(path, root, file_type, ACL):
     return render_template(
         "video.html", path=path, name=name,
         prev=prev,nxt=nxt, tracks=tracks,
-        chapters=chapters, subs_file=subs,
-        subs_name = basename(subs)
+        chapters=chapters, subs_file=subs
     )
+
 
 def audio(path, root, file_type, ACL):
     prev, nxt, name, rnd = get_filepage_data(path, root, file_type, ACL, random=True)

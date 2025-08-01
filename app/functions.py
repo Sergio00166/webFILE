@@ -123,22 +123,21 @@ def get_disk_stat(path):
     return {"size": size, "free": free, "used": size-free}  
 
 
-def get_dir_size(directory):
-    total, stack = 0, [directory]
-    while stack:
-        current = stack.pop()
-        try:
-            for entry in scandir(current):
-                if entry.is_file():
-                    total += entry.stat().st_size
-                elif Path(entry.path).is_mount():
-                    pass # Ignore it
-                elif entry.is_dir():
-                    stack.append(entry.path)
+def get_dir_size(root):
+    try: root_dev = stat(root, follow_symlinks=True).st_dev
+    except: return 0
 
-        except NotADirectoryError:
-            total += getsize(current)
-        except PermissionError: pass
+    total, stack = 0, [root]
+    while stack:
+        path = stack.pop()
+        for e in scandir(path):
+            try:
+                st = e.stat(follow_symlinks=True)
+                if e.is_file(follow_symlinks=True):
+                    total += st.st_size
+                elif e.is_dir(follow_symlinks=True) and st.st_dev == root_dev:
+                    stack.append(e.path)
+            except: pass
     return total
 
 

@@ -5,7 +5,7 @@ from os.path import getsize, relpath, join
 from flask import send_file as df_send_file
 from re import compile as re_compile
 from flask import Response, request
-from os import sep, stat, walk
+from os import sep, stat, scandir
 from functions import validate_acl
 import tarfile
 
@@ -83,19 +83,22 @@ def generate(file_path, ranges):
 
 
 def safe_calc_tar_size(directory, ACL, root):
-    total_size = 0
+    total_size, stack = 0, [directory]
 
-    for curdir, dirs, files in walk(directory, followlinks=True):
-        for name in dirs + files:
-            path = join(curdir, name)
-            rel = relpath(path, start=root).replace(sep, "/")
-            validate_acl(rel, ACL)
+    while stack:
+        curdir = stack.pop()
+        with scandir(curdir) as it:
+            for entry in it:
+                path = entry.path
+                validate_acl(relpath(path, start=root).replace(sep, "/"), ACL)
 
-            if isfile(path):
-                size = getsize(path) # Also checks if readable
-                total_size += 512 + size + (512 - (size % 512)) % 512
+                st = entry.stat(follow_symlinks=True)
+                total_size += 512 + ((st.st_size + 511) & ~0x1FF)
 
-    return total_size + 1024  # tar EOF padding
+                if entry.is_dir(follow_symlinks=True):
+                    stack.append(path)
+
+    return total_size + 1024
 
 
 def send_dir(directory, root, ACL, name=None):
