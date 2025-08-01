@@ -10,8 +10,8 @@ from flask import request
 
 
 def check_recursive(path, ACL, root, write=False):
-    for fulldir, dirs, files in walk(path):
-        for item in dirs + files:
+    for fulldir, _, files in walk(path):
+        for item in files:
             item_path = fulldir+sep+item
             
             if not access(item_path, W_OK if write else R_OK):
@@ -26,8 +26,8 @@ def check_recursive(path, ACL, root, write=False):
 def check_rec_chg_parent(path, ACL, root, new_parent):
     parent = len(path.split("/"))
     new_parent = new_parent.split("/")
-    for fulldir, dirs, files in walk(path):
-        for item in dirs + files:
+    for fulldir, _, files in walk(path):
+        for item in files:
             item_path = relpath(fulldir+sep+item, start=root).replace(sep, "/")
             item_path = "/".join(new_parent + item_path.split("/")[parent:])
             validate_acl(item_path, ACL, True)

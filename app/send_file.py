@@ -145,4 +145,4 @@ def generate_tar(directory_path):
 
     yield b"\0" * 1024
 
- 
+
