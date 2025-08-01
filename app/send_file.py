@@ -3,9 +3,9 @@
 from os.path import basename, getmtime, isfile
 from os.path import getsize, relpath, join
 from flask import send_file as df_send_file
+from os import sep, stat, scandir, walk
 from re import compile as re_compile
 from flask import Response, request
-from os import sep, stat, scandir
 from functions import validate_acl
 import tarfile
 
