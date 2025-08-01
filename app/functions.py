@@ -2,7 +2,7 @@
 
 from os.path import exists, normpath, dirname
 from os.path import commonpath, abspath
-from os import sep, access, R_OK, scandir
+from os import sep, access, R_OK, scandir, stat
 from datetime import datetime as dt
 from json import load as jsload
 from flask import session
