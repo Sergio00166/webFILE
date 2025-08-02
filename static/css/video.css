@@ -346,37 +346,67 @@ canvas { position: absolute; }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-    .main-state { height: 64px; width: 64px; }
-    .custom-loader { height: 90px; width: 90px; }
+    .main-state {
+        height: 64px;
+        width: 64px;
+    }
+    .custom-loader {
+        height: 90px;
+        width: 90px;
+    }
 }
 @media (max-width: 500px) {
-    .play-pause { display: none; }
+    .play-pause {
+        display: none;
+    }
 }
 @media (max-width: 450px) {
-    .time-container { margin-bottom: 6px; }
-    .volume { display: none; }
+    .time-container {
+        margin-bottom: 6px;
+    }
+    .volume {
+        display: none;
+    }
     .btn-controls {
         padding-top: 0.67rem;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
         flex-direction: column;
     }
-    .setting-menu { bottom: 100px; }
+    .setting-menu {
+        bottom: 100px;
+    }
 }
 @media (max-width: 320px) {
-    .duration { width: 90%; }
-    #mode { display: none; }
-    .main-state { height: 40px; width: 40px; }
+    .duration {
+        width: 90%;
+    }
+    #mode {
+        display: none;
+    }
+    .main-state {
+        height: 40px;
+        width: 40px;
+    }
     .custom-loader {
         height: 56px;
         width: 56px;
         border-width: 5px;
     }
-    .vol_val_st { font-size: 1rem; }
+    .vol_val_st { 
+        font-size: 1rem;
+    }
 }
 @media (max-width: 220px) {
-    .settings { display: none; }
+    .settings {
+        display: none;
+    }
 }
 @media (max-height: 320px) {
-    .btn-controls { display: none; }
+    .btn-controls {
+        display: none;
+    }
     .video-box, .main-state, .custom-loader {
         margin-bottom: 8px !important;
     }
@@ -387,10 +417,14 @@ canvas { position: absolute; }
     }
 }
 @media (min-aspect-ratio: 1/1) and (max-height: 320px) {
-    .hover-time .hover-duration { font-size: 0.5rem; }
+    .hover-time .hover-duration {
+        font-size: 0.5rem;
+    }
 }
-@media ((max-width: 160px), (max-height: 160px)) {
-    .video-container { display: none; }
+@media ((max-width: 160px) or (max-height: 160px)) {
+    .video-container {
+        display: none;
+    }
 }
 
 /* Hover styles on devices that support it */
