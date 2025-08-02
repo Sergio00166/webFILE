@@ -7,12 +7,12 @@ from functions import printerr, load_userACL, safe_path, validate_acl
 from files_mgr import handle_upload, mkdir, delfile, move, copy
 from os.path import abspath, isfile, join
 from os import getenv, urandom, makedirs
+from redis import Redis, ConnectionPool
 from flask_session import Session
 from flask import Flask, request
 from send_file import send_file
 from sys import path as pypath
 from secrets import token_hex
-from redis import StrictRedis
 
 
 # Set the paths of templates and static
@@ -52,12 +52,13 @@ except Exception as e:
 # Initialize main flask app
 app = Flask(__name__,static_folder=None,template_folder=join(parent_path,"templates"))
 app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
+pool = ConnectionPool(host='127.0.0.1', port=6379, db=0)
 
-# Configure SQLite for session storage
+# Configure Redis for session storage
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_REDIS'] = StrictRedis(host='127.0.0.1', port=6379, db=0)
+app.config['SESSION_REDIS'] = Redis(connection_pool=pool)
 app.config["PERMANENT_SESSION_LIFETIME"] = 3600
 
 # Init session
