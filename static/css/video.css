@@ -106,6 +106,9 @@ body {
     box-sizing: border-box;
     padding: 0.5rem 1rem;
 }
+.controls.show {
+    background: linear-gradient(to top, #000c -100%, transparent);
+}
 .duration {
     position: relative;
     margin: 0 auto;
@@ -136,6 +139,7 @@ body {
     height: 100%;
     border-radius: inherit;
     overflow: hidden;
+    transition: none !important;
 }
 .chapter {
     position: absolute;
@@ -318,15 +322,10 @@ select option {
 
 /* Just to animate with Opacity but
 WITHOUT BREAKING the backdrop-filter */
-.controls .time-container,
-.controls .duration::before,
-.controls .round-button,
-.controls .duration * {
+.time-container, .round-button,
+.duration::before, .duration * {
     opacity: 0;
     transition: opacity 0.3s;
-}
-.controls.show {
-    background: linear-gradient(to top, #000c -100%, transparent);
 }
 .controls.show .time-container,
 .controls.show .duration::before,
