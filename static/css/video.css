@@ -101,16 +101,10 @@ body {
 }
 .controls {
     bottom: 0;
-    opacity: 0;
     width: 100%;
     position: absolute;
     box-sizing: border-box;
     padding: 0.5rem 1rem;
-    transition: opacity 0.3s;
-    background: linear-gradient(to top, #000c -100%, transparent);
-}
-.controls.show {
-    opacity: 1;
 }
 .duration {
     position: relative;
@@ -320,6 +314,25 @@ select option {
     -webkit-backdrop-filter: blur(3px) saturate(150%) invert(5%) brightness(75%);
     background: transparent;
     box-shadow: 0 0 2px #FFFA;
+}
+
+/* Just to animate with Opacity but
+WITHOUT BREAKING the backdrop-filter */
+.controls .time-container,
+.controls .duration::before,
+.controls .round-button,
+.controls .duration * {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.controls.show {
+    background: linear-gradient(to top, #000c -100%, transparent);
+}
+.controls.show .time-container,
+.controls.show .duration::before,
+.controls.show .round-button,
+.controls.show .duration * {
+    opacity: 1;
 }
 
 /* Default values */
