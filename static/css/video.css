@@ -314,8 +314,8 @@ select option {
 /* Liquid Glass Fx */
 .duration::before, .main-state, 
 .round-button, .setting-menu, .hover-duration {
-    backdrop-filter: blur(3px) saturate(150%) invert(5%) brightness(75%);
-    -webkit-backdrop-filter: blur(3px) saturate(150%) invert(5%) brightness(75%);
+    backdrop-filter: blur(2px) saturate(200%) invert(10%) brightness(75%);
+    -webkit-backdrop-filter: blur(2px) saturate(200%) invert(10%) brightness(75%);
     background: transparent;
     box-shadow: 0 0 2px #FFFA;
 }
@@ -433,5 +433,6 @@ canvas { position: absolute; }
         outline: 2px solid #fffa !important;
     }
 }
+
 
 
