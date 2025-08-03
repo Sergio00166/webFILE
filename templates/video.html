@@ -15,8 +15,8 @@
     </script>
   </head>
   <body>
-    <a href="{{ request.path }}?raw" download="{{ name }}" id="download_video" tabindex="-1"></a>
-    <a href="{{ subs_file }}" download="{{ subs_name }}" id="download_subs" tabindex="-1"></a>
+    <a href="{{ request.path }}?raw" download id="download_video" tabindex="-1"></a>
+    <a href="{{ subs_file }}" id="download_subs" tabindex="-1"></a>
     <a href='{{ nxt }}' id="next" tabindex="-1"></a>
     <a href='{{ prev }}' id="prev" tabindex="-1"></a>
     <div class="video-container">

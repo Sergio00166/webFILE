@@ -3,25 +3,19 @@
 from os.path import getsize,getmtime,exists,isfile,basename
 from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
+from shutil import which as find_proc
 from json import loads as jsload
-from cache import SelectiveCache
+from cache import setup_cache
 from flask import Response
-from os import getenv
 
-cache_limit = getenv("MAX_CACHE",None)
-if cache_limit and not cache_limit.isdigit():
-    print("MAX_CACHE MUST BE AN INT VALUE")
-    exit(1) # Dont continue
-cache_limit = int(cache_limit) if cache_limit else 256
-cache = SelectiveCache(max_memory=cache_limit*1024*1024)
-
+cache = setup_cache()
+is_ffmpeg_available = False
 
 def check_ffmpeg_installed():
-    try:
-        result = run(["ffmpeg","-version"],stdout=DEVNULL,stderr=DEVNULL)
-        if result.returncode != 0:
-            raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
-    except: raise ModuleNotFoundError("FFMPEG IS NOT INSTALLED")
+    global is_ffmpeg_available
+    if is_ffmpeg_available: return
+    if find_proc("ffmpeg"): is_ffmpeg_available = True
+    else: raise ModuleNotFoundError("FFMPEG is not installed")
 
 def external_subs(file):
     sname = ".".join(file.split(".")[:-1]+["mks"])
@@ -31,18 +25,16 @@ def external_subs(file):
 
 @cache.cached("sz","mt")
 def ffmpeg_extract_chapters(file_path,sz,mt):
+    ffprobe_output = jsload( run([
+        "ffprobe", "-v", "quiet", "-show_entries",
+        "chapters",  "-of", "json", file_path
+    ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
     try:
-        ffprobe_output = jsload( run([
-            "ffprobe", "-v", "quiet", "-print_format",
-            "json", "-show_entries", "chapters", file_path
-        ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
-
-        filtered_chapters = [ {
+        return [ {
             "title": chapter["tags"].get("title", "Untitled"),
             "start_time": int(float(chapter["start_time"]))
         } for chapter in ffprobe_output["chapters"] ]
 
-        return filtered_chapters
     except: return ""
 
 
@@ -127,5 +119,6 @@ def get_subtitles(index,file,legacy):
     headers = {"Content-Disposition": "attachment;filename="+subsname}
     # Return the subtittle track with the right mime
     return Response(out, mimetype=mime, headers=headers)
+
 
 

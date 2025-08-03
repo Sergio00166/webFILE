@@ -1,11 +1,11 @@
 # Code by Sergio00166
 
-from flask import send_file as df_send_file
+from os.path import basename, getmtime, isfile
 from os.path import getsize, relpath, join
-from os.path import basename, getmtime
+from flask import send_file as df_send_file
+from os import sep, stat, scandir, walk
 from re import compile as re_compile
 from flask import Response, request
-from os import sep, stat, walk
 from functions import validate_acl
 import tarfile
 
@@ -78,38 +78,37 @@ def generate(file_path, ranges):
 
 
 
+
 """ TO SEND FOLDER AS TAR FILES IN REALTIME """
 
-def compute_tar_size(directory):
-    return sum(
-        512 + getsize(path := join(curdir, f)) + (512 - (getsize(path) % 512)) % 512
-        for curdir, _, files in walk(directory, followlinks=True)
-        for f in files
-    ) + 1024 # Add tar padding
+
+def safe_calc_tar_size(directory, ACL, root):
+    total_size, stack = 0, [directory]
+
+    while stack:
+        curdir = stack.pop()
+        for entry in scandir(curdir):
+            path = entry.path
+            validate_acl(relpath(path, start=root).replace(sep, "/"), ACL)
+
+            st = entry.stat(follow_symlinks=True)
+            total_size += 512 + ((st.st_size + 511) & ~0x1FF)
+
+            if entry.is_dir(follow_symlinks=True):
+                stack.append(path)
+
+    return total_size + 1024
 
 
 def send_dir(directory, root, ACL, name=None):
     folder = name if name else basename(directory)
-
-    validate_directory_tree(directory, root, ACL)
-    size = compute_tar_size(directory)
+    size = safe_calc_tar_size(directory, ACL, root)
 
     headers={
         "Content-Disposition": "attachment;filename=" + folder+".tar",
         "Content-Length": str(size),
     }
     return Response(generate_tar(directory), mimetype="application/x-tar", headers=headers)
-
-
-def validate_directory_tree(directory_path, web_root, ACL):
-    for root, _, files in walk(directory_path, followlinks=True):
-        for file in files:
-            file_path = join(root, file)
-            with open(file_path, "rb"):
-                pass
-            file_path = relpath(file_path, start=web_root)
-            file_path = file_path.replace(sep, "/")
-            validate_acl(file_path, ACL)
 
 
 def create_tar_header(file_path, arcname):
@@ -136,12 +135,14 @@ def stream_tar_file(file_path, arcname):
 
 
 def generate_tar(directory_path):
+    root_len = len(directory_path.rstrip(sep)) + 1
+
     for root, _, files in walk(directory_path, followlinks=True):
-        for file in files:
-            file_path = join(root, file)
-            arcname = relpath(file_path, directory_path)
+        for name in files:
+            file_path = join(root, name)
+            arcname = file_path[root_len:]
             yield from stream_tar_file(file_path, arcname)
 
-    yield b"\0" * 1024  # Add TAR end
+    yield b"\0" * 1024
 
- 
+

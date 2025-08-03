@@ -13,6 +13,7 @@ const buttons = {
     ren: document.getElementById('renBtn'),
     invert: document.getElementById('invertBtn'),
 };
+const progress = document.getElementById('progress');
 const base = (location.pathname.replace(/\/$/, '') || '') + '/';
 
 const selected = new Map();
@@ -86,8 +87,6 @@ function handleDivClick(div) {
     else window.open(url, '_blank');
 }
 
-enableDelegation();
-
 function enableDelegation() {
     var container = document.querySelector('div.container');
     if (!container) return;
@@ -103,7 +102,8 @@ function enableDelegation() {
             handleDivClick(e.target.closest('.filename'));
         }
     });
-}
+} enableDelegation();
+
 
 function downloadURL(url) {
     var a = document.createElement('a');
@@ -208,7 +208,7 @@ async function pasteFiles() {
     await delay(250);
     for (var i = 0; i < toPaste.list.length; i++) {
         var p = toPaste.list[i].replace(/\/$/, '');
-        var dest = base + '/' + p.split('/').pop();
+        var dest = base + p.split('/').pop();
         if (!await sendRequest(p, dest, toPaste.mode)) break;
     }
     clearAllMvCp();
@@ -219,7 +219,7 @@ async function mkdir() {
     var name = prompt('Create dir');
     if (!name) return;
     name = encodeURIComponent(name);
-    if (await sendRequest(base+'/'+name, null, 'MKCOL')) location.reload();
+    if (await sendRequest(base + name, null, 'MKCOL')) location.reload();
 }
 
 function openFileMenu(selectDir) {
@@ -247,26 +247,64 @@ async function createFolders(files) {
         }
     }
     for (const dir of dirs) {
-        var path = base+'/'+encodePath(dir);
+        var path = base + encodePath(dir);
         var r = await fetch(path, { method: 'MKCOL' });
         if (!r.ok) throw r.status;
     }
 }
 
+
+function uploadFileWithProgress(file, url, onProgress) {
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('PUT', url);
+
+        xhr.upload.onprogress = function(event) {
+            if (event.lengthComputable && onProgress) {
+                onProgress(event.loaded, event.total);
+            }
+        };
+
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                resolve();
+            } else { reject(xhr.status); }
+        };
+
+        xhr.onerror = function() { reject('Connection Error'); };
+
+        xhr.send(file);
+    });
+}
+
+
 async function uploadFiles(files, isDir) {
     showLoader();
+
+    let totalBytes = 0;
+    for (let f of files) totalBytes += f.size;
+
+    let uploadedBytes = 0;
+
     if (isDir) await createFolders(files);
 
-    for (var i = 0; i < files.length; i++) {
-        var f = files[i];
-        var path = isDir ? f.webkitRelativePath : f.name;
-        path = base+'/'+encodePath(path);
+    for (let i = 0; i < files.length; i++) {
+        let f = files[i];
+        let path = isDir ? f.webkitRelativePath : f.name;
+        path = base + encodePath(path);
 
         try {
-            var r = await fetch(path, { method: 'PUT', body: f });
-            if (!r.ok) throw r.status;
+            await uploadFileWithProgress(f, path, (loaded, total) => {
+                let totalUploaded = uploadedBytes + loaded;
+                let percent = (totalUploaded / totalBytes) * 100;
+                progress.textContent = percent.toFixed(2) + '%';
+            });
+
+            uploadedBytes += f.size;
+
         } catch (status) {
-            var msgs = {
+            const msgs = {
                 400: 'Invalid upload data',
                 403: 'You don’t have permission to do that',
                 409: 'It already exists',
@@ -274,11 +312,13 @@ async function uploadFiles(files, isDir) {
                 500: 'Server Error'
             };
             alert(msgs[status] || 'Connection Error');
-            break;
+            break;  // stop uploading more files on error
         }
     }
-   location.reload();
+
+    location.reload();
 }
+
 
 function enableDragAndDropUpload(dropArea, selectDirectory) {
     dropArea.addEventListener('dragover', function (e) { e.preventDefault(); });
@@ -348,4 +388,5 @@ document.addEventListener('keydown', function (e) {
         case '3': var el3 = document.getElementById('sortDate'); if (el3) el3.click(); break;
     }
 });
+
 

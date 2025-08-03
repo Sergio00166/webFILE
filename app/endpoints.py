@@ -1,10 +1,11 @@
 # Code by Sergio00166
 
 from functions import safe_path, validate_acl, printerr
+from flask import redirect, session, request
 from video import check_ffmpeg_installed
 from send_file import send_file, send_dir
 from hashlib import sha256
-from flask import redirect
+from os.path import isfile
 from actions import *
 
 autoload_webpage = "index" + webpage_file_ext

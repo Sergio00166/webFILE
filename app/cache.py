@@ -1,59 +1,76 @@
 # Code by Sergio00166
 
+from json import dumps as jsdumps, loads as jsloads
+from redis import Redis, ConnectionPool
+from pickle import dumps, loads
+from hashlib import sha256
 from functools import wraps
-from sys import getsizeof
+from redis import Redis
+from os import getenv
 
 
-# SelectiveCache(max_memory=1000)
-# @cache.cached("invalidate_variable")
+cache_limit = getenv("MAX_CACHE",None)
+if cache_limit and not cache_limit.isdigit():
+    print("MAX_CACHE MUST BE AN INT VALUE")
+    exit(1) # Dont continue
 
-class SelectiveCache:
+cache_limit = int(cache_limit) if cache_limit else 256
+cache_limit *= 1024 * 1024 # MB -> bytes
+
+# Connect to Redis server. DB0 is used for sessions
+def setup_cache(host="127.0.0.1", port=6379, db=1):
+    pool = ConnectionPool(host=host, port=port, db=db)
+    redis_client = Redis(connection_pool=pool)
+
+    if redis_client.set("app:redis_configured", "1", nx=True, ex=60):
+        lock_key = "app:redis_memory_configured"
+        acquired = redis_client.set(lock_key, "1", nx=True, ex=60)
+        if acquired:
+            redis_client.config_set("maxmemory", cache_limit)
+            redis_client.config_set("maxmemory-policy", "allkeys-lru")
+
+    return SelectiveRedisCache(redis_client)
+
+
+class SelectiveRedisCache:
     _instance = None
-    _initialized = False
 
-    def __new__(cls, *args, **kwargs):
-        if not cls._initialized:
-            cls._instance = super(SelectiveCache, cls).__new__(cls)
-            cls._instance.cache = {}
-            cls._instance.inv_keys = {}
-            cls._instance.max_memory = kwargs.get("max_memory")
-            cls._instance.current_memory = 0
-            cls._initialized = True
+    def __new__(cls, redis_client: Redis):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance.redis = redis_client
         return cls._instance
 
     def cached(self, *invalidators):
         def decorator(func):
             @wraps(func)
             def wrapper(*args, **kwargs):
+                inv_values = {k: kwargs.get(k) for k in invalidators}
                 filtered_kwargs = {
                     k: v for k, v in kwargs.items() if k not in invalidators
                 }
-                key = (func, args, frozenset(filtered_kwargs.items()))
-                inv_values = {k: kwargs.get(k) for k in invalidators}
+                raw_key = {
+                    'fn': f"{func.__module__}.{func.__name__}",
+                    'args': args,
+                    'kwargs': filtered_kwargs
+                }
+                digest = sha256(jsdumps(raw_key, sort_keys=True, default=repr).encode()).hexdigest()
+                cache_key = f"cache:{digest}"
+                inv_key = f"inv:{digest}"
 
-                if key in self.cache and self.inv_keys.get(key) == inv_values:
-                    result, freq, size = self.cache[key]
-                    self.cache[key] = (result, freq + 1, size)
-                    return result
+                cached_blob = self.redis.get(cache_key)
+                if cached_blob is not None:
+                    stored_inv = jsloads(self.redis.get(inv_key) or b'{}')
+                    if stored_inv == inv_values:
+                        return loads(cached_blob)
 
                 result = func(*args, **kwargs)
-                size = getsizeof(result)
-
-                if self.max_memory is not None:
-                    while self.cache and self.current_memory + size > self.max_memory:
-                        least_used_key = min(self.cache, key=lambda k: self.cache[k][1])
-                        _, _, removed_size = self.cache.pop(least_used_key)
-                        self.inv_keys.pop(least_used_key, None)
-                        self.current_memory -= removed_size
-                    if self.current_memory + size > self.max_memory:
-                        return result
-
-                self.cache[key] = (result, 1, size)
-                self.inv_keys[key] = inv_values
-                self.current_memory += size
+                self.redis.set(cache_key, dumps(result))
+                self.redis.set(inv_key, jsdumps(inv_values))
                 return result
 
             return wrapper
         return decorator
+
 
 

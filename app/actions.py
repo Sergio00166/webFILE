@@ -1,8 +1,9 @@
 # Code by Sergio00166
 
-from os.path import pardir, isfile, basename, abspath, relpath, dirname
-from flask import render_template, stream_template
+from flask import render_template, stream_template, redirect, request
+from os.path import pardir, basename, abspath, relpath, dirname
 from video import get_subtitles, external_subs
+from urllib.parse import urlparse, urlunparse
 from urllib.parse import quote as encurl
 from video import get_chapters, get_info
 from random import choice
@@ -10,6 +11,11 @@ from explorer import *
 
 # Function to compress HTML output without modifying contents
 minify = lambda stream: ("".join(map(str.strip, x.split("\n"))) for x in stream)
+
+
+def redirect_no_query():
+    parsed_url = urlparse(request.url)
+    return redirect(urlunparse(("", "", parsed_url.path, "", "", "")))
 
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False):
@@ -49,7 +55,7 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
     folder_content = get_folder_content(folder_path, root, folder_size, ACL)
 
     # Get the parent dir from the folder_path
-    parent_directory = abspath(join(folder_path, pardir))
+    parent_directory = dirname(folder_path)
 
     # Check if the parent directory is root
     parent_directory = "" if parent_directory == root \
@@ -89,9 +95,9 @@ def video(path, root, file_type, ACL):
     return render_template(
         "video.html", path=path, name=name,
         prev=prev,nxt=nxt, tracks=tracks,
-        chapters=chapters, subs_file=subs,
-        subs_name = basename(subs)
+        chapters=chapters, subs_file=subs
     )
+
 
 def audio(path, root, file_type, ACL):
     prev, nxt, name, rnd = get_filepage_data(path, root, file_type, ACL, random=True)

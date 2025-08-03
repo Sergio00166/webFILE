@@ -1,15 +1,12 @@
 # Code by Sergio00166
 
-from functions import validate_acl, is_binary, readable_size, readable_date
+from functions import validate_acl, get_disk_stat, get_dir_size
 from os.path import join, isdir, relpath, getsize, getmtime
-from os import sep, listdir, scandir
+from datetime import datetime as dt
 from json import load as jsload
 from sys import path as pypath
+from os import sep, listdir
 from pathlib import Path
-from flask import request
-
-if sep == chr(92): import ctypes
-else: from os import statvfs
 
 # Load database of file type and extensions
 file_types = jsload(open(join(pypath[0],"file_types.json")))
@@ -17,6 +14,8 @@ file_types = jsload(open(join(pypath[0],"file_types.json")))
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 # Get website (plugin) extension to import it on actions.py
 webpage_file_ext = file_types.get("webpage")[0]
+# A list of a secuence of bytes to identify the UTF-x using their BOMs
+boms = ( b"\xef\xbb\xbf", b"\xff\xfe", b"\xfe\xff", b"\xff\xfe\x00\x00", b"\x00\x00\xfe\xff")
 
 
 def get_folder_content(folder_path, root, folder_size, ACL):
@@ -34,16 +33,20 @@ def get_folder_content(folder_path, root, folder_size, ACL):
             data["name"] = item
             data["path"] = rel_path
             data["type"] = get_file_type(item_path)
-            data["size"] = (
-                (get_directory_size(item_path) if folder_size else 0)
-                if data["type"] in ["directory", "disk"] else getsize(item_path)
-            )
+
             if data["type"] == "disk":
-                data["capacity"] = get_disk_capacity(item_path)
+                disk = get_disk_stat(item_path)
+                data["capacity"] = disk["size"]
+                data["size"] = disk["used"]
+            else:
+                data["size"] = (
+                    (get_dir_size(item_path) if folder_size else 0)
+                    if data["type"] == "directory" else getsize(item_path)
+                )
 
             try:    data["mtime"] = getmtime(item_path)
             except: data["mtime"] = None
-
+                            
             content.append(data)
         except: pass
     return content
@@ -53,6 +56,7 @@ def sort_contents(folder_content, sort, root):
     dirs, files = [], []
 
     for x in folder_content:
+        # path is a relative path 
         path = x["path"].replace("/", sep)
         if isdir(join(root,path)):
             dirs.append(x)
@@ -88,36 +92,6 @@ def get_file_type(path):
     return "file" if is_binary(path) else "text"
 
 
-def get_directory_size(directory):
-    total, stack = 0, [directory]
-    while stack:
-        current = stack.pop()
-        try:
-            for entry in scandir(current):
-                if entry.is_file():
-                    total += entry.stat().st_size
-                elif Path(entry.path).is_mount():
-                    pass # Ignore it
-                elif entry.is_dir():
-                    stack.append(entry.path)
-
-        except NotADirectoryError:
-            total += getsize(current)
-        except PermissionError: pass
-    return total
-
-
-def get_disk_capacity(disk):
-    if sep == chr(92):
-        size_bytes = windll.kernel32.GetDiskFreeSpaceExW.GetDiskFreeSpaceExW(
-            ctypes.c_wchar_p(drive_path), None, ctypes.byref(c_ulonglong()), None
-        ).value
-    else:
-        disk_obj = statvfs(disk)
-        size_bytes = disk_obj.f_frsize * disk_obj.f_blocks
-    return size_bytes
-
-
 def humanize_all(data):
     for item in data:
         if "capacity" in item:
@@ -128,5 +102,36 @@ def humanize_all(data):
         if "mtime" in item:
             item["mtime"] = readable_date(item["mtime"])
         item["size"] = readable_size(item["size"])
+
+
+def readable_size(num, suffix="B"):
+    # Connverts byte values to a human readable format
+    for unit in ("", "Ki", "Mi", "Gi", "Ti"):
+        if num < 1024:
+            return f"{num:.1f} {unit}{suffix}"
+        num /= 1024
+    return f"{num:.1f} Yi{suffix}"
+
+
+def readable_date(date):
+    if date is not None:
+        cd = dt.fromtimestamp(date)
+        return [cd.strftime("%d/%m/%Y"), cd.strftime("%H:%M")]
+    else:
+        return ["##/##/####", "##:##:##"]
+
+
+def is_binary(filepath):
+    with open(filepath, "rb") as f:
+        head = f.read(4)
+        if any(head.startswith(bom) for bom in boms):
+            return False
+        if b"\x00" in head:
+            return True
+        while chunk := f.read(1024):
+            if b"\x00" in chunk:
+                return True
+    return False
+
 
 

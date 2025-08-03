@@ -1,17 +1,18 @@
 # Code by Sergio00166
 
-from flask import request, redirect, session, render_template
 from os.path import exists, normpath, dirname
-from os.path import commonpath, join, abspath
-from urllib.parse import urlparse, urlunparse
+from os.path import commonpath, abspath
+from os import sep, access, R_OK, scandir, stat
 from datetime import datetime as dt
-from os import sep, access, R_OK
 from json import load as jsload
+from flask import session
+from pathlib import Path
 from sys import stderr
 
+if sep == chr(92): import ctypes
+else: from os import statvfs
+
 is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
-# A list of a secuence of bytes to identify the UTF-x using their BOMs
-boms = ( b"\xef\xbb\xbf", b"\xff\xfe", b"\xfe\xff", b"\xff\xfe\x00\x00", b"\x00\x00\xfe\xff")
 
 
 """ Global functions """
@@ -20,7 +21,7 @@ def safe_path(path, root, igntf=False):
     # Checks if the path is inside the root dir
     # else raise an exception depending on the case
     path = path.replace("/", sep)
-    path = abspath(join(root,path))
+    path = abspath(sep.join([root,path]))
 
     if is_subdirectory(root, path):
         if igntf:
@@ -107,38 +108,37 @@ def printerr(e, log_path, override_msg=None):
 
 """ Extra functions """
 
-def is_binary(filepath):
-    with open(filepath, "rb") as f:
-        head = f.read(4)
-        if any(head.startswith(bom) for bom in boms):
-            return False
-        if b"\x00" in head:
-            return True
-        while chunk := f.read(1024):
-            if b"\x00" in chunk:
-                return True
-    return False
-
-
-def redirect_no_query():
-    parsed_url = urlparse(request.url)
-    return redirect(urlunparse(("", "", parsed_url.path, "", "", "")))
-
-
-def readable_size(num, suffix="B"):
-    # Connverts byte values to a human readable format
-    for unit in ("", "Ki", "Mi", "Gi", "Ti"):
-        if num < 1024:
-            return f"{num:.1f} {unit}{suffix}"
-        num /= 1024
-    return f"{num:.1f} Yi{suffix}"
-
-
-def readable_date(date):
-    if date is not None:
-        cd = dt.fromtimestamp(date)
-        return [cd.strftime("%d/%m/%Y"), cd.strftime("%H:%M")]
+def get_disk_stat(path):
+    if sep == chr(92):
+        size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+            path, None, ctypes.byref(total), ctypes.byref(free)
+        )
+        total, free = total.value, free.value
     else:
-        return ["##/##/####", "##:##:##"]
+        st = statvfs(path)
+        size = st.f_frsize * st.f_blocks
+        free = st.f_frsize * st.f_bfree
+
+    return {"size": size, "free": free, "used": size-free}  
+
+
+def get_dir_size(root):
+    try: root_dev = stat(root).st_dev
+    except: return 0
+
+    total, stack = 0, [root]
+    while stack:
+        path = stack.pop()
+        for e in scandir(path):
+            try:
+                st = e.stat()
+                if e.is_file():
+                    total += st.st_size
+                elif e.is_dir() and st.st_dev == root_dev:
+                    stack.append(e.path)
+            except: pass
+    return total
+
 
 

@@ -5,25 +5,18 @@ video::cue {
     background: none !important;
     line-height: 1.1 !important;
     text-shadow: 0.07em 0.07em 0.05em black, -0.07em 0.07em 0.05em black,
-        0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
-        0.07em 0 0.05em black, -0.07em 0 0.05em black, 0 0.07em 0.05em black,
-        0 -0.07em 0.05em black !important;
+                 0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
+                 0.07em 0 0.05em black, -0.07em 0 0.05em black,
+                 0 0.07em 0.05em black, 0 -0.07em 0.05em black !important;
 }
 /* Dont cut the bottom of the bottom subtitles */
-video::-webkit-media-text-track-display {
-    padding: 0.25em !important;
-}
+video::-webkit-media-text-track-display { padding: 0.25em !important; }
 /* Dont fucking show native video controls */
-video::-webkit-media-controls { display: none !important; }
-video::-moz-media-controls    { display: none !important; }
-
-.video-box { position: relative; }
-canvas { position: absolute; }
+video::-webkit-media-controls, 
+video::-moz-media-controls { display: none !important; }
 
 .video-container {
-    position: relative;
     width: 90vw;
-    height: 90vh;
     height: 90dvh;
     color: white;
     overflow: hidden;
@@ -33,7 +26,6 @@ canvas { position: absolute; }
 }
 #touch-box {
     position: absolute;
-    z-index: 9;
     width: 100%;
     height: 100%;
 }
@@ -56,13 +48,9 @@ img {
     justify-content: center;
     box-sizing: border-box;
     position: relative;
-    margin-right: 4px;
-    margin-left: 4px;
+    margin: 0 4px;
     cursor: pointer;
     flex-shrink: 0;
-}
-.lmbsl {
-    background: #8f9f3050 !important;
 }
 body {
     margin: 0;
@@ -70,11 +58,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
     height: 100dvh;
     background: black;
     -webkit-tap-highlight-color: transparent;
-    -webkit-user-select: none;
     user-select: none;
 }
 .custom-loader {
@@ -89,66 +75,60 @@ body {
     transition: all 0.5s;
 }
 @keyframes rotation {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-} 
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 .main-state {
     opacity: 0;
     transform: scale(0);
     height: 75px;
     width: 75px;
-    position: absolute; 
+    position: absolute;
     cursor: pointer;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
-    background: linear-gradient(145deg, #363a4360, #1b242960);
+}
+.main-state.show {
+    opacity: 0.8;
+    transform: scale(1);
 }
 .main-state img {
     width: 67%;
     height: 67%;
 }
-.main-state.show {
-  opacity: 1;
-  transform: scale(1);
-}
 .controls {
     bottom: 0;
-    opacity: 0;
     width: 100%;
-    z-index: 99;
     position: absolute;
-    transition: opacity 0.3s;
     box-sizing: border-box;
-    padding: 0.5rem 1rem 0.5rem 1rem;
-    background: linear-gradient(to top, #000c -100%, transparent);
+    padding: 0.5rem 1rem;
 }
 .controls.show {
-    opacity: 1;
+    background: linear-gradient(to top, #000c -100%, transparent);
 }
 .duration {
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
-    width: calc((100% - 64px));
+    margin: 0 auto;
+    width: calc(100% - 64px);
     height: 8px;
-    background: #363a4360;
     cursor: pointer;
     border-radius: 4px;
 }
+.duration::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+}
 /* This weird shit is only to let the */
 /* user select easily the start and end */
-/* and also try to fix one bug */
-.duration::before {
-    position: absolute;
+.duration::after {
     content: "";
-    height: 100%;
+    position: absolute;
     left: -10%;
     width: 120%;
     height: 150%;
@@ -157,8 +137,9 @@ body {
 .chapter-container {
     position: relative;
     height: 100%;
-    border-radius: 4px;
+    border-radius: inherit;
     overflow: hidden;
+    transition: none !important;
 }
 .chapter {
     position: absolute;
@@ -166,23 +147,22 @@ body {
     width: 2px;
     margin-left: -1px;
     background-color: black;
+    z-index: 2;
 }
 .hover-time {
-    overflow: show;
-    height: 100%;
     position: absolute;
     inset: 0;
-    background: #fff6;
+    height: 100%;
+    width: 0;
+    background: #fff4;
     display: flex;
     align-items: center;
-    width: 0;
     border-radius: 5px;
-    z-index: -1;
 }
 .hover-time .hover-duration {
     position: absolute;
     width: max-content;
-    max-width: min(150px,40vw) !important;
+    max-width: min(150px, 40vw) !important;
     padding: 0.3rem;
     border-radius: 8px;
     font-size: 0.8rem;
@@ -200,16 +180,16 @@ body {
     background: #ff4a10c0;
     align-items: center;
     border-radius: 5px;
+    z-index: 1;
 }
 .current-time::before {
-    z-index: 9;
     opacity: 0;
     content: "";
     width: 14px;
     height: 14px;
     position: absolute;
-    right: calc((-13px / 2));
-    background: #ff6a00c0;
+    right: -6.5px;
+    background: #ff6a00e0;
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
@@ -272,9 +252,8 @@ body {
     opacity: 0;
     visibility: hidden;
     list-style: none;
-    padding-inline-start: 0;
-    margin-block-start: 0;
-    margin-block-end: 0;
+    padding: 0;
+    margin: 0;
     position: absolute;
     bottom: 84px;
     transition: all 0.2s;
@@ -297,26 +276,14 @@ body {
     cursor: pointer;
     color: white;
 }
-.setting-menu li:nth-child(-n+3):focus-within {
-    outline: auto;
-}
-.setting-menu li:nth-child(1)::before {
-    content: "Subs";
-    position: absolute;
-}
-.setting-menu li:nth-child(2)::before {
-    content: "Tracks";
-    position: absolute;
-}
-.setting-menu li:nth-child(3)::before {
-    content: "Speed";
-    position: absolute;
-}
+.setting-menu li:nth-child(-n+3):focus-within { outline: auto; }
+.setting-menu li:nth-child(1)::before { content: "Subs"; position: absolute; }
+.setting-menu li:nth-child(2)::before { content: "Tracks"; position: absolute; }
+.setting-menu li:nth-child(3)::before { content: "Speed"; position: absolute; }
+
 select {
     position: relative;
     cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
     text-align: center;
     font-size: 1rem;
@@ -331,38 +298,53 @@ select option {
 }
 .fullscreen {
     position: absolute !important;
-    max-width: 100% !important;
     width: 100% !important;
     height: 100% !important;
     display: flex !important;
     background: black !important;
     align-items: center !important;
     -webkit-tap-highlight-color: transparent !important;
-    -webkit-user-select: none !important;
     user-select: none !important;
 }
 .side-controls {
     display: flex;
     align-items: center;
 }
+
+/* Liquid Glass Fx */
+.duration::before, .main-state, 
 .round-button, .setting-menu, .hover-duration {
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-}
-.duration, .round-button, .setting-menu, .hover-duration {
-    background: linear-gradient(145deg, #363a4360, #1b242960);
+    backdrop-filter: blur(2px) saturate(200%) invert(10%) brightness(75%);
+    -webkit-backdrop-filter: blur(2px) saturate(200%) invert(10%) brightness(75%);
+    background: transparent;
     box-shadow: 0 0 2px #FFFA;
 }
 
-/* Define default values */
+/* Just to animate with Opacity but
+WITHOUT BREAKING the backdrop-filter */
+.time-container, .round-button,
+.duration::before, .duration * {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.controls.show .time-container,
+.controls.show .duration::before,
+.controls.show .round-button,
+.controls.show .duration * {
+    opacity: 1;
+}
+
+/* Default values */
 .vol_val_st { font-size: 1.3rem; }
-.full,.contract { display: none; }
+.full, .contract { display: none; }
 .video-container:not(.fullscreen) .full { display: block; }
 .video-container.fullscreen .contract { display: block; }
+.lmbsl { background: #8f9f3030 !important; }
+.video-box, .video-container { position: relative; }
+canvas { position: absolute; }
 
 
-/* RESPONSIVE (pain) ZONE */
-
+/* RESPONSIVE */
 @media (max-width: 900px) {
     .main-state {
         height: 64px;
@@ -445,16 +427,12 @@ select option {
     }
 }
 
-/* Disable hover on touch devices */
+/* Hover styles on devices that support it */
 @media (hover: hover) {
     .setting-menu li:hover, .round-button:hover {
-        outline: solid !important;
-        outline-color: #fffa !important;
-        outline-width: 2px !important;
-    }
-    .lmbsl:hover {
-        background: #6d65 !important;
+        outline: 2px solid #fffa !important;
     }
 }
 
- 
+
+

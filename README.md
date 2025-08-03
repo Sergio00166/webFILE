@@ -1,11 +1,11 @@
-# Web Server with Custom Video & Audio Player 🎥🎵
+# Web Server with Custom Video & Audio Player
 
 A lightweight Python -based HTTP file server with built-in streaming for video and audio.    
 Supports ACL-based access control, uploads, and file operations.
 
 ---
 
-## ✨ Table of Contents
+## Table of Contents
 
 * [🔍 Overview](#overview)
 * [🎧 Multimedia Streaming](#multimedia-streaming)
@@ -22,7 +22,7 @@ Supports ACL-based access control, uploads, and file operations.
 
 ---
 
-## 🔍 Overview
+## Overview
 
 This service exposes a filesystem directory over HTTP, enabling:
 
@@ -31,7 +31,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 * **Access control** via JSON-based ACLs (read/write/deny per resource).
 * Also it detects if a directory is a mount point and changes its type (and icon).
 
-## 🎧 Multimedia Streaming
+## Multimedia Streaming
 
 * Leverages browser-native codecs only.
 * Caches metadata and subtitles to minimize `ffmpeg` calls.
@@ -42,22 +42,23 @@ This service exposes a filesystem directory over HTTP, enabling:
 * Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.
 * Auto-loads external `.mks` subtitles matching video basename.
 
-## 🔐 ACL & User Management
+## ACL & User Management
 
 * Managed by `aclmgr.py` in the `app/` directory.
 * ACLs define per-path permissions: read-only, write, or denied.
 * User accounts stored in JSON (`data/users.json`).
 * See [aclmgr documentation](aclmgr.md).
 
-## 📂 Requirements
+## Requirements
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Install `ffmpeg` at the system level for media playback.
+Install `ffmpeg` at the system level for media playback.   
+A `Redis` sever for session storage and other cache.   
 
-## ⚙️ Configuration
+## Configuration
 
 Configure via environment variables:
 
@@ -70,9 +71,9 @@ Configure via environment variables:
 | SESSIONS\_DB    | No       | data/sessions.db | Session store.                                  |
 | SECRET\_KEY     | No       | Auto-generated   | Secret key for multi-worker setups.             |
 | SHOW\_DIRSIZE   | No       | False            | Display directory sizes.                        |
-| MAX\_CACHE (MB) | No       | 256              | RAM limit for metadata/subtitle caching/process |
+| MAX\_CACHE (MB) | No       | 256              | RAM limit for video metadata/subtitle cache     |
 
-## 🔢 File Listing API
+## File Listing API
 
 When using the API (with the header `Accept: application/json`) the DIR contents will be returned as JSON.
 Valid `type` values are defined in `app/file_types.json` and the internal `disk`, `directory`, `text` and `file`.
@@ -106,7 +107,7 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 ]
 ```
 
-## 🔍 Endpoints
+## Endpoints
 
 * `GET /path?login`
   Returns the login page.
@@ -125,7 +126,7 @@ Valid `type` values are defined in `app/file_types.json` and the internal `disk`
 
 **NOTE**: When using the API (`Accept: application/json`) it ignores the `?sort`, and `?raw` is not necessary as it sends directly the file).
 
-## 💡 Other HTTP Methods
+## Other HTTP Methods
 
 The server internally uses some WebDAV methods to handle file and folder operations in a more standard way.    
 **Note:** This is not full WebDAV support—these methods are adopted for internal use only.
@@ -137,7 +138,7 @@ The server internally uses some WebDAV methods to handle file and folder operati
 | MOVE   | Rename or move an item     |
 | COPY   | Duplicate a file or folder |
 
-## 📄 HTML vs .web Extensions
+## HTML vs .web Extensions
 
 Since `.html` files are treated as plain text, the server recognizes `.web` files as HTML pages.
 
@@ -145,12 +146,12 @@ Since `.html` files are treated as plain text, the server recognizes `.web` file
 
 **NOTE**: Browser based only (disable with `?noauto`), it does not affect the API.
 
-## 🔹 Official Plugins
+## Official Plugins
 
 Plugins allow you to create new pages and customize the frontend GUI by dropping `.web` extensions into served directories.    
 All the currently available at: [webFILE-plugins](https://github.com/Sergio00166/webFILE-plugins)
 
-## 🚀 Running the Server
+## Running the Server
 
 **Development** (Flask builtin, `127.0.0.1:8000`):
 
@@ -167,6 +168,6 @@ gunicorn -b 127.0.0.1:8000 app:app
 > If behind NGINX or another reverse proxy, disable POST buffering:
 > `proxy_request_buffering off;`
 
-## 🔒 License
+## License
 
 Distributed under the GPL License. See `LICENSE` for details.
