@@ -237,8 +237,8 @@ const getPct = clientX => {
 };
 
 function updateTime(pct) {
-    currentTime.style.width = `${pct * 100}%`;
     audio.currentTime = pct * audio.duration;
+    updateSeekBar(); // Update all
 }
 
 function showHover(clientX) {

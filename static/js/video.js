@@ -362,8 +362,8 @@ const getPct = clientX => {
 };
 
 function updateTime(pct) {
-    currentTime.style.width = `${pct * 100}%`;
     video.currentTime = pct * video.duration;
+    handleProgressBar(); // Update all
 }
 
 
