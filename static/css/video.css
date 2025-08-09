@@ -107,9 +107,6 @@ body {
     box-sizing: border-box;
     padding: 0.5rem 1rem;
 }
-.controls.show {
-    background: linear-gradient(to top, #000c -100%, transparent);
-}
 .duration {
     position: relative;
     margin: 0 auto;
@@ -194,6 +191,7 @@ body {
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
+    box-shadow: 0 0 3px black;
 }
 .duration:hover .current-time::before {
     opacity: 1;
@@ -210,6 +208,12 @@ body {
     font-size: 13px;
     padding-right: 8px;
 }
+.time-container span {
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 4px;
+    background: #3338;
+}
 .volume {
     display: flex;
     align-items: center;
@@ -219,35 +223,37 @@ body {
     cursor: pointer;
 }
 #volume-bar {
-    height: 3px;
+    height: 5px;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 3px;
     visibility: hidden;
     width: 0 !important;
     background: #eee;
     transition: all 0.1s;
     -webkit-appearance: none;
     appearance: none;
+    border: 1px solid #333;
 }
 #volume-bar::-webkit-slider-thumb {
-    width: 9px;
-    height: 9px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
     background: #007aff;
     -webkit-appearance: none;
     appearance: none;
+    box-shadow: 0 0 3px black;
 }
 #volume-bar::-moz-range-thumb {
-    width: 9px;
-    height: 9px;
+    width: 11px;
+    height: 11px;
     border-radius: 50%;
     background: #007aff;
+    box-shadow: 0 0 3px black;
 }
 #volume-bar.show {
-    width: 48px !important;
+    width: 56px !important;
     visibility: visible;
     transform: scaleX(1);
-    margin-right: 16px;
 }
 .setting-menu {
     opacity: 0;
@@ -313,10 +319,10 @@ select option {
 }
 
 /* Liquid Glass Fx */
-.duration::before, .main-state, 
+.duration::before, .main-state,
 .round-button, .setting-menu, .hover-duration {
-    backdrop-filter: blur(3px) saturate(200%) invert(10%) brightness(75%);
-    -webkit-backdrop-filter: blur(3px) saturate(200%) invert(10%) brightness(75%);
+    backdrop-filter: invert(10%) brightness(75%)  saturate(200%) blur(3px);
+    -webkit-backdrop-filter: invert(10%) brightness(75%)  saturate(200%) blur(3px);
     background: transparent;
     box-shadow: 0 0 2px #FFFA;
 }

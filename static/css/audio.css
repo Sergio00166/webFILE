@@ -118,6 +118,7 @@ img {
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
+    box-shadow: 0 0 3px black;
 }
 .duration:hover .current-time::before {
     opacity: 1;
@@ -201,12 +202,14 @@ img {
     height: 10px;
     border-radius: 50%;
     background: #007aff;
+    box-shadow: 0 0 3px black;
 }
 #volume-bar::-moz-range-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #007aff;
+    box-shadow: 0 0 3px black;
 }
 .extra-controls {
     width: 100%;
