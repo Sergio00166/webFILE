@@ -332,12 +332,12 @@ select option {
 
 /* Just to animate with Opacity but
 WITHOUT BREAKING the backdrop-filter */
-.time-container, .round-button,
+.time-container span, .round-button,
 .duration::before, .duration * {
     opacity: 0;
     transition: opacity 0.3s;
 }
-.controls.show .time-container,
+.controls.show .time-container span,
 .controls.show .duration::before,
 .controls.show .round-button,
 .controls.show .duration * {
