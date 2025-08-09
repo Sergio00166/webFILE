@@ -223,7 +223,7 @@ body {
     cursor: pointer;
 }
 #volume-bar {
-    height: 5px;
+    height: 4px;
     cursor: pointer;
     border-radius: 3px;
     visibility: hidden;
@@ -235,8 +235,8 @@ body {
     border: 1px solid #333;
 }
 #volume-bar::-webkit-slider-thumb {
-    width: 11px;
-    height: 11px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: #007aff;
     -webkit-appearance: none;
@@ -244,14 +244,14 @@ body {
     box-shadow: 0 0 3px black;
 }
 #volume-bar::-moz-range-thumb {
-    width: 11px;
-    height: 11px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: #007aff;
     box-shadow: 0 0 3px black;
 }
 #volume-bar.show {
-    width: 56px !important;
+    width: 48px !important;
     visibility: visible;
     transform: scaleX(1);
 }
@@ -441,6 +441,5 @@ canvas { position: absolute; }
         outline: 2px solid #fffa !important;
     }
 }
-
 
 
