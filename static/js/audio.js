@@ -237,8 +237,8 @@ const getPct = clientX => {
 };
 
 function updateTime(pct) {
-    currentTime.style.width = `${pct * 100}%`;
     audio.currentTime = pct * audio.duration;
+    updateSeekBar(); // Update all
 }
 
 function showHover(clientX) {
@@ -277,7 +277,7 @@ duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
+    touchDrag(eMove => updateTime(getPct(eMove.touches[0] && eMove.touches[0].clientX).pct))
 );
 
 document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });

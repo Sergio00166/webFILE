@@ -362,8 +362,8 @@ const getPct = clientX => {
 };
 
 function updateTime(pct) {
-    currentTime.style.width = `${pct * 100}%`;
     video.currentTime = pct * video.duration;
+    handleProgressBar(); // Update all
 }
 
 
@@ -762,7 +762,7 @@ duration.addEventListener('mousedown', e =>
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
 );
 duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(e.touches[0] && e.touches[0].clientX).pct))
+    touchDrag(eMove => updateTime(getPct(eMove.touches[0] && eMove.touches[0].clientX).pct))
 );
 document.addEventListener('touchstart', () => { touchHoverActive = true; clearHover(); }, { passive: true });
 duration.addEventListener('mousemove', e => { if (!touchHoverActive) showHover(e.clientX); });

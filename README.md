@@ -68,7 +68,6 @@ Configure via environment variables:
 | ERRLOG\_FILE    | No       | data/error.log   | Server error log.                               |
 | ACL\_FILE       | No       | data/acl.json    | ACL rules file.                                 |
 | USERS\_FILE     | No       | data/users.json  | User accounts file.                             |
-| SESSIONS\_DB    | No       | data/sessions.db | Session store.                                  |
 | SECRET\_KEY     | No       | Auto-generated   | Secret key for multi-worker setups.             |
 | SHOW\_DIRSIZE   | No       | False            | Display directory sizes.                        |
 | MAX\_CACHE (MB) | No       | 256              | RAM limit for video metadata/subtitle cache     |

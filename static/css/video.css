@@ -61,6 +61,7 @@ body {
     height: 100dvh;
     background: black;
     -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
     user-select: none;
 }
 .custom-loader {
@@ -106,14 +107,11 @@ body {
     box-sizing: border-box;
     padding: 0.5rem 1rem;
 }
-.controls.show {
-    background: linear-gradient(to top, #000c -100%, transparent);
-}
 .duration {
     position: relative;
     margin: 0 auto;
     width: calc(100% - 64px);
-    height: 8px;
+    height: 6px;
     cursor: pointer;
     border-radius: 4px;
 }
@@ -129,10 +127,11 @@ body {
 .duration::after {
     content: "";
     position: absolute;
-    left: -10%;
+    top: 50%;
+    left: 50%;
     width: 120%;
-    height: 150%;
-    top: -25%;
+    height: 200%;
+    transform: translate(-50%, -50%);
 }
 .chapter-container {
     position: relative;
@@ -151,11 +150,10 @@ body {
 }
 .hover-time {
     position: absolute;
+    display: flex;
     inset: 0;
     height: 100%;
-    width: 0;
     background: #fff4;
-    display: flex;
     align-items: center;
     border-radius: 5px;
 }
@@ -185,14 +183,15 @@ body {
 .current-time::before {
     opacity: 0;
     content: "";
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
+    right: -6px;
     position: absolute;
-    right: -6.5px;
     background: #ff6a00e0;
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
+    box-shadow: 0 0 3px black;
 }
 .duration:hover .current-time::before {
     opacity: 1;
@@ -209,6 +208,15 @@ body {
     font-size: 13px;
     padding-right: 8px;
 }
+.time-container span {
+    display: inline-block;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    padding: 1px;
+    padding-left: 2px;
+    padding-right: 2px;
+    border-radius: 4px;
+}
 .volume {
     display: flex;
     align-items: center;
@@ -218,35 +226,37 @@ body {
     cursor: pointer;
 }
 #volume-bar {
-    height: 3px;
+    height: 4px;
     cursor: pointer;
-    border-radius: 2px;
+    border-radius: 3px;
     visibility: hidden;
     width: 0 !important;
     background: #eee;
     transition: all 0.1s;
     -webkit-appearance: none;
     appearance: none;
+    border: 1px solid #333;
 }
 #volume-bar::-webkit-slider-thumb {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: #007aff;
     -webkit-appearance: none;
     appearance: none;
+    box-shadow: 0 0 3px black;
 }
 #volume-bar::-moz-range-thumb {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     background: #007aff;
+    box-shadow: 0 0 3px black;
 }
 #volume-bar.show {
     width: 48px !important;
     visibility: visible;
     transform: scaleX(1);
-    margin-right: 16px;
 }
 .setting-menu {
     opacity: 0;
@@ -312,22 +322,22 @@ select option {
 }
 
 /* Liquid Glass Fx */
-.duration::before, .main-state, 
+.duration::before, .main-state, .time-container span,
 .round-button, .setting-menu, .hover-duration {
-    backdrop-filter: blur(2px) saturate(200%) invert(10%) brightness(75%);
-    -webkit-backdrop-filter: blur(2px) saturate(200%) invert(10%) brightness(75%);
+    backdrop-filter: invert(10%) brightness(75%)  saturate(200%) blur(3px);
+    -webkit-backdrop-filter: invert(10%) brightness(75%)  saturate(200%) blur(3px);
     background: transparent;
     box-shadow: 0 0 2px #FFFA;
 }
 
 /* Just to animate with Opacity but
 WITHOUT BREAKING the backdrop-filter */
-.time-container, .round-button,
+.time-container span, .round-button,
 .duration::before, .duration * {
     opacity: 0;
     transition: opacity 0.3s;
 }
-.controls.show .time-container,
+.controls.show .time-container span,
 .controls.show .duration::before,
 .controls.show .round-button,
 .controls.show .duration * {
@@ -362,7 +372,8 @@ canvas { position: absolute; }
 }
 @media (max-width: 450px) {
     .time-container {
-        margin-bottom: 6px;
+        margin-bottom: 8px;
+        padding-right: 0;
     }
     .volume {
         display: none;
@@ -433,6 +444,5 @@ canvas { position: absolute; }
         outline: 2px solid #fffa !important;
     }
 }
-
 
 

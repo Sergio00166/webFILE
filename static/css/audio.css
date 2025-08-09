@@ -61,8 +61,8 @@ img {
     position: relative;
     margin: auto;
     width: calc((100% - 64px));
-    height: 8px;
-    background: #62626274;
+    height: 6px;
+    background: #555;
     cursor: pointer;
     border-radius: 4px;
 }
@@ -70,25 +70,24 @@ img {
 /* user select easily the start and end */
 /* and also try to fix one bug */
 .duration::before {
+    content: "";
     position: absolute;
-    content: '';
-    height: 100%;
-    left: -10%;
+    top: 50%;
+    left: 50%;
     width: 120%;
-    height: 150%;
-    top: -25%;
+    height: 200%;
+    transform: translate(-50%, -50%);
 }
 .hover-time {
     overflow: show;
     height: 100%;
     position: absolute;
     inset: 0;
-    background: #fff9;
+    background: #fff5;
     display: flex;
     align-items: center;
     width: 0;
     border-radius: 5px;
-    z-index: -1;
 }
 .hover-time .hover-duration {
     position: absolute;
@@ -106,19 +105,20 @@ img {
     background: #ff4a10;
     align-items: center;
     border-radius: 5px;
+    z-index: 1;
 }
 .current-time::before {
-    z-index: 9;
     opacity: 0;
     content: '';
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
+    right: -6px;
     position: absolute;
-    right: calc((-14px / 2));
     background: #ff6a00;
     border-radius: 50%;
     transition: all 0.2s;
     transform: scale(0);
+    box-shadow: 0 0 3px black;
 }
 .duration:hover .current-time::before {
     opacity: 1;
@@ -202,12 +202,14 @@ img {
     height: 10px;
     border-radius: 50%;
     background: #007aff;
+    box-shadow: 0 0 3px black;
 }
 #volume-bar::-moz-range-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #007aff;
+    box-shadow: 0 0 3px black;
 }
 .extra-controls {
     width: 100%;
@@ -296,7 +298,7 @@ img {
     }
     .player-title {
         margin-top: 12px;
-        margin-bottom: 16px;
+        margin-bottom: 24px;
         font-size: 20px;
     }
 }
@@ -363,4 +365,5 @@ img {
         color: #aad4ff;
     }
 }
+
 
