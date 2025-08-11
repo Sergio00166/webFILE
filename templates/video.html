@@ -21,7 +21,7 @@
     <a href='{{ prev }}' id="prev" tabindex="-1"></a>
     <div class="video-container">
       <div class="video-box">
-          <video src="{{ request.path }}?raw" disablePictureInPicture tabindex="-1"></video>
+          <video src="{{ request.path }}?raw" disablePictureInPicture></video>
           <canvas></canvas>
       </div>
       <div id="touch-box"></div>
@@ -62,7 +62,6 @@
             </span>
             <span class="time-container">
               <span class="current-duration">00:00</span>
-              <span>/</span>
               <span class="total-duration">00:00</span>
             </span>
           </div>

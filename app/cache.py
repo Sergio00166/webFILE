@@ -3,8 +3,9 @@
 from json import dumps as jsdumps, loads as jsloads
 from redis import Redis, ConnectionPool
 from pickle import dumps, loads
-from hashlib import sha256
+from inspect import signature
 from functools import wraps
+from hashlib import sha256
 from redis import Redis
 from os import getenv
 
@@ -32,45 +33,54 @@ def setup_cache(host="127.0.0.1", port=6379, db=1):
     return SelectiveRedisCache(redis_client)
 
 
+
 class SelectiveRedisCache:
     _instance = None
 
-    def __new__(cls, redis_client: Redis):
+    def __new__(cls, redis_client):
         if cls._instance is None:
             cls._instance = super().__new__(cls)
             cls._instance.redis = redis_client
         return cls._instance
 
     def cached(self, *invalidators):
+        invalidators = set(invalidators)
+
         def decorator(func):
+            sig = signature(func)
+
             @wraps(func)
             def wrapper(*args, **kwargs):
-                inv_values = {k: kwargs.get(k) for k in invalidators}
-                filtered_kwargs = {
-                    k: v for k, v in kwargs.items() if k not in invalidators
+                bound = sig.bind_partial(*args, **kwargs)
+                bound.apply_defaults()
+                all_args = dict(bound.arguments)
+
+                inv_values = {k: all_args.get(k) for k in invalidators}
+                for k in invalidators:
+                    all_args.pop(k, None)
+
+                key_data = {
+                    "fn": f"{func.__module__}.{func.__qualname__}",
+                    "args": all_args,
                 }
-                raw_key = {
-                    'fn': f"{func.__module__}.{func.__name__}",
-                    'args': args,
-                    'kwargs': filtered_kwargs
-                }
-                digest = sha256(jsdumps(raw_key, sort_keys=True, default=repr).encode()).hexdigest()
+                digest = sha256(jsdumps(key_data, sort_keys=True, default=repr).encode()).hexdigest()
                 cache_key = f"cache:{digest}"
                 inv_key = f"inv:{digest}"
 
-                cached_blob = self.redis.get(cache_key)
-                if cached_blob is not None:
-                    stored_inv = jsloads(self.redis.get(inv_key) or b'{}')
-                    if stored_inv == inv_values:
-                        return loads(cached_blob)
+                redis = self.redis
+                cached_blob = redis.get(cache_key)
+                stored_inv_raw = redis.get(inv_key)
+                stored_inv = jsloads(stored_inv_raw) if stored_inv_raw else {}
+
+                if cached_blob and stored_inv == inv_values:
+                    return loads(cached_blob)
 
                 result = func(*args, **kwargs)
-                self.redis.set(cache_key, dumps(result))
-                self.redis.set(inv_key, jsdumps(inv_values))
+                redis.set(cache_key, dumps(result))
+                redis.set(inv_key, jsdumps(inv_values))
                 return result
 
             return wrapper
         return decorator
-
 
 
