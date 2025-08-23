@@ -5,14 +5,14 @@
 .time  { margin-left: 0.5em; }
 ::-webkit-scrollbar-thumb { background-color: #555; }
 ::-webkit-scrollbar-track { background-color: #1e1e1e; }
-.size,.capacity,.time,.date { font-size: 13px; }
+.size,.capacity,.time,.date { font-size: 15px; }
 .time, .date { font-family: monospace; }
 
 body {
     margin: 0;
     color: #e0e0e0;
     background-color: #1a1a1a;
-    font-family: 'Segoe UI', 'Liberation Sans', 'DejaVu Sans', sans-serif;
+    font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     scrollbar-color: #555 #1e1e1e;
     -webkit-user-select: none;
@@ -31,45 +31,19 @@ pre {
     margin: 0;
     white-space: pre-wrap;
     font-family: inherit;
-    font-size: 15px;
+    font-size: 16px;
     -webkit-user-select: text;
     user-select: text;
 }
 
-button {
-    flex: 1;
-    padding: 6px 10px;
-    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
-    border: 1px solid #555;
-    border-radius: 3px;
-    color: #e0e0e0;
-    font-weight: 500;
-    font-size: 11px;
-    cursor: pointer;
-    line-height: 1.3;
-    transition: all 0.2s ease;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
-button:disabled {
-    background: #2a2a2a;
-    color: #666;
-    cursor: not-allowed;
-    border-color: #444;
-}
-button:not(:disabled):hover {
-    background: linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%);
-    border-color: #777;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-}
-
 #sidebar {
     padding-top: 8px;
-    width: 150px;
+    width: 175px;
     background: #2a2a2a;
     border-right: 1px solid #444;
     display: flex;
     flex-direction: column;
-    box-shadow: 2px 0 4px rgba(0,0,0,0.4);
+    box-shadow: 2px 0 4px #0007;
     transition: all 0.3s ease;
     z-index: 100;
 }
@@ -96,10 +70,6 @@ button:not(:disabled):hover {
     justify-content: center;
     transition: all 0.2s ease;
 }
-.sidebar-toggle:hover {
-    background: #3a3a3a;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.5);
-}
 
 .sidebar-content {
     flex: 1;
@@ -113,7 +83,7 @@ button:not(:disabled):hover {
 .sidebar-section h3 {
     margin: 0 0 6px 0;
     padding: 3px 6px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 600;
     color: #aaa;
     text-transform: uppercase;
@@ -125,30 +95,20 @@ button:not(:disabled):hover {
 .sidebar-button {
     width: 100%;
     text-align: left;
-    padding: 4px 6px;
+    padding: 6px;
     margin: 1px 0;
-    background: transparent;
     border: none;
     border-radius: 2px;
     color: #e0e0e0;
-    font-size: 12px;
+    font-size: 14px;
     box-shadow: none;
+    background: transparent;
     transition: background-color 0.2s ease;
-}
-.sidebar-button:hover {
-    background: #3a3a3a;
-    border: none;
-}
-.sidebar-button:active {
-    background: #2a2a2a;
 }
 .sidebar-button:disabled {
     color: #666;
     cursor: not-allowed;
     opacity: 0.6;
-}
-.sidebar-button:disabled:hover {
-    background: transparent;
 }
 
 .main-container {
@@ -162,18 +122,17 @@ button:not(:disabled):hover {
     display: flex;
     flex-direction: column;
     background: #1a1a1a;
-    overflow: hidden;
     margin-left: 0;
 }
 
 .path-bar {
-    background: #222;
-    border-bottom: 1px solid #444;
-    padding: 6px;
-    padding-left: 10px;
-    padding-right: 12px;
     display: flex;
     align-items: center;
+    background: #222;
+    border-bottom: 1px solid #444;
+    padding: 8px;
+    padding-left: 12px;
+    padding-right: 16px;
     gap: 12px;
 }
 
@@ -192,27 +151,28 @@ button:not(:disabled):hover {
     flex: 1;
     font-weight: 600;
     color: #e0e0e0;
-    font-size: small;
+    font-family: monospace;
+    font-size: 14px;
     background: #444;
     border-radius: 10px;
-    padding: 4px;
+    padding: 6px;
     padding-left: 12px;
     padding-right: 13px;
 }
 
 .container {
-    background-color: #1a1a1a;
-    padding: 0;
+    gap: 0;
+    flex: 1;
     margin: 0;
-    padding-top: 4px;
-    padding-bottom: 10px;
+    padding: 0;
+    padding-top: 5px;
+    padding-bottom: 16px;
     padding-left: 6px;
     padding-right: 8px;
     border-radius: 0;
+    background-color: #1a1a1a;
     display: flex;
     flex-direction: column;
-    gap: 0;
-    flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -230,29 +190,24 @@ button:not(:disabled):hover {
     display: flex;
     background-color: #222;
     border: 1px solid transparent;
-    border-radius: 6px;
-    margin: 2px;
-    padding: 8px;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    border-radius: 8px;
+    margin: 3px;
+    padding: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     cursor: pointer;
     transition: all 0.15s ease;
     align-items: center;
-}
-.filename:hover {
-    background-color: #2a2a2a;
-    border-color: #555;
 }
 .selected {
     background-color: #1e3a5f !important;
     border-color: #4a90d9 !important;
 }
 .name {
-    text-align: left;
     flex: 1;
+    text-align: left;
     margin-right: 12px;
     margin-left: 6px;
-    font-size: 12px;
 }
 
 .load_container {
@@ -291,26 +246,26 @@ button:not(:disabled):hover {
     position: absolute;
     height: 100%;
     width: 30%;
-    background: linear-gradient(90deg, #4a90d9, #357abd);
     border-radius: 8px;
+    background: linear-gradient(90deg, #4a90d9, #357abd);
     animation: slide 1.7s infinite ease-in-out;
 }
 
 @keyframes fadeIn {
     from { opacity: 0; }
-    to { opacity: 1; }
+    to   { opacity: 1; }
 }
 @keyframes scalePulse {
     from { transform: scale(1); }
-    to { transform: scale(1.3); }
+    to   { transform: scale(1.3); }
 }
 @keyframes textFade {
     from { opacity: 0.7; }
-    to { opacity: 1; }
+    to   { opacity: 1; }
 }
 @keyframes slide {
-    0% { left: -30%; }
-    50% { left: 50%; }
+    0%   { left: -30%; }
+    50%  { left: 50%; }
     100% { left: 100%; }
 }
 
@@ -363,11 +318,22 @@ screen is too small */
 }
 /* Disable hover on touch devices */
 @media (hover: hover) {
-    button:not(:disabled):hover {
-        background: linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%);
-    }
     .filename:hover {
         background-color: #2a2a2a;
+        border-color: #555;
+    }
+    button:not(:disabled):hover {
+        background: linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%);
+        border-color: #777;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+    .sidebar-toggle:hover {
+        background: #3a3a3a;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+    }
+    .sidebar-button:hover {
+        background: #3a3a3a;
+        border: none;
     }
 }
 
