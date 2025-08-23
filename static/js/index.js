@@ -1,4 +1,4 @@
-/* Code by Sergio00166 */
+/* Code by Sergio00166 /*
 /*
 All paths are (and must be) encoded by default, also the items dataset
 Except the Destination Header THAT MUST BE NOT ENCODED.
@@ -15,11 +15,26 @@ const buttons = {
 };
 const progress = document.getElementById('progress');
 const base = (location.pathname.replace(/\/$/, '') || '') + '/';
-
 const selected = new Map();
-let selectMode = true;
-toggleSelectMode();
+let selectMode = false;
 
+
+function updateButtonStates() {
+    buttons.invert.disabled = !selectMode;
+    buttons.copy.disabled   = !selectMode;
+    buttons.move.disabled   = !selectMode;
+    buttons.ren.disabled    = !selectMode;
+    buttons.del.disabled    = !selectMode;
+}
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+}
+function encodePath(path) {
+    return path.split('/').map(encodeURIComponent).join('/');
+}
+function delay(ms) {
+    return new Promise(function (r) { setTimeout(r, ms); });
+}
 
 function copyFiles() {
     storageOp('copy', getURLlist());
@@ -31,18 +46,11 @@ function clearAllMvCp() {
     ['copy', 'move'].forEach(function (k) { localStorage.removeItem(k); });
 }
 
-function encodePath(path) {
-    return path.split('/').map(encodeURIComponent).join('/');
-}
-function delay(ms) {
-    return new Promise(function (r) { setTimeout(r, ms); });
-}
-
 function showLoader() {
     var loader = document.getElementById('loader');
     if (loader) loader.style.display = '';
-    var list = document.getElementsByClassName('list-group');
-    if (list.length) list[0].style.display = 'none';
+    var list = document.querySelector('.main-container');
+    if (list) list.style.display = 'none';
 }
 
 function changeURL(mode) {
@@ -54,10 +62,10 @@ function changeURL(mode) {
 
 function toggleSelectMode() {
     selectMode = !selectMode;
-    buttons.select.textContent = selectMode ? 'CANCEL' : 'SELECT';
-    Object.keys(buttons).forEach(function (k) {
-        if (k !== 'select') buttons[k].disabled = !selectMode;
-    });
+    if (buttons.select) {
+        buttons.select.textContent = selectMode ? '❌ Cancel Selection' : '✅ Select Mode';
+    }
+    updateButtonStates();
     if (!selectMode) deselectAll();
 }
 
@@ -80,11 +88,13 @@ function selectDiv(div) {
 }
 
 function handleDivClick(div) {
-    if (selectMode) return selectDiv(div);
-    var url = div.dataset.value;
-    if (!url) return;
-    if (div.hasAttribute('isdir')) location.href = url;
-    else window.open(url, '_blank');
+    if (selectMode) selectDiv(div);
+    else {
+        var url = div.dataset.value;
+        if (!url) return;
+        if (div.hasAttribute('isdir')) location.href = url;
+        else window.open(url, '_blank');
+    }
 }
 
 function enableDelegation() {
@@ -116,7 +126,7 @@ function downloadURL(url) {
 }
 
 async function executeDownloads() {
-    if (selectMode) {
+    if (selectMode && selected.size > 0) {
         for (var div of selected.values()) {
             var url = div.dataset.value;
             if (!url) continue;
@@ -124,7 +134,7 @@ async function executeDownloads() {
             downloadURL(url + suffix);
             await delay(100);
         }
-    } else downloadURL(base + '?tar');
+    } else downloadURL(base+'?tar');
 }
 
 async function executeDeletes() {
@@ -174,7 +184,7 @@ async function sendRequest(path, dest, method) {
         return true;
     } catch (status) {
         const msgs = {
-            403: 'You don’t have permission to do that',
+            403: 'You don\'t have permission to do that',
             404: 'That file/folder does not exist',
             409: 'It already exists',
             507: 'Not enough free space'
@@ -253,11 +263,9 @@ async function createFolders(files) {
     }
 }
 
-
 function uploadFileWithProgress(file, url, onProgress) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-
         xhr.open('PUT', url);
 
         xhr.upload.onprogress = function(event) {
@@ -265,19 +273,15 @@ function uploadFileWithProgress(file, url, onProgress) {
                 onProgress(event.loaded, event.total);
             }
         };
-
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve();
-            } else { reject(xhr.status); }
+            } else reject(xhr.status);
         };
-
         xhr.onerror = function() { reject('Connection Error'); };
-
         xhr.send(file);
     });
 }
-
 
 async function uploadFiles(files, isDir) {
     showLoader();
@@ -306,7 +310,7 @@ async function uploadFiles(files, isDir) {
         } catch (status) {
             const msgs = {
                 400: 'Invalid upload data',
-                403: 'You don’t have permission to do that',
+                403: 'You don\'t have permission to do that',
                 409: 'It already exists',
                 507: 'Not enough free space',
                 500: 'Server Error'
@@ -319,7 +323,6 @@ async function uploadFiles(files, isDir) {
     location.reload();
 }
 
-
 function enableDragAndDropUpload(dropArea, selectDirectory) {
     dropArea.addEventListener('dragover', function (e) { e.preventDefault(); });
     dropArea.addEventListener('drop', function (e) {
@@ -329,8 +332,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory) {
             uploadFiles(files, selectDirectory);
         }
     });
-}
-enableDragAndDropUpload(document);
+} enableDragAndDropUpload(document);
 
 function moveFocus(direction) {
     var container = document.querySelector('.container');
@@ -342,11 +344,6 @@ function moveFocus(direction) {
     var index = items.indexOf(active);
     index = (index + direction + items.length) % items.length;
     items[index].focus();
-}
-
-function toggleMenu() {
-    var controls = document.querySelector('.controls');
-    if (controls) controls.classList.toggle('open');
 }
 
 document.addEventListener('keydown', function (e) {
@@ -365,10 +362,8 @@ document.addEventListener('keydown', function (e) {
             document.activeElement.click();
             break;
         case 'arrowleft': {
-            var active = document.activeElement;
-            var backdir = document.querySelector('.backdir');
-            if (selectMode) active.click();
-            else if (backdir) backdir.click();
+            if (selectMode) document.activeElement.click();
+            else document.getElementById('backdir').click();
             break;
         }
         case 'a': invertSelection(); break;
@@ -382,10 +377,10 @@ document.addEventListener('keydown', function (e) {
         case 'n': renameFiles(); break;
         case 'r': executeDeletes(); break;
         case 'm': mkdir(); break;
-        case 'l': var el = document.getElementById('login'); if (el) el.click(); break;
-        case '1': var el1 = document.getElementById('sortName'); if (el1) el1.click(); break;
-        case '2': var el2 = document.getElementById('sortSize'); if (el2) el2.click(); break;
-        case '3': var el3 = document.getElementById('sortDate'); if (el3) el3.click(); break;
+        case 'l': document.getElementById('login').click(); break;
+        case '1': document.getElementById('sortName').click(); break;
+        case '2': document.getElementById('sortSize').click(); break;
+        case '3': document.getElementById('sortDate').click(); break;
     }
 });
 
