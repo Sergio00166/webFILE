@@ -39,18 +39,18 @@
                 </div>
                 
                 <div class="sidebar-section">
+                    <h3>Selection</h3>
+                    <button class="sidebar-button" id="selectBtn" onclick="toggleSelectMode()">✅ Select Mode</button>
+                    <button class="sidebar-button" id="invertBtn" onclick="invertSelection()">🔄 Invert Selection</button>
+                    <button class="sidebar-button" onclick="executeDownloads()">📥 Download</button>
+                </div>
+
+                <div class="sidebar-section">
                     <h3>Manage</h3>
                     <button class="sidebar-button" onclick="mkdir()">📁 New Folder</button>
                     <button class="sidebar-button" onclick="openFileMenu()">📤 Upload Files</button>
                     <button class="sidebar-button" onclick="openFileMenu(true)">📤 Upload Directory</button>
                     <button class="sidebar-button" id="delBtn" onclick="executeDeletes()" disabled>🗑️ Delete</button>
-                </div>
-                
-                <div class="sidebar-section">
-                    <h3>Selection</h3>
-                    <button class="sidebar-button" id="selectBtn" onclick="toggleSelectMode()">✅ Select Mode</button>
-                    <button class="sidebar-button" id="invertBtn" onclick="invertSelection()">🔄 Invert Selection</button>
-                    <button class="sidebar-button" onclick="executeDownloads()">📥 Download</button>
                 </div>
                 
                 <div class="sidebar-section">
