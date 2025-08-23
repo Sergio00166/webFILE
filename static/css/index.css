@@ -65,7 +65,7 @@ pre {
     height: 50px;
     cursor: pointer;
     font-size: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    box-shadow: 0 4px 12px #0007;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
@@ -325,11 +325,11 @@ screen is too small */
     button:not(:disabled):hover {
         background: linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%);
         border-color: #777;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        box-shadow: 0 2px 4px #0007;
     }
     .sidebar-toggle:hover {
         background: #3a3a3a;
-        box-shadow: 0 6px 16px rgba(0,0,0,0.5);
+        box-shadow: 0 6px 16px #0008;
     }
     .sidebar-button:hover {
         background: #3a3a3a;
