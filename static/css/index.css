@@ -5,7 +5,7 @@
 .time  { margin-left: 0.5em; }
 ::-webkit-scrollbar-thumb { background-color: #555; }
 ::-webkit-scrollbar-track { background-color: #1e1e1e; }
-.size,.capacity,.time,.date { font-size: 12px; }
+.size,.capacity,.time,.date { font-size: 13px; }
 .time, .date { font-family: monospace; }
 
 body {
@@ -31,7 +31,7 @@ pre {
     margin: 0;
     white-space: pre-wrap;
     font-family: inherit;
-    font-size: 1.2em;
+    font-size: 15px;
     -webkit-user-select: text;
     user-select: text;
 }
