@@ -5,29 +5,38 @@ Except the Destination Header THAT MUST BE NOT ENCODED.
 Base path variable (base) ends with '/' always.
 */
 
-const buttons = {
-    select: document.getElementById('selectBtn'),
-    del: document.getElementById('delBtn'),
-    copy: document.getElementById('copyBtn'),
-    move: document.getElementById('moveBtn'),
-    ren: document.getElementById('renBtn'),
-    invert: document.getElementById('invertBtn'),
-};
-const progress = document.getElementById('progress');
+const selectBtn   = document.getElementById('selectBtn');
+const delBtn      = document.getElementById('delBtn');
+const copyBtn     = document.getElementById('copyBtn');
+const moveBtn     = document.getElementById('moveBtn');
+const renBtn      = document.getElementById('renBtn');
+const invertBtn   = document.getElementById('invertBtn');
+const progress    = document.getElementById('progress');
+const sidebar     = document.getElementById('sidebar');
+const loader      = document.getElementById('loader');
+const mainContainer = document.querySelector('.main-container');
+const listGroup   = document.querySelector('.list-group');
+const backdir     = document.getElementById('backdir');
+const login       = document.getElementById('login');
+const sortName    = document.getElementById('sortName');
+const sortSize    = document.getElementById('sortSize');
+const sortDate    = document.getElementById('sortDate');
+const body        = document.body;
+
 const base = (location.pathname.replace(/\/$/, '') || '') + '/';
 const selected = new Map();
 let selectMode = false;
 
 
 function updateButtonStates() {
-    buttons.invert.disabled = !selectMode;
-    buttons.copy.disabled   = !selectMode;
-    buttons.move.disabled   = !selectMode;
-    buttons.ren.disabled    = !selectMode;
-    buttons.del.disabled    = !selectMode;
+    invertBtn.disabled = !selectMode;
+    copyBtn.disabled   = !selectMode;
+    moveBtn.disabled   = !selectMode;
+    renBtn.disabled    = !selectMode;
+    delBtn.disabled    = !selectMode;
 }
 function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
+    sidebar.classList.toggle('open');
 }
 function encodePath(path) {
     return path.split('/').map(encodeURIComponent).join('/');
@@ -47,10 +56,8 @@ function clearAllMvCp() {
 }
 
 function showLoader() {
-    var loader = document.getElementById('loader');
     if (loader) loader.style.display = '';
-    var list = document.querySelector('.main-container');
-    if (list) list.style.display = 'none';
+    if (mainContainer) mainContainer.style.display = 'none';
 }
 
 function changeURL(mode) {
@@ -62,8 +69,8 @@ function changeURL(mode) {
 
 function toggleSelectMode() {
     selectMode = !selectMode;
-    if (buttons.select) {
-        buttons.select.textContent = selectMode ? '❌ Cancel Select' : '✅ Select Mode';
+    if (selectBtn) {
+        selectBtn.textContent = selectMode ? '❌ Cancel Select' : '✅ Select Mode';
     }
     updateButtonStates();
     if (!selectMode) deselectAll();
@@ -98,15 +105,14 @@ function handleDivClick(div) {
 }
 
 function enableDelegation() {
-    var container = document.querySelector('.list-group');
-    if (!container) return;
+    if (!listGroup) return;
 
-    container.addEventListener('click', function (e) {
+    listGroup.addEventListener('click', function (e) {
         var d = e.target.closest('.filename');
         if (d) handleDivClick(d);
     });
 
-    container.addEventListener('keydown', function (e) {
+    listGroup.addEventListener('keydown', function (e) {
         if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.filename')) {
             e.preventDefault();
             handleDivClick(e.target.closest('.filename'));
@@ -120,7 +126,7 @@ function downloadURL(url) {
     a.href = url;
     a.download = '';
     a.style.display = 'none';
-    document.body.appendChild(a);
+    body.appendChild(a);
     a.click();
     a.remove();
 }
@@ -285,12 +291,10 @@ function uploadFileWithProgress(file, url, onProgress) {
 
 async function uploadFiles(files, isDir) {
     showLoader();
-
     let totalBytes = 0;
-    for (let f of files) totalBytes += f.size;
-
     let uploadedBytes = 0;
 
+    for (let f of files) totalBytes += f.size;
     if (isDir) await createFolders(files);
 
     for (let i = 0; i < files.length; i++) {
@@ -304,7 +308,6 @@ async function uploadFiles(files, isDir) {
                 let percent = (totalUploaded / totalBytes) * 100;
                 progress.textContent = percent.toFixed(2) + '%';
             });
-
             uploadedBytes += f.size;
 
         } catch (status) {
@@ -319,7 +322,6 @@ async function uploadFiles(files, isDir) {
             break;  // stop uploading more files on error
         }
     }
-
     location.reload();
 }
 
@@ -334,38 +336,55 @@ function enableDragAndDropUpload(dropArea, selectDirectory) {
     });
 } enableDragAndDropUpload(document);
 
+
 function moveFocus(direction) {
-    var container = document.querySelector('.list-group');
+    var container = listGroup;
     var items = Array.prototype.filter.call(container.children, function (el) {
         return !el.classList.contains('backdir');
     });
     if (items.length === 0) return;
+
     var active = document.activeElement;
     var index = items.indexOf(active);
-    index = (index + direction + items.length) % items.length;
+
+    if (direction === -Infinity) index = 0;
+    else if (direction === Infinity) index = items.length - 1;
+    else index = (index + direction + items.length) % items.length;
+
     items[index].focus();
 }
 
 document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+    const key = e.key.toLowerCase();
+    const mod = e.shiftKey && (key === 'arrowleft' || key === 'arrowright');
 
-    switch (e.key.toLowerCase()) {
+    if ((e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) && !mod) return;
+
+    switch (key) {
         case 'arrowdown':
-            e.preventDefault();
-            moveFocus(1);
-            break;
         case 'arrowup':
             e.preventDefault();
-            moveFocus(-1);
+            moveFocus(key === 'arrowdown' ? 1 : -1);
+            break;
+        case 'pageup':
+        case 'pagedown':
+            e.preventDefault();
+            moveFocus(key === 'pagedown' ? 10 : -10);
+            break;
+        case 'home':
+        case 'end':
+            e.preventDefault();
+            moveFocus(key === 'end' ? Infinity : -Infinity);
             break;
         case 'arrowright':
-            document.activeElement.click();
+            if (mod) listGroup.scrollLeft += 100;
+            else document.activeElement.click();
             break;
-        case 'arrowleft': {
-            if (selectMode) document.activeElement.click();
-            else document.getElementById('backdir').click();
+        case 'arrowleft':
+            if (mod) listGroup.scrollLeft -= 100;
+            else if (selectMode) document.activeElement.click();
+            else backdir.click();
             break;
-        }
         case 'a': invertSelection(); break;
         case 'd': executeDownloads(); break;
         case 'c': copyFiles(); break;
@@ -377,10 +396,10 @@ document.addEventListener('keydown', function (e) {
         case 'n': renameFiles(); break;
         case 'r': executeDeletes(); break;
         case 'm': mkdir(); break;
-        case 'l': document.getElementById('login').click(); break;
-        case '1': document.getElementById('sortName').click(); break;
-        case '2': document.getElementById('sortSize').click(); break;
-        case '3': document.getElementById('sortDate').click(); break;
+        case 'l': login.click(); break;
+        case '1': sortName.click(); break;
+        case '2': sortSize.click(); break;
+        case '3': sortDate.click(); break;
     }
 });
 
