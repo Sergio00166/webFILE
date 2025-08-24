@@ -397,7 +397,7 @@ document.addEventListener('keydown', function (e) {
         case 'r': executeDeletes(); break;
         case 'm': mkdir(); break;
         case 'l': login.click(); break;
-        case 'i': window.location.href='/';
+        case 'i': window.location.href='/'; break;
         case '1': sortName.click(); break;
         case '2': sortSize.click(); break;
         case '3': sortDate.click(); break;
