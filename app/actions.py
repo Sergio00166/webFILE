@@ -48,18 +48,8 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False)
 
 
 def get_index_data(folder_path, root, folder_size, sort, ACL):
-    # Check if the folder path is the same as the root dir
-    is_root = folder_path == root
-
     # Get all folder contents
     folder_content = get_folder_content(folder_path, root, folder_size, ACL)
-
-    # Get the parent dir from the folder_path
-    parent_directory = dirname(folder_path)
-
-    # Check if the parent directory is root
-    parent_directory = "" if parent_directory == root \
-        else relpath(parent_directory, start=root)+"/"
 
     # Get relative path from root
     folder_path = relpath(folder_path, start=root)
@@ -67,11 +57,10 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
 
     # Fix and check some things with the paths
     folder_path = "/" + folder_path.replace(sep, "/")
-    parent_directory = parent_directory.replace(sep, "/")
 
     # Sort the result items
     folder_content = sort_contents(folder_content, sort, root)
-    return folder_content, folder_path, parent_directory, is_root
+    return folder_content, folder_path
 
 
 def subtitles(path, mode):
@@ -108,7 +97,7 @@ def directory(path, root, folder_size, sort, ACL, useApi):
     # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
 
-    folder_content, folder_path, parent_directory, is_root =\
+    folder_content, folder_path =\
     get_index_data(path, root, folder_size, sort, ACL)
 
     if useApi:
@@ -116,8 +105,8 @@ def directory(path, root, folder_size, sort, ACL, useApi):
     else:
         humanize_all(folder_content)  # The arg is a reference
         return minify(stream_template(
-            "index.html", folder_content=folder_content,folder_path=folder_path,
-            parent_directory=parent_directory, is_root=is_root, sort=sort
+            "index.html", folder_content=folder_content,
+            folder_path=folder_path, sort=sort
         ))
 
  

@@ -129,7 +129,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 120%;
+    width: calc(100% + 32px);
     height: 200%;
     transform: translate(-50%, -50%);
 }

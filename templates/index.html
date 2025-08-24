@@ -18,113 +18,125 @@
             <h1 id="progress"></h1>
         </div>
     </div>
-    <div class="list-group">
-        <h2><pre>Index of&nbsp;{{ folder_path }}</pre></h2>
-        <button class="menu-toggle" onclick="toggleMenu()">&#9776; Menu</button>
-        <div class="controls">
-            <div class="ctrl_group">
-                <div class="ctrl_flex">
-                    <button id="sortName" onclick="changeURL('{% if sort=='np' %}nd{% else %}np{% endif %}')" title="Sort by name (1)">
-                        NAME{% if sort=="np" %}&nbsp;&uarr;{% elif sort=="nd" %}&nbsp;&darr;{% endif %}
+    
+    <div class="main-container">
+        <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+            <img src="{{ url_for('index', static='svg/index/bars-solid.svg') }}"> 
+        </button>
+
+        <div id="sidebar">
+            <div class="sidebar-content">
+
+                <div class="sidebar-section">
+                    <h3>Sort</h3>
+                    <button class="sidebar-button" id="sortName" onclick="changeURL('{% if sort=='np' %}nd{% else %}np{% endif %}')" title="(1)">
+                        {% if sort=="np" %}⬆️{% elif sort=="nd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Name
                     </button>
-                    <button id="sortSize" onclick="changeURL('{% if sort=='sp' %}sd{% else %}sp{% endif %}')" title="Sort by size (2)">
-                        SIZE{% if sort=="sp" %}&nbsp;&uarr;{% elif sort=="sd" %}&nbsp;&darr;{% endif %}
+                    <button class="sidebar-button" id="sortSize" onclick="changeURL('{% if sort=='sp' %}sd{% else %}sp{% endif %}')" title="(2)">
+                        {% if sort=="sp" %}⬆️{% elif sort=="sd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Size
                     </button>
-                    <button id="sortDate" onclick="changeURL('{% if sort=='dp' %}dd{% else %}dp{% endif %}')" title="Sort by date (3)">
-                        DATE{% if sort=="dp" %}&nbsp;&uarr;{% elif sort=="dd" %}&nbsp;&darr;{% endif %}
+                    <button class="sidebar-button" id="sortDate" onclick="changeURL('{% if sort=='dp' %}dd{% else %}dp{% endif %}')" title="(3)">
+                        {% if sort=="dp" %}⬆️{% elif sort=="dd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Date
                     </button>
                 </div>
-                <div class="ctrl_flex">
-                    <button id="selectBtn" onclick="toggleSelectMode()" title="Toggle select mode (S)">SELECT</button>
-                    <button id="invertBtn" onclick="invertSelection()" disabled title="Select all (A)">*</button>
-                    <button onclick="executeDownloads()" title="Download selection(D)">DWNLD</button>
+                
+                <div class="sidebar-section">
+                    <h3>Selection</h3>
+                    <button class="sidebar-button" id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Select Mode</button>
+                    <button class="sidebar-button" id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert Selection</button>
+                    <button class="sidebar-button" onclick="executeDownloads()" title="(d)">📥 Download</button>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Manage</h3>
+                    <button class="sidebar-button" onclick="mkdir()" title="(m)">📁 New Folder</button>
+                    <button class="sidebar-button" onclick="openFileMenu()" title="(u)">📤 Upload Files</button>
+                    <button class="sidebar-button" onclick="openFileMenu(true)" title="(f)">📤 Upload Folder</button>
+                    <button class="sidebar-button" id="delBtn" onclick="executeDeletes()" title="(r)" disabled>🗑️ Delete</button>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Actions</h3>
+                    <button class="sidebar-button" id="copyBtn" onclick="copyFiles()" title="(c)" disabled>📋 Copy</button>
+                    <button class="sidebar-button" id="moveBtn" onclick="moveFiles()" title="(x)" disabled>✂️ Move</button>
+                    <button class="sidebar-button" id="renBtn" onclick="renameFiles()" title="(n)" disabled>✏️ Rename</button>
+                    <button class="sidebar-button" onclick="pasteFiles()" title="(p)">📋 Paste</button>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Account</h3>
                     {% if 'user' in session %}
-                        <button onclick='window.location.href="?logout"' id="login" title="Logout (L)">LOGOUT</button>
+                        <button class="sidebar-button" id="login" onclick='window.location.href="?logout"' title="(l)">🚪 Logout</button>
                     {% else %}
-                        <button onclick='window.location.href="?login"' id="login" title="Login page (L)">LOGIN</button>
-                    {% endif %} 
-                </div>
-            </div>
-            <div class="ctrl_group">
-                <div class="ctrl_flex">
-                    <button onclick="mkdir()" title="Create directory (M)">MKDIR</button>
-                    <button onclick="openFileMenu()" title="Upload files (U)">UPFILE</button>
-                    <button onclick="openFileMenu(true)" title="Upload directory (F)">UPDIR</button>
-                    <button onclick="pasteFiles()" title="Paste files (P)">PASTE</button>
-                </div>
-                <div class="ctrl_flex">
-                    <button id="copyBtn" onclick="copyFiles()" disabled title="Copy selection (C)">COPY</button>
-                    <button id="moveBtn" onclick="moveFiles()" disabled title="Move selection (X)">MOVE</button>
-                    <button id="renBtn" onclick="renameFiles()" disabled title="Rename selection (N)">REN</button>
-                    <button id="delBtn" onclick="executeDeletes()" disabled title="Delete selection (R)">DEL</button>
+                        <button class="sidebar-button" id="login" onclick='window.location.href="?login"' title="(l)">🔑 Login</button>
+                    {% endif %}
                 </div>
             </div>
         </div>
-        <div class="container">
-            {% if not is_root %}
-                <a class="backdir" href="{{ url_for('explorer', path=parent_directory) }}">
-                    <img src="{{ url_for('index', static='svg/index/reply-solid.svg') }}" class="goback"></img>
-                    <span class="name">Parent Directory</span>
-                </a>
-            {% endif %}
-            {% for item in folder_content %}
-                <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %} tabindex="0">
-                {% if item['type'] == 'disk' %}
-                    <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="disk"></img>
-                {% elif item['type'] == 'directory' %}
-                    <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder"></img>
-                {% elif item['type'] == 'source' %}
-                    <img src="{{ url_for('index', static='svg/index/file-code-solid.svg') }}" class="src"></img>
-                {% elif item['type'] == 'video' %}
-                    <img src="{{ url_for('index', static='svg/index/film-solid.svg') }}" class="default"></img>
-                {% elif item['type'] == 'audio' %}
-                    <img src="{{ url_for('index', static='svg/index/music-solid.svg') }}" class="default"></img>
-                {% elif item['type'] == 'text' %}
-                    <img src="{{ url_for('index', static='svg/index/file-lines-solid.svg') }}" class="files"></img>
-                {% elif item['type'] == 'pdf' %}
-                    <img src="{{ url_for('index', static='svg/index/file-pdf-solid.svg') }}" class="pdf"></img>
-                {% elif item['type'] == 'photo' %}
-                    <img src="{{ url_for('index', static='svg/index/image-solid.svg') }}" class="default"></img>
-                {% elif item['type'] == 'document' %}
-                    <img src="{{ url_for('index', static='svg/index/file-word-solid.svg') }}" class="doc"></img>
-                {% elif item['type'] == 'database' %}
-                    <img src="{{ url_for('index', static='svg/index/database-solid.svg') }}" class="default"></img>
-                {% elif item['type'] == 'presentation' %}
-                    <img src="{{ url_for('index', static='svg/index/file-powerpoint-solid.svg') }}" class="pp"></img>
-                {% elif item['type'] == 'virtualdisk' %}
-                    <img src="{{ url_for('index', static='svg/index/compact-disc-solid.svg') }}" class="iso"></img>
-                {% elif item['type'] == 'compressed' %}
-                    <img src="{{ url_for('index', static='svg/index/file-zipper-solid.svg') }}" class="zip"></img>
-                {% elif item['type'] == 'binary' %}
-                    <img src="{{ url_for('index', static='svg/index/file-binary.svg') }}"></img>
-                {% elif item['type'] == 'webpage' %}
-                    <img src="{{ url_for('index', static='svg/index/globe-solid.svg') }}" class="iso"></img>
-                {% else %}
-                    <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}" class="files"></img>
-                {% endif %}
-                    <span class="name">
-                        <pre>{{ item['name'] }}
-                        {% if item['type'] == 'directory' %}
-                            <t class="small">/</t>
-                        {% elif item['type'] == 'disk' %}
-                            <t class="small">//</t>
-                        {% endif %}
-                        </pre>
-                    </span>
-                    <span>
-                        <t class="size">{{ item['size'] }}</t>
-                        {% if item['type'] == 'disk' %}
-                            <t class="capacity">&nbsp;/&nbsp;{{item['capacity']}}</t>
-                            <t class="time">({{item["used"]}}%)</t>
-                        {% else %}
-                            <t class="date">{{ item['mtime'][0] }}</t>
-                            <t class="time">{{ item['mtime'][1] }}</t>
-                        {% endif %}
-                    </span>
-                </div>
-            {% endfor %}
+        
+        <div class="content-area">
+            <div class="path-bar">
+                <span onclick="window.location.href='..'" title="Parent">
+                    <img src="/?static=svg/index/arrow-left-solid.svg">
+                </span>
+                <span onclick="window.location.href='/'" title="Index (i)">
+                    <img src="/?static=svg/index/house-chimney-solid.svg">
+                </span>
+                <div class="path-title">{{ folder_path }}</div>
+            </div>
+            <div class="list-group">
+                {% for item in folder_content %}
+                    <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %} tabindex="0">
+                    {% if item['type'] == 'disk' %}
+                        <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="disk">
+                    {% elif item['type'] == 'directory' %}
+                        <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">
+                    {% elif item['type'] == 'source' %}
+                        <img src="{{ url_for('index', static='svg/index/file-code-solid.svg') }}" class="src">
+                    {% elif item['type'] == 'video' %}
+                        <img src="{{ url_for('index', static='svg/index/film-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'audio' %}
+                        <img src="{{ url_for('index', static='svg/index/music-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'text' %}
+                        <img src="{{ url_for('index', static='svg/index/file-lines-solid.svg') }}" class="files">
+                    {% elif item['type'] == 'pdf' %}
+                        <img src="{{ url_for('index', static='svg/index/file-pdf-solid.svg') }}" class="pdf">
+                    {% elif item['type'] == 'photo' %}
+                        <img src="{{ url_for('index', static='svg/index/image-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'document' %}
+                        <img src="{{ url_for('index', static='svg/index/file-word-solid.svg') }}" class="doc">
+                    {% elif item['type'] == 'database' %}
+                        <img src="{{ url_for('index', static='svg/index/database-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'presentation' %}
+                        <img src="{{ url_for('index', static='svg/index/file-powerpoint-solid.svg') }}" class="pp">
+                    {% elif item['type'] == 'virtualdisk' %}
+                        <img src="{{ url_for('index', static='svg/index/compact-disc-solid.svg') }}" class="iso">
+                    {% elif item['type'] == 'compressed' %}
+                        <img src="{{ url_for('index', static='svg/index/file-zipper-solid.svg') }}" class="zip">
+                    {% elif item['type'] == 'binary' %}
+                        <img src="{{ url_for('index', static='svg/index/file-binary.svg') }}">
+                    {% elif item['type'] == 'webpage' %}
+                        <img src="{{ url_for('index', static='svg/index/globe-solid.svg') }}" class="iso">
+                    {% else %}
+                        <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}" class="files">
+                    {% endif %}
+                        <span class="name"> <pre>{{ item['name'] }}</pre> </span>
+                        <span>
+                            <t class="size">{{ item['size'] }}</t>
+                            {% if item['type'] == 'disk' %}
+                                <t class="capacity">&nbsp;/&nbsp;{{item['capacity']}}</t>
+                                <t class="time">({{item["used"]}}%)</t>
+                            {% else %}
+                                <t class="date">{{ item['mtime'][0] }}</t>
+                                <t class="time">{{ item['mtime'][1] }}</t>
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </body>
 </html>
+
 

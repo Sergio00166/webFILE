@@ -1,25 +1,49 @@
-/* Code by Sergio00166 */
+/* Code by Sergio00166 /*
 /*
 All paths are (and must be) encoded by default, also the items dataset
 Except the Destination Header THAT MUST BE NOT ENCODED.
 Base path variable (base) ends with '/' always.
 */
 
-const buttons = {
-    select: document.getElementById('selectBtn'),
-    del: document.getElementById('delBtn'),
-    copy: document.getElementById('copyBtn'),
-    move: document.getElementById('moveBtn'),
-    ren: document.getElementById('renBtn'),
-    invert: document.getElementById('invertBtn'),
-};
-const progress = document.getElementById('progress');
+const selectBtn   = document.getElementById('selectBtn');
+const delBtn      = document.getElementById('delBtn');
+const copyBtn     = document.getElementById('copyBtn');
+const moveBtn     = document.getElementById('moveBtn');
+const renBtn      = document.getElementById('renBtn');
+const invertBtn   = document.getElementById('invertBtn');
+const progress    = document.getElementById('progress');
+const sidebar     = document.getElementById('sidebar');
+const loader      = document.getElementById('loader');
+const mainContainer = document.querySelector('.main-container');
+const listGroup   = document.querySelector('.list-group');
+const backdir     = document.getElementById('backdir');
+const login       = document.getElementById('login');
+const sortName    = document.getElementById('sortName');
+const sortSize    = document.getElementById('sortSize');
+const sortDate    = document.getElementById('sortDate');
+const body        = document.body;
+
 const base = (location.pathname.replace(/\/$/, '') || '') + '/';
-
 const selected = new Map();
-let selectMode = true;
-toggleSelectMode();
+let selectMode = false;
 
+
+function updateButtonStates() {
+    invertBtn.disabled = !selectMode;
+    copyBtn.disabled   = !selectMode;
+    moveBtn.disabled   = !selectMode;
+    renBtn.disabled    = !selectMode;
+    delBtn.disabled    = !selectMode;
+}
+function toggleSidebar() {
+    sidebar.classList.toggle('open');
+}
+function encodePath(path) {
+    return path.split('/').map(encodeURIComponent).join('/');
+}
+function delay(ms) {
+    return new Promise(function (r) { setTimeout(r, ms); });
+}
 
 function copyFiles() {
     storageOp('copy', getURLlist());
@@ -31,18 +55,9 @@ function clearAllMvCp() {
     ['copy', 'move'].forEach(function (k) { localStorage.removeItem(k); });
 }
 
-function encodePath(path) {
-    return path.split('/').map(encodeURIComponent).join('/');
-}
-function delay(ms) {
-    return new Promise(function (r) { setTimeout(r, ms); });
-}
-
 function showLoader() {
-    var loader = document.getElementById('loader');
     if (loader) loader.style.display = '';
-    var list = document.getElementsByClassName('list-group');
-    if (list.length) list[0].style.display = 'none';
+    if (mainContainer) mainContainer.style.display = 'none';
 }
 
 function changeURL(mode) {
@@ -54,10 +69,10 @@ function changeURL(mode) {
 
 function toggleSelectMode() {
     selectMode = !selectMode;
-    buttons.select.textContent = selectMode ? 'CANCEL' : 'SELECT';
-    Object.keys(buttons).forEach(function (k) {
-        if (k !== 'select') buttons[k].disabled = !selectMode;
-    });
+    if (selectBtn) {
+        selectBtn.textContent = selectMode ? '❌ Cancel Select' : '✅ Select Mode';
+    }
+    updateButtonStates();
     if (!selectMode) deselectAll();
 }
 
@@ -80,23 +95,24 @@ function selectDiv(div) {
 }
 
 function handleDivClick(div) {
-    if (selectMode) return selectDiv(div);
-    var url = div.dataset.value;
-    if (!url) return;
-    if (div.hasAttribute('isdir')) location.href = url;
-    else window.open(url, '_blank');
+    if (selectMode) selectDiv(div);
+    else {
+        var url = div.dataset.value;
+        if (!url) return;
+        if (div.hasAttribute('isdir')) location.href = url;
+        else window.open(url, '_blank');
+    }
 }
 
 function enableDelegation() {
-    var container = document.querySelector('div.container');
-    if (!container) return;
+    if (!listGroup) return;
 
-    container.addEventListener('click', function (e) {
+    listGroup.addEventListener('click', function (e) {
         var d = e.target.closest('.filename');
         if (d) handleDivClick(d);
     });
 
-    container.addEventListener('keydown', function (e) {
+    listGroup.addEventListener('keydown', function (e) {
         if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.filename')) {
             e.preventDefault();
             handleDivClick(e.target.closest('.filename'));
@@ -110,13 +126,13 @@ function downloadURL(url) {
     a.href = url;
     a.download = '';
     a.style.display = 'none';
-    document.body.appendChild(a);
+    body.appendChild(a);
     a.click();
     a.remove();
 }
 
 async function executeDownloads() {
-    if (selectMode) {
+    if (selectMode && selected.size > 0) {
         for (var div of selected.values()) {
             var url = div.dataset.value;
             if (!url) continue;
@@ -124,7 +140,7 @@ async function executeDownloads() {
             downloadURL(url + suffix);
             await delay(100);
         }
-    } else downloadURL(base + '?tar');
+    } else downloadURL(base+'?tar');
 }
 
 async function executeDeletes() {
@@ -174,7 +190,7 @@ async function sendRequest(path, dest, method) {
         return true;
     } catch (status) {
         const msgs = {
-            403: 'You don’t have permission to do that',
+            403: 'You don\'t have permission to do that',
             404: 'That file/folder does not exist',
             409: 'It already exists',
             507: 'Not enough free space'
@@ -253,11 +269,9 @@ async function createFolders(files) {
     }
 }
 
-
 function uploadFileWithProgress(file, url, onProgress) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-
         xhr.open('PUT', url);
 
         xhr.upload.onprogress = function(event) {
@@ -265,28 +279,22 @@ function uploadFileWithProgress(file, url, onProgress) {
                 onProgress(event.loaded, event.total);
             }
         };
-
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve();
-            } else { reject(xhr.status); }
+            } else reject(xhr.status);
         };
-
         xhr.onerror = function() { reject('Connection Error'); };
-
         xhr.send(file);
     });
 }
 
-
 async function uploadFiles(files, isDir) {
     showLoader();
-
     let totalBytes = 0;
-    for (let f of files) totalBytes += f.size;
-
     let uploadedBytes = 0;
 
+    for (let f of files) totalBytes += f.size;
     if (isDir) await createFolders(files);
 
     for (let i = 0; i < files.length; i++) {
@@ -300,13 +308,12 @@ async function uploadFiles(files, isDir) {
                 let percent = (totalUploaded / totalBytes) * 100;
                 progress.textContent = percent.toFixed(2) + '%';
             });
-
             uploadedBytes += f.size;
 
         } catch (status) {
             const msgs = {
                 400: 'Invalid upload data',
-                403: 'You don’t have permission to do that',
+                403: 'You don\'t have permission to do that',
                 409: 'It already exists',
                 507: 'Not enough free space',
                 500: 'Server Error'
@@ -315,10 +322,8 @@ async function uploadFiles(files, isDir) {
             break;  // stop uploading more files on error
         }
     }
-
     location.reload();
 }
-
 
 function enableDragAndDropUpload(dropArea, selectDirectory) {
     dropArea.addEventListener('dragover', function (e) { e.preventDefault(); });
@@ -329,48 +334,57 @@ function enableDragAndDropUpload(dropArea, selectDirectory) {
             uploadFiles(files, selectDirectory);
         }
     });
-}
-enableDragAndDropUpload(document);
+} enableDragAndDropUpload(document);
+
 
 function moveFocus(direction) {
-    var container = document.querySelector('.container');
+    var container = listGroup;
     var items = Array.prototype.filter.call(container.children, function (el) {
         return !el.classList.contains('backdir');
     });
     if (items.length === 0) return;
+
     var active = document.activeElement;
     var index = items.indexOf(active);
-    index = (index + direction + items.length) % items.length;
+
+    if (direction === -Infinity) index = 0;
+    else if (direction === Infinity) index = items.length - 1;
+    else index = (index + direction + items.length) % items.length;
+
     items[index].focus();
 }
 
-function toggleMenu() {
-    var controls = document.querySelector('.controls');
-    if (controls) controls.classList.toggle('open');
-}
-
 document.addEventListener('keydown', function (e) {
-    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+    const key = e.key.toLowerCase();
+    const mod = e.shiftKey && (key === 'arrowleft' || key === 'arrowright');
 
-    switch (e.key.toLowerCase()) {
+    if ((e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) && !mod) return;
+
+    switch (key) {
         case 'arrowdown':
-            e.preventDefault();
-            moveFocus(1);
-            break;
         case 'arrowup':
             e.preventDefault();
-            moveFocus(-1);
+            moveFocus(key === 'arrowdown' ? 1 : -1);
+            break;
+        case 'pageup':
+        case 'pagedown':
+            e.preventDefault();
+            moveFocus(key === 'pagedown' ? 10 : -10);
+            break;
+        case 'home':
+        case 'end':
+            e.preventDefault();
+            moveFocus(key === 'end' ? Infinity : -Infinity);
             break;
         case 'arrowright':
-            document.activeElement.click();
+            if (mod) listGroup.scrollLeft += 100;
+            else document.activeElement.click();
             break;
-        case 'arrowleft': {
-            var active = document.activeElement;
-            var backdir = document.querySelector('.backdir');
-            if (selectMode) active.click();
-            else if (backdir) backdir.click();
+        case 'arrowleft':
+            if (mod) listGroup.scrollLeft -= 100;
+            else if (selectMode) document.activeElement.click();
+            else window.location.href='..';
             break;
-        }
         case 'a': invertSelection(); break;
         case 'd': executeDownloads(); break;
         case 'c': copyFiles(); break;
@@ -382,10 +396,11 @@ document.addEventListener('keydown', function (e) {
         case 'n': renameFiles(); break;
         case 'r': executeDeletes(); break;
         case 'm': mkdir(); break;
-        case 'l': var el = document.getElementById('login'); if (el) el.click(); break;
-        case '1': var el1 = document.getElementById('sortName'); if (el1) el1.click(); break;
-        case '2': var el2 = document.getElementById('sortSize'); if (el2) el2.click(); break;
-        case '3': var el3 = document.getElementById('sortDate'); if (el3) el3.click(); break;
+        case 'l': login.click(); break;
+        case 'i': window.location.href='/'; break;
+        case '1': sortName.click(); break;
+        case '2': sortSize.click(); break;
+        case '3': sortDate.click(); break;
     }
 });
 
