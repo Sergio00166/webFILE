@@ -76,10 +76,10 @@
         
         <div class="content-area">
             <div class="path-bar">
-                <span id="backdir" onclick="window.location.href='{{ url_for('explorer', path=parent_directory) }}'" title="Parent">
+                <span id="backdir" onclick="window.location.href='{{ url_for('explorer', path=parent_directory) }}'" tabindex="0" title="Parent">
                     <img src="/?static=svg/index/arrow-left-solid.svg">
                 </span>
-                <span onclick="window.location.href='{{ url_for('explorer', path='') }}'" title="Index">
+                <span onclick="window.location.href='{{ url_for('explorer', path='') }}'" tabindex="0" title="Index">
                     <img src="/?static=svg/index/house-chimney-solid.svg">
                 </span>
                 <div class="path-title">{{ folder_path }}</div>
