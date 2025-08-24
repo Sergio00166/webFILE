@@ -98,7 +98,7 @@ function handleDivClick(div) {
 }
 
 function enableDelegation() {
-    var container = document.querySelector('div.container');
+    var container = document.querySelector('.list-group');
     if (!container) return;
 
     container.addEventListener('click', function (e) {
@@ -335,7 +335,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory) {
 } enableDragAndDropUpload(document);
 
 function moveFocus(direction) {
-    var container = document.querySelector('.container');
+    var container = document.querySelector('.list-group');
     var items = Array.prototype.filter.call(container.children, function (el) {
         return !el.classList.contains('backdir');
     });

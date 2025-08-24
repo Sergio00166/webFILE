@@ -3,15 +3,17 @@
 .size  { margin-left: 3em; }
 .date  { margin-left: 1em; }
 .time  { margin-left: 0.5em; }
-::-webkit-scrollbar-thumb { background-color: #555; }
-::-webkit-scrollbar-track { background-color: #1e1e1e; }
+
 .size,.capacity,.time,.date { font-size: 15px; }
-.time, .date { font-family: monospace; }
+.time,.date { font-family: monospace; }
+
+::-webkit-scrollbar-thumb { background: #555; }
+::-webkit-scrollbar-track { background: #1e1e1e; }
 
 body {
     margin: 0;
     color: #e0e0e0;
-    background-color: #1a1a1a;
+    background: #1a1a1a;
     font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     scrollbar-color: #555 #1e1e1e;
@@ -24,7 +26,7 @@ body {
 
 img {
     pointer-events: none;
-    max-width: 16px;
+    width: 16px;
     height: 16px;
 }
 pre {
@@ -44,12 +46,10 @@ pre {
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 4px #0007;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
     z-index: 100;
 }
-#sidebar.hidden {
-    transform: translateX(-100%);
-}
+#sidebar.hidden { transform: translateX(-100%); }
 
 .sidebar-toggle {
     display: none;
@@ -63,28 +63,24 @@ pre {
     width: 50px;
     height: 50px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 25px;
     line-height: 1;
     box-shadow: 0 4px 12px #0007;
 }
-
 .sidebar-content {
-    flex: 1;
     padding: 6px;
     overflow-y: auto;
-    overflow-x: hidden;
 }
-.sidebar-section {
-    margin-bottom: 12px;
-}
+
+.sidebar-section { margin-bottom: 12px; }
 .sidebar-section h3 {
-    margin: 0 0 6px 0;
+    margin: 0 0 6px;
     padding: 3px 6px;
     font-size: 11px;
     font-weight: 600;
     color: #aaa;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: .5px;
     background: #3a3a3a;
     border-radius: 4px;
 }
@@ -98,27 +94,25 @@ pre {
     border-radius: 8px;
     color: #e0e0e0;
     font-size: 14px;
-    box-shadow: none;
     background: transparent;
+    cursor: pointer;
 }
 .sidebar-button:disabled {
     color: #666;
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: .6;
 }
 
 .main-container {
     display: flex;
     height: 100vh;
     height: 100dvh;
-    background: #1a1a1a;
 }
 .content-area {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    background: #1a1a1a;
-    margin-left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .path-bar {
@@ -126,9 +120,7 @@ pre {
     align-items: center;
     background: #222;
     border-bottom: 1px solid #444;
-    padding: 8px;
-    padding-left: 12px;
-    padding-right: 16px;
+    padding: 8px 16px 8px 12px;
     gap: 12px;
 }
 
@@ -137,12 +129,12 @@ pre {
     height: 21px;
 }
 .path-bar span img {
-    max-width: none !important;
     width: 100%;
     height: 100%;
     object-fit: cover;
     filter: invert(75%);
 }
+
 .path-title {
     flex: 1;
     font-weight: 600;
@@ -151,59 +143,43 @@ pre {
     font-size: 14px;
     background: #444;
     border-radius: 10px;
-    padding: 6px;
-    padding-left: 12px;
-    padding-right: 13px;
+    padding: 6px 13px 6px 12px;
 }
 
-.container {
-    gap: 0;
-    flex: 1;
-    margin: 0;
-    padding: 0;
-    padding-top: 5px;
-    padding-bottom: 16px;
-    padding-left: 6px;
-    padding-right: 8px;
-    border-radius: 0;
-    background-color: #1a1a1a;
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
 .list-group {
     width: 100%;
-    max-width: none;
-    margin: 0;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    overflow: hidden;
+    overflow: auto;
 }
 
 .filename {
     display: flex;
-    background-color: #222;
+    align-items: center;
+    margin: 3px 8px;
+    padding: 6px 9px;
+    cursor: pointer;
+    background: #222;
+    transition: all .15s ease;
     border: 1px solid transparent;
     border-radius: 8px;
-    margin: 3px;
-    padding: 10px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    align-items: center;
 }
+.filename:first-of-type {
+    margin-top: 6px;
+}
+.filename:last-of-type {
+    margin-bottom: 16px;
+}
+
 .selected {
-    background-color: #1e3a5f !important;
+    background: #1e3a5f !important;
     border-color: #4a90d9 !important;
 }
 .name {
     flex: 1;
+    margin: 0 12px 0 6px;
     text-align: left;
-    margin-right: 12px;
-    margin-left: 6px;
 }
 
 .load_container {
@@ -214,7 +190,7 @@ pre {
     align-items: center;
     justify-content: center;
     background: #1a1a1a;
-    animation: fadeIn 0.5s ease-out;
+    animation: fadeIn .5s ease-out;
     font-family: sans-serif;
     max-width: 100vw;
 }
@@ -233,8 +209,7 @@ pre {
     border-radius: 8px;
     overflow: hidden;
     position: relative;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    margin: 2rem 0;
     border: 1px solid #555;
 }
 .load_container .progress-bar::before {
@@ -243,49 +218,31 @@ pre {
     height: 100%;
     width: 30%;
     border-radius: 8px;
-    background: linear-gradient(90deg, #4a90d9, #357abd);
+    background: linear-gradient(90deg,#4a90d9,#357abd);
     animation: slide 1.7s infinite ease-in-out;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
-@keyframes scalePulse {
-    from { transform: scale(1); }
-    to   { transform: scale(1.3); }
-}
-@keyframes textFade {
-    from { opacity: 0.7; }
-    to   { opacity: 1; }
-}
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes textFade { from{opacity:.7} to{opacity:1} }
 @keyframes slide {
-    0%   { left: -30%; }
-    50%  { left: 50%; }
-    100% { left: 100%; }
+    0%  { left:-30% }
+    50% { left:50% }
+    100%{ left:100% }
 }
 
-.folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) brightness(100%) contrast(100%); }
+.folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) }
 .files { filter: brightness(0) invert(1); }
 .default { filter: brightness(225%) contrast(300%); }
-.pdf { filter: invert(25%) sepia(100%) hue-rotate(-50deg) saturate(1000%) brightness(100%) contrast(100%); }
+.pdf { filter: invert(25%) sepia(100%) hue-rotate(-50deg) saturate(1000%); }
 .doc { filter: brightness(300%) contrast(75%); }
-.pp { filter: invert(25%) sepia(100%) saturate(500%) brightness(100%) contrast(100%); }
-.src { filter: invert(67%) sepia(25%) saturate(100%) brightness(100%) contrast(100%); }
-.zip { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(3000%) brightness(50%) contrast(100%); }
+.pp { filter: invert(25%) sepia(100%) saturate(500%); }
+.src { filter: invert(67%) sepia(25%); }
+.zip { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(3000%) brightness(50%); }
 .disk { filter: brightness(0) invert(1) brightness(67%); }
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
-
-/* Responsive Design */
-
-@media (max-width: 1100px) {
-    .time { display: none; }
-}
-@media (max-width: 900px) {
-    .date, .capacity { display: none; }
-}
-@media (max-width: 700px) {
+/* Responsive */
+@media (max-width:700px) {
     #sidebar {
         position: fixed;
         inset: 0;
@@ -293,33 +250,21 @@ pre {
         height: 100dvh;
         z-index: 150;
         transform: translateX(-100%);
-        transition: transform 0.3s ease;
     }
     .sidebar-toggle { display: block; }
     #sidebar.open { transform: translateX(0); }
+    .filename { min-width: calc(100vw + 200px); }
 }
-@media (max-width: 500px) {
-    .size { display: none; }
-    .ctrl_flex { flex-direction: column; }
-    .ctrl_group { flex-direction: row; }
-}
-@media (max-width: 600px) {
-    .name { font-size: 11px; }
-}
+@media (max-width:200px) { .main-container { display: none; } }
 
-/* Dont show nothing is the
-screen is too small */
-@media (max-width: 200px) {
-    .main-container { display: none; }
-}
-/* Disable hover on touch devices */
-@media (hover: hover) {
+/* Hover effects */
+@media (hover:hover) {
     .filename:hover {
-        background-color: #2a2a2a;
+        background: #2a2a2a;
         border-color: #555;
     }
     button:not(:disabled):hover {
-        background: linear-gradient(180deg, #4a4a4a 0%, #3a3a3a 100%);
+        background: linear-gradient(180deg,#4a4a4a 0%,#3a3a3a 100%);
         border-color: #777;
         box-shadow: 0 2px 4px #0007;
     }

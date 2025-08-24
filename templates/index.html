@@ -74,65 +74,63 @@
         
         <div class="content-area">
             <div class="path-bar">
-                <span id="backdir" onclick="window.location.href='{{ url_for('explorer', path=parent_directory) }}'">
+                <span id="backdir" onclick="window.location.href='{{ url_for('explorer', path=parent_directory) }}'" title="Parent">
                     <img src="/?static=svg/index/arrow-left-solid.svg">
                 </span>
-                <span onclick="window.location.href='{{ url_for('explorer', path='') }}'">
+                <span onclick="window.location.href='{{ url_for('explorer', path='') }}'" title="Index">
                     <img src="/?static=svg/index/house-chimney-solid.svg">
                 </span>
                 <div class="path-title">{{ folder_path }}</div>
             </div>
             <div class="list-group">
-                <div class="container">
-                    {% for item in folder_content %}
-                        <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %} tabindex="0">
-                        {% if item['type'] == 'disk' %}
-                            <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="disk">
-                        {% elif item['type'] == 'directory' %}
-                            <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">
-                        {% elif item['type'] == 'source' %}
-                            <img src="{{ url_for('index', static='svg/index/file-code-solid.svg') }}" class="src">
-                        {% elif item['type'] == 'video' %}
-                            <img src="{{ url_for('index', static='svg/index/film-solid.svg') }}" class="default">
-                        {% elif item['type'] == 'audio' %}
-                            <img src="{{ url_for('index', static='svg/index/music-solid.svg') }}" class="default">
-                        {% elif item['type'] == 'text' %}
-                            <img src="{{ url_for('index', static='svg/index/file-lines-solid.svg') }}" class="files">
-                        {% elif item['type'] == 'pdf' %}
-                            <img src="{{ url_for('index', static='svg/index/file-pdf-solid.svg') }}" class="pdf">
-                        {% elif item['type'] == 'photo' %}
-                            <img src="{{ url_for('index', static='svg/index/image-solid.svg') }}" class="default">
-                        {% elif item['type'] == 'document' %}
-                            <img src="{{ url_for('index', static='svg/index/file-word-solid.svg') }}" class="doc">
-                        {% elif item['type'] == 'database' %}
-                            <img src="{{ url_for('index', static='svg/index/database-solid.svg') }}" class="default">
-                        {% elif item['type'] == 'presentation' %}
-                            <img src="{{ url_for('index', static='svg/index/file-powerpoint-solid.svg') }}" class="pp">
-                        {% elif item['type'] == 'virtualdisk' %}
-                            <img src="{{ url_for('index', static='svg/index/compact-disc-solid.svg') }}" class="iso">
-                        {% elif item['type'] == 'compressed' %}
-                            <img src="{{ url_for('index', static='svg/index/file-zipper-solid.svg') }}" class="zip">
-                        {% elif item['type'] == 'binary' %}
-                            <img src="{{ url_for('index', static='svg/index/file-binary.svg') }}">
-                        {% elif item['type'] == 'webpage' %}
-                            <img src="{{ url_for('index', static='svg/index/globe-solid.svg') }}" class="iso">
-                        {% else %}
-                            <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}" class="files">
-                        {% endif %}
-                            <span class="name"> <pre>{{ item['name'] }}</pre> </span>
-                            <span>
-                                <t class="size">{{ item['size'] }}</t>
-                                {% if item['type'] == 'disk' %}
-                                    <t class="capacity">&nbsp;/&nbsp;{{item['capacity']}}</t>
-                                    <t class="time">({{item["used"]}}%)</t>
-                                {% else %}
-                                    <t class="date">{{ item['mtime'][0] }}</t>
-                                    <t class="time">{{ item['mtime'][1] }}</t>
-                                {% endif %}
-                            </span>
-                        </div>
-                    {% endfor %}
-                </div>
+                {% for item in folder_content %}
+                    <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %} tabindex="0">
+                    {% if item['type'] == 'disk' %}
+                        <img src="{{ url_for('index', static='svg/index/hard-drive-solid.svg') }}" class="disk">
+                    {% elif item['type'] == 'directory' %}
+                        <img src="{{ url_for('index', static='svg/index/folder-solid.svg') }}" class="folder">
+                    {% elif item['type'] == 'source' %}
+                        <img src="{{ url_for('index', static='svg/index/file-code-solid.svg') }}" class="src">
+                    {% elif item['type'] == 'video' %}
+                        <img src="{{ url_for('index', static='svg/index/film-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'audio' %}
+                        <img src="{{ url_for('index', static='svg/index/music-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'text' %}
+                        <img src="{{ url_for('index', static='svg/index/file-lines-solid.svg') }}" class="files">
+                    {% elif item['type'] == 'pdf' %}
+                        <img src="{{ url_for('index', static='svg/index/file-pdf-solid.svg') }}" class="pdf">
+                    {% elif item['type'] == 'photo' %}
+                        <img src="{{ url_for('index', static='svg/index/image-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'document' %}
+                        <img src="{{ url_for('index', static='svg/index/file-word-solid.svg') }}" class="doc">
+                    {% elif item['type'] == 'database' %}
+                        <img src="{{ url_for('index', static='svg/index/database-solid.svg') }}" class="default">
+                    {% elif item['type'] == 'presentation' %}
+                        <img src="{{ url_for('index', static='svg/index/file-powerpoint-solid.svg') }}" class="pp">
+                    {% elif item['type'] == 'virtualdisk' %}
+                        <img src="{{ url_for('index', static='svg/index/compact-disc-solid.svg') }}" class="iso">
+                    {% elif item['type'] == 'compressed' %}
+                        <img src="{{ url_for('index', static='svg/index/file-zipper-solid.svg') }}" class="zip">
+                    {% elif item['type'] == 'binary' %}
+                        <img src="{{ url_for('index', static='svg/index/file-binary.svg') }}">
+                    {% elif item['type'] == 'webpage' %}
+                        <img src="{{ url_for('index', static='svg/index/globe-solid.svg') }}" class="iso">
+                    {% else %}
+                        <img src="{{ url_for('index', static='svg/index/file-solid.svg') }}" class="files">
+                    {% endif %}
+                        <span class="name"> <pre>{{ item['name'] }}</pre> </span>
+                        <span>
+                            <t class="size">{{ item['size'] }}</t>
+                            {% if item['type'] == 'disk' %}
+                                <t class="capacity">&nbsp;/&nbsp;{{item['capacity']}}</t>
+                                <t class="time">({{item["used"]}}%)</t>
+                            {% else %}
+                                <t class="date">{{ item['mtime'][0] }}</t>
+                                <t class="time">{{ item['mtime'][1] }}</t>
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
             </div>
         </div>
     </div>
