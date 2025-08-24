@@ -383,7 +383,7 @@ document.addEventListener('keydown', function (e) {
         case 'arrowleft':
             if (mod) listGroup.scrollLeft -= 100;
             else if (selectMode) document.activeElement.click();
-            else backdir.click();
+            else window.location.href='..';
             break;
         case 'a': invertSelection(); break;
         case 'd': executeDownloads(); break;
@@ -397,6 +397,7 @@ document.addEventListener('keydown', function (e) {
         case 'r': executeDeletes(); break;
         case 'm': mkdir(); break;
         case 'l': login.click(); break;
+        case 'i': window.location.href='/';
         case '1': sortName.click(); break;
         case '2': sortSize.click(); break;
         case '3': sortDate.click(); break;
