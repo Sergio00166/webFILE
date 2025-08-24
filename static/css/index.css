@@ -39,12 +39,13 @@ pre {
 }
 
 #sidebar {
+    flex: 0 0 auto; 
+    display: flex;
+    width: 150px;
     padding-top: 8px;
-    width: 175px;
+    flex-direction: column;
     background: #2a2a2a;
     border-right: 1px solid #444;
-    display: flex;
-    flex-direction: column;
     box-shadow: 2px 0 4px #0007;
     transition: transform 0.3s ease;
     z-index: 100;
