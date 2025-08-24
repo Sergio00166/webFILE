@@ -59,13 +59,15 @@ pre {
     background: #333e;
     border: 1px solid #444;
     border-radius: 50%;
-    color: #e0e0e0;
     width: 50px;
     height: 50px;
     cursor: pointer;
-    font-size: 25px;
-    line-height: 1;
     box-shadow: 0 4px 12px #0007;
+}
+.sidebar-toggle img {
+    width: 24px;
+    height: auto;
+    filter: invert(90%);
 }
 .sidebar-content {
     padding: 6px;
@@ -157,7 +159,7 @@ pre {
 .filename {
     display: flex;
     align-items: center;
-    margin: 3px 8px;
+    margin: 3px 9px;
     padding: 6px 9px;
     cursor: pointer;
     background: #222;
@@ -232,7 +234,6 @@ pre {
 
 .folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) }
 .files { filter: brightness(0) invert(1); }
-.default { filter: brightness(225%) contrast(300%); }
 .pdf { filter: invert(25%) sepia(100%) hue-rotate(-50deg) saturate(1000%); }
 .doc { filter: brightness(300%) contrast(75%); }
 .pp { filter: invert(25%) sepia(100%) saturate(500%); }

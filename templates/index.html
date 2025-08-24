@@ -20,11 +20,13 @@
     </div>
     
     <div class="main-container">
-        <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">☰</button>
-        
+        <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
+            <img src="{{ url_for('index', static='svg/index/bars-solid.svg') }}"> 
+        </button>
+
         <div id="sidebar">
             <div class="sidebar-content">
-                
+
                 <div class="sidebar-section">
                     <h3>Sort</h3>
                     <button class="sidebar-button" id="sortName" onclick="changeURL('{% if sort=='np' %}nd{% else %}np{% endif %}')">
