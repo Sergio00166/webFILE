@@ -243,21 +243,20 @@ pre {
 .disk { filter: brightness(0) invert(1) brightness(67%); }
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
+
 /* Responsive */
+@media (max-width:200px) { .main-container { display: none; } }
+@media (max-width:1200px) { .filename { min-width: calc(100% + 200px); } }
+@media (max-width:400px) { .filename { min-width: calc(100% + 350px); } }
 @media (max-width:700px) {
     #sidebar {
-        position: fixed;
         inset: 0;
-        height: 100vh;
-        height: 100dvh;
-        z-index: 150;
+        position: fixed;
         transform: translateX(-100%);
     }
     .sidebar-toggle { display: block; }
     #sidebar.open { transform: translateX(0); }
-    .filename { min-width: calc(100vw + 200px); }
 }
-@media (max-width:200px) { .main-container { display: none; } }
 
 /* Hover effects */
 @media (hover:hover) {
