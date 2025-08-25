@@ -42,24 +42,28 @@
                 
                 <div class="sidebar-section">
                     <h3>Selection</h3>
-                    <button class="sidebar-button" id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Select Mode</button>
-                    <button class="sidebar-button" id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert Selection</button>
+                    <button class="sidebar-button" id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Enable</button>
+                    <button class="sidebar-button" id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert</button>
                     <button class="sidebar-button" onclick="executeDownloads()" title="(d)">📥 Download</button>
                 </div>
 
                 <div class="sidebar-section">
-                    <h3>Manage</h3>
-                    <button class="sidebar-button" onclick="mkdir()" title="(m)">📁 New Folder</button>
-                    <button class="sidebar-button" onclick="openFileMenu()" title="(u)">📤 Upload Files</button>
-                    <button class="sidebar-button" onclick="openFileMenu(true)" title="(f)">📤 Upload Folder</button>
+                    <h3>Upload</h3>
+                    <button class="sidebar-button" onclick="openFileMenu()" title="(u)">📤 Files</button>
+                    <button class="sidebar-button" onclick="openFileMenu(true)" title="(f)">📤 Folder</button>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Actions</h3>
+                    <button class="sidebar-button" onclick="mkdir()" title="(m)">📁 New Dir</button>
+                    <button class="sidebar-button" id="renBtn" onclick="renameFiles()" title="(n)" disabled>✏️ Rename</button>
                     <button class="sidebar-button" id="delBtn" onclick="executeDeletes()" title="(r)" disabled>🗑️ Delete</button>
                 </div>
                 
                 <div class="sidebar-section">
-                    <h3>Actions</h3>
+                    <h3>Manage</h3>
                     <button class="sidebar-button" id="copyBtn" onclick="copyFiles()" title="(c)" disabled>📋 Copy</button>
                     <button class="sidebar-button" id="moveBtn" onclick="moveFiles()" title="(x)" disabled>✂️ Move</button>
-                    <button class="sidebar-button" id="renBtn" onclick="renameFiles()" title="(n)" disabled>✏️ Rename</button>
                     <button class="sidebar-button" onclick="pasteFiles()" title="(p)">📋 Paste</button>
                 </div>
                 

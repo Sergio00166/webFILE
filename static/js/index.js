@@ -70,7 +70,7 @@ function changeURL(mode) {
 function toggleSelectMode() {
     selectMode = !selectMode;
     if (selectBtn) {
-        selectBtn.textContent = selectMode ? '❌ Cancel Select' : '✅ Select Mode';
+        selectBtn.textContent = selectMode ? '❌ Cancel' : '✅ Enable';
     }
     updateButtonStates();
     if (!selectMode) deselectAll();
