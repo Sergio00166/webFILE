@@ -147,6 +147,8 @@ pre {
     background: #444;
     border-radius: 10px;
     padding: 6px 13px 6px 12px;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .list-group {
