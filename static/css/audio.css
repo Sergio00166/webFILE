@@ -79,14 +79,13 @@ img {
     transform: translate(-50%, -50%);
 }
 .hover-time {
+    width: 0;
     overflow: show;
     height: 100%;
     position: absolute;
-    inset: 0;
     background: #fff5;
     display: flex;
     align-items: center;
-    width: 0;
     border-radius: 5px;
 }
 .hover-time .hover-duration {
@@ -97,7 +96,6 @@ img {
     pointer-events: none;
 }
 .duration .current-time {
-    inset: 0;
     width: 0;
     height: 100%;
     display: flex;
