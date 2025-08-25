@@ -344,14 +344,8 @@ function moveFocus(direction) {
     });
     if (items.length === 0) return;
 
-    var active = document.activeElement;
-    var index = items.indexOf(active);
-
-    if (direction === -Infinity) index = 0;
-    else if (direction === Infinity) index = items.length - 1;
-    else index = (index + direction + items.length) % items.length;
-
-    items[index].focus();
+    var index = items.indexOf(document.activeElement);
+    items[(index + direction + items.length) % items.length].focus();
 }
 
 document.addEventListener('keydown', function (e) {
@@ -365,16 +359,6 @@ document.addEventListener('keydown', function (e) {
         case 'arrowup':
             e.preventDefault();
             moveFocus(key === 'arrowdown' ? 1 : -1);
-            break;
-        case 'pageup':
-        case 'pagedown':
-            e.preventDefault();
-            moveFocus(key === 'pagedown' ? 10 : -10);
-            break;
-        case 'home':
-        case 'end':
-            e.preventDefault();
-            moveFocus(key === 'end' ? Infinity : -Infinity);
             break;
         case 'arrowright':
             if (mod) listGroup.scrollLeft += 100;
