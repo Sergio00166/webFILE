@@ -345,7 +345,11 @@ function moveFocus(direction) {
     if (items.length === 0) return;
 
     var index = items.indexOf(document.activeElement);
-    items[(index + direction + items.length) % items.length].focus();
+    if (direction === -Infinity) index = 0;
+    else if (direction === Infinity) index = items.length - 1;
+    else index = (index + direction + items.length) % items.length;
+
+    items[index].focus();
 }
 
 document.addEventListener('keydown', function (e) {
@@ -358,14 +362,24 @@ document.addEventListener('keydown', function (e) {
         case 'arrowdown':
         case 'arrowup':
             e.preventDefault();
-            moveFocus(key === 'arrowdown' ? 1 : -1);
+            if (key=="arrowup") moveFocus(-1);
+            else moveFocus(1);
+            break;            
+        case 'home':
+        case 'end':
+            e.preventDefault();
+            if (key=="end") moveFocus(Infinity);
+            else moveFocus(-Infinity);
             break;
         case 'arrowright':
-            if (mod) listGroup.scrollLeft += 100;
+            e.preventDefault();
+            if (mod) listGroup.scrollTo({
+                left: listGroup.scrollWidth, behavior: 'smooth' });
             else document.activeElement.click();
             break;
         case 'arrowleft':
-            if (mod) listGroup.scrollLeft -= 100;
+            e.preventDefault();
+            if (mod) listGroup.scrollTo({ left: 0, behavior: 'smooth' });
             else if (selectMode) document.activeElement.click();
             else window.location.href='..';
             break;
@@ -387,5 +401,4 @@ document.addEventListener('keydown', function (e) {
         case '3': sortDate.click(); break;
     }
 });
-
 
