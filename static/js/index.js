@@ -338,10 +338,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory) {
 
 
 function moveFocus(direction) {
-    var container = listGroup;
-    var items = Array.prototype.filter.call(container.children, function (el) {
-        return !el.classList.contains('backdir');
-    });
+    var items = Array.from(listGroup.children);
     if (items.length === 0) return;
 
     var index = items.indexOf(document.activeElement);
