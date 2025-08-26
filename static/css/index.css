@@ -143,16 +143,18 @@ pre {
     user-select: text;
 }
 .list-group {
+    gap: 6px;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    padding: 6px 9px 16px;
+    box-sizing: border-box;
     overflow: auto;
 }
 .filename {
     display: flex;
     align-items: center;
-    margin: 3px 9px;
     padding: 6px 9px;
     cursor: pointer;
     background: #222;
@@ -160,8 +162,6 @@ pre {
     border: 1px solid transparent;
     border-radius: 8px;
 }
-.filename:first-of-type { margin-top: 6px; }
-.filename:last-of-type { margin-bottom: 16px; }
 .filename:focus { outline: 1px solid white; }
 
 .selected {
