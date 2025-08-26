@@ -6,7 +6,6 @@
 
 .size,.capacity,.time,.date { font-size: 15px; }
 .time,.date { font-family: monospace; }
-
 ::-webkit-scrollbar-thumb { background: #555; }
 ::-webkit-scrollbar-track { background: #1e1e1e; }
 
@@ -23,7 +22,6 @@ body {
     height: 100vh;
     height: 100dvh;
 }
-
 img {
     pointer-events: none;
     width: 16px;
@@ -37,7 +35,6 @@ pre {
     -webkit-user-select: text;
     user-select: text;
 }
-
 #sidebar {
     flex: 0 0 auto; 
     display: flex;
@@ -76,7 +73,6 @@ pre {
     padding: 6px;
     overflow-y: auto;
 }
-
 .sidebar-section { margin-bottom: 12px; }
 .sidebar-section h3 {
     margin: 0 0 6px;
@@ -89,7 +85,6 @@ pre {
     background: #3a3a3a;
     border-radius: 4px;
 }
-
 .sidebar-button {
     width: 100%;
     text-align: left;
@@ -107,7 +102,6 @@ pre {
     cursor: not-allowed;
     opacity: .6;
 }
-
 .main-container {
     display: flex;
     height: 100vh;
@@ -127,7 +121,6 @@ pre {
     padding: 8px 16px 8px 12px;
     gap: 12px;
 }
-
 .path-bar span { 
     cursor: pointer;
     height: 21px;
@@ -149,7 +142,6 @@ pre {
     -webkit-user-select: text;
     user-select: text;
 }
-
 .list-group {
     width: 100%;
     height: 100%;
@@ -157,7 +149,6 @@ pre {
     flex-direction: column;
     overflow: auto;
 }
-
 .filename {
     display: flex;
     align-items: center;
@@ -169,12 +160,9 @@ pre {
     border: 1px solid transparent;
     border-radius: 8px;
 }
-.filename:first-of-type {
-    margin-top: 6px;
-}
-.filename:last-of-type {
-    margin-bottom: 16px;
-}
+.filename:first-of-type { margin-top: 6px; }
+.filename:last-of-type { margin-bottom: 16px; }
+.filename:focus { outline: 1px solid white; }
 
 .selected {
     background: #1e3a5f !important;
@@ -185,7 +173,6 @@ pre {
     margin: 0 12px 0 6px;
     text-align: left;
 }
-
 .load_container {
     height: 100vh;
     height: 100dvh;
