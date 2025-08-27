@@ -162,8 +162,9 @@ pre {
     border: 1px solid transparent;
     border-radius: 8px;
 }
-.filename:focus { outline: 1px solid white; }
-
+.filename:focus-visible { 
+    outline: 1px solid white;
+}
 .selected {
     background: #1e3a5f !important;
     border-color: #4a90d9 !important;
@@ -234,7 +235,7 @@ pre {
 
 /* Responsive */
 @media (max-width:200px) { .main-container { display: none; } }
-@media (max-width:1200px) { .filename { min-width: calc(100% + 200px); } }
+@media (max-width:1200px) { .filename { min-width: calc(100% + 224px); } }
 @media (max-width:400px) { .filename { min-width: calc(100% + 350px); } }
 @media (max-width:700px) {
     #sidebar {
