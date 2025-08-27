@@ -235,8 +235,8 @@ pre {
 
 /* Responsive */
 @media (max-width:200px) { .main-container { display: none; } }
-@media (max-width:1200px) { .filename { min-width: calc(100% + 224px); } }
-@media (max-width:400px) { .filename { min-width: calc(100% + 350px); } }
+@media (max-width:1200px) { .filename { min-width: calc(100% + 256px); } }
+@media (max-width:400px) { .filename { min-width: calc(100% + 512px); } }
 @media (max-width:700px) {
     #sidebar {
         inset: 0;
