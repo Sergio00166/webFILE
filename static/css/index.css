@@ -44,7 +44,7 @@ pre {
     background: #2a2a2a;
     border-right: 1px solid #444;
     box-shadow: 2px 0 4px #0007;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s;
     z-index: 100;
 }
 #sidebar.hidden { transform: translateX(-100%); }
@@ -92,9 +92,10 @@ pre {
     margin: 1px 0;
     border: none;
     border-radius: 8px;
-    color: #e0e0e0;
+    color: #eee;
     font-size: 14px;
     background: transparent;
+    transition: background-color 0.15s; 
     cursor: pointer;
 }
 .sidebar-content button:disabled {
@@ -161,7 +162,7 @@ pre {
     padding: 6px 9px;
     cursor: pointer;
     background: #222;
-    transition: all .15s ease;
+    transition: all .2s;
     border: 1px solid transparent;
     border-radius: 8px;
 }
@@ -257,9 +258,7 @@ pre {
         border-color: #555;
     }
     .sidebar-content button:not(:disabled):hover {
-        background: linear-gradient(180deg,#4a4a4a 0%,#3a3a3a 100%);
-        border-color: #777;
-        box-shadow: 0 2px 4px #0007;
+        background: #444;
     }
     .sidebar-toggle:hover {
         background: #444e !important;

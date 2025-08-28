@@ -332,14 +332,15 @@ function moveFocus(direction) {
     items[index].focus();
 }
 
-
 listGroup.addEventListener('click', function (e) {
-    handleDivClick(e.target.closest('.filename'));
+    const d = e.target.closest('.filename');
+    if (d) handleDivClick(d);
 });
 listGroup.addEventListener('keydown', function (e) {
-    if ((e.key === 'Enter' || e.key === ' ')) {
+    const d = e.target.closest('.filename');
+    if ((e.key === 'Enter' || e.key === ' ') && d) {
         e.preventDefault();
-        handleDivClick(e.target.closest('.filename'));
+        handleDivClick(d);
     }
 });
 document.addEventListener('keydown', function (e) {
