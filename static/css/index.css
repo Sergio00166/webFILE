@@ -85,7 +85,7 @@ pre {
     background: #3a3a3a;
     border-radius: 4px;
 }
-.sidebar-button {
+.sidebar-content button {
     width: 100%;
     text-align: left;
     padding: 6px;
@@ -97,7 +97,7 @@ pre {
     background: transparent;
     cursor: pointer;
 }
-.sidebar-button:disabled {
+.sidebar-content button:disabled {
     color: #666;
     cursor: not-allowed;
     opacity: .6;
@@ -121,11 +121,14 @@ pre {
     padding: 8px 16px 8px 12px;
     gap: 12px;
 }
-.path-bar span { 
+.path-bar button {
+    padding: 0;
+    background: none;
+    border: none;
     cursor: pointer;
     height: 21px;
 }
-.path-bar span img {
+.path-bar button img {
     width: auto;
     height: 100%;
     filter: invert(75%);
@@ -253,7 +256,7 @@ pre {
         background: #2a2a2a;
         border-color: #555;
     }
-    button:not(:disabled):hover {
+    .sidebar-content button:not(:disabled):hover {
         background: linear-gradient(180deg,#4a4a4a 0%,#3a3a3a 100%);
         border-color: #777;
         box-shadow: 0 2px 4px #0007;
