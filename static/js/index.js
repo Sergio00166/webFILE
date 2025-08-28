@@ -104,23 +104,6 @@ function handleDivClick(div) {
     }
 }
 
-function enableDelegation() {
-    if (!listGroup) return;
-
-    listGroup.addEventListener('click', function (e) {
-        var d = e.target.closest('.filename');
-        if (d) handleDivClick(d);
-    });
-
-    listGroup.addEventListener('keydown', function (e) {
-        if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('.filename')) {
-            e.preventDefault();
-            handleDivClick(e.target.closest('.filename'));
-        }
-    });
-} enableDelegation();
-
-
 function downloadURL(url) {
     var a = document.createElement('a');
     a.href = url;
@@ -349,6 +332,16 @@ function moveFocus(direction) {
     items[index].focus();
 }
 
+
+listGroup.addEventListener('click', function (e) {
+    handleDivClick(e.target.closest('.filename'));
+});
+listGroup.addEventListener('keydown', function (e) {
+    if ((e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        handleDivClick(e.target.closest('.filename'));
+    }
+});
 document.addEventListener('keydown', function (e) {
     const key = e.key.toLowerCase();
     const mod = e.shiftKey && (key === 'arrowleft' || key === 'arrowright');
