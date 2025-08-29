@@ -422,11 +422,6 @@ canvas { position: absolute; }
         margin-bottom: 30px;
     }
 }
-@media (min-aspect-ratio: 1/1) and (max-height: 320px) {
-    .hover-time .hover-duration {
-        font-size: 0.5rem;
-    }
-}
 @media ((max-width: 160px) or (max-height: 160px)) {
     .video-container {
         display: none;
