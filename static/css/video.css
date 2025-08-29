@@ -105,7 +105,7 @@ body {
     width: 100%;
     position: absolute;
     box-sizing: border-box;
-    padding: 0.5rem 1rem;
+    padding: 0 12px 8px 12px;
 }
 .duration {
     position: relative;
@@ -196,8 +196,7 @@ body {
     transform: scale(1);
 }
 .btn-controls {
-    padding-top: 1rem;
-    font-size: 1.2rem;
+    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -262,7 +261,7 @@ body {
     padding: 0;
     margin: 0;
     position: absolute;
-    bottom: 84px;
+    bottom: 76px;
     transition: all 0.2s;
     transform: scaleY(0);
     transform-origin: bottom;
@@ -380,14 +379,12 @@ canvas { position: absolute; }
         display: none;
     }
     .btn-controls {
-        padding-top: 0.67rem;
-        font-size: 1.2rem;
         display: flex;
         align-items: center;
         flex-direction: column;
     }
     .setting-menu {
-        bottom: 100px;
+        bottom: 104px;
     }
 }
 @media (max-width: 320px) {
@@ -405,9 +402,6 @@ canvas { position: absolute; }
         height: 56px;
         width: 56px;
         border-width: 5px;
-    }
-    .vol_val_st { 
-        font-size: 1rem;
     }
 }
 @media (max-width: 220px) {
