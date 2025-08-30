@@ -438,6 +438,16 @@ function toggleFullscreenMode() {
     }
 }
 
+videoContainerElement.addEventListener('fullscreenchange', () => {
+    videoContainerElement.classList.toggle('fullscreen', document.fullscreenElement);
+    
+    if (videoElement.videoWidth >= videoElement.videoHeight) {
+        screen.orientation.lock('landscape').catch(() => {});
+    } else {
+        screen.orientation.lock('portrait').catch(() => {});
+    }
+});
+
 // ============================================================================
 // TIMELINE & CHAPTERS
 // ============================================================================
@@ -823,16 +833,6 @@ videoContainerElement.addEventListener('mousemove', (event) => {
 videoContainerElement.addEventListener('focusin', (event) => {
     controlsContainer.classList.add('show');
     hideControlsWithDelay(MOUSE_CONTROL_DELAY);
-});
-
-videoContainerElement.addEventListener('fullscreenchange', () => {
-    videoContainerElement.classList.toggle('fullscreen', document.fullscreenElement);
-    
-    if (videoElement.videoWidth >= videoElement.videoHeight) {
-        screen.orientation.lock('landscape').catch(() => {});
-    } else {
-        screen.orientation.lock('portrait').catch(() => {});
-    }
 });
 
 videoContainerElement.addEventListener('touchmove', () => {
