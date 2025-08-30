@@ -320,8 +320,8 @@ select option {
 /* Liquid Glass Fx */
 .duration::before, .main-state, .time-container span,
 .round-button, .setting-menu, .hover-duration {
-    backdrop-filter: invert(10%) brightness(75%) saturate(200%) blur(3px);
-    -webkit-backdrop-filter: invert(10%) brightness(75%)  saturate(200%) blur(3px);
+    -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
+    backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     background: transparent;
     box-shadow: 0 0 2px #FFFA;
 }
