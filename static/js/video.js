@@ -748,7 +748,7 @@ liD.addEventListener("click", () => {
     download_video.click();
     setTimeout(handleSettingMenu, 100);
 });
-liD.addEventListener('keydown', e => {}
+liD.addEventListener('keydown', e => {
     if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         liD.click();
@@ -806,7 +806,7 @@ document.addEventListener('keydown', e => {
         case 'm': toggleMuteUnmute(); break;
         default: break;
     }
-};
+});
 
 function volume_kbd_helper() {
     volumeBar.value = video.volume;
