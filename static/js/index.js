@@ -42,7 +42,7 @@ function encodePath(path) {
     return path.split('/').map(encodeURIComponent).join('/');
 }
 function delay(ms) {
-    return new Promise(function (r) { setTimeout(r, ms); });
+    return new Promise(r => setTimeout(r, ms));
 }
 
 function copyFiles() {
@@ -52,7 +52,7 @@ function moveFiles() {
     storageOp('move', getURLlist());
 }
 function clearAllMvCp() {
-    ['copy', 'move'].forEach(function (k) { localStorage.removeItem(k); });
+    ['copy', 'move'].forEach(k => localStorage.removeItem(k));
 }
 
 function showLoader() {
@@ -77,7 +77,7 @@ function toggleSelectMode() {
 }
 
 function deselectAll() {
-    selected.forEach(function (div, id) {
+    selected.forEach((div, id) => {
         div.classList.remove('selected');
     });
     selected.clear();
@@ -158,7 +158,7 @@ function storageOp(key, list) {
 
 function getURLlist() {
     return Array.from(selected.values())
-        .map(function (div) { return div.dataset.value; })
+        .map(div => div.dataset.value)
         .filter(Boolean);
 }
 
@@ -227,7 +227,7 @@ function openFileMenu(selectDir) {
     inp.multiple = !selectDir;
     if (selectDir) inp.setAttribute('webkitdirectory', true);
 
-    inp.onchange = function () {
+    inp.onchange = () => {
         if (inp.files.length && (selectDir || confirm('Upload '+inp.files.length+' item(s)?'))) {
             uploadFiles(inp.files, selectDir);
         }
@@ -257,17 +257,17 @@ function uploadFileWithProgress(file, url, onProgress) {
         const xhr = new XMLHttpRequest();
         xhr.open('PUT', url);
 
-        xhr.upload.onprogress = function(event) {
+        xhr.upload.onprogress = event => {
             if (event.lengthComputable && onProgress) {
                 onProgress(event.loaded, event.total);
             }
         };
-        xhr.onload = function() {
+        xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve();
             } else reject(xhr.status);
         };
-        xhr.onerror = function() { reject('Connection Error'); };
+        xhr.onerror = () => { reject('Connection Error'); };
         xhr.send(file);
     });
 }
@@ -309,8 +309,8 @@ async function uploadFiles(files, isDir) {
 }
 
 function enableDragAndDropUpload(dropArea, selectDirectory) {
-    dropArea.addEventListener('dragover', function (e) { e.preventDefault(); });
-    dropArea.addEventListener('drop', function (e) {
+    dropArea.addEventListener('dragover', e => { e.preventDefault(); });
+    dropArea.addEventListener('drop', e => {
         e.preventDefault();
         var files = Array.prototype.slice.call(e.dataTransfer.files);
         if (files.length && confirm('¿Upload ' + files.length + ' item(s)?')) {
@@ -332,18 +332,18 @@ function moveFocus(direction) {
     items[index].focus();
 }
 
-listGroup.addEventListener('click', function (e) {
+listGroup.addEventListener('click', e => {
     const d = e.target.closest('.filename');
     if (d) handleDivClick(d);
 });
-listGroup.addEventListener('keydown', function (e) {
+listGroup.addEventListener('keydown', e => {
     const d = e.target.closest('.filename');
     if ((e.key === 'Enter' || e.key === ' ') && d) {
         e.preventDefault();
         handleDivClick(d);
     }
 });
-document.addEventListener('keydown', function (e) {
+document.addEventListener('keydown', e => {
     const key = e.key.toLowerCase();
     const mod = e.shiftKey && (key === 'arrowleft' || key === 'arrowright');
 
@@ -392,4 +392,3 @@ document.addEventListener('keydown', function (e) {
         case '3': sortDate.click(); break;
     }
 });
-

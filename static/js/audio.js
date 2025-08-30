@@ -105,7 +105,7 @@ function updateSeekBar() {
     currentTimeElem.textContent = formatTime(audio.currentTime);
 }
 
-volumeBar.addEventListener('input', (e) => {
+volumeBar.addEventListener('input', e => {
     audio.volume = e.target.value;
     if (audio.muted) {
         audio.muted = false;
@@ -287,7 +287,7 @@ duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHove
 
 
 // Add keyboard shortcuts
-document.addEventListener('keydown', (e) => {
+document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
 
     if (e.key.match(/[0-9]/gi)) {
@@ -301,21 +301,6 @@ document.addEventListener('keydown', (e) => {
                 if (e.repeat) break;
                 toggleMainState();
             } break;
-        case 'm':
-            toggleMuteUnmute();
-            break;
-        case 's':
-            toggleShuffle();
-            break;
-        case 'l':
-            cycleLoop();
-            break;
-        case 'n':
-            next();
-            break;
-        case 'p':
-            prev();
-            break;
         case 'arrowright':
             audio.currentTime += 2;
             break;
@@ -330,8 +315,12 @@ document.addEventListener('keydown', (e) => {
             audio.volume = Math.max(audio.volume - 0.02, 0);
             volume_kbd_helper();
             break;
-        default:
-            break;
+        case 'm': toggleMuteUnmute(); break;
+        case 's': toggleShuffle(); break;
+        case 'l': cycleLoop(); break;
+        case 'n': next(); break;
+        case 'p': prev(); break;
+        default: break;
     }
 });
 

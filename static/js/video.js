@@ -590,7 +590,7 @@ function cancelPressTimer() {
 }
 
 // Mouse events
-settingsBtn.addEventListener('mousedown', (e) => {
+settingsBtn.addEventListener('mousedown', e => {
     e.preventDefault();
     startPressTimer();
 });
@@ -599,7 +599,7 @@ settingsBtn.addEventListener('mouseup', cancelPressTimer);
 settingsBtn.addEventListener('mouseleave', cancelPressTimer);
 
 // Touch events
-settingsBtn.addEventListener('touchstart', (e) => {
+settingsBtn.addEventListener('touchstart', e => {
     e.preventDefault();
     startPressTimer();
 }, { passive: false });
@@ -672,18 +672,18 @@ volume.addEventListener('mouseleave', () => {
     volumeBar.classList.remove('show');
     volumeHideTimeout = setTimeout(()=>{ timeContainer.style.display = 'block'; }, 100);
 });
-volumeBar.addEventListener('input', (e) => {
+volumeBar.addEventListener('input', e => {
     handleVolume(e);
 });
 
 // Settings events
-settingsBtn.addEventListener('click', (e) => {
+settingsBtn.addEventListener('click', e => {
     if (settingsButtonPressed) {
         e.preventDefault();
         settingsButtonPressed = false;
     } else handleSettingMenu();
 });
-settingsBtn.addEventListener('touchend', (e) => {
+settingsBtn.addEventListener('touchend', e => {
     if (settingsButtonPressed) {
         e.preventDefault();
         settingsButtonPressed = false;
@@ -716,7 +716,7 @@ speedSelect.addEventListener('change', function() {
 
 // Touch interaction events
 touchBox.addEventListener('touchend', double_touch);
-touchBox.addEventListener('click', (e) => {
+touchBox.addEventListener('click', e => {
     e.preventDefault();
     toggleMainState();
     showCursor();
@@ -768,10 +768,9 @@ document.addEventListener('touchstart', () => { touchHoverActive = true; clearHo
 duration.addEventListener('mousemove', e => { if (!touchHoverActive) showHover(e.clientX); });
 duration.addEventListener('mouseleave', () => { touchHoverActive = false; clearHover(); });
 duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-document.addEventListener('keydown', handleShorthand);
 
 
-function handleShorthand(e) {
+document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
     
     if (e.key.match(/[0-9]/gi)) {
@@ -786,9 +785,6 @@ function handleShorthand(e) {
                 if (e.repeat) break;
                 video.paused ? play() : pause();
             } break;
-        case 'f':
-            toggleFullscreen();
-            break;
         case 'arrowright':
             video.currentTime += 2;
             chgtime_kdb_helper('fordward');
@@ -796,18 +792,6 @@ function handleShorthand(e) {
         case 'arrowleft':
             video.currentTime -= 2;
             chgtime_kdb_helper('back');
-            break;
-        case 'p':
-            prev();
-            break;
-        case 'n':
-            next();
-            break;
-        case 'l':
-            chMode();
-            break;
-        case 'm':
-            toggleMuteUnmute();
             break;
         case 'arrowup': 
             video.volume = Math.min(video.volume + 0.02, 1);
@@ -817,10 +801,14 @@ function handleShorthand(e) {
             video.volume = Math.max(video.volume - 0.02, 0);
             volume_kbd_helper();
             break;
-        default:
-            break;
+        case 'f': toggleFullscreen(); break;
+        case 'p': prev(); break;
+        case 'n': next(); break;
+        case 'l': chMode(); break;
+        case 'm': toggleMuteUnmute(); break;
+        default: break;
     }
-}
+});
 
 function volume_kbd_helper() {
     volumeBar.value = video.volume;
