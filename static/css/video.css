@@ -105,7 +105,7 @@ body {
     width: 100%;
     position: absolute;
     box-sizing: border-box;
-    padding: 0.5rem 1rem;
+    padding: 0 12px 8px 12px;
 }
 .duration {
     position: relative;
@@ -148,9 +148,9 @@ body {
     z-index: 2;
 }
 .hover-time {
+    width: 0;
     position: absolute;
     display: flex;
-    inset: 0;
     height: 100%;
     background: #fff4;
     align-items: center;
@@ -169,7 +169,6 @@ body {
     pointer-events: none;
 }
 .current-time {
-    inset: 0;
     width: 0;
     height: 100%;
     display: flex;
@@ -197,8 +196,7 @@ body {
     transform: scale(1);
 }
 .btn-controls {
-    padding-top: 1rem;
-    font-size: 1.2rem;
+    margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -263,7 +261,7 @@ body {
     padding: 0;
     margin: 0;
     position: absolute;
-    bottom: 84px;
+    bottom: 76px;
     transition: all 0.2s;
     transform: scaleY(0);
     transform-origin: bottom;
@@ -322,8 +320,8 @@ select option {
 /* Liquid Glass Fx */
 .duration::before, .main-state, .time-container span,
 .round-button, .setting-menu, .hover-duration {
-    backdrop-filter: invert(10%) brightness(75%) saturate(200%) blur(3px);
-    -webkit-backdrop-filter: invert(10%) brightness(75%)  saturate(200%) blur(3px);
+    -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
+    backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     background: transparent;
     box-shadow: 0 0 2px #FFFA;
 }
@@ -381,14 +379,12 @@ canvas { position: absolute; }
         display: none;
     }
     .btn-controls {
-        padding-top: 0.67rem;
-        font-size: 1.2rem;
         display: flex;
         align-items: center;
         flex-direction: column;
     }
     .setting-menu {
-        bottom: 100px;
+        bottom: 104px;
     }
 }
 @media (max-width: 320px) {
@@ -407,9 +403,6 @@ canvas { position: absolute; }
         width: 56px;
         border-width: 5px;
     }
-    .vol_val_st { 
-        font-size: 1rem;
-    }
 }
 @media (max-width: 220px) {
     .settings {
@@ -427,11 +420,6 @@ canvas { position: absolute; }
 @media (max-aspect-ratio: 1/1) {
     .video-box, .main-state, .custom-loader {
         margin-bottom: 30px;
-    }
-}
-@media (min-aspect-ratio: 1/1) and (max-height: 320px) {
-    .hover-time .hover-duration {
-        font-size: 0.5rem;
     }
 }
 @media ((max-width: 160px) or (max-height: 160px)) {

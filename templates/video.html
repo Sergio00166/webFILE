@@ -46,12 +46,12 @@
         </div>
         <div class="btn-controls">
           <div class="side-controls">
-            <button class="round-button play-pause" onclick="toggleMainState()" title="Play">
+            <button class="round-button play-pause" onclick="togglePlayPauseState()" title="Play">
               <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: block;">
               <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
             </button>
             <span class="volume">
-              <button class="round-button" onclick="toggleMuteUnmute()" title="Mute (M)">
+              <button class="round-button" onclick="toggleMuteState()" title="Mute (M)">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" style="display: none;">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-high-outline.svg') }}" style="display: block;">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-medium-outline.svg') }}" style="display: none;">
@@ -66,13 +66,13 @@
             </span>
           </div>
           <div class="side-controls">
-            <button class="round-button" onclick="prev()" title="Prev (P)">
+            <button class="round-button" onclick="navigateToPrevious()" title="Prev (P)">
               <img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}">
             </button>
-            <button class="round-button" onclick="next()" title="Next (N)">
+            <button class="round-button" onclick="navigateToNext()" title="Next (N)">
               <img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}">
             </button>
-            <button class="round-button" id="mode" onclick="chMode()" title="Loop (L)">1</button>
+            <button class="round-button" id="mode" onclick="changePlaybackMode()" title="Loop (L)">1</button>
             <span class="settings">
               <button class="round-button" id="settings" title="Menu (hold:legacy)">
                 <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
@@ -104,7 +104,7 @@
                 <li id="liD" tabindex="0">Download</li>
               </ul>
             </span>
-            <button class="round-button" onclick="toggleFullscreen()" title="Fullscren (F)">
+            <button class="round-button" onclick="toggleFullscreenMode()" title="Fullscren (F)">
               <img class="full" src="{{ url_for('index', static='svg/videoplayer/scan-outline.svg') }}">
               <img class="contract" src="{{ url_for('index', static='svg/videoplayer/contract-outline.svg') }}">
             </button>
@@ -114,4 +114,5 @@
     </div>
   </body>
 </html>
- 
+
+

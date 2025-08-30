@@ -29,46 +29,50 @@
 
                 <div class="sidebar-section">
                     <h3>Sort</h3>
-                    <button class="sidebar-button" id="sortName" onclick="changeURL('{% if sort=='np' %}nd{% else %}np{% endif %}')" title="(1)">
+                    <button id="sortName" onclick="changeSortingMode('{% if sort=='np' %}nd{% else %}np{% endif %}')" title="(1)">
                         {% if sort=="np" %}⬆️{% elif sort=="nd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Name
                     </button>
-                    <button class="sidebar-button" id="sortSize" onclick="changeURL('{% if sort=='sp' %}sd{% else %}sp{% endif %}')" title="(2)">
+                    <button id="sortSize" onclick="changeSortingMode('{% if sort=='sp' %}sd{% else %}sp{% endif %}')" title="(2)">
                         {% if sort=="sp" %}⬆️{% elif sort=="sd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Size
                     </button>
-                    <button class="sidebar-button" id="sortDate" onclick="changeURL('{% if sort=='dp' %}dd{% else %}dp{% endif %}')" title="(3)">
+                    <button id="sortDate" onclick="changeSortingMode('{% if sort=='dp' %}dd{% else %}dp{% endif %}')" title="(3)">
                         {% if sort=="dp" %}⬆️{% elif sort=="dd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Date
                     </button>
                 </div>
                 
                 <div class="sidebar-section">
                     <h3>Selection</h3>
-                    <button class="sidebar-button" id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Select Mode</button>
-                    <button class="sidebar-button" id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert Selection</button>
-                    <button class="sidebar-button" onclick="executeDownloads()" title="(d)">📥 Download</button>
+                    <button id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Enable</button>
+                    <button id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert</button>
+                    <button onclick="executeDownloads()" title="(d)">📥 Download</button>
                 </div>
 
                 <div class="sidebar-section">
-                    <h3>Manage</h3>
-                    <button class="sidebar-button" onclick="mkdir()" title="(m)">📁 New Folder</button>
-                    <button class="sidebar-button" onclick="openFileMenu()" title="(u)">📤 Upload Files</button>
-                    <button class="sidebar-button" onclick="openFileMenu(true)" title="(f)">📤 Upload Folder</button>
-                    <button class="sidebar-button" id="delBtn" onclick="executeDeletes()" title="(r)" disabled>🗑️ Delete</button>
+                    <h3>Upload</h3>
+                    <button onclick="openFileUploadMenu()" title="(u)">📤 Files</button>
+                    <button onclick="openFileUploadMenu(true)" title="(f)">📤 Folder</button>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Actions</h3>
+                    <button onclick="createDirectory()" title="(m)">📁 New Dir</button>
+                    <button id="renBtn" onclick="renameSelectedFiles()" title="(n)" disabled>✏️ Rename</button>
+                    <button id="delBtn" onclick="executeDeletes()" title="(r)" disabled>🗑️ Delete</button>
                 </div>
                 
                 <div class="sidebar-section">
-                    <h3>Actions</h3>
-                    <button class="sidebar-button" id="copyBtn" onclick="copyFiles()" title="(c)" disabled>📋 Copy</button>
-                    <button class="sidebar-button" id="moveBtn" onclick="moveFiles()" title="(x)" disabled>✂️ Move</button>
-                    <button class="sidebar-button" id="renBtn" onclick="renameFiles()" title="(n)" disabled>✏️ Rename</button>
-                    <button class="sidebar-button" onclick="pasteFiles()" title="(p)">📋 Paste</button>
+                    <h3>Manage</h3>
+                    <button id="copyBtn" onclick="copySelectedFiles()" title="(c)" disabled>📋 Copy</button>
+                    <button id="moveBtn" onclick="moveSelectedFiles()" title="(x)" disabled>✂️ Move</button>
+                    <button onclick="pasteFiles()" title="(p)">📋 Paste</button>
                 </div>
                 
                 <div class="sidebar-section">
                     <h3>Account</h3>
                     {% if 'user' in session %}
-                        <button class="sidebar-button" id="login" onclick='window.location.href="?logout"' title="(l)">🚪 Logout</button>
+                        <button id="login" onclick='window.location.href="?logout"' title="(l)">🚪 Logout</button>
                     {% else %}
-                        <button class="sidebar-button" id="login" onclick='window.location.href="?login"' title="(l)">🔑 Login</button>
+                        <button id="login" onclick='window.location.href="?login"' title="(l)">🔑 Login</button>
                     {% endif %}
                 </div>
             </div>
@@ -76,12 +80,12 @@
         
         <div class="content-area">
             <div class="path-bar">
-                <span onclick="window.location.href='..'" title="Parent">
+                <button onclick="window.location.href='..'" title="Parent">
                     <img src="/?static=svg/index/arrow-left-solid.svg">
-                </span>
-                <span onclick="window.location.href='/'" title="Index (i)">
+                </button>
+                <button onclick="window.location.href='/'" title="Index (i)">
                     <img src="/?static=svg/index/house-chimney-solid.svg">
-                </span>
+                </button>
                 <div class="path-title">{{ folder_path }}</div>
             </div>
             <div class="list-group">
@@ -127,7 +131,7 @@
                                 <t class="capacity">&nbsp;/&nbsp;{{item['capacity']}}</t>
                                 <t class="time">({{item["used"]}}%)</t>
                             {% else %}
-                                <t class="date">{{ item['mtime'][0] }}</t>
+                                <t class="time">{{ item['mtime'][0] }}</t>
                                 <t class="time">{{ item['mtime'][1] }}</t>
                             {% endif %}
                         </span>

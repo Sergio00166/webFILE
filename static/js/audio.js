@@ -1,350 +1,545 @@
 /* Code by Sergio00166 */
 
-const audio = document.getElementById('audio');
-const iconPlay = document.querySelector('#play-pause img:first-child');
-const iconPause = document.querySelector('#play-pause img:last-child');
-const duration = document.querySelector('.duration');
-const currentTime = document.querySelector('.current-time');
-const hoverTime = document.querySelector('.hover-time');
-const hoverDuration = document.querySelector('.hover-duration');
-const currentTimeElem = document.getElementById('current-time');
-const totalTimeElem = document.getElementById('total-time');
-const volumeBar = document.getElementById('volume-bar');
-const shuffleBtn = document.getElementById('shuffle-btn');
-const loopBtn = document.getElementById('loop-btn');
-const prevLink = document.getElementById('prev');
+// ============================================================================
+// DOM ELEMENTS - AUDIO PLAYER
+// ============================================================================
+
+const audioElement = document.getElementById('audio');
+const playIcon = document.querySelector('#play-pause img:first-child');
+const pauseIcon = document.querySelector('#play-pause img:last-child');
+const durationBar = document.querySelector('.duration');
+const currentTimeBar = document.querySelector('.current-time');
+const hoverTimeBar = document.querySelector('.hover-time');
+const hoverDurationDisplay = document.querySelector('.hover-duration');
+const currentTimeDisplay = document.getElementById('current-time');
+const totalTimeDisplay = document.getElementById('total-time');
+const volumeSlider = document.getElementById('volume-bar');
+
+// ============================================================================
+// DOM ELEMENTS - CONTROLS
+// ============================================================================
+
+const shuffleButton = document.getElementById('shuffle-btn');
+const loopButton = document.getElementById('loop-btn');
+const previousLink = document.getElementById('prev');
 const nextLink = document.getElementById('next');
 const randomLink = document.getElementById('random');
 const downloadLink = document.getElementById('download-link');
-const volHighIcon = document.querySelector('.vol-icons img:nth-child(1)');
-const volMedIcon = document.querySelector('.vol-icons img:nth-child(2)');
-const volLowIcon = document.querySelector('.vol-icons img:nth-child(3)');
-const volZeroIcon = document.querySelector('.vol-icons img:nth-child(4)');
-const volMutedIcon = document.querySelector('.vol-icons img:nth-child(5)');
-const loopImg = document.querySelector('#loop-btn img:first-child');
-const loopSameImg = document.querySelector('#loop-btn img:last-child');
+const speedButton = document.getElementById('speed-btn');
+
+// ============================================================================
+// DOM ELEMENTS - ICONS
+// ============================================================================
+
+const volumeHighIcon = document.querySelector('.vol-icons img:nth-child(1)');
+const volumeMediumIcon = document.querySelector('.vol-icons img:nth-child(2)');
+const volumeLowIcon = document.querySelector('.vol-icons img:nth-child(3)');
+const volumeZeroIcon = document.querySelector('.vol-icons img:nth-child(4)');
+const volumeMutedIcon = document.querySelector('.vol-icons img:nth-child(5)');
+const loopIcon = document.querySelector('#loop-btn img:first-child');
+const loopSameIcon = document.querySelector('#loop-btn img:last-child');
+
+// ============================================================================
+// STATE VARIABLES
+// ============================================================================
 
 let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
 let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
 const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
 const savedMuted = localStorage.getItem('audioMuted');
-const speedBtn = document.getElementById('speed-btn');
-const speedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-let speedIndex = speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0 ?
-    speedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) :
-    speedOptions.indexOf(1);
-audio.playbackRate = speedOptions[speedIndex];
-let speedBtn_startY = 0;
-let fixTouchHover = false;
 
-if (!isNaN(savedVolume)) audio.volume = savedVolume;
-if (savedMuted !== null) audio.muted = savedMuted === 'true';
-updateVolumeIcon(audio.volume);
+// ============================================================================
+// PLAYBACK SPEED CONFIGURATION
+// ============================================================================
+
+const playbackSpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+let currentSpeedIndex = playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0 ?
+    playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) :
+    playbackSpeedOptions.indexOf(1);
+
+// ============================================================================
+// TOUCH INTERACTION VARIABLES
+// ============================================================================
+
+let speedButtonStartY = 0;
+let isTouchHoverActive = false;
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+function initializeAudioPlayer() {
+    // Set initial playback speed
+    audioElement.playbackRate = playbackSpeedOptions[currentSpeedIndex];
+    
+    // Set initial volume
+    if (!isNaN(savedVolume)) {
+        audioElement.volume = savedVolume;
+    }
+    
+    // Set initial muted state
+    if (savedMuted !== null) {
+        audioElement.muted = savedMuted === 'true';
+    }
+    
+    // Update UI elements
+    updateVolumeIcon(audioElement.volume);
+    updateLoopButton();
+    updateShuffleButton();
+    updateSpeedDisplay();
+}
+
+function waitForAudioReady() {
+    if (isNaN(audioElement.duration) || audioElement.duration === 0) {
+        return setTimeout(waitForAudioReady, 25);
+    }
+    
+    playAudio();
+    if (audioElement.paused) pauseAudio();
+    
+    totalTimeDisplay.textContent = formatTime(audioElement.duration);
+    audioElement.addEventListener('timeupdate', updateSeekBar);
+}
+
+// ============================================================================
+// LOOP MODE MANAGEMENT
+// ============================================================================
 
 function updateLoopButton() {
     if (loopMode === 0) {
-        loopBtn.style.opacity = 0.4;
-        loopImg.style.display = 'block';
-        loopSameImg.style.display = 'none';
+        loopButton.style.opacity = 0.4;
+        loopIcon.style.display = 'block';
+        loopSameIcon.style.display = 'none';
     } else if (loopMode === 1) {
-        loopBtn.style.opacity = 1;
-        loopImg.style.display = 'block';
-        loopSameImg.style.display = 'none';
+        loopButton.style.opacity = 1;
+        loopIcon.style.display = 'block';
+        loopSameIcon.style.display = 'none';
     } else {
-        loopBtn.style.opacity = 1;
-        loopImg.style.display = 'none';
-        loopSameImg.style.display = 'block';
+        loopButton.style.opacity = 1;
+        loopIcon.style.display = 'none';
+        loopSameIcon.style.display = 'block';
     }
+    
     localStorage.setItem('audioLoopMode', loopMode);
 }
-updateLoopButton();
 
-shuffleBtn.style.opacity = isShuffled ? 1 : 0.4;
-
-window.addEventListener('pageshow', () => {
-    volumeBar.value = audio.volume;
-    updateVolumeBar();
-    (function wait4ready() {
-        if (isNaN(audio.duration) || audio.duration === 0) {
-            return setTimeout(wait4ready, 25);
-        }
-        play(); if (audio.paused) pause();
-        totalTimeElem.textContent = formatTime(audio.duration);
-        audio.addEventListener('timeupdate', updateSeekBar);
-    })();
-});
-
-
-function updateSpeedDisplay() {
-    speedBtn.textContent = speedOptions[speedIndex] + 'x';
-}
-updateSpeedDisplay();
-speedBtn.addEventListener('click', () => {
-    speedIndex = (speedIndex + 1) % speedOptions.length;
-    audio.playbackRate = speedOptions[speedIndex];
-    localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
-    updateSpeedDisplay();
-});
-speedBtn.addEventListener('wheel', e => {
-    e.preventDefault();
-    if (e.deltaY < 0 && speedIndex < speedOptions.length - 1) speedIndex++;
-    else if (e.deltaY > 0 && speedIndex > 0) speedIndex--;
-    audio.playbackRate = speedOptions[speedIndex];
-    localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
-    updateSpeedDisplay();
-});
-
-function formatTime(sec) {
-    const min = Math.floor(sec / 60).toString().padStart(2, '0');
-    const sec2 = Math.floor(sec % 60).toString().padStart(2, '0');
-    return `${min}:${sec2}`;
-}
-
-function updateSeekBar() {
-    currentTime.style.width = (audio.currentTime / audio.duration) * 100 + '%';
-    currentTimeElem.textContent = formatTime(audio.currentTime);
-}
-
-volumeBar.addEventListener('input', (e) => {
-    audio.volume = e.target.value;
-    if (audio.muted) {
-        audio.muted = false;
-        localStorage.setItem('audioMuted', 'false');
-    }
-    localStorage.setItem('audioVolume', audio.volume);
-    updateVolumeIcon(audio.volume);
-    updateVolumeBar();
-});
-
-audio.addEventListener('ended', () => {
-    if (loopMode === 2) play();
-    else if (loopMode === 1) next();
-    else {
-        iconPause.style.display = 'none';
-        iconPlay.style.display = 'block';
-    }
-});
-
-function updateVolumeBar() {
-    const percent = volumeBar.value * 100;
-    if (audio.muted) volumeBar.style.background = '#e1e1e1';
-    else volumeBar.style.background = `linear-gradient(to right, #007aff ${percent}%, #e1e1e1 ${percent}%)`;
-}
-
-function updateVolumeIcon(vol) {
-    [volHighIcon, volMedIcon, volLowIcon, volZeroIcon, volMutedIcon].forEach(el => el.style.display = 'none');
-    if (audio.muted) volMutedIcon.style.display = 'block';
-    else if (vol === 0) volZeroIcon.style.display = 'block';
-    else if (vol > 0.66) volHighIcon.style.display = 'block';
-    else if (vol > 0.33) volMedIcon.style.display = 'block';
-    else volLowIcon.style.display = 'block';
-}
-
-function pause() {
-    audio.pause();
-    iconPause.style.display = 'none';
-    iconPlay.style.display = 'block';
-}
-
-function play() {
-    audio.play().catch(()=>{});
-    iconPlay.style.display = 'none';
-    iconPause.style.display = 'block';
-}
-
-function toggleMainState() {
-    audio.paused ? play() : pause();
-}
-audio.addEventListener('play', play);
-audio.addEventListener('pause', pause);
-
-
-function toggleMuteUnmute() {
-    audio.muted = !audio.muted;
-    localStorage.setItem('audioMuted', audio.muted);
-    updateVolumeIcon(audio.volume);
-    updateVolumeBar();
-}
-
-function toggleShuffle() {
-    isShuffled = !isShuffled;
-    localStorage.setItem('audioShuffle', JSON.stringify(isShuffled));
-    shuffleBtn.style.opacity = isShuffled ? 1 : 0.4;
-}
-
-function cycleLoop() {
+function cycleLoopMode() {
     loopMode = (loopMode + 1) % 3;
     updateLoopButton();
 }
 
-function prev() {
-    if (isShuffled) window.history.go(-1);
-    else prevLink.click();
+// ============================================================================
+// SHUFFLE MODE MANAGEMENT
+// ============================================================================
+
+function updateShuffleButton() {
+    shuffleButton.style.opacity = isShuffled ? 1 : 0.4;
 }
 
-function next() {
+function toggleShuffleMode() {
+    isShuffled = !isShuffled;
+    localStorage.setItem('audioShuffle', JSON.stringify(isShuffled));
+    updateShuffleButton();
+}
+
+// ============================================================================
+// PLAYBACK SPEED MANAGEMENT
+// ============================================================================
+
+function updateSpeedDisplay() {
+    speedButton.textContent = playbackSpeedOptions[currentSpeedIndex] + 'x';
+}
+
+function changePlaybackSpeed() {
+    currentSpeedIndex = (currentSpeedIndex + 1) % playbackSpeedOptions.length;
+    audioElement.playbackRate = playbackSpeedOptions[currentSpeedIndex];
+    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    updateSpeedDisplay();
+}
+
+function handleSpeedWheel(event) {
+    event.preventDefault();
+    
+    if (event.deltaY < 0 && currentSpeedIndex < playbackSpeedOptions.length - 1) {
+        currentSpeedIndex++;
+    } else if (event.deltaY > 0 && currentSpeedIndex > 0) {
+        currentSpeedIndex--;
+    }
+    
+    audioElement.playbackRate = playbackSpeedOptions[currentSpeedIndex];
+    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    updateSpeedDisplay();
+}
+
+function handleSpeedTouchStart(event) {
+    event.preventDefault();
+    speedButtonStartY = event.touches[0].clientY;
+}
+
+function handleSpeedTouchEnd(event) {
+    const speedButtonEndY = event.changedTouches[0].clientY;
+    const speedButtonDeltaY = speedButtonEndY - speedButtonStartY;
+
+    if (speedButtonDeltaY > 10 && currentSpeedIndex < playbackSpeedOptions.length - 1) {
+        currentSpeedIndex++;
+    } else if (speedButtonDeltaY < -10 && currentSpeedIndex > 0) {
+        currentSpeedIndex--;
+    } else if (Math.abs(speedButtonDeltaY) < 10) {
+        speedButton.click();
+    }
+
+    audioElement.playbackRate = playbackSpeedOptions[currentSpeedIndex];
+    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    updateSpeedDisplay();
+}
+
+// ============================================================================
+// TIME FORMATTING & DISPLAY
+// ============================================================================
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
+    const remainingSeconds = Math.floor(seconds % 60).toString().padStart(2, '0');
+    return `${minutes}:${remainingSeconds}`;
+}
+
+function formatDuration(timeInSeconds) {
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds / 60) % 60);
+    const seconds = Math.floor(timeInSeconds % 60);
+    
+    if (hours > 0) {
+        return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`;
+    } else {
+        return `${formatNumber(minutes)}:${formatNumber(seconds)}`;
+    }
+}
+
+function formatNumber(number) {
+    return new Intl.NumberFormat({}, {
+        minimumIntegerDigits: 2
+    }).format(number);
+}
+
+// ============================================================================
+// SEEK BAR & PROGRESS
+// ============================================================================
+
+function updateSeekBar() {
+    currentTimeBar.style.width = (audioElement.currentTime / audioElement.duration) * 100 + '%';
+    currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+}
+
+function getTimelinePosition(clientX) {
+    const rect = durationBar.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const position = Math.min(Math.max(0, clientX - rect.left), width);
+    return { 
+        percentage: position / width, 
+        position: position, 
+        height: height 
+    };
+}
+
+function updateAudioTime(percentage) {
+    audioElement.currentTime = percentage * audioElement.duration;
+    updateSeekBar();
+}
+
+// ============================================================================
+// TIMELINE INTERACTION
+// ============================================================================
+
+function showTimelineHover(clientX) {
+    const { percentage, position, height } = getTimelinePosition(clientX);
+    hoverTimeBar.style.width = `${percentage * 100}%`;
+    
+    hoverDurationDisplay.textContent = formatDuration(percentage * audioElement.duration);
+    hoverDurationDisplay.style.display = 'block';
+    hoverDurationDisplay.style.bottom = `${height + 6}px`;
+    
+    const barRect = durationBar.getBoundingClientRect();
+    const tooltipWidth = hoverDurationDisplay.offsetWidth;
+    let leftPosition = position - tooltipWidth / 2;
+    
+    if (leftPosition < 0) leftPosition = 0;
+    if (leftPosition + tooltipWidth > barRect.width) {
+        leftPosition = barRect.width - tooltipWidth;
+    }
+    
+    hoverDurationDisplay.style.left = `${leftPosition}px`;
+    hoverDurationDisplay.style.visibility = tooltipWidth ? 'visible' : 'hidden';
+}
+
+function clearTimelineHover() {
+    hoverTimeBar.style.width = '0';
+    hoverDurationDisplay.style.display = 'none';
+}
+
+function setupMouseDrag(handlerMove) {
+    const endDrag = () => document.removeEventListener('mousemove', handlerMove);
+    document.addEventListener('mousemove', handlerMove);
+    document.addEventListener('mouseup', endDrag, { once: true });
+}
+
+function setupTouchDrag(handlerMove) {
+    const endDrag = () => document.removeEventListener('touchmove', handlerMove);
+    document.addEventListener('touchmove', handlerMove, { passive: true });
+    document.addEventListener('touchend', endDrag, { once: true });
+}
+
+// ============================================================================
+// VOLUME CONTROL
+// ============================================================================
+
+function updateVolumeBar() {
+    const volumePercent = volumeSlider.value * 100;
+    if (audioElement.muted) {
+        volumeSlider.style.background = '#e1e1e1';
+    } else {
+        volumeSlider.style.background = `linear-gradient(to right, #007aff ${volumePercent}%, #e1e1e1 ${volumePercent}%)`;
+    }
+}
+
+function updateVolumeIcon(volume) {
+    const allVolumeIcons = [volumeHighIcon, volumeMediumIcon, volumeLowIcon, volumeZeroIcon, volumeMutedIcon];
+    allVolumeIcons.forEach(icon => icon.style.display = 'none');
+    
+    if (audioElement.muted) {
+        volumeMutedIcon.style.display = 'block';
+    } else if (volume === 0) {
+        volumeZeroIcon.style.display = 'block';
+    } else if (volume > 0.66) {
+        volumeHighIcon.style.display = 'block';
+    } else if (volume > 0.33) {
+        volumeMediumIcon.style.display = 'block';
+    } else {
+        volumeLowIcon.style.display = 'block';
+    }
+}
+
+function handleVolumeChange(event) {
+    audioElement.volume = event.target.value;
+    
+    if (audioElement.muted) {
+        audioElement.muted = false;
+        localStorage.setItem('audioMuted', 'false');
+    }
+    
+    localStorage.setItem('audioVolume', audioElement.volume);
+    updateVolumeIcon(audioElement.volume);
+    updateVolumeBar();
+}
+
+function toggleMuteState() {
+    audioElement.muted = !audioElement.muted;
+    localStorage.setItem('audioMuted', audioElement.muted);
+    updateVolumeIcon(audioElement.volume);
+    updateVolumeBar();
+}
+
+function handleVolumeKeyboardChange() {
+    volumeSlider.value = audioElement.volume;
+    localStorage.setItem('audioVolume', audioElement.volume);
+    updateVolumeIcon(audioElement.volume);
+    updateVolumeBar();
+}
+
+// ============================================================================
+// PLAYBACK CONTROL
+// ============================================================================
+
+function pauseAudio() {
+    audioElement.pause();
+    pauseIcon.style.display = 'none';
+    playIcon.style.display = 'block';
+}
+
+function playAudio() {
+    audioElement.play().catch(() => {});
+    playIcon.style.display = 'none';
+    pauseIcon.style.display = 'block';
+}
+
+function togglePlayPauseState() {
+    audioElement.paused ? playAudio() : pauseAudio();
+}
+
+function handleAudioEnded() {
+    if (loopMode === 2) {
+        playAudio();
+    } else if (loopMode === 1) {
+        navigateToNext();
+    } else {
+        pauseIcon.style.display = 'none';
+        playIcon.style.display = 'block';
+    }
+}
+
+// ============================================================================
+// NAVIGATION
+// ============================================================================
+
+function navigateToPrevious() {
+    if (isShuffled) {
+        window.history.go(-1);
+    } else {
+        previousLink.click();
+    }
+}
+
+function navigateToNext() {
     if (isShuffled) {
         window.history.forward();
         setTimeout(() => {
             randomLink.click();
         }, 250);
-    } else nextLink.click();
+    } else {
+        nextLink.click();
+    }
 }
 
-function download() { downloadLink.click(); }
-
-speedBtn.addEventListener('touchstart', e => {
-    e.preventDefault();
-    speedBtn_startY = e.touches[0].clientY;
-}, { passive: false });
-
-speedBtn.addEventListener('touchend', e => {
-    const speedBtn_endY = e.changedTouches[0].clientY;
-    const speedBtn_deltaY = speedBtn_endY - speedBtn_startY;
-
-    if (speedBtn_deltaY > 10 && speedIndex < speedOptions.length - 1) speedIndex++;
-    else if (speedBtn_deltaY < -10 && speedIndex > 0) speedIndex--;
-    else if (Math.abs(speedBtn_deltaY) < 10) speedBtn.click();
-
-    audio.playbackRate = speedOptions[speedIndex];
-    localStorage.setItem('audioSpeed', speedOptions[speedIndex]);
-    updateSpeedDisplay();
-});
-
-
-function formatter(number) {
-    return new Intl.NumberFormat({}, {
-        minimumIntegerDigits: 2
-    }).format(number);
-}
-function showDuration(time) {
-    const hours = Math.floor(time / 60 ** 2);
-    const min = Math.floor((time / 60) % 60);
-    const sec = Math.floor(time % 60);
-    if (hours > 0) return `${formatter(hours)}:${formatter(min)}:${formatter(sec)}`;
-    else return `${formatter(min)}:${formatter(sec)}`;
+function downloadAudio() {
+    downloadLink.click();
 }
 
+// ============================================================================
+// KEYBOARD SHORTCUTS
+// ============================================================================
 
-// Time bar control funcs
+function handleKeyboardShortcuts(event) {
+    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
-const getPct = clientX => {
-    const rect = duration.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const pos = Math.min(Math.max(0, clientX - rect.left), width);
-    return { pct: pos / width, pos, height };
-};
-
-function updateTime(pct) {
-    audio.currentTime = pct * audio.duration;
-    updateSeekBar(); // Update all
-}
-
-function showHover(clientX) {
-    const { pct, pos, height } = getPct(clientX);
-    hoverTime.style.width = `${pct * 100}%`;
-    hoverDuration.textContent = showDuration(pct * audio.duration);
-    hoverDuration.style.display = 'block';
-    hoverDuration.style.bottom = `${height + 6}px`;
-    const barRect = duration.getBoundingClientRect();
-    const tooltipWidth = hoverDuration.offsetWidth;
-    let left = pos - tooltipWidth / 2;
-    if (left < 0) left = 0;
-    if (left + tooltipWidth > barRect.width) left = barRect.width - tooltipWidth;
-    hoverDuration.style.left = `${left}px`;
-    hoverDuration.style.visibility = tooltipWidth ? 'visible' : 'hidden';
-}
-
-function clearHover() {
-    hoverTime.style.width = '0';
-    hoverDuration.style.display = 'none';
-}
-
-function drag(handlerMove) {
-    const end = () => document.removeEventListener('mousemove', handlerMove);
-    document.addEventListener('mousemove', handlerMove);
-    document.addEventListener('mouseup', end, { once: true });
-}
-
-function touchDrag(handlerMove) {
-    const end = () => document.removeEventListener('touchmove', handlerMove);
-    document.addEventListener('touchmove', handlerMove, { passive: true });
-    document.addEventListener('touchend', end, { once: true });
-}
-
-duration.addEventListener('mousedown', e =>
-    drag(eMove => updateTime(getPct(eMove.clientX).pct))
-);
-duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(eMove.touches[0] && eMove.touches[0].clientX).pct))
-);
-
-document.addEventListener('touchstart', () => { fixTouchHover = true; clearHover(); }, { passive: true });
-duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-duration.addEventListener('mousemove', e => { if (!fixTouchHover) showHover(e.clientX); });
-duration.addEventListener('mouseleave', () => { fixTouchHover = false; clearHover(); });
-
-
-// Add keyboard shortcuts
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
-
-    if (e.key.match(/[0-9]/gi)) {
-        audio.currentTime = (audio.duration / 100) * (parseInt(e.key) * 10);
+    if (event.key.match(/[0-9]/gi)) {
+        audioElement.currentTime = (audioElement.duration / 100) * (parseInt(event.key) * 10);
         return;
     }
-    switch (e.key.toLowerCase()) {
+    
+    switch (event.key.toLowerCase()) {
         case ' ':
             if (document.activeElement === document.body) {
-                e.preventDefault();
-                if (e.repeat) break;
-                toggleMainState();
-            } break;
-        case 'm':
-            toggleMuteUnmute();
-            break;
-        case 's':
-            toggleShuffle();
-            break;
-        case 'l':
-            cycleLoop();
-            break;
-        case 'n':
-            next();
-            break;
-        case 'p':
-            prev();
+                event.preventDefault();
+                if (event.repeat) break;
+                togglePlayPauseState();
+            }
             break;
         case 'arrowright':
-            audio.currentTime += 2;
+            audioElement.currentTime += 2;
             break;
         case 'arrowleft':
-            audio.currentTime -= 2;
+            audioElement.currentTime -= 2;
             break;
         case 'arrowup':
-            audio.volume = Math.min(audio.volume + 0.02, 1);
-            volume_kbd_helper();
+            audioElement.volume = Math.min(audioElement.volume + 0.02, 1);
+            handleVolumeKeyboardChange();
             break;
         case 'arrowdown':
-            audio.volume = Math.max(audio.volume - 0.02, 0);
-            volume_kbd_helper();
+            audioElement.volume = Math.max(audioElement.volume - 0.02, 0);
+            handleVolumeKeyboardChange();
+            break;
+        case 'm':
+            toggleMuteState();
+            break;
+        case 's':
+            toggleShuffleMode();
+            break;
+        case 'l':
+            cycleLoopMode();
+            break;
+        case 'n':
+            navigateToNext();
+            break;
+        case 'p':
+            navigateToPrevious();
             break;
         default:
             break;
     }
+}
+
+// ============================================================================
+// MEDIA SESSION API
+// ============================================================================
+
+function setupMediaSession() {
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.setActionHandler('previoustrack', navigateToPrevious);
+        navigator.mediaSession.setActionHandler('nexttrack', navigateToNext);
+    }
+}
+
+// ============================================================================
+// EVENT LISTENERS - AUDIO ELEMENT
+// ============================================================================
+
+audioElement.addEventListener('ended', handleAudioEnded);
+audioElement.addEventListener('play', playAudio);
+audioElement.addEventListener('pause', pauseAudio);
+
+// ============================================================================
+// EVENT LISTENERS - CONTROLS
+// ============================================================================
+
+volumeSlider.addEventListener('input', handleVolumeChange);
+
+speedButton.addEventListener('click', changePlaybackSpeed);
+speedButton.addEventListener('wheel', handleSpeedWheel);
+speedButton.addEventListener('touchstart', handleSpeedTouchStart, { passive: false });
+speedButton.addEventListener('touchend', handleSpeedTouchEnd);
+
+// ============================================================================
+// EVENT LISTENERS - TIMELINE
+// ============================================================================
+
+durationBar.addEventListener('mousedown', (event) => {
+    setupMouseDrag(moveEvent => updateAudioTime(getTimelinePosition(moveEvent.clientX).percentage));
 });
 
-function volume_kbd_helper() {
-    volumeBar.value = audio.volume;
-    localStorage.setItem('audioVolume', audio.volume);
-    updateVolumeIcon(audio.volume);
-    updateVolumeBar();
-}
+durationBar.addEventListener('touchstart', (event) => {
+    setupTouchDrag(moveEvent => updateAudioTime(getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage));
+});
 
-// Media session
-if ('mediaSession' in navigator) {
-    navigator.mediaSession.setActionHandler('previoustrack', prev);
-    navigator.mediaSession.setActionHandler('nexttrack', next);
-}
+document.addEventListener('touchstart', () => {
+    isTouchHoverActive = true;
+    clearTimelineHover();
+}, { passive: true });
+
+durationBar.addEventListener('click', (event) => {
+    updateAudioTime(getTimelinePosition(event.clientX).percentage);
+});
+
+durationBar.addEventListener('mousemove', (event) => {
+    if (!isTouchHoverActive) showTimelineHover(event.clientX);
+});
+
+durationBar.addEventListener('mouseleave', () => {
+    isTouchHoverActive = false;
+    clearTimelineHover();
+});
+
+// ============================================================================
+// EVENT LISTENERS - KEYBOARD
+// ============================================================================
+
+document.addEventListener('keydown', handleKeyboardShortcuts);
+
+// ============================================================================
+// EVENT LISTENERS - WINDOW
+// ============================================================================
+
+window.addEventListener('pageshow', () => {
+    volumeSlider.value = audioElement.volume;
+    updateVolumeBar();
+    waitForAudioReady();
+});
+
+// ============================================================================
+// INITIALIZATION CALL
+// ============================================================================
+
+initializeAudioPlayer();
+setupMediaSession();
+
+ 
 
