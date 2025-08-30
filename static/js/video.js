@@ -519,7 +519,6 @@ function split_timeline_chapters() {
     chptdata = [...chapters.map(item => item.start_time), divLength];
     // Create sections within the div
     chptdata.slice(0, -1).forEach((time, index) => {
-        const nextTime = chptdata[index + 1];
         const startPercent = Math.min((time / divLength) * 100, 100)
         const section = document.createElement('div');
         section.classList.add('chapter');
@@ -691,14 +690,14 @@ settingsBtn.addEventListener('touchend', e => {
 });
 
 // Track selection events
-audioTracksSelect.addEventListener('change', function() {
+audioTracksSelect.addEventListener('change', () => {
     selectedIndex = parseInt(this.value, 10);
     changeTrack(selectedIndex);
     text = audioTracksSelect[selectedIndex].text;
     localStorage.setItem('videoAudio', text);
     handleSettingMenu();
 });
-subtitleSelect.addEventListener('change', async function() {
+subtitleSelect.addEventListener('change', async () => {
     selectedSubtitleIndex = parseInt(this.value);
     if (selectedSubtitleIndex == -1) localStorage.removeItem('videoSubs');
     else {
@@ -708,7 +707,7 @@ subtitleSelect.addEventListener('change', async function() {
     await changeSubs(selectedSubtitleIndex);
     handleSettingMenu();
 });
-speedSelect.addEventListener('change', function() {
+speedSelect.addEventListener('change', () => {
     video.playbackRate = parseFloat(this.value);
     localStorage.setItem('videoSpeed', video.playbackRate);
     handleSettingMenu();
@@ -725,11 +724,11 @@ touchBox.addEventListener('click', e => {
 
 // Fix outline when clicking
 [s0, s1, s2].forEach(el => {
-    el.addEventListener('mouseenter', ()=> {
+    el.addEventListener('mouseenter', () => {
         isMouseOnSelect = true;
         el.parentElement.style.outline="none";
     });
-    el.addEventListener('mouseleave', ()=> {
+    el.addEventListener('mouseleave', () => {
         isMouseOnSelect = false;
     });
     el.addEventListener('focus', ()=> {
@@ -749,7 +748,7 @@ liD.addEventListener("click", () => {
     download_video.click();
     setTimeout(handleSettingMenu, 100);
 });
-liD.addEventListener('keydown', function(e) {
+liD.addEventListener('keydown', e => {}
     if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         liD.click();
@@ -758,17 +757,16 @@ liD.addEventListener('keydown', function(e) {
 
 /* Keyboard events */
 
-duration.addEventListener('mousedown', e =>
+duration.addEventListener('mousedown', e => {
     drag(eMove => updateTime(getPct(eMove.clientX).pct))
-);
-duration.addEventListener('touchstart', e =>
-    touchDrag(eMove => updateTime(getPct(eMove.touches[0] && eMove.touches[0].clientX).pct))
-);
+});
+duration.addEventListener('touchstart', e => {
+    touchDrag(eMove => updateTime(getPct(eMove.touches[0] && eMove.touches[0].clientX).pct));
+});
 document.addEventListener('touchstart', () => { touchHoverActive = true; clearHover(); }, { passive: true });
 duration.addEventListener('mousemove', e => { if (!touchHoverActive) showHover(e.clientX); });
 duration.addEventListener('mouseleave', () => { touchHoverActive = false; clearHover(); });
-duration.addEventListener('click', e => updateTime(getPct(e.clientX).pct));
-
+duration.addEventListener('click', e => { updateTime(getPct(e.clientX).pct); });
 
 document.addEventListener('keydown', e => {
     if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
@@ -808,7 +806,7 @@ document.addEventListener('keydown', e => {
         case 'm': toggleMuteUnmute(); break;
         default: break;
     }
-});
+};
 
 function volume_kbd_helper() {
     volumeBar.value = video.volume;
