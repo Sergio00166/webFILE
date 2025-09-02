@@ -128,6 +128,7 @@ pre {
     border: none;
     cursor: pointer;
     height: 21px;
+    width: 21px;
 }
 .path-bar button img {
     width: auto;
@@ -190,7 +191,8 @@ pre {
     font-family: sans-serif;
     max-width: 100vw;
 }
-.load_container h1,h3 {
+.load_container h1,
+.load_container h3 {
     margin: 0;
     color: #e0e0e0;
     text-transform: uppercase;

@@ -228,8 +228,8 @@ img {
     height: 30px;
 }
 .extra-controls button img{
-    width: 30px;
-    height: 30px;
+    height: 100%;
+    width: auto;
 }
 #speed-btn {
     background: none;
@@ -262,12 +262,8 @@ img {
     border-radius: 100%;
 }
 .nav-btn img {
-    width: 40px;
-    height: 40px;
-}
-.icon-menu {
-    width: 30px;
-    height: 30px;
+    height: 100%;
+    width: auto;
 }
 
 /* RESPONSIVE  ZONE */
@@ -289,8 +285,6 @@ img {
     }
     .control-btn {
         padding: 5px;
-    }
-    .control-btn img {
         width: 24px;
         height: 24px;
     }
