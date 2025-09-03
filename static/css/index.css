@@ -144,8 +144,6 @@ pre {
     background: #444;
     border-radius: 9px;
     padding: 4px 8px 4px 8px;
-    -webkit-user-select: text;
-    user-select: text;
 }
 .list-group {
     gap: 6px;
