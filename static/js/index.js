@@ -442,7 +442,7 @@ async function uploadFiles(files, isDirectory) {
                 500: 'Server Error'
             };
             
-            alert(errorMessages[statusCode] || 'Connection Error');
+            alert(errorMessages[statusCode] || 'Upload Error');
             break;  // stop uploading more files on error
         }
     }
