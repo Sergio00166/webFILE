@@ -31,8 +31,8 @@ video::-moz-media-controls { display: none !important; }
 }
 img {
     pointer-events: none;
-    width: 50%;
-    height: 50%;
+    width: 20px;
+    height: 20px;
     display: inline-block;
     vertical-align: middle;
     filter: brightness(0) invert(1);
