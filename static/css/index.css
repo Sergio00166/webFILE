@@ -2,7 +2,7 @@
 
 body {
     margin: 0;
-    color: #e0e0e0;
+    color: #eee;
     background: #1a1a1a;
     font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -58,7 +58,7 @@ pre {
     background: #2a2a2a;
     border-right: 1px solid #444;
     box-shadow: 2px 0 4px #0007;
-    transition: transform 0.3s;
+    transition: transform .3s;
     z-index: 100;
 }
 #sidebar.hidden { transform: translateX(-100%); }
@@ -91,6 +91,7 @@ pre {
 /* -------------------------
    Sidebar content
    ------------------------- */
+
 .sidebar-content {
     padding: 6px;
     overflow-y: auto;
@@ -114,16 +115,16 @@ pre {
 
 .sidebar-content button {
     width: 100%;
+    color: #eee;
     text-align: left;
-    padding: 6px;
+    padding:  8px;
     margin: 1px 0;
     border: none;
     border-radius: 8px;
-    color: #eee;
     font-size: 14px;
     background: transparent;
-    transition: background-color 0.15s; 
     cursor: pointer;
+    line-height: 1;
 }
 .sidebar-content button:disabled {
     color: #666;
@@ -202,8 +203,7 @@ pre {
     align-items: center;
     padding: 6px 9px;
     cursor: pointer;
-    background: #222;
-    transition: all .2s;
+    background: #3336;
     border: 1px solid transparent;
     border-radius: 8px;
 }
@@ -334,10 +334,11 @@ pre {
     }
     .sidebar-content 
     button:not(:disabled):hover {
-        background: #444;
+        background: #444a;
     }
     .sidebar-toggle:hover {
         background: #444e !important;
         border: none !important;
     }
 }
+
