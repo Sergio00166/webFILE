@@ -100,7 +100,6 @@ button {
     }
 }
 
-
 @media (hover: hover) {
     .button-upload:hover {
         background: #446;
