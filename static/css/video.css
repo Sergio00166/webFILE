@@ -2,509 +2,324 @@
 
 body {
     margin: 0;
-    font-family: sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100dvh;
-    background: black;
+    color: #eee;
+    background: #1a1a1a;
+    font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
+    scrollbar-color: #555 #1e1e1e;
     -webkit-user-select: none;
     user-select: none;
+    word-break: break-all;
+    height: 100vh;
+    height: 100dvh;
 }
 
 /* -------------------------
-   Subtitle styles
+   Text & scrollbar
    ------------------------- */
 
-video::cue {
-    background: none !important;
-    line-height: 1.1 !important;
-    text-shadow: 0.07em 0.07em 0.05em black, -0.07em 0.07em 0.05em black,
-                 0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
-                 0.07em 0 0.05em black, -0.07em 0 0.05em black,
-                 0 0.07em 0.05em black, 0 -0.07em 0.05em black !important;
-}
-/* Dont cut the bottom of the bottom subtitles */
-video::-webkit-media-text-track-display { padding: 0.25em !important; }
-/* Dont fucking show native video controls */
-video::-webkit-media-controls, 
-video::-moz-media-controls { display: none !important; }
+.size  { margin-left: 3em; }
+.date  { margin-left: 1em; }
+.time  { margin-left: 0.5em; }
+
+.size,.capacity,.time,.date { font-size: 15px; }
+.time,.date { font-family: monospace; }
+
+::-webkit-scrollbar-thumb { background: #555; }
+::-webkit-scrollbar-track { background: #1e1e1e; }
 
 /* -------------------------
-   Main structure
+   Shared
    ------------------------- */
-
-.video-container {
-    width: 90vw;
-    height: 90dvh;
-    color: white;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-#touch-box {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-.controls {
-    bottom: 0;
-    width: 100%;
-    position: absolute;
-    box-sizing: border-box;
-    padding: 0 12px 8px 12px;
-}
-
-/* -------------------------
-   Controls bar
-   ------------------------- */
-
-.time-container {
-    font-size: 13px;
-    padding-right: 16px;
-}
-.time-container span {
-    display: inline-block;
-    padding: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
-    border-radius: 5px;
-    box-shadow: none !important;
-}
-.btn-controls {
-    margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-.side-controls {
-    display: flex;
-    align-items: center;
-}
-
-/* -------------------------
-   Buttons + svg
-   ------------------------- */
-
-.round-button {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    color: white;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    position: relative;
-    margin: 0 4px;
-    cursor: pointer;
-    flex-shrink: 0;
-}
 img {
     pointer-events: none;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    vertical-align: middle;
-    filter: brightness(0) invert(1);
+    width: 16px;
+    height: 16px;
+}
+pre {
+    margin: 0;
+    white-space: pre-wrap;
+    font-family: inherit;
+    font-size: 16px;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 /* -------------------------
-   Main state (show status)
+   Sidebar container
    ------------------------- */
 
-.main-state {
-    opacity: 0;
-    transform: scale(0);
-    height: 75px;
-    width: 75px;
-    position: absolute;
-    cursor: pointer;
-    border-radius: 50%;
+#sidebar {
+    flex: 0 0 auto; 
     display: flex;
-    align-items: center;
+    width: 125px;
+    padding-top: 8px;
+    flex-direction: column;
+    background: #2a2a2a;
+    border-right: 1px solid #444;
+    box-shadow: 2px 0 4px #0007;
+    transition: transform .3s;
+    z-index: 100;
+}
+#sidebar.hidden { transform: translateX(-100%); }
+
+/* -------------------------
+   Sidebar toggle
+   ------------------------- */
+
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    background: #333e;
+    border: 1px solid #444;
+    border-radius: 50%;
+    align-content: center;
     justify-content: center;
-    transition: all 0.3s;
+    box-shadow: 0 4px 12px #0007;
 }
-.main-state.show {
-    opacity: 0.8;
-    transform: scale(1);
-}
-.main-state img {
-    width: 67%;
-    height: 67%;
+.sidebar-toggle img {
+    width: 24px;
+    height: auto;
+    filter: invert(90%);
 }
 
 /* -------------------------
-   Main time bar
+   Sidebar content
    ------------------------- */
 
-.duration {
-    position: relative;
-    margin: 0 auto;
-    width: calc(100% - 64px);
-    height: 6px;
-    cursor: pointer;
+.sidebar-content {
+    padding: 6px;
+    overflow-y: auto;
+}
+.sidebar-section { margin-bottom: 12px; }
+.sidebar-section h3 {
+    margin: 0 0 6px;
+    padding: 3px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #aaa;
+    text-align: center;
+    letter-spacing: .5px;
+    background: #3a3a3a;
     border-radius: 4px;
 }
-.duration::before {
-    content: "";
-    position: absolute;
+
+/* -------------------------
+   Sidebar buttons
+   ------------------------- */
+
+.sidebar-content button {
+    width: 100%;
+    color: #eee;
+    text-align: left;
+    padding:  8px;
+    margin: 1px 0;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    background: transparent;
+    cursor: pointer;
+    line-height: 1;
+}
+.sidebar-content button:disabled {
+    color: #666;
+    cursor: not-allowed;
+    opacity: .6;
+}
+
+/* -------------------------
+   Main layout / content
+   ------------------------- */
+
+.main-container {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+}
+.content-area {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     height: 100%;
-    border-radius: inherit;
 }
-/* This weird shit is only to let the */
-/* user select easily the start and end */
-.duration::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: calc(100% + 32px);
-    height: 200%;
-    transform: translate(-50%, -50%);
-}
-
-/* -------------------------
-   Time bar current time
-   ------------------------- */
-
-.current-time {
-    width: 0;
+.list-group {
+    gap: 6px;
+    width: 100%;
     height: 100%;
     display: flex;
-    position: absolute;
-    background: #ff4a10c0;
-    align-items: center;
-    border-radius: 5px;
-    z-index: 1;
-}
-.current-time::before {
-    opacity: 0;
-    content: "";
-    width: 12px;
-    height: 12px;
-    right: -6px;
-    position: absolute;
-    background: #ff6a00e0;
-    border-radius: 50%;
-    transition: all 0.2s;
-    transform: scale(0);
-    box-shadow: 0 0 3px black;
-}
-.duration:hover .current-time::before {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* -------------------------
-   Hover time & Show info
-   ------------------------- */
-
-.hover-time {
-    width: 0;
-    position: absolute;
-    display: flex;
-    height: 100%;
-    background: #fff4;
-    align-items: center;
-    border-radius: 5px;
-}
-.hover-time .hover-duration {
-    position: absolute;
-    width: max-content;
-    max-width: min(150px, 40vw) !important;
-    padding: 0.3rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    visibility: hidden;
-    font-weight: bold;
-    text-align: center;
-    pointer-events: none;
-}
-
-/* -------------------------
-   Time bar chapters
-   ------------------------- */
-
-.chapter-container {
-    position: relative;
-    height: 100%;
-    border-radius: inherit;
-    overflow: hidden;
-}
-.chapter {
-    position: absolute;
-    height: 100%;
-    width: 2px;
-    margin-left: -1px;
-    background-color: black;
-    z-index: 2;
-}
-
-/* -------------------------
-   Sound control
-   ------------------------- */
-
-.volume {
-    display: flex;
-    align-items: center;
-}
-.mute-unmute {
-    display: flex;
-    cursor: pointer;
-}
-#volume-bar {
-    height: 4px;
-    cursor: pointer;
-    border-radius: 3px;
-    visibility: hidden;
-    width: 0 !important;
-    background: #eee;
-    transition: all 0.1s;
-    -webkit-appearance: none;
-    appearance: none;
-    border: 1px solid #333;
-}
-#volume-bar::-webkit-slider-thumb {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #007aff;
-    -webkit-appearance: none;
-    appearance: none;
-    box-shadow: 0 0 3px black;
-}
-#volume-bar::-moz-range-thumb {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #007aff;
-    box-shadow: 0 0 3px black;
-}
-#volume-bar.show {
-    width: 48px !important;
-    visibility: visible;
-    transform: scaleX(1);
-}
-
-/* -------------------------
-   Option list
-   ------------------------- */
-
-.setting-menu {
-    opacity: 0;
-    visibility: hidden;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    bottom: 76px;
-    transition: all 0.2s;
-    transform: scaleY(0);
-    transform-origin: bottom;
-    border-radius: 12px;
-    margin-left: -50px;
-}
-.setting-menu.show {
-    opacity: 1;
-    transform: scaleY(1);
-    visibility: visible;
-}
-.setting-menu li {
-    padding: 0.33rem 0.5rem;
-    margin: 0.25rem;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-    color: white;
-}
-.setting-menu li:nth-child(-n+3):focus-within { outline: auto; }
-.setting-menu li:nth-child(1)::before { content: "Subs"; position: absolute; }
-.setting-menu li:nth-child(2)::before { content: "Tracks"; position: absolute; }
-.setting-menu li:nth-child(3)::before { content: "Speed"; position: absolute; }
-
-/* -------------------------
-   Override select styles
-   ------------------------- */
-
-select {
-    position: relative;
-    cursor: pointer;
-    appearance: none;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 500;
-    width: 70px;
-    opacity: 0;
-    border: none;
-}
-select option {
-    background: #363a43;
-    color: white;
-}
-
-/* -------------------------
-   Loading animation
-   ------------------------- */
-
-.custom-loader {
-    width: 108px;
-    height: 108px;
-    border: 10px solid white;
-    border-bottom-color: transparent;
-    border-radius: 50%;
+    flex-direction: column;
+    padding: 6px 9px 16px;
     box-sizing: border-box;
-    animation: rotation 1s linear infinite;
+    overflow: auto;
+}
+
+/* -------------------------
+   Path bar
+   ------------------------- */
+
+.path-bar {
+    display: flex;
+    align-items: center;
+    background: #222;
+    border-bottom: 1px solid #444;
+    padding: 6px 12px;
+    gap: 10px;
+}
+.path-bar button {
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+}
+.path-bar button img {
+    width: auto;
+    height: 100%;
+    filter: invert(75%);
+}
+.path-title {
+    flex: 1;
+    font-weight: 600;
+    color: #eee;
+    font-family: monospace;
+    font-size: 14px;
+    background: #444;
+    border-radius: 9px;
+    padding: 4px 7px 4px 8px;
+}
+
+/* -------------------------
+   File item
+   ------------------------- */
+
+.filename {
+    display: flex;
+    align-items: center;
+    padding: 6px 9px;
+    cursor: pointer;
+    background: #3336;
+    border: 1px solid transparent;
+    border-radius: 8px;
+}
+.filename:focus-visible { 
+    outline: 1px solid white;
+}
+.selected {
+    background: #1e3a5f !important;
+    border-color: #4a90d9 !important;
+}
+.name {
+    flex: 1;
+    margin: 0 12px 0 6px;
+    text-align: left;
+}
+
+/* -------------------------
+   Loading/Uploading screen
+   ------------------------- */
+
+.load_container {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    animation: fadeIn .5s ease-out;
+    font-family: sans-serif;
+    max-width: 100vw;
+}
+.load_container h1,
+.load_container h3 {
+    margin: 0;
+    color: #e0e0e0;
+    text-align: center;
+    letter-spacing: 1px;
+    animation: textFade 1.5s ease-in-out infinite alternate;
+}
+.load_container .progress-bar {
+    width: min(350px, 90%);
+    height: 16px;
+    background: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    margin: 2rem 0;
+    border: 1px solid #555;
+}
+.load_container .progress-bar::before {
+    content: '';
     position: absolute;
-    transition: all 0.5s;
-}
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* -------------------------
-   Full screen control
-   ------------------------- */
-
-.fullscreen {
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    background: black !important;
-    align-items: center !important;
-    -webkit-tap-highlight-color: transparent !important;
-    user-select: none !important;
+    height: 100%;
+    width: 30%;
+    border-radius: 8px;
+    background: linear-gradient(90deg,#4a90d9,#357abd);
+    animation: slide 1.7s infinite ease-in-out;
 }
 
 /* -------------------------
-   Button transparency style
+   Keyframes
    ------------------------- */
 
-.duration::before, .main-state, .time-container span,
-.round-button, .setting-menu, .hover-duration {
-    -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
-    backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
-    background: transparent;
-    box-shadow: 0 0 2px #FFFA;
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes textFade { from{opacity:.7} to{opacity:1} }
+@keyframes slide {
+    0%  { left:-30% }
+    50% { left:50% }
+    100%{ left:100% }
 }
 
 /* -------------------------
-   Show/hide button controls
+   File type icons
    ------------------------- */
 
-/* Just to animate with Opacity but
-WITHOUT BREAKING the backdrop-filter */
-.time-container span, .round-button,
-.duration::before, .duration * {
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-.controls.show .time-container span,
-.controls.show .duration::before,
-.controls.show .round-button,
-.controls.show .duration * {
-    opacity: 1;
-}
-.chapter-container, .duration .current-time,
-.duration .hover-time {
-    transition: none !important;
-}
+.folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) }
+.files { filter: brightness(0) invert(1); }
+.pdf { filter: invert(25%) sepia(100%) hue-rotate(-50deg) saturate(1000%); }
+.doc { filter: brightness(300%) contrast(75%); }
+.pp { filter: invert(25%) sepia(100%) saturate(500%); }
+.src { filter: invert(67%) sepia(25%); }
+.zip { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(3000%) brightness(50%); }
+.disk { filter: brightness(0) invert(1) brightness(67%); }
+.iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
 /* -------------------------
-   Other
+   Responsive
    ------------------------- */
 
-.vol_val_st { font-size: 1.3rem; }
-.full, .contract { display: none; }
-.video-container:not(.fullscreen) .full { display: block; }
-.video-container.fullscreen .contract { display: block; }
-.lmbsl { background: #8f9f3030 !important; }
-.video-box, .video-container { position: relative; }
-canvas { position: absolute; }
-
-
-/* -------------------------
-   Responsive rules
-   ------------------------- */
-
-@media (max-width: 900px) {
-    .main-state {
-        height: 64px;
-        width: 64px;
-    }
-    .custom-loader {
-        height: 90px;
-        width: 90px;
-    }
-}
-@media (max-width: 520px) {
-    .play-pause {
+@media (max-width:200px) { 
+    .main-container { 
         display: none;
     }
 }
-@media (max-width: 470px) {
-    .time-container {
-        margin-bottom: 8px;
-        padding-right: 0;
+@media (max-width:1200px) {
+    .filename { 
+        min-width: calc(100% + 256px);
     }
-    .volume {
-        display: none;
+}
+@media (max-width:400px) { 
+    .filename {
+        min-width: calc(100% + 512px);
     }
-    .btn-controls {
+}
+@media (max-width:700px) {
+    #sidebar {
+        inset: 0;
+        position: fixed;
+        transform: translateX(-100%);
+    }
+    .sidebar-toggle {
         display: flex;
-        align-items: center;
-        flex-direction: column;
     }
-    .setting-menu {
-        bottom: 104px;
-    }
-}
-@media (max-width: 320px) {
-    .duration {
-        width: 90%;
-    }
-    #mode {
-        display: none;
-    }
-    .main-state {
-        height: 40px;
-        width: 40px;
-    }
-    .custom-loader {
-        height: 56px;
-        width: 56px;
-        border-width: 5px;
-    }
-}
-@media (max-width: 220px) {
-    .settings {
-        display: none;
-    }
-}
-@media (max-height: 320px) {
-    .btn-controls {
-        display: none;
-    }
-    .video-box, .main-state, .custom-loader {
-        margin-bottom: 8px !important;
-    }
-}
-@media (max-aspect-ratio: 1/1) {
-    .video-box, .main-state, .custom-loader {
-        margin-bottom: 30px;
-    }
-}
-@media ((max-width: 160px) or (max-height: 160px)) {
-    .video-container {
-        display: none;
+    #sidebar.open {
+        transform: translateX(0);
     }
 }
 
@@ -512,8 +327,18 @@ canvas { position: absolute; }
    Disable hover when touch
    ------------------------- */
 
-@media (hover: hover) {
-    .setting-menu li:hover, .round-button:hover {
-        outline: 2px solid #fffa !important;
+@media (hover:hover) {
+    .filename:hover {
+        background: #2a2a2a;
+        border-color: #555;
+    }
+    .sidebar-content 
+    button:not(:disabled):hover {
+        background: #444a;
+    }
+    .sidebar-toggle:hover {
+        background: #444e !important;
+        border: none !important;
     }
 }
+

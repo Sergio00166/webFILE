@@ -668,7 +668,7 @@ function loadAudioTracks() {
             }
         }
     } catch (error) {
-        // Audio tracks not supported
+zz
     }
 }
 
