@@ -433,7 +433,7 @@ function openFileUploadMenu(selectDirectory = false) {
     fileInput.click();
 }
 
-function enableDragAndDropUpload(dropArea, selectDirectory = false) {
+function enableDragAndDropUpload(dropArea) {
     dropArea.addEventListener('dragover', event => { 
         event.preventDefault(); 
     });
@@ -443,7 +443,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
         const files = Array.prototype.slice.call(event.dataTransfer.files);
         
         if (files.length && confirm('¿Upload ' + files.length + ' item(s)?')) {
-            uploadFiles(files, selectDirectory);
+            uploadFiles(files);
         }
     });
 }
