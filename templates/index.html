@@ -13,7 +13,7 @@
 <body>
     <div id="loader" style="display: none;">
         <div class="load_container">
-            <h1>Processing</h1>
+            <h1>PROCESSING</h1>
             <div class="progress-bar"></div>
             <h1 id="progress"></h1>
         </div>
@@ -28,7 +28,7 @@
             <div class="sidebar-content">
 
                 <div class="sidebar-section">
-                    <h3>Sort</h3>
+                    <h3>SORT</h3>
                     <button id="sortName" onclick="changeSortingMode('{% if sort=='np' %}nd{% else %}np{% endif %}')" title="(1)">
                         {% if sort=="np" %}⬆️{% elif sort=="nd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Name
                     </button>
@@ -41,34 +41,34 @@
                 </div>
                 
                 <div class="sidebar-section">
-                    <h3>Selection</h3>
+                    <h3>SELECTION</h3>
                     <button id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Enable</button>
                     <button id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert</button>
                     <button onclick="executeDownloads()" title="(d)">📥 Download</button>
                 </div>
 
                 <div class="sidebar-section">
-                    <h3>Upload</h3>
+                    <h3>UPLOAD</h3>
                     <button onclick="openFileUploadMenu()" title="(u)">📤 Files</button>
                     <button onclick="openFileUploadMenu(true)" title="(f)">📤 Folder</button>
                 </div>
 
                 <div class="sidebar-section">
-                    <h3>Actions</h3>
+                    <h3>ACTIONS</h3>
                     <button onclick="createDirectory()" title="(m)">📁 New Dir</button>
                     <button id="renBtn" onclick="renameSelectedFiles()" title="(n)" disabled>✏️ Rename</button>
                     <button id="delBtn" onclick="executeDeletes()" title="(r)" disabled>🗑️ Delete</button>
                 </div>
                 
                 <div class="sidebar-section">
-                    <h3>Manage</h3>
+                    <h3>MANAGE</h3>
                     <button id="copyBtn" onclick="copySelectedFiles()" title="(c)" disabled>📋 Copy</button>
                     <button id="moveBtn" onclick="moveSelectedFiles()" title="(x)" disabled>✂️ Move</button>
                     <button onclick="pasteFiles()" title="(p)">📋 Paste</button>
                 </div>
                 
                 <div class="sidebar-section">
-                    <h3>Account</h3>
+                    <h3>ACCOUNT</h3>
                     {% if 'user' in session %}
                         <button id="login" onclick='window.location.href="?logout"' title="(l)">🚪 Logout</button>
                     {% else %}
@@ -86,7 +86,7 @@
                 <button onclick="window.location.href='/'" title="Index (i)">
                     <img src="/?static=svg/index/house-chimney-solid.svg">
                 </button>
-                <div class="path-title">{{ folder_path }}</div>
+                <pre class="path-title">{{ folder_path }}</pre>
             </div>
             <div class="list-group">
                 {% for item in folder_content %}

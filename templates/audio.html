@@ -28,14 +28,14 @@
           <span id="total-time">00:00</span>
         </div>
         <div class="playback-controls">
-          <button class="nav-btn prev" onclick="navigateToPrevious()" title="Prev (P)">
+          <button class="nav-btn" onclick="navigateToPrevious()" title="Prev (P)">
             <img src="{{ url_for('index', static='svg/audioplayer/round-double-alt-arrow-left.svg') }}">
           </button>
-          <button id="play-pause" class="control-btn" onclick="togglePlayPauseState()" title="Play">
+          <button id="play-pause" onclick="togglePlayPauseState()" title="Play">
             <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: block;">
             <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
           </button>
-          <button class="nav-btn next" onclick="navigateToNext()" title="Next (N)">
+          <button class="nav-btn" onclick="navigateToNext()" title="Next (N)">
             <img src="{{ url_for('index', static='svg/audioplayer/round-double-alt-arrow-right.svg') }}" />
           </button>
         </div>

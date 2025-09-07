@@ -1,6 +1,22 @@
 /* Code by Sergio00166 */
 
-/* Just to add a border to the subtitles */
+body {
+    margin: 0;
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100dvh;
+    background: black;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+/* -------------------------
+   Subtitle styles
+   ------------------------- */
+
 video::cue {
     background: none !important;
     line-height: 1.1 !important;
@@ -14,6 +30,10 @@ video::-webkit-media-text-track-display { padding: 0.25em !important; }
 /* Dont fucking show native video controls */
 video::-webkit-media-controls, 
 video::-moz-media-controls { display: none !important; }
+
+/* -------------------------
+   Main structure
+   ------------------------- */
 
 .video-container {
     width: 90vw;
@@ -29,14 +49,45 @@ video::-moz-media-controls { display: none !important; }
     width: 100%;
     height: 100%;
 }
-img {
-    pointer-events: none;
-    width: 20px;
-    height: 20px;
-    display: inline-block;
-    vertical-align: middle;
-    filter: brightness(0) invert(1);
+.controls {
+    bottom: 0;
+    width: 100%;
+    position: absolute;
+    box-sizing: border-box;
+    padding: 0 12px 8px 12px;
 }
+
+/* -------------------------
+   Controls bar
+   ------------------------- */
+
+.time-container {
+    font-size: 13px;
+    padding-right: 16px;
+}
+.time-container span {
+    display: inline-block;
+    padding: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    border-radius: 5px;
+    box-shadow: none !important;
+}
+.btn-controls {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.side-controls {
+    display: flex;
+    align-items: center;
+}
+
+/* -------------------------
+   Buttons + svg
+   ------------------------- */
+
 .round-button {
     width: 40px;
     height: 40px;
@@ -52,33 +103,19 @@ img {
     cursor: pointer;
     flex-shrink: 0;
 }
-body {
-    margin: 0;
-    font-family: sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100dvh;
-    background: black;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-user-select: none;
-    user-select: none;
+img {
+    pointer-events: none;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    vertical-align: middle;
+    filter: brightness(0) invert(1);
 }
-.custom-loader {
-    width: 108px;
-    height: 108px;
-    border: 10px solid white;
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-    position: absolute;
-    transition: all 0.5s;
-}
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+
+/* -------------------------
+   Main state (show status)
+   ------------------------- */
+
 .main-state {
     opacity: 0;
     transform: scale(0);
@@ -100,13 +137,11 @@ body {
     width: 67%;
     height: 67%;
 }
-.controls {
-    bottom: 0;
-    width: 100%;
-    position: absolute;
-    box-sizing: border-box;
-    padding: 0 12px 8px 12px;
-}
+
+/* -------------------------
+   Main time bar
+   ------------------------- */
+
 .duration {
     position: relative;
     margin: 0 auto;
@@ -133,41 +168,11 @@ body {
     height: 200%;
     transform: translate(-50%, -50%);
 }
-.chapter-container {
-    position: relative;
-    height: 100%;
-    border-radius: inherit;
-    overflow: hidden;
-}
-.chapter {
-    position: absolute;
-    height: 100%;
-    width: 2px;
-    margin-left: -1px;
-    background-color: black;
-    z-index: 2;
-}
-.hover-time {
-    width: 0;
-    position: absolute;
-    display: flex;
-    height: 100%;
-    background: #fff4;
-    align-items: center;
-    border-radius: 5px;
-}
-.hover-time .hover-duration {
-    position: absolute;
-    width: max-content;
-    max-width: min(150px, 40vw) !important;
-    padding: 0.3rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    visibility: hidden;
-    font-weight: bold;
-    text-align: center;
-    pointer-events: none;
-}
+
+/* -------------------------
+   Time bar current time
+   ------------------------- */
+
 .current-time {
     width: 0;
     height: 100%;
@@ -195,24 +200,56 @@ body {
     opacity: 1;
     transform: scale(1);
 }
-.btn-controls {
-    margin-top: 10px;
+
+/* -------------------------
+   Hover time & Show info
+   ------------------------- */
+
+.hover-time {
+    width: 0;
+    position: absolute;
     display: flex;
+    height: 100%;
+    background: #fff4;
     align-items: center;
-    justify-content: space-between;
-}
-.time-container {
-    font-size: 13px;
-    padding-right: 16px;
-}
-.time-container span {
-    display: inline-block;
-    padding: 2px;
-    padding-left: 3px;
-    padding-right: 3px;
     border-radius: 5px;
-    box-shadow: none !important;
 }
+.hover-time .hover-duration {
+    position: absolute;
+    width: max-content;
+    max-width: min(150px, 40vw) !important;
+    padding: 0.3rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    visibility: hidden;
+    font-weight: bold;
+    text-align: center;
+    pointer-events: none;
+}
+
+/* -------------------------
+   Time bar chapters
+   ------------------------- */
+
+.chapter-container {
+    position: relative;
+    height: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+}
+.chapter {
+    position: absolute;
+    height: 100%;
+    width: 2px;
+    margin-left: -1px;
+    background-color: black;
+    z-index: 2;
+}
+
+/* -------------------------
+   Sound control
+   ------------------------- */
+
 .volume {
     display: flex;
     align-items: center;
@@ -231,6 +268,7 @@ body {
     transition: all 0.1s;
     -webkit-appearance: none;
     appearance: none;
+    outline: none;
     border: 1px solid #333;
 }
 #volume-bar::-webkit-slider-thumb {
@@ -254,6 +292,11 @@ body {
     visibility: visible;
     transform: scaleX(1);
 }
+
+/* -------------------------
+   Option list
+   ------------------------- */
+
 .setting-menu {
     opacity: 0;
     visibility: hidden;
@@ -287,6 +330,10 @@ body {
 .setting-menu li:nth-child(2)::before { content: "Tracks"; position: absolute; }
 .setting-menu li:nth-child(3)::before { content: "Speed"; position: absolute; }
 
+/* -------------------------
+   Override select styles
+   ------------------------- */
+
 select {
     position: relative;
     cursor: pointer;
@@ -302,6 +349,31 @@ select option {
     background: #363a43;
     color: white;
 }
+
+/* -------------------------
+   Loading animation
+   ------------------------- */
+
+.custom-loader {
+    width: 108px;
+    height: 108px;
+    border: 10px solid white;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    position: absolute;
+    transition: all 0.5s;
+}
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* -------------------------
+   Full screen control
+   ------------------------- */
+
 .fullscreen {
     position: absolute !important;
     width: 100% !important;
@@ -312,12 +384,11 @@ select option {
     -webkit-tap-highlight-color: transparent !important;
     user-select: none !important;
 }
-.side-controls {
-    display: flex;
-    align-items: center;
-}
 
-/* Liquid Glass Fx */
+/* -------------------------
+   Button transparency style
+   ------------------------- */
+
 .duration::before, .main-state, .time-container span,
 .round-button, .setting-menu, .hover-duration {
     -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
@@ -325,6 +396,10 @@ select option {
     background: transparent;
     box-shadow: 0 0 2px #FFFA;
 }
+
+/* -------------------------
+   Show/hide button controls
+   ------------------------- */
 
 /* Just to animate with Opacity but
 WITHOUT BREAKING the backdrop-filter */
@@ -344,7 +419,10 @@ WITHOUT BREAKING the backdrop-filter */
     transition: none !important;
 }
 
-/* Default values */
+/* -------------------------
+   Other
+   ------------------------- */
+
 .vol_val_st { font-size: 1.3rem; }
 .full, .contract { display: none; }
 .video-container:not(.fullscreen) .full { display: block; }
@@ -354,7 +432,10 @@ WITHOUT BREAKING the backdrop-filter */
 canvas { position: absolute; }
 
 
-/* RESPONSIVE */
+/* -------------------------
+   Responsive rules
+   ------------------------- */
+
 @media (max-width: 900px) {
     .main-state {
         height: 64px;
@@ -428,11 +509,13 @@ canvas { position: absolute; }
     }
 }
 
-/* Hover styles on devices that support it */
+/* -------------------------
+   Disable hover when touch
+   ------------------------- */
+
 @media (hover: hover) {
     .setting-menu li:hover, .round-button:hover {
         outline: 2px solid #fffa !important;
     }
 }
-
 

@@ -1,17 +1,8 @@
 /* Code by Sergio00166 */
 
-.size  { margin-left: 3em; }
-.date  { margin-left: 1em; }
-.time  { margin-left: 0.5em; }
-
-.size,.capacity,.time,.date { font-size: 15px; }
-.time,.date { font-family: monospace; }
-::-webkit-scrollbar-thumb { background: #555; }
-::-webkit-scrollbar-track { background: #1e1e1e; }
-
 body {
     margin: 0;
-    color: #e0e0e0;
+    color: #eee;
     background: #1a1a1a;
     font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -22,6 +13,24 @@ body {
     height: 100vh;
     height: 100dvh;
 }
+
+/* -------------------------
+   Text & scrollbar
+   ------------------------- */
+
+.size  { margin-left: 3em; }
+.date  { margin-left: 1em; }
+.time  { margin-left: 0.5em; }
+
+.size,.capacity,.time,.date { font-size: 15px; }
+.time,.date { font-family: monospace; }
+
+::-webkit-scrollbar-thumb { background: #555; }
+::-webkit-scrollbar-track { background: #1e1e1e; }
+
+/* -------------------------
+   Shared
+   ------------------------- */
 img {
     pointer-events: none;
     width: 16px;
@@ -35,6 +44,11 @@ pre {
     -webkit-user-select: text;
     user-select: text;
 }
+
+/* -------------------------
+   Sidebar container
+   ------------------------- */
+
 #sidebar {
     flex: 0 0 auto; 
     display: flex;
@@ -44,10 +58,14 @@ pre {
     background: #2a2a2a;
     border-right: 1px solid #444;
     box-shadow: 2px 0 4px #0007;
-    transition: transform 0.3s;
-    z-index: 100;
+    transition: transform .3s;
+    z-index: 10;
 }
 #sidebar.hidden { transform: translateX(-100%); }
+
+/* -------------------------
+   Sidebar toggle
+   ------------------------- */
 
 .sidebar-toggle {
     display: none;
@@ -69,6 +87,11 @@ pre {
     height: auto;
     filter: invert(90%);
 }
+
+/* -------------------------
+   Sidebar content
+   ------------------------- */
+
 .sidebar-content {
     padding: 6px;
     overflow-y: auto;
@@ -80,29 +103,39 @@ pre {
     font-size: 11px;
     font-weight: 600;
     color: #aaa;
-    text-transform: uppercase;
+    text-align: center;
     letter-spacing: .5px;
     background: #3a3a3a;
     border-radius: 4px;
 }
+
+/* -------------------------
+   Sidebar buttons
+   ------------------------- */
+
 .sidebar-content button {
     width: 100%;
     text-align: left;
-    padding: 6px;
+    padding: 8px;
     margin: 1px 0;
     border: none;
     border-radius: 8px;
-    color: #eee;
     font-size: 14px;
     background: transparent;
-    transition: background-color 0.15s; 
     cursor: pointer;
+    line-height: 1;
+    color: #eee;
 }
 .sidebar-content button:disabled {
     color: #666;
     cursor: not-allowed;
     opacity: .6;
 }
+
+/* -------------------------
+   Main layout / content
+   ------------------------- */
+
 .main-container {
     display: flex;
     height: 100vh;
@@ -114,38 +147,6 @@ pre {
     width: 100%;
     height: 100%;
 }
-.path-bar {
-    display: flex;
-    align-items: center;
-    background: #222;
-    border-bottom: 1px solid #444;
-    padding: 8px 16px 8px 12px;
-    gap: 12px;
-}
-.path-bar button {
-    padding: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    height: 21px;
-}
-.path-bar button img {
-    width: auto;
-    height: 100%;
-    filter: invert(75%);
-}
-.path-title {
-    flex: 1;
-    font-weight: 600;
-    color: #e0e0e0;
-    font-family: monospace;
-    font-size: 14px;
-    background: #444;
-    border-radius: 10px;
-    padding: 6px 13px 6px 12px;
-    -webkit-user-select: text;
-    user-select: text;
-}
 .list-group {
     gap: 6px;
     width: 100%;
@@ -156,13 +157,58 @@ pre {
     box-sizing: border-box;
     overflow: auto;
 }
+
+/* -------------------------
+   Path bar
+   ------------------------- */
+
+.path-bar {
+    display: flex;
+    align-items: center;
+    background: #222;
+    border-bottom: 1px solid #444;
+    padding: 6px 16px 6px 12px;
+    gap: 10px;
+}
+.path-bar button {
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+}
+.path-bar button img {
+    width: auto;
+    height: 100%;
+    filter: invert(75%);
+}
+.path-title {
+    flex: 1;
+    font-weight: 600;
+    font-family: monospace;
+    font-size: 14px;
+    background: #444;
+    border-radius: 9px;
+    padding: 4px 8px 4px 8px;
+    /* Hide start */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    direction: rtl;
+    text-align: left;
+}
+
+/* -------------------------
+   File item
+   ------------------------- */
+
 .filename {
     display: flex;
     align-items: center;
     padding: 6px 9px;
     cursor: pointer;
-    background: #222;
-    transition: all .2s;
+    background: #3336;
     border: 1px solid transparent;
     border-radius: 8px;
 }
@@ -178,6 +224,11 @@ pre {
     margin: 0 12px 0 6px;
     text-align: left;
 }
+
+/* -------------------------
+   Loading/Uploading screen
+   ------------------------- */
+
 .load_container {
     height: 100vh;
     height: 100dvh;
@@ -190,10 +241,8 @@ pre {
     font-family: sans-serif;
     max-width: 100vw;
 }
-.load_container h1,h3 {
+.load_container h1 {
     margin: 0;
-    color: #e0e0e0;
-    text-transform: uppercase;
     text-align: center;
     letter-spacing: 1px;
     animation: textFade 1.5s ease-in-out infinite alternate;
@@ -218,6 +267,10 @@ pre {
     animation: slide 1.7s infinite ease-in-out;
 }
 
+/* -------------------------
+   Keyframes
+   ------------------------- */
+
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 @keyframes textFade { from{opacity:.7} to{opacity:1} }
 @keyframes slide {
@@ -225,6 +278,10 @@ pre {
     50% { left:50% }
     100%{ left:100% }
 }
+
+/* -------------------------
+   File type icons
+   ------------------------- */
 
 .folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) }
 .files { filter: brightness(0) invert(1); }
@@ -236,34 +293,63 @@ pre {
 .disk { filter: brightness(0) invert(1) brightness(67%); }
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
+/* -------------------------
+   Responsive
+   ------------------------- */
 
-/* Responsive */
-@media (max-width:200px) { .main-container { display: none; } }
-@media (max-width:1200px) { .filename { min-width: calc(100% + 256px); } }
-@media (max-width:400px) { .filename { min-width: calc(100% + 512px); } }
+@media (max-width:200px) { 
+    .main-container { 
+        display: none;
+    }
+    .load_container { 
+        display: none;
+    }
+}
+@media (max-width:1200px) {
+    .filename { 
+        min-width: calc(100% + 256px);
+    }
+}
+@media (max-width:400px) { 
+    .filename {
+        min-width: calc(100% + 512px);
+    }
+}
 @media (max-width:700px) {
     #sidebar {
         inset: 0;
         position: fixed;
         transform: translateX(-100%);
     }
-    .sidebar-toggle { display: flex; }
-    #sidebar.open { transform: translateX(0); }
+    .sidebar-toggle {
+        display: flex;
+    }
+    #sidebar.open {
+        transform: translateX(0);
+    }
+}
+@media (max-width:400px) {
+    .load_container h1 {
+        font-size: 1.5em;
+    }
 }
 
-/* Hover effects */
+/* -------------------------
+   Disable hover when touch
+   ------------------------- */
+
 @media (hover:hover) {
     .filename:hover {
         background: #2a2a2a;
         border-color: #555;
     }
-    .sidebar-content button:not(:disabled):hover {
-        background: #444;
+    .sidebar-content 
+    button:not(:disabled):hover {
+        background: #444a;
     }
     .sidebar-toggle:hover {
         background: #444e !important;
         border: none !important;
     }
 }
-
 

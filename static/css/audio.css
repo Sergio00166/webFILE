@@ -1,4 +1,4 @@
-/* Code by Sergio00166 */
+/* Code by Sergio00166  */
 
 body {
     margin: 0;
@@ -31,9 +31,26 @@ body {
     overflow: hidden;
 }
 img {
+    height: 100%;
+    width: auto;
     pointer-events: none;
     transition: filter 0.1s;
 }
+button {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* -------------------------
+   Main structure
+   ------------------------- */
+
 .player-header {
     display: flex;
     align-items: center;
@@ -51,6 +68,48 @@ img {
     color: #eee;
     word-break: break-word;
     overflow-wrap: break-word;
+}
+.controls {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.extra-controls {
+    width: 100%;
+    margin-top: 24px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.playback-controls {
+    margin-top: 24px;
+    margin-bottom: 20px;
+    width: calc(100% - 16px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* -------------------------
+   Time / progress bar
+   ------------------------- */
+
+/* Text time displays */
+#current-time,
+#total-time {
+    font-size: 12px;
+    font-family: monospace;
+    line-height: 1 !important;
+}
+#total-time {
+    margin-left: 12px;
+    margin-right: 8px;
+}
+#current-time {
+    margin-left: 8px;
+    margin-right: 12px;
 }
 .time-bar {
     display: flex;
@@ -78,6 +137,11 @@ img {
     height: 200%;
     transform: translate(-50%, -50%);
 }
+
+/* -------------------------
+   Hover time show
+   ------------------------- */
+
 .hover-time {
     width: 0;
     overflow: show;
@@ -94,6 +158,7 @@ img {
     visibility: hidden;
     font-weight: bold;
     pointer-events: none;
+    transform: translateZ(0);
 }
 .duration .current-time {
     width: 0;
@@ -122,38 +187,42 @@ img {
     opacity: 1;
     transform: scale(1);
 }
-#current-time, #total-time {
-    font-size: 12px;
-    font-family: monospace;
-    line-height: 1 !important;
-}
-#total-time {
-    margin-left: 12px;
-    margin-right: 8px;    
-}
-#current-time {
-    margin-left: 8px;
-    margin-right: 12px;
-}
-.playback-controls {
-    margin-top: 24px;
-    margin-bottom: 20px;
-    width: calc(100% - 16px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+
+/* -------------------------
+   Buttons block
+   ------------------------- */
+
+#play-pause {
+    background: #def3;
+    padding: 6px;
+    border-radius: 12px;
+    transition: background-color 0.2s;
 }
 #play-pause img {
     filter: invert(1);
     width: 24px;
     height: 24px;
 }
-.controls {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+#speed-btn {
+    font-size: 18px;
+    color: #0a84ff;
+    transition: color 0.2s;
+    line-height: 1;
 }
+.nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.extra-controls button {
+    width: 30px;
+    height: 30px;
+}
+
+/* -------------------------
+   Volume controls
+   ------------------------- */
+
 .volume-control {
     width: 90%;
     display: flex;
@@ -162,25 +231,12 @@ img {
     padding-right: 12px;
 }
 .vol-icons {
-    position: relative;
     width: 24px;
     height: 24px;
     cursor: pointer;
 }
 .vol-icons img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: none;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
     filter: invert(0.9);
-}
-#vol-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
 }
 #volume-bar {
     flex: 1;
@@ -191,7 +247,6 @@ img {
     border-radius: 2px;
     outline: none;
     cursor: pointer;
-    background: linear-gradient(to right, #007aff 100%, #eee 0%);
 }
 #volume-bar::-webkit-slider-thumb {
     -webkit-appearance: none;
@@ -209,90 +264,14 @@ img {
     background: #007aff;
     box-shadow: 0 0 3px black;
 }
-.extra-controls {
-    width: 100%;
-    margin-top: 24px;
-    margin-bottom: 8px;
-    display: flex;
-    align-items: space-between;
-    justify-content: space-around;
-    align-items: center;
-}
-.extra-controls button {
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    width: 30px;
-    height: 30px;
-}
-.extra-controls button img{
-    width: 30px;
-    height: 30px;
-}
-#speed-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    color: #0a84ff;
-    transition: color 0.2s;
-    line-height: 1;
-}
-.control-btn {
-    border: none;
-    background: #def3;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-}
-.nav-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin: 0;
-    padding: 0;
-    width: 40px;
-    height: 40px;
-    border-radius: 100%;
-}
-.nav-btn img {
-    width: 40px;
-    height: 40px;
-}
-.icon-menu {
-    width: 30px;
-    height: 30px;
-}
 
-/* RESPONSIVE  ZONE */
+/* -------------------------
+   Responsive rules
+   ------------------------- */
 
 @media (max-width: 300px) {
-    .round-button {
-        display: none;
-    }
-    .audio-container {
-        background: none;
-        padding: 0px;
-        border: none;
-    }
-    .volume-control, .extra-controls {
-        display: none;
-    }
     .audio-player {
         padding: 8px;
-    }
-    .control-btn {
-        padding: 5px;
-    }
-    .control-btn img {
-        width: 24px;
-        height: 24px;
     }
     .player-title {
         margin-top: 12px;
@@ -301,7 +280,12 @@ img {
     }
 }
 @media (max-width: 250px) {
-    #current-time, #total-time {
+    #current-time,
+    #total-time {
+        display: none;
+    }
+    .volume-control,
+    .extra-controls {
         display: none;
     }
     .duration {
@@ -315,9 +299,6 @@ img {
     .playback-controls {
         align-items: center;
         justify-content: center;
-    }
-    span {
-        display: none;
     }
 }
 @media (max-width: 120px) {
@@ -351,17 +332,20 @@ img {
     }
 }
 
-/* Disable hover on touch devices */
+/* -------------------------
+   Disable hover when touch
+   ------------------------- */
 @media (hover: hover) {
-    button:hover img {
+    .nav-btn:hover img,
+    .extra-controls button:hover img {
         filter: drop-shadow(0 0 2px white);
+        transform: translateZ(0);
     }
-    .control-btn:hover {
+    #play-pause:hover {
         background: #def6;
     }
     #speed-btn:hover {
         color: #aad4ff;
     }
 }
-
 

@@ -132,16 +132,13 @@ function changeSortingMode(sortMode) {
 
 function toggleSelectMode() {
     isSelectModeActive = !isSelectModeActive;
+    if (!isSelectModeActive) deselectAllItems();
     
     if (selectButton) {
-        selectButton.textContent = isSelectModeActive ? '❌ Cancel' : '✅ Enable';
+        selectButton.textContent = isSelectModeActive 
+            ? '❌ Cancel' : '✅ Enable';
     }
-    
     updateButtonStates();
-    
-    if (!isSelectModeActive) {
-        deselectAllItems();
-    }
 }
 
 function deselectAllItems() {
@@ -182,7 +179,7 @@ function handleItemClick(div) {
     } else {
         const itemURL = div.dataset.value;
         if (!itemURL) return;
-        
+
         if (div.hasAttribute('isdir')) {
             location.href = itemURL;
         } else {
@@ -215,9 +212,7 @@ async function executeDownloads() {
             downloadURL(itemURL + suffix);
             await delay(100);
         }
-    } else {
-        downloadURL(basePath + '?tar');
-    }
+    } else downloadURL(basePath + '?tar');
 }
 
 // ============================================================================
@@ -226,7 +221,6 @@ async function executeDownloads() {
 
 async function executeDeletes() {
     if (!isSelectModeActive || !selectedItems.size) return;
-    
     if (!confirm('Are you sure to delete?')) return;
     
     let errorMessage = null;
@@ -239,10 +233,8 @@ async function executeDeletes() {
                           response.status === 404 ? 'That file/folder does not exist' :
                           'Something went wrong on the server.';
         }
-        
         await delay(100);
     }
-    
     if (errorMessage) alert(errorMessage);
     location.reload();
 }
@@ -260,12 +252,11 @@ async function sendHTTPRequest(path, destination, method) {
                 Destination: decodeURIComponent(destination)
             };
         }
-        
         const response = await fetch(path, requestOptions);
-        
         if (!response.ok) throw response.status;
         
         return true;
+
     } catch (statusCode) {
         const errorMessages = {
             403: 'You don\'t have permission to do that',
@@ -273,7 +264,6 @@ async function sendHTTPRequest(path, destination, method) {
             409: 'It already exists',
             507: 'Not enough free space'
         };
-        
         alert(errorMessages[statusCode] || 'Something went wrong');
         return false;
     }
@@ -298,7 +288,6 @@ async function renameSelectedFiles() {
         
         if (!await sendHTTPRequest(cleanURL, destinationPath, 'MOVE')) break;
     }
-    
     clearAllCopyMoveOperations();
     location.reload();
 }
@@ -326,7 +315,6 @@ async function pasteFiles() {
         
         if (!await sendHTTPRequest(sourcePath, destinationPath, pasteOperation.mode)) break;
     }
-    
     clearAllCopyMoveOperations();
     location.reload();
 }
@@ -349,24 +337,6 @@ async function createDirectory() {
 // FILE UPLOAD MANAGEMENT
 // ============================================================================
 
-function openFileUploadMenu(selectDirectory = false) {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.multiple = !selectDirectory;
-    
-    if (selectDirectory) {
-        fileInput.setAttribute('webkitdirectory', true);
-    }
-
-    fileInput.onchange = () => {
-        if (fileInput.files.length && (selectDirectory || confirm('Upload ' + fileInput.files.length + ' item(s)?'))) {
-            uploadFiles(fileInput.files, selectDirectory);
-        }
-    };
-    
-    fileInput.click();
-}
-
 async function createDirectoryStructure(files) {
     const directories = new Set();
 
@@ -377,7 +347,6 @@ async function createDirectoryStructure(files) {
             directories.add(directoryPath);
         }
     }
-    
     for (const directory of directories) {
         const directoryURL = basePath + encodePath(directory);
         const response = await fetch(directoryURL, { method: 'MKCOL' });
@@ -396,7 +365,6 @@ function uploadFileWithProgress(file, uploadURL, progressCallback) {
                 progressCallback(event.loaded, event.total);
             }
         };
-        
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve();
@@ -404,7 +372,6 @@ function uploadFileWithProgress(file, uploadURL, progressCallback) {
                 reject(xhr.status);
             }
         };
-        
         xhr.onerror = () => { reject('Connection Error'); };
         xhr.send(file);
     });
@@ -416,7 +383,6 @@ async function uploadFiles(files, isDirectory) {
     let uploadedBytes = 0;
 
     for (let file of files) totalBytes += file.size;
-    
     if (isDirectory) await createDirectoryStructure(files);
 
     for (let i = 0; i < files.length; i++) {
@@ -430,7 +396,6 @@ async function uploadFiles(files, isDirectory) {
                 let percent = (totalUploaded / totalBytes) * 100;
                 progressBar.textContent = percent.toFixed(2) + '%';
             });
-            
             uploadedBytes += file.size;
 
         } catch (statusCode) {
@@ -441,20 +406,34 @@ async function uploadFiles(files, isDirectory) {
                 507: 'Not enough free space',
                 500: 'Server Error'
             };
-            
-            alert(errorMessages[statusCode] || 'Connection Error');
+            alert(errorMessages[statusCode] || 'Upload Error');
             break;  // stop uploading more files on error
         }
     }
-    
     location.reload();
 }
 
 // ============================================================================
-// DRAG AND DROP UPLOAD
+// UPLOAD ENTRYPOINTS
 // ============================================================================
 
-function enableDragAndDropUpload(dropArea, selectDirectory = false) {
+function openFileUploadMenu(selectDirectory = false) {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.multiple = !selectDirectory;
+    
+    if (selectDirectory) {
+        fileInput.setAttribute('webkitdirectory', true);
+    }
+    fileInput.onchange = () => {
+        if (fileInput.files.length && (selectDirectory || confirm('Upload ' + fileInput.files.length + ' item(s)?'))) {
+            uploadFiles(fileInput.files, selectDirectory);
+        }
+    };
+    fileInput.click();
+}
+
+function enableDragAndDropUpload(dropArea) {
     dropArea.addEventListener('dragover', event => { 
         event.preventDefault(); 
     });
@@ -464,7 +443,7 @@ function enableDragAndDropUpload(dropArea, selectDirectory = false) {
         const files = Array.prototype.slice.call(event.dataTransfer.files);
         
         if (files.length && confirm('¿Upload ' + files.length + ' item(s)?')) {
-            uploadFiles(files, selectDirectory);
+            uploadFiles(files);
         }
     });
 }
@@ -486,7 +465,6 @@ function moveFocus(direction) {
     } else {
         currentIndex = (currentIndex + direction + items.length) % items.length;
     }
-
     items[currentIndex].focus();
 }
 

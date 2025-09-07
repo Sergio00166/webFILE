@@ -53,10 +53,11 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
 
     # Get relative path from root
     folder_path = relpath(folder_path, start=root)
-    if folder_path == ".": folder_path = ""
 
-    # Fix and check some things with the paths
-    folder_path = "/" + folder_path.replace(sep, "/")
+    if folder_path != ".":
+        folder_path = "/" + folder_path.replace(sep, "/") + "/"
+    else:
+        folder_path = "/"
 
     # Sort the result items
     folder_content = sort_contents(folder_content, sort, root)
