@@ -268,6 +268,7 @@ img {
     transition: all 0.1s;
     -webkit-appearance: none;
     appearance: none;
+    outline: none;
     border: 1px solid #333;
 }
 #volume-bar::-webkit-slider-thumb {

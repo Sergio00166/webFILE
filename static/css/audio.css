@@ -247,7 +247,6 @@ button {
     border-radius: 2px;
     outline: none;
     cursor: pointer;
-    background: linear-gradient(to right, #007aff 100%, #eee 0%);
 }
 #volume-bar::-webkit-slider-thumb {
     -webkit-appearance: none;
