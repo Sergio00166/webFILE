@@ -50,14 +50,13 @@ pre {
    ------------------------- */
 
 #sidebar {
-    flex: 0 0 auto; 
     display: flex;
-    width: 140px;
+    width: fit-content;
     padding-top: 8px;
     flex-direction: column;
     background: #2a2a2a;
     border-right: 1px solid #444;
-    box-shadow: 2px 0 4px #0007;
+    box-shadow: 2px 0 4px #0008;
     transition: transform .3s;
     z-index: 10;
 }
@@ -80,7 +79,7 @@ pre {
     border-radius: 50%;
     align-content: center;
     justify-content: center;
-    box-shadow: 0 4px 12px #0007;
+    box-shadow: 0 4px 12px #0008;
 }
 .sidebar-toggle img {
     width: 24px;
@@ -96,7 +95,12 @@ pre {
     padding: 6px;
     overflow-y: auto;
 }
-.sidebar-section { margin-bottom: 12px; }
+.sidebar-section { 
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
 .sidebar-section h3 {
     margin: 0 0 6px;
     padding: 3px 6px;
@@ -115,9 +119,10 @@ pre {
 
 .sidebar-content button {
     width: 100%;
+    white-space: nowrap;
     text-align: left;
     padding: 8px;
-    margin: 1px 0;
+    padding-right: 12px;
     border: none;
     border-radius: 8px;
     font-size: 14px;
