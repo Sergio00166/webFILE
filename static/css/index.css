@@ -335,7 +335,7 @@ pre {
  *   Hide if screen too small
  * ------------------------- */
 
-@media (max-width:200px) or (max-height: 200px) {
+@media (max-width:200px) {
     .main-container {
         display: none;
     }
