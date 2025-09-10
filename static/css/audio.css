@@ -48,8 +48,8 @@ button {
 }
 
 /* -------------------------
-   Main structure
-   ------------------------- */
+ *   Main structure
+ * ------------------------- */
 
 .player-header {
     display: flex;
@@ -93,8 +93,8 @@ button {
 }
 
 /* -------------------------
-   Time / progress bar
-   ------------------------- */
+ *   Time / progress bar
+ * ------------------------- */
 
 /* Text time displays */
 #current-time,
@@ -139,8 +139,8 @@ button {
 }
 
 /* -------------------------
-   Hover time show
-   ------------------------- */
+ *   Hover time show
+ * ------------------------- */
 
 .hover-time {
     width: 0;
@@ -189,8 +189,8 @@ button {
 }
 
 /* -------------------------
-   Buttons block
-   ------------------------- */
+ *   Buttons block
+ * ------------------------- */
 
 #play-pause {
     background: #def3;
@@ -220,8 +220,8 @@ button {
 }
 
 /* -------------------------
-   Volume controls
-   ------------------------- */
+ *   Volume controls
+ * ------------------------- */
 
 .volume-control {
     width: 90%;
@@ -266,8 +266,8 @@ button {
 }
 
 /* -------------------------
-   Responsive rules
-   ------------------------- */
+ *   Responsive rules
+ * ------------------------- */
 
 @media (max-width: 300px) {
     .audio-player {
@@ -301,12 +301,14 @@ button {
         justify-content: center;
     }
 }
-@media (max-width: 120px) {
-    .audio-player {
-        display: none;
+
+@media (max-height: 400px) or (max-width: 400px) {
+    .player-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
-
 @media (max-height: 280px) {
     .volume-control {
         display: none;
@@ -315,26 +317,23 @@ button {
         display: none;
     }
 }
-@media (max-height: 190px) {
+@media (max-height: 190px) or (max-width: 160px) {
     .time-bar {
         display: none;
     }
     .player-header {
         display: none;
     }
-    .playback-controls {
-        margin: 0;
-    }
 }
-@media (max-height: 110px) {
+@media (max-height: 120px) or (max-width: 120px){
     .audio-player {
         display: none;
     }
 }
 
 /* -------------------------
-   Disable hover when touch
-   ------------------------- */
+ *   Disable hover when touch
+ * ------------------------- */
 @media (hover: hover) {
     .nav-btn:hover img,
     .extra-controls button:hover img {
@@ -349,3 +348,4 @@ button {
     }
 }
 
+ 

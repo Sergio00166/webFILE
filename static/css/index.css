@@ -15,8 +15,8 @@ body {
 }
 
 /* -------------------------
-   Text & scrollbar
-   ------------------------- */
+ *   Text & scrollbar
+ * ------------------------- */
 
 .size  { margin-left: 3em; }
 .date  { margin-left: 1em; }
@@ -29,8 +29,8 @@ body {
 ::-webkit-scrollbar-track { background: #1e1e1e; }
 
 /* -------------------------
-   Shared
-   ------------------------- */
+ *   Shared
+ * ------------------------- */
 img {
     pointer-events: none;
     width: 16px;
@@ -46,8 +46,8 @@ pre {
 }
 
 /* -------------------------
-   Sidebar container
-   ------------------------- */
+ *   Sidebar container
+ * ------------------------- */
 
 #sidebar {
     display: flex;
@@ -63,8 +63,8 @@ pre {
 #sidebar.hidden { transform: translateX(-100%); }
 
 /* -------------------------
-   Sidebar toggle
-   ------------------------- */
+ *   Sidebar toggle
+ * ------------------------- */
 
 .sidebar-toggle {
     display: none;
@@ -88,14 +88,14 @@ pre {
 }
 
 /* -------------------------
-   Sidebar content
-   ------------------------- */
+ *   Sidebar content
+ * ------------------------- */
 
 .sidebar-content {
     padding: 6px;
     overflow-y: auto;
 }
-.sidebar-section { 
+.sidebar-section {
     margin-bottom: 12px;
     display: flex;
     flex-direction: column;
@@ -114,8 +114,8 @@ pre {
 }
 
 /* -------------------------
-   Sidebar buttons
-   ------------------------- */
+ *   Sidebar buttons
+ * ------------------------- */
 
 .sidebar-content button {
     width: 100%;
@@ -138,8 +138,8 @@ pre {
 }
 
 /* -------------------------
-   Main layout / content
-   ------------------------- */
+ *   Main layout / content
+ * ------------------------- */
 
 .main-container {
     display: flex;
@@ -164,8 +164,8 @@ pre {
 }
 
 /* -------------------------
-   Path bar
-   ------------------------- */
+ *   Path bar
+ * ------------------------- */
 
 .path-bar {
     display: flex;
@@ -205,8 +205,8 @@ pre {
 }
 
 /* -------------------------
-   File item
-   ------------------------- */
+ *   File item
+ * ------------------------- */
 
 .filename {
     display: flex;
@@ -217,7 +217,7 @@ pre {
     border: 1px solid transparent;
     border-radius: 8px;
 }
-.filename:focus-visible { 
+.filename:focus-visible {
     outline: 1px solid white;
 }
 .selected {
@@ -231,8 +231,8 @@ pre {
 }
 
 /* -------------------------
-   Loading/Uploading screen
-   ------------------------- */
+ *   Loading/Uploading screen
+ * ------------------------- */
 
 .load_container {
     height: 100vh;
@@ -273,8 +273,8 @@ pre {
 }
 
 /* -------------------------
-   Keyframes
-   ------------------------- */
+ *   Keyframes
+ * ------------------------- */
 
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 @keyframes textFade { from{opacity:.7} to{opacity:1} }
@@ -285,8 +285,8 @@ pre {
 }
 
 /* -------------------------
-   File type icons
-   ------------------------- */
+ *   File type icons
+ * ------------------------- */
 
 .folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) }
 .files { filter: brightness(0) invert(1); }
@@ -299,38 +299,30 @@ pre {
 .iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
 
 /* -------------------------
-   Responsive
-   ------------------------- */
+ *   Responsive
+ * ------------------------- */
 
-@media (max-width:200px) { 
-    .main-container { 
-        display: none;
-    }
-    .load_container { 
-        display: none;
-    }
-}
 @media (max-width:1200px) {
-    .filename { 
+    .filename {
         min-width: calc(100% + 256px);
     }
 }
-@media (max-width:400px) { 
+@media (max-width:400px) {
     .filename {
         min-width: calc(100% + 512px);
     }
 }
 @media (max-width:700px) {
     #sidebar {
-        inset: 0;
-        position: fixed;
-        transform: translateX(-100%);
+    inset: 0;
+    position: fixed;
+    transform: translateX(-100%);
     }
     .sidebar-toggle {
         display: flex;
     }
     #sidebar.open {
-        transform: translateX(0);
+    transform: translateX(0);
     }
 }
 @media (max-width:400px) {
@@ -340,15 +332,28 @@ pre {
 }
 
 /* -------------------------
-   Disable hover when touch
-   ------------------------- */
+ *   Hide if screen too small
+ * ------------------------- */
+
+@media (max-width:200px) or (max-height: 200px) {
+    .main-container {
+        display: none;
+    }
+    .load_container {
+        display: none;
+    }
+}
+
+/* -------------------------
+ *   Disable hover when touch
+ * ------------------------- */
 
 @media (hover:hover) {
     .filename:hover {
         background: #2a2a2a;
         border-color: #555;
     }
-    .sidebar-content 
+    .sidebar-content
     button:not(:disabled):hover {
         background: #444a;
     }
@@ -358,3 +363,4 @@ pre {
     }
 }
 
+ 

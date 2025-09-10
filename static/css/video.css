@@ -6,6 +6,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100vh;
     height: 100dvh;
     background: black;
     -webkit-tap-highlight-color: transparent;
@@ -14,29 +15,30 @@ body {
 }
 
 /* -------------------------
-   Subtitle styles
-   ------------------------- */
+ *   Subtitle styles
+ * ------------------------- */
 
 video::cue {
     background: none !important;
     line-height: 1.1 !important;
     text-shadow: 0.07em 0.07em 0.05em black, -0.07em 0.07em 0.05em black,
-                 0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
-                 0.07em 0 0.05em black, -0.07em 0 0.05em black,
-                 0 0.07em 0.05em black, 0 -0.07em 0.05em black !important;
+    0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
+    0.07em 0 0.05em black, -0.07em 0 0.05em black,
+    0 0.07em 0.05em black, 0 -0.07em 0.05em black !important;
 }
 /* Dont cut the bottom of the bottom subtitles */
 video::-webkit-media-text-track-display { padding: 0.25em !important; }
 /* Dont fucking show native video controls */
-video::-webkit-media-controls, 
+video::-webkit-media-controls,
 video::-moz-media-controls { display: none !important; }
 
 /* -------------------------
-   Main structure
-   ------------------------- */
+ *   Main structure
+ * ------------------------- */
 
 .video-container {
     width: 90vw;
+    height: 90vh;
     height: 90dvh;
     color: white;
     overflow: hidden;
@@ -48,18 +50,20 @@ video::-moz-media-controls { display: none !important; }
     position: absolute;
     width: 100%;
     height: 100%;
+    z-index: 2;
 }
 .controls {
-    bottom: 0;
     width: 100%;
     position: absolute;
     box-sizing: border-box;
     padding: 0 12px 8px 12px;
+    inset: 0;
+    margin-bottom: 8px;
 }
 
 /* -------------------------
-   Controls bar
-   ------------------------- */
+ *   Controls bar
+ * ------------------------- */
 
 .time-container {
     font-size: 13px;
@@ -74,7 +78,7 @@ video::-moz-media-controls { display: none !important; }
     box-shadow: none !important;
 }
 .btn-controls {
-    margin-top: 10px;
+    margin-top: 4px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -83,14 +87,15 @@ video::-moz-media-controls { display: none !important; }
     display: flex;
     align-items: center;
 }
+.settings { position: relative; }
 
 /* -------------------------
-   Buttons + svg
-   ------------------------- */
+ *   Buttons + svg
+ * ------------------------- */
 
 .round-button {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     color: white;
     border: none;
@@ -102,6 +107,7 @@ video::-moz-media-controls { display: none !important; }
     margin: 0 4px;
     cursor: pointer;
     flex-shrink: 0;
+    z-index: 3;
 }
 img {
     pointer-events: none;
@@ -113,8 +119,8 @@ img {
 }
 
 /* -------------------------
-   Main state (show status)
-   ------------------------- */
+ *   Main state (show status)
+ * ------------------------- */
 
 .main-state {
     opacity: 0;
@@ -128,6 +134,8 @@ img {
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
+    pointer-events: none;
+    z-index: 4;
 }
 .main-state.show {
     opacity: 0.8;
@@ -139,16 +147,20 @@ img {
 }
 
 /* -------------------------
-   Main time bar
-   ------------------------- */
+ *   Main time bar
+ * ------------------------- */
 
 .duration {
-    position: relative;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 8px;
     margin: 0 auto;
     width: calc(100% - 64px);
-    height: 6px;
+    height: 8px;
     cursor: pointer;
     border-radius: 4px;
+    z-index: 2;
 }
 .duration::before {
     content: "";
@@ -170,8 +182,8 @@ img {
 }
 
 /* -------------------------
-   Time bar current time
-   ------------------------- */
+ *   Time bar current time
+ * ------------------------- */
 
 .current-time {
     width: 0;
@@ -202,8 +214,8 @@ img {
 }
 
 /* -------------------------
-   Hover time & Show info
-   ------------------------- */
+ *   Hover time & Show info
+ * ------------------------- */
 
 .hover-time {
     width: 0;
@@ -228,8 +240,8 @@ img {
 }
 
 /* -------------------------
-   Time bar chapters
-   ------------------------- */
+ *   Time bar chapters
+ * ------------------------- */
 
 .chapter-container {
     position: relative;
@@ -247,8 +259,8 @@ img {
 }
 
 /* -------------------------
-   Sound control
-   ------------------------- */
+ *   Sound control
+ * ------------------------- */
 
 .volume {
     display: flex;
@@ -294,22 +306,26 @@ img {
 }
 
 /* -------------------------
-   Option list
-   ------------------------- */
+ *   Option list
+ * ------------------------- */
 
 .setting-menu {
+    position: absolute;
     opacity: 0;
-    visibility: hidden;
-    list-style: none;
     padding: 0;
     margin: 0;
-    position: absolute;
-    bottom: 76px;
-    transition: all 0.2s;
+    right: -15%;
+    top: 40px;
+    max-height: 50vh;
+    max-height: 50dvh;
+    overflow: auto;
+    visibility: hidden;
+    list-style: none;
+    transition: transform 0.2s;
     transform: scaleY(0);
-    transform-origin: bottom;
+    transform-origin: top;
     border-radius: 12px;
-    margin-left: -50px;
+    z-index: 3;
 }
 .setting-menu.show {
     opacity: 1;
@@ -317,22 +333,29 @@ img {
     visibility: visible;
 }
 .setting-menu li {
-    padding: 0.33rem 0.5rem;
+    padding: 0.25rem 0.4rem;
     margin: 0.25rem;
     border-radius: 8px;
-    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     color: white;
 }
-.setting-menu li:nth-child(-n+3):focus-within { outline: auto; }
-.setting-menu li:nth-child(1)::before { content: "Subs"; position: absolute; }
-.setting-menu li:nth-child(2)::before { content: "Tracks"; position: absolute; }
-.setting-menu li:nth-child(3)::before { content: "Speed"; position: absolute; }
+.setting-menu li:nth-child(-n+3):focus-within {
+    outline: auto;
+}
+.setting-menu li:nth-child(1)::before {
+    content: "Subs"; position: absolute;
+}
+.setting-menu li:nth-child(2)::before {
+    content: "Tracks"; position: absolute;
+}
+.setting-menu li:nth-child(3)::before {
+    content: "Speed"; position: absolute;
+}
 
 /* -------------------------
-   Override select styles
-   ------------------------- */
+ *   Override select styles
+ * ------------------------- */
 
 select {
     position: relative;
@@ -344,6 +367,7 @@ select {
     width: 70px;
     opacity: 0;
     border: none;
+    line-height: 1;
 }
 select option {
     background: #363a43;
@@ -351,8 +375,8 @@ select option {
 }
 
 /* -------------------------
-   Loading animation
-   ------------------------- */
+ *   Loading animation
+ * ------------------------- */
 
 .custom-loader {
     width: 108px;
@@ -371,8 +395,8 @@ select option {
 }
 
 /* -------------------------
-   Full screen control
-   ------------------------- */
+ *   Full screen control
+ * ------------------------- */
 
 .fullscreen {
     position: absolute !important;
@@ -386,8 +410,8 @@ select option {
 }
 
 /* -------------------------
-   Button transparency style
-   ------------------------- */
+ *   Button transparency style
+ * ------------------------- */
 
 .duration::before, .main-state, .time-container span,
 .round-button, .setting-menu, .hover-duration {
@@ -398,11 +422,11 @@ select option {
 }
 
 /* -------------------------
-   Show/hide button controls
-   ------------------------- */
+ *   Show/hide button controls
+ * ------------------------- */
 
 /* Just to animate with Opacity but
-WITHOUT BREAKING the backdrop-filter */
+ *WITHOUT BREAKING the backdrop-filter */
 .time-container span, .round-button,
 .duration::before, .duration * {
     opacity: 0;
@@ -420,8 +444,8 @@ WITHOUT BREAKING the backdrop-filter */
 }
 
 /* -------------------------
-   Other
-   ------------------------- */
+ *   Other
+ * ------------------------- */
 
 .vol_val_st { font-size: 1.3rem; }
 .full, .contract { display: none; }
@@ -433,8 +457,8 @@ canvas { position: absolute; }
 
 
 /* -------------------------
-   Responsive rules
-   ------------------------- */
+ *   Responsive
+ * ------------------------- */
 
 @media (max-width: 900px) {
     .main-state {
@@ -452,32 +476,17 @@ canvas { position: absolute; }
     }
 }
 @media (max-width: 470px) {
-    .time-container {
-        margin-bottom: 8px;
-        padding-right: 0;
-    }
-    .volume {
-        display: none;
-    }
-    .btn-controls {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-    }
-    .setting-menu {
-        bottom: 104px;
-    }
+    .side-controls:first-of-type { display: none; }
+    .btn-controls { display: flex; align-items: center; flex-direction: column; }
+    .side-controls:last-of-type { width: 100%; justify-content: center; }
 }
 @media (max-width: 320px) {
+    .round-button {
+        width: 32px;
+        height: 32px;
+    }
     .duration {
         width: 90%;
-    }
-    #mode {
-        display: none;
-    }
-    .main-state {
-        height: 40px;
-        width: 40px;
     }
     .custom-loader {
         height: 56px;
@@ -485,33 +494,33 @@ canvas { position: absolute; }
         border-width: 5px;
     }
 }
-@media (max-width: 220px) {
-    .settings {
-        display: none;
-    }
+
+/* -------------------------
+ *   Responsive (extra)
+ * ------------------------- */
+
+ @media (max-width: 224px) {
+    #mode { display: none; }
 }
-@media (max-height: 320px) {
-    .btn-controls {
-        display: none;
-    }
-    .video-box, .main-state, .custom-loader {
-        margin-bottom: 8px !important;
-    }
+@media (max-width: 180px) {
+    #settings, .setting-menu { display: none; }
 }
-@media (max-aspect-ratio: 1/1) {
-    .video-box, .main-state, .custom-loader {
-        margin-bottom: 30px;
-    }
+ @media (max-width: 150px) {
+    .side-controls:last-of-type { display: none; }
 }
-@media ((max-width: 160px) or (max-height: 160px)) {
-    .video-container {
-        display: none;
-    }
+@media (max-width: 120px) {
+    .video-container { display: none; }
+}
+@media (max-height: 200px) {
+    .btn-controls { display: none; }
+}
+@media (max-height: 120px) {
+    .video-container { display: none; }
 }
 
 /* -------------------------
-   Disable hover when touch
-   ------------------------- */
+ *   Disable hover when touch
+ * ------------------------- */
 
 @media (hover: hover) {
     .setting-menu li:hover, .round-button:hover {
@@ -519,3 +528,4 @@ canvas { position: absolute; }
     }
 }
 
+ 
