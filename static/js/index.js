@@ -9,32 +9,32 @@ Base path variable (base) ends with '/' always.
 // DOM ELEMENTS - BUTTONS
 // ============================================================================
 
-const selectButton = document.getElementById('selectBtn');
-const deleteButton = document.getElementById('delBtn');
-const copyButton = document.getElementById('copyBtn');
-const moveButton = document.getElementById('moveBtn');
-const renameButton = document.getElementById('renBtn');
-const invertButton = document.getElementById('invertBtn');
+const selectButton = document.getById('selectBtn');
+const deleteButton = document.getById('delBtn');
+const copyButton = document.getById('copyBtn');
+const moveButton = document.getById('moveBtn');
+const renameButton = document.getById('renBtn');
+const invertButton = document.getById('invertBtn');
 
 // ============================================================================
 // DOM ELEMENTS - UI COMPONENTS
 // ============================================================================
 
-const progressBar = document.getElementById('progress');
-const sidebar = document.getElementById('sidebar');
-const loader = document.getElementById('loader');
+const progressBar = document.getById('progress');
+const sidebar = document.getById('sidebar');
+const loader = document.getById('loader');
 const mainContainer = document.querySelector('.main-container');
 const listGroup = document.querySelector('.list-group');
-const backDirectoryButton = document.getElementById('backdir');
-const loginButton = document.getElementById('login');
+const backDirectoryButton = document.getById('backdir');
+const loginButton = document.getById('login');
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
 // ============================================================================
 
-const sortByNameButton = document.getElementById('sortName');
-const sortBySizeButton = document.getElementById('sortSize');
-const sortByDateButton = document.getElementById('sortDate');
+const sortByNameButton = document.getById('sortName');
+const sortBySizeButton = document.getById('sortSize');
+const sortByDateButton = document.getById('sortDate');
 
 // ============================================================================
 // GLOBAL VARIABLES
@@ -516,7 +516,7 @@ document.addEventListener('keydown', event => {
                     behavior: 'smooth' 
                 });
             } else {
-                document.active.click();
+                document.activeElement.click();
             }
             break;
         case 'arrowleft':
@@ -527,7 +527,7 @@ document.addEventListener('keydown', event => {
                     behavior: 'smooth' 
                 });
             } else if (isSelectModeActive) {
-                document.active.click();
+                document.activeElement.click();
             } else {
                 window.location.href = '..';
             }
