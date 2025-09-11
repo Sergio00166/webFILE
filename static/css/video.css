@@ -87,15 +87,14 @@ video::-moz-media-controls { display: none !important; }
     display: flex;
     align-items: center;
 }
-.settings { position: relative; }
 
 /* -------------------------
  *   Buttons + svg
  * ------------------------- */
 
 .round-button {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     color: white;
     border: none;
@@ -252,9 +251,10 @@ img {
 .chapter {
     position: absolute;
     height: 100%;
-    width: 2px;
+    width: 3px;
     margin-left: -1px;
     background-color: black;
+    box-shadow: 0 0 1px white;
     z-index: 2;
 }
 
@@ -454,6 +454,7 @@ select option {
 .lmbsl { background: #8f9f3030 !important; }
 .video-box, .video-container { position: relative; }
 canvas { position: absolute; }
+.settings { position: relative; }
 
 
 /* -------------------------
