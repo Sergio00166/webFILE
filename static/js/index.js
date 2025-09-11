@@ -25,22 +25,21 @@ const sidebar = document.getElementById('sidebar');
 const loader = document.getElementById('loader');
 const mainContainer = document.querySelector('.main-container');
 const listGroup = document.querySelector('.list-group');
-const backDirectoryButton = document.getElementById('backdir');
+const backButton = document.getElementById('backdir');
 const loginButton = document.getElementById('login');
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
 // ============================================================================
 
-const sortByNameButton = document.getElementById('sortName');
-const sortBySizeButton = document.getElementById('sortSize');
-const sortByDateButton = document.getElementById('sortDate');
+const sortByName = document.getElementById('sortName');
+const sortBySize = document.getElementById('sortSize');
+const sortByDate = document.getElementById('sortDate');
 
 // ============================================================================
 // GLOBAL VARIABLES
 // ============================================================================
 
-const body = document.body;
 const basePath = (location.pathname.replace(/\/$/, '') || '') + '/';
 const selectedItems = new Map();
 let isSelectModeActive = false;
@@ -163,9 +162,9 @@ function selectItem(div) {
 function invertSelection() {
     if (!isSelectModeActive) return;
     
-    const filenames = document.getsByClassName('filename');
-    for (let i = 0; i < filenames.length; i++) {
-        selectItem(filenames[i]);
+    const filenameElements = document.getElementsByClassName('filename');
+    for (let i = 0; i < filenameElements.length; i++) {
+        selectItem(filenameElements[i]);
     }
 }
 
@@ -193,11 +192,11 @@ function handleItemClick(div) {
 // ============================================================================
 
 function downloadURL(url) {
-    const downloadLink = document.create('a');
+    const downloadLink = document.createElement('a');
     downloadLink.href = url;
     downloadLink.download = '';
     downloadLink.style.display = 'none';
-    body.appendChild(downloadLink);
+    document.body.appendChild(downloadLink);
     downloadLink.click();
     downloadLink.remove();
 }
@@ -418,7 +417,7 @@ async function uploadFiles(files, isDirectory) {
 // ============================================================================
 
 function openFileUploadMenu(selectDirectory = false) {
-    const fileInput = document.create('input');
+    const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.multiple = !selectDirectory;
     
@@ -456,7 +455,7 @@ function moveFocus(direction) {
     const items = Array.from(listGroup.children);
     if (items.length === 0) return;
 
-    let currentIndex = items.indexOf(document.active);
+    let currentIndex = items.indexOf(document.activeElement);
     
     if (direction === -Infinity) {
         currentIndex = 0;
@@ -572,13 +571,13 @@ document.addEventListener('keydown', event => {
             window.location.href = '/'; 
             break;
         case '1': 
-            sortByNameButton.click(); 
+            sortByName.click(); 
             break;
         case '2': 
-            sortBySizeButton.click(); 
+            sortBySize.click(); 
             break;
         case '3': 
-            sortByDateButton.click(); 
+            sortByDate.click(); 
             break;
     }
 });
@@ -589,5 +588,4 @@ document.addEventListener('keydown', event => {
 
 enableDragAndDropUpload(document);
 
- 
  
