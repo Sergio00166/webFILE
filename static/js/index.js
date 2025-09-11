@@ -9,38 +9,38 @@ Base path variable (base) ends with '/' always.
 // DOM ELEMENTS - BUTTONS
 // ============================================================================
 
-const selectButton = document.getElementById('selectBtn');
-const deleteButton = document.getElementById('delBtn');
-const copyButton = document.getElementById('copyBtn');
-const moveButton = document.getElementById('moveBtn');
-const renameButton = document.getElementById('renBtn');
-const invertButton = document.getElementById('invertBtn');
+const selectButton = document.getById('selectBtn');
+const deleteButton = document.getById('delBtn');
+const copyButton = document.getById('copyBtn');
+const moveButton = document.getById('moveBtn');
+const renameButton = document.getById('renBtn');
+const invertButton = document.getById('invertBtn');
 
 // ============================================================================
 // DOM ELEMENTS - UI COMPONENTS
 // ============================================================================
 
-const progressBar = document.getElementById('progress');
-const sidebarElement = document.getElementById('sidebar');
-const loaderElement = document.getElementById('loader');
-const mainContainerElement = document.querySelector('.main-container');
-const listGroupElement = document.querySelector('.list-group');
-const backDirectoryButton = document.getElementById('backdir');
-const loginButton = document.getElementById('login');
+const progressBar = document.getById('progress');
+const sidebar = document.getById('sidebar');
+const loader = document.getById('loader');
+const mainContainer = document.querySelector('.main-container');
+const listGroup = document.querySelector('.list-group');
+const backDirectoryButton = document.getById('backdir');
+const loginButton = document.getById('login');
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
 // ============================================================================
 
-const sortByNameButton = document.getElementById('sortName');
-const sortBySizeButton = document.getElementById('sortSize');
-const sortByDateButton = document.getElementById('sortDate');
+const sortByNameButton = document.getById('sortName');
+const sortBySizeButton = document.getById('sortSize');
+const sortByDateButton = document.getById('sortDate');
 
 // ============================================================================
 // GLOBAL VARIABLES
 // ============================================================================
 
-const bodyElement = document.body;
+const body = document.body;
 const basePath = (location.pathname.replace(/\/$/, '') || '') + '/';
 const selectedItems = new Map();
 let isSelectModeActive = false;
@@ -62,7 +62,7 @@ function updateButtonStates() {
 // ============================================================================
 
 function toggleSidebar() {
-    sidebarElement.classList.toggle('open');
+    sidebar.classList.toggle('open');
 }
 
 // ============================================================================
@@ -111,8 +111,8 @@ function getSelectedURLs() {
 // ============================================================================
 
 function showLoader() {
-    if (loaderElement) loaderElement.style.display = '';
-    if (mainContainerElement) mainContainerElement.style.display = 'none';
+    if (loader) loader.style.display = '';
+    if (mainContainer) mainContainer.style.display = 'none';
 }
 
 // ============================================================================
@@ -163,9 +163,9 @@ function selectItem(div) {
 function invertSelection() {
     if (!isSelectModeActive) return;
     
-    const filenameElements = document.getElementsByClassName('filename');
-    for (let i = 0; i < filenameElements.length; i++) {
-        selectItem(filenameElements[i]);
+    const filenames = document.getsByClassName('filename');
+    for (let i = 0; i < filenames.length; i++) {
+        selectItem(filenames[i]);
     }
 }
 
@@ -193,11 +193,11 @@ function handleItemClick(div) {
 // ============================================================================
 
 function downloadURL(url) {
-    const downloadLink = document.createElement('a');
+    const downloadLink = document.create('a');
     downloadLink.href = url;
     downloadLink.download = '';
     downloadLink.style.display = 'none';
-    bodyElement.appendChild(downloadLink);
+    body.appendChild(downloadLink);
     downloadLink.click();
     downloadLink.remove();
 }
@@ -418,7 +418,7 @@ async function uploadFiles(files, isDirectory) {
 // ============================================================================
 
 function openFileUploadMenu(selectDirectory = false) {
-    const fileInput = document.createElement('input');
+    const fileInput = document.create('input');
     fileInput.type = 'file';
     fileInput.multiple = !selectDirectory;
     
@@ -453,10 +453,10 @@ function enableDragAndDropUpload(dropArea) {
 // ============================================================================
 
 function moveFocus(direction) {
-    const items = Array.from(listGroupElement.children);
+    const items = Array.from(listGroup.children);
     if (items.length === 0) return;
 
-    let currentIndex = items.indexOf(document.activeElement);
+    let currentIndex = items.indexOf(document.active);
     
     if (direction === -Infinity) {
         currentIndex = 0;
@@ -472,12 +472,12 @@ function moveFocus(direction) {
 // EVENT LISTENERS - LIST GROUP
 // ============================================================================
 
-listGroupElement.addEventListener('click', event => {
+listGroup.addEventListener('click', event => {
     const clickedItem = event.target.closest('.filename');
     if (clickedItem) handleItemClick(clickedItem);
 });
 
-listGroupElement.addEventListener('keydown', event => {
+listGroup.addEventListener('keydown', event => {
     const focusedItem = event.target.closest('.filename');
     if ((event.key === 'Enter' || event.key === ' ') && focusedItem) {
         event.preventDefault();
@@ -511,23 +511,23 @@ document.addEventListener('keydown', event => {
         case 'arrowright':
             event.preventDefault();
             if (isShiftArrow) {
-                listGroupElement.scrollTo({
-                    left: listGroupElement.scrollWidth, 
+                listGroup.scrollTo({
+                    left: listGroup.scrollWidth, 
                     behavior: 'smooth' 
                 });
             } else {
-                document.activeElement.click();
+                document.active.click();
             }
             break;
         case 'arrowleft':
             event.preventDefault();
             if (isShiftArrow) {
-                listGroupElement.scrollTo({ 
+                listGroup.scrollTo({ 
                     left: 0, 
                     behavior: 'smooth' 
                 });
             } else if (isSelectModeActive) {
-                document.activeElement.click();
+                document.active.click();
             } else {
                 window.location.href = '..';
             }
@@ -589,4 +589,5 @@ document.addEventListener('keydown', event => {
 
 enableDragAndDropUpload(document);
 
+ 
  

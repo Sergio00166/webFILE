@@ -76,10 +76,12 @@ img, .main-state, .controls,
  * ------------------------- */
 
 .time-container {
+    left: 50%;
     font-size: 13px;
-    padding-right: 16px;
+    position: absolute;
+    transform: translateX(-50%);
 }
-.time-container span {
+.time-container > span {
     display: inline-block;
     padding: 2px;
     padding-left: 3px;
@@ -147,7 +149,7 @@ img {
     opacity: 0.8;
     transform: scale(1);
 }
-.main-state img {
+.main-state > img {
     width: 67%;
     height: 67%;
 }
@@ -317,7 +319,7 @@ img {
     opacity: 0;
     padding: 0;
     margin: 0;
-    right: -15%;
+    right: -20%;
     top: 40px;
     max-height: 50vh;
     max-height: 50dvh;
@@ -334,7 +336,7 @@ img {
     transform: scaleY(1);
     visibility: visible;
 }
-.setting-menu li {
+.setting-menu > li {
     padding: 0.25rem 0.4rem;
     margin: 0.25rem;
     border-radius: 8px;
@@ -342,16 +344,16 @@ img {
     cursor: pointer;
     color: white;
 }
-.setting-menu li:nth-child(-n+3):focus-within {
+.setting-menu > li:nth-child(-n+3):focus-within {
     outline: auto;
 }
-.setting-menu li:nth-child(1)::before {
+.setting-menu > li:nth-child(1)::before {
     content: "Subs"; position: absolute;
 }
-.setting-menu li:nth-child(2)::before {
+.setting-menu > li:nth-child(2)::before {
     content: "Tracks"; position: absolute;
 }
-.setting-menu li:nth-child(3)::before {
+.setting-menu > li:nth-child(3)::before {
     content: "Speed"; position: absolute;
 }
 
@@ -412,7 +414,7 @@ select option {
 }
 
 /* -------------------------
- *   Button transparency style
+ *   Transparent style
  * ------------------------- */
 
 .duration::before, .main-state, .time-container span,
@@ -440,8 +442,8 @@ select option {
 .controls.show .duration * {
     opacity: 1;
 }
-.chapter-container, .duration .current-time,
-.duration .hover-time {
+.chapter-container, .duration .hover-time,
+.duration .current-time {
     transition: none !important;
 }
 
@@ -457,6 +459,7 @@ select option {
 .video-box, .video-container { position: relative; }
 canvas { position: absolute; }
 
+
 /* -------------------------
  *   Responsive
  * ------------------------- */
@@ -471,54 +474,36 @@ canvas { position: absolute; }
         width: 90px;
     }
 }
-@media (max-width: 470px) {
-    .side-controls:first-of-type { 
-        display: none;
-    }
-    .btn-controls { 
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-    }
-    .side-controls:last-of-type { 
-        width: 100%;
-        justify-content: center;
-    }
+@media (max-width: 600px) {
+    .time-container { display: none; }
+}
+@media (max-width: 500px) {
+    .play-pause, .volume { display: none; }
+    .btn-controls { justify-content: center; }
 }
 @media (max-width: 320px) {
-    .duration {
-        width: 90%;
-    }
+    .duration { width: 90%; }
     .custom-loader {
         height: 56px;
         width: 56px;
         border-width: 5px;
     }
 }
+@media (max-width: 250px) {
+    #mode { display: none; }
+}
+@media (max-width: 200px) {
+    #settings, .setting-menu { display: none; }
+}
 
 /* -------------------------
  *   Responsive (hide)
  * ------------------------- */
 
-@media (max-width: 520px) {
-    .play-pause { display: none; }
-}
-@media (max-width: 224px) {
-    #mode { display: none; }
-}
-@media (max-width: 180px) {
-    #settings, .setting-menu { display: none; }
-}
- @media (max-width: 150px) {
-    .side-controls:last-of-type { display: none; }
-}
-@media (max-width: 120px) {
-    .video-container { display: none; }
-}
-@media (max-height: 200px) {
+@media (max-height: 200px) or (max-width: 150px) {
     .btn-controls { display: none; }
 }
-@media (max-height: 120px) {
+@media (max-height: 120px) or (max-width: 120px) {
     .video-container { display: none; }
 }
 

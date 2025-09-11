@@ -26,6 +26,7 @@
       </div>
       <div id="touch-box"></div>
       <span class="custom-loader" style="display: none;"></span>
+  
       <span class="main-state">
         <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: none;">
         <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
@@ -35,6 +36,7 @@
         <img src="{{ url_for('index', static='svg/videoplayer/chevron-back-outline.svg') }}" style="display: none;">
         <div class="vol_val_st" style="display: none;"></div>
       </span>
+  
       <div class="controls">
         <div class="duration">
           <div class="current-time"></div>
@@ -45,11 +47,13 @@
           <div class="buffer"></div>
         </div>
         <div class="btn-controls">
+
           <div class="side-controls">
             <button class="round-button play-pause" onclick="togglePlayPauseState()" title="Play">
               <img src="{{ url_for('index', static='svg/videoplayer/play-outline.svg') }}" style="display: block;">
               <img src="{{ url_for('index', static='svg/videoplayer/pause-outline.svg') }}" style="display: none;">
             </button>
+            <button class="round-button" id="mode" onclick="changePlaybackMode()" title="Loop (L)">1</button>
             <span class="volume">
               <button class="round-button" onclick="toggleMuteState()" title="Mute (M)">
                 <img src="{{ url_for('index', static='svg/videoplayer/volume-mute-outline.svg') }}" style="display: none;">
@@ -60,11 +64,14 @@
               </button>
               <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
             </span>
-            <span class="time-container">
-              <span class="current-duration">00:00</span>
-              <span class="total-duration">00:00</span>
-            </span>
           </div>
+    
+          <span class="time-container">
+            <span id="current-duration">00:00</span>
+            <span>/</span>
+            <span id="total-duration">00:00</span>
+          </span>
+
           <div class="side-controls">
             <button class="round-button" onclick="navigateToPrevious()" title="Prev (P)">
               <img src="{{ url_for('index', static='svg/videoplayer/play-skip-back-outline.svg') }}">
@@ -72,7 +79,6 @@
             <button class="round-button" onclick="navigateToNext()" title="Next (N)">
               <img src="{{ url_for('index', static='svg/videoplayer/play-skip-forward-outline.svg') }}">
             </button>
-            <button class="round-button" id="mode" onclick="changePlaybackMode()" title="Loop (L)">1</button>
             <span class="settings">
               <button class="round-button" id="settings" title="Menu (hold:legacy)">
                 <img src="{{ url_for('index', static='svg/videoplayer/settings-outline.svg') }}">
@@ -109,10 +115,11 @@
               <img class="contract" src="{{ url_for('index', static='svg/videoplayer/contract-outline.svg') }}">
             </button>
           </div>
+
         </div>
       </div>
     </div>
   </body>
 </html>
 
-
+ 

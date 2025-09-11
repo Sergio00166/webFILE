@@ -81,6 +81,14 @@ def serveRoot_page(ACL, root, folder_size, useApi):
         return "Method not allowed", 405
     path = safe_path("", root)  # Check if we can access it
     sort = request.args["sort"] if "sort" in request.args else ""
+
+    # Autoload index.web if available (plugins-like)
+    if (
+        isfile("/" + autoload_webpage) and
+        not ("noauto" in request.args or useApi)
+    ):
+        return redirect(request.path + autoload_webpage)
+
     if "tar" in request.args: return send_dir(path, root, ACL, "index")
     return directory(path, root, folder_size, sort, ACL, useApi)
 
