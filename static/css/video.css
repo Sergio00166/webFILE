@@ -33,6 +33,18 @@ video::-webkit-media-controls,
 video::-moz-media-controls { display: none !important; }
 
 /* -------------------------
+ *   Pointer config
+ * ------------------------- */
+
+img, .main-state, .controls,
+.hover-time .hover-duration {
+    pointer-events: none;
+}
+.side-controls, .duration {
+    pointer-events: auto;
+}
+
+/* -------------------------
  *   Main structure
  * ------------------------- */
 
@@ -50,15 +62,13 @@ video::-moz-media-controls { display: none !important; }
     position: absolute;
     width: 100%;
     height: 100%;
-    z-index: 2;
 }
 .controls {
     width: 100%;
+    height: 100%;
     position: absolute;
     box-sizing: border-box;
-    padding: 0 12px 8px 12px;
-    inset: 0;
-    margin-bottom: 8px;
+    padding: 0 12px;
 }
 
 /* -------------------------
@@ -87,6 +97,9 @@ video::-moz-media-controls { display: none !important; }
     display: flex;
     align-items: center;
 }
+.settings { 
+    position: relative;
+}
 
 /* -------------------------
  *   Buttons + svg
@@ -101,15 +114,11 @@ video::-moz-media-controls { display: none !important; }
     display: flex;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box;
-    position: relative;
     margin: 0 4px;
     cursor: pointer;
     flex-shrink: 0;
-    z-index: 3;
 }
 img {
-    pointer-events: none;
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -124,8 +133,8 @@ img {
 .main-state {
     opacity: 0;
     transform: scale(0);
-    height: 75px;
-    width: 75px;
+    height: 70px;
+    width: 70px;
     position: absolute;
     cursor: pointer;
     border-radius: 50%;
@@ -133,8 +142,6 @@ img {
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
-    pointer-events: none;
-    z-index: 4;
 }
 .main-state.show {
     opacity: 0.8;
@@ -150,33 +157,30 @@ img {
  * ------------------------- */
 
 .duration {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    bottom: 8px;
-    margin: 0 auto;
-    width: calc(100% - 64px);
     height: 8px;
+    margin: 0 auto;
     cursor: pointer;
     border-radius: 4px;
-    z-index: 2;
+    position: absolute;
+    inset: auto 0 20px;
+    width: calc(100% - 64px);
 }
 .duration::before {
     content: "";
-    position: absolute;
     width: 100%;
     height: 100%;
+    position: absolute;
     border-radius: inherit;
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
 .duration::after {
     content: "";
-    position: absolute;
     top: 50%;
     left: 50%;
-    width: calc(100% + 32px);
     height: 200%;
+    position: absolute;
+    width: calc(100% + 32px);
     transform: translate(-50%, -50%);
 }
 
@@ -235,7 +239,6 @@ img {
     visibility: hidden;
     font-weight: bold;
     text-align: center;
-    pointer-events: none;
 }
 
 /* -------------------------
@@ -315,7 +318,7 @@ img {
     padding: 0;
     margin: 0;
     right: -15%;
-    top: 40px;
+    top: 38px;
     max-height: 50vh;
     max-height: 50dvh;
     overflow: auto;
@@ -325,7 +328,6 @@ img {
     transform: scaleY(0);
     transform-origin: top;
     border-radius: 12px;
-    z-index: 3;
 }
 .setting-menu.show {
     opacity: 1;
@@ -454,8 +456,6 @@ select option {
 .lmbsl { background: #8f9f3030 !important; }
 .video-box, .video-container { position: relative; }
 canvas { position: absolute; }
-.settings { position: relative; }
-
 
 /* -------------------------
  *   Responsive
@@ -471,21 +471,21 @@ canvas { position: absolute; }
         width: 90px;
     }
 }
-@media (max-width: 520px) {
-    .play-pause {
+@media (max-width: 470px) {
+    .side-controls:first-of-type { 
         display: none;
     }
-}
-@media (max-width: 470px) {
-    .side-controls:first-of-type { display: none; }
-    .btn-controls { display: flex; align-items: center; flex-direction: column; }
-    .side-controls:last-of-type { width: 100%; justify-content: center; }
+    .btn-controls { 
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+    .side-controls:last-of-type { 
+        width: 100%;
+        justify-content: center;
+    }
 }
 @media (max-width: 320px) {
-    .round-button {
-        width: 32px;
-        height: 32px;
-    }
     .duration {
         width: 90%;
     }
@@ -497,10 +497,13 @@ canvas { position: absolute; }
 }
 
 /* -------------------------
- *   Responsive (extra)
+ *   Responsive (hide)
  * ------------------------- */
 
- @media (max-width: 224px) {
+@media (max-width: 520px) {
+    .play-pause { display: none; }
+}
+@media (max-width: 224px) {
     #mode { display: none; }
 }
 @media (max-width: 180px) {
