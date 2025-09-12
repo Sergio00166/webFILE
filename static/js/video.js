@@ -664,9 +664,7 @@ function loadAudioTracks() {
                 audioTracksSelector.selectedIndex = 0;
             }
         }
-    } catch (error) {
-zz
-    }
+    } catch (error) {}
 }
 
 function changeAudioTrack(selectedIndex) {

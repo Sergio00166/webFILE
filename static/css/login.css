@@ -81,6 +81,11 @@ button {
     margin-top: 12px;
 }
 
+
+/* -------------------------
+ *   Responsive rules
+ * ------------------------- */
+
 @media (max-height: 600px) {
     .container {
         margin-bottom: 0;
@@ -92,13 +97,19 @@ button {
         padding-top: 16px;
         padding-bottom: 20px;
     }
-    #error { word-break: break-all; }
+    #error {
+        word-break: break-all;
+    }
 }
 @media (max-width: 120px) {
     .container {
         display: none;
     }
 }
+
+/* -------------------------
+ *   Disable hover when touch
+ * ------------------------- */
 
 @media (hover: hover) {
     .button-upload:hover {

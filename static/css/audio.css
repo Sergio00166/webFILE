@@ -265,6 +265,7 @@ button {
     box-shadow: 0 0 3px black;
 }
 
+
 /* -------------------------
  *   Responsive rules
  * ------------------------- */
@@ -280,10 +281,8 @@ button {
     }
 }
 @media (max-width: 250px) {
+    #total-time,
     #current-time,
-    #total-time {
-        display: none;
-    }
     .volume-control,
     .extra-controls {
         display: none;
@@ -301,7 +300,6 @@ button {
         justify-content: center;
     }
 }
-
 @media (max-height: 400px) or (max-width: 400px) {
     .player-title {
         white-space: nowrap;
@@ -310,22 +308,18 @@ button {
     }
 }
 @media (max-height: 280px) {
-    .volume-control {
-        display: none;
-    }
+    .volume-control,
     .extra-controls {
         display: none;
     }
 }
 @media (max-height: 190px) or (max-width: 160px) {
-    .time-bar {
-        display: none;
-    }
+    .time-bar,
     .player-header {
         display: none;
     }
 }
-@media (max-height: 120px) or (max-width: 120px){
+@media (max-height: 120px) or (max-width: 120px) {
     .audio-player {
         display: none;
     }
@@ -334,6 +328,7 @@ button {
 /* -------------------------
  *   Disable hover when touch
  * ------------------------- */
+
 @media (hover: hover) {
     .nav-btn:hover img,
     .extra-controls button:hover img {

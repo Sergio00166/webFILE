@@ -314,15 +314,15 @@ pre {
 }
 @media (max-width:700px) {
     #sidebar {
-    inset: 0;
-    position: fixed;
-    transform: translateX(-100%);
+        inset: 0;
+        position: fixed;
+        transform: translateX(-100%);
     }
     .sidebar-toggle {
         display: flex;
     }
     #sidebar.open {
-    transform: translateX(0);
+        transform: translateX(0);
     }
 }
 @media (max-width:400px) {
@@ -336,8 +336,10 @@ pre {
  * ------------------------- */
 
 @media (max-width:200px) or (max-height: 120px) {
-    .main-container { display: none; }
-    .load_container { display: none; }
+    .main-container,
+    .load_container { 
+        display: none;
+    }
 }
 
 /* -------------------------
