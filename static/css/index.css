@@ -307,8 +307,8 @@ pre {
         inset: 0;
         position: fixed;
         transform: translateX(-100%);
-        -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(10px);
-        backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(10px);
+        -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
+        backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
         background: transparent;
     }
     .sidebar-toggle-notch {
