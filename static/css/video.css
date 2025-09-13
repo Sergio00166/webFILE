@@ -76,13 +76,14 @@ img, .main-state, .controls,
  * ------------------------- */
 
 .time-container {
+    gap: 3px;
     left: 50%;
+    display: flex;
     font-size: 13px;
     position: absolute;
     transform: translateX(-50%);
 }
 .time-container > span {
-    display: inline-block;
     padding: 2px;
     padding-left: 3px;
     padding-right: 4px;
