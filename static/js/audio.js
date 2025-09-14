@@ -10,9 +10,9 @@ const pauseIcon = document.querySelector('#play-pause img:last-child');
 const durationBar = document.querySelector('.duration');
 const currentTimeBar = document.querySelector('.current-time');
 const hoverTimeBar = document.querySelector('.hover-time');
-const hoverDurationDisplay = document.querySelector('.hover-duration');
-const currentTimeDisplay = document.getElementById('current-time');
-const totalTimeDisplay = document.getElementById('total-time');
+const hoverDuration = document.querySelector('.hover-duration');
+const currentTime = document.getElementById('current-time');
+const totalTime = document.getElementById('total-time');
 const volumeSlider = document.getElementById('volume-bar');
 
 // ============================================================================
@@ -53,9 +53,12 @@ const savedMuted = localStorage.getItem('audioMuted');
 // ============================================================================
 
 const playbackSpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-let currentSpeedIndex = playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0 ?
-    playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) :
-    playbackSpeedOptions.indexOf(1);
+let currentSpeedIndex;
+if (playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0) {
+    currentSpeedIndex = playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed')));
+} else {
+    currentSpeedIndex = playbackSpeedOptions.indexOf(1);
+}
 
 // ============================================================================
 // TOUCH INTERACTION VARIABLES
@@ -86,7 +89,7 @@ function initializeAudioPlayer() {
     updateVolumeIcon(audioElement.volume);
     updateLoopButton();
     updateShuffleButton();
-    updateSpeedDisplay();
+    updateSpeed();
 }
 
 function waitForAudioReady() {
@@ -97,7 +100,7 @@ function waitForAudioReady() {
     playAudio();
     if (audioElement.paused) pauseAudio();
     
-    totalTimeDisplay.textContent = formatTime(audioElement.duration);
+    totalTime.textContent = formatTime(audioElement.duration);
     audioElement.addEventListener('timeupdate', updateSeekBar);
 }
 
@@ -133,7 +136,11 @@ function cycleLoopMode() {
 // ============================================================================
 
 function updateShuffleButton() {
-    shuffleButton.style.opacity = isShuffled ? 1 : 0.4;
+    if (isShuffled) {
+        shuffleButton.style.opacity = 1;
+    } else {
+        shuffleButton.style.opacity = 0.4;
+    }
 }
 
 function toggleShuffleMode() {
@@ -146,7 +153,7 @@ function toggleShuffleMode() {
 // PLAYBACK SPEED MANAGEMENT
 // ============================================================================
 
-function updateSpeedDisplay() {
+function updateSpeed() {
     speedButton.textContent = playbackSpeedOptions[currentSpeedIndex] + 'x';
 }
 
@@ -154,7 +161,7 @@ function changePlaybackSpeed() {
     currentSpeedIndex = (currentSpeedIndex + 1) % playbackSpeedOptions.length;
     audioElement.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
-    updateSpeedDisplay();
+    updateSpeed();
 }
 
 function handleSpeedWheel(event) {
@@ -168,7 +175,7 @@ function handleSpeedWheel(event) {
     
     audioElement.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
-    updateSpeedDisplay();
+    updateSpeed();
 }
 
 function handleSpeedTouchStart(event) {
@@ -190,7 +197,7 @@ function handleSpeedTouchEnd(event) {
 
     audioElement.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
-    updateSpeedDisplay();
+    updateSpeed();
 }
 
 // ============================================================================
@@ -227,7 +234,7 @@ function formatNumber(number) {
 
 function updateSeekBar() {
     currentTimeBar.style.width = (audioElement.currentTime / audioElement.duration) * 100 + '%';
-    currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+    currentTime.textContent = formatTime(audioElement.currentTime);
 }
 
 function getTimelinePosition(clientX) {
@@ -255,12 +262,12 @@ function showTimelineHover(clientX) {
     const { percentage, position, height } = getTimelinePosition(clientX);
     hoverTimeBar.style.width = `${percentage * 100}%`;
     
-    hoverDurationDisplay.textContent = formatDuration(percentage * audioElement.duration);
-    hoverDurationDisplay.style.display = 'block';
-    hoverDurationDisplay.style.bottom = `${height + 6}px`;
+    hoverDuration.textContent = formatDuration(percentage * audioElement.duration);
+    hoverDuration.style.display = 'block';
+    hoverDuration.style.bottom = `${height + 6}px`;
     
     const barRect = durationBar.getBoundingClientRect();
-    const tooltipWidth = hoverDurationDisplay.offsetWidth;
+    const tooltipWidth = hoverDuration.offsetWidth;
     let leftPosition = position - tooltipWidth / 2;
     
     if (leftPosition < 0) leftPosition = 0;
@@ -268,13 +275,13 @@ function showTimelineHover(clientX) {
         leftPosition = barRect.width - tooltipWidth;
     }
     
-    hoverDurationDisplay.style.left = `${leftPosition}px`;
-    hoverDurationDisplay.style.visibility = tooltipWidth ? 'visible' : 'hidden';
+    hoverDuration.style.left = `${leftPosition}px`;
+    hoverDuration.style.visibility = tooltipWidth ? 'visible' : 'hidden';
 }
 
 function clearTimelineHover() {
     hoverTimeBar.style.width = '0';
-    hoverDurationDisplay.style.display = 'none';
+    hoverDuration.style.display = 'none';
 }
 
 function setupMouseDrag(handlerMove) {
@@ -363,7 +370,11 @@ function playAudio() {
 }
 
 function togglePlayPauseState() {
-    audioElement.paused ? playAudio() : pauseAudio();
+    if (audioElement.paused) {
+        playAudio();
+    } else {
+        pauseAudio();
+    }
 }
 
 function handleAudioEnded() {
@@ -482,7 +493,7 @@ audioElement.addEventListener('pause', pauseAudio);
 // ============================================================================
 
 volumeSlider.addEventListener('input', handleVolumeChange);
-volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); })
+volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); });
 
 speedButton.addEventListener('click', changePlaybackSpeed);
 speedButton.addEventListener('wheel', handleSpeedWheel);
@@ -542,4 +553,5 @@ window.addEventListener('pageshow', () => {
 initializeAudioPlayer();
 setupMediaSession();
 
+ 
  

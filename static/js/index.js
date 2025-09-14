@@ -21,26 +21,25 @@ const invertButton = document.getElementById('invertBtn');
 // ============================================================================
 
 const progressBar = document.getElementById('progress');
-const sidebarElement = document.getElementById('sidebar');
-const loaderElement = document.getElementById('loader');
-const mainContainerElement = document.querySelector('.main-container');
-const listGroupElement = document.querySelector('.list-group');
-const backDirectoryButton = document.getElementById('backdir');
+const sidebar = document.getElementById('sidebar');
+const loader = document.getElementById('loader');
+const mainContainer = document.querySelector('.main-container');
+const listGroup = document.querySelector('.list-group');
+const backButton = document.getElementById('backdir');
 const loginButton = document.getElementById('login');
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
 // ============================================================================
 
-const sortByNameButton = document.getElementById('sortName');
-const sortBySizeButton = document.getElementById('sortSize');
-const sortByDateButton = document.getElementById('sortDate');
+const sortByName = document.getElementById('sortName');
+const sortBySize = document.getElementById('sortSize');
+const sortByDate = document.getElementById('sortDate');
 
 // ============================================================================
 // GLOBAL VARIABLES
 // ============================================================================
 
-const bodyElement = document.body;
 const basePath = (location.pathname.replace(/\/$/, '') || '') + '/';
 const selectedItems = new Map();
 let isSelectModeActive = false;
@@ -62,7 +61,7 @@ function updateButtonStates() {
 // ============================================================================
 
 function toggleSidebar() {
-    sidebarElement.classList.toggle('open');
+    sidebar.classList.toggle('open');
 }
 
 // ============================================================================
@@ -111,8 +110,8 @@ function getSelectedURLs() {
 // ============================================================================
 
 function showLoader() {
-    if (loaderElement) loaderElement.style.display = '';
-    if (mainContainerElement) mainContainerElement.style.display = 'none';
+    if (loader) loader.style.display = '';
+    if (mainContainer) mainContainer.style.display = 'none';
 }
 
 // ============================================================================
@@ -135,8 +134,11 @@ function toggleSelectMode() {
     if (!isSelectModeActive) deselectAllItems();
     
     if (selectButton) {
-        selectButton.textContent = isSelectModeActive 
-            ? '❌ Cancel' : '✅ Enable';
+        if (isSelectModeActive) {
+            selectButton.textContent = '❌ Cancel';
+        } else {
+            selectButton.textContent = '✅ Enable';
+        }
     }
     updateButtonStates();
 }
@@ -197,7 +199,7 @@ function downloadURL(url) {
     downloadLink.href = url;
     downloadLink.download = '';
     downloadLink.style.display = 'none';
-    bodyElement.appendChild(downloadLink);
+    document.body.appendChild(downloadLink);
     downloadLink.click();
     downloadLink.remove();
 }
@@ -208,7 +210,12 @@ async function executeDownloads() {
             const itemURL = div.dataset.value;
             if (!itemURL) continue;
             
-            const suffix = div.hasAttribute('isdir') ? '?tar' : '?raw';
+            let suffix;
+            if (div.hasAttribute('isdir')) {
+                suffix = '?tar';
+            } else {
+                suffix = '?raw';
+            }
             downloadURL(itemURL + suffix);
             await delay(100);
         }
@@ -229,9 +236,13 @@ async function executeDeletes() {
         const response = await fetch(div.dataset.value, { method: 'DELETE' });
         
         if (!response.ok) {
-            errorMessage = response.status === 403 ? 'You dont have permission to do that' :
-                          response.status === 404 ? 'That file/folder does not exist' :
-                          'Something went wrong on the server.';
+            if (response.status === 403) {
+                errorMessage = 'You dont have permission to do that';
+            } else if (response.status === 404) {
+                errorMessage = 'That file/folder does not exist';
+            } else {
+                errorMessage = 'Something went wrong on the server.';
+            }
         }
         await delay(100);
     }
@@ -300,9 +311,12 @@ async function pasteFiles() {
     const copyList = JSON.parse(localStorage.getItem('copy') || '[]');
     const moveList = JSON.parse(localStorage.getItem('move') || '[]');
     
-    const pasteOperation = copyList.length ? 
-        { list: copyList, mode: 'COPY' } : 
-        moveList.length ? { list: moveList, mode: 'MOVE' } : {};
+    let pasteOperation = {};
+    if (copyList.length) {
+        pasteOperation = { list: copyList, mode: 'COPY' };
+    } else if (moveList.length) {
+        pasteOperation = { list: moveList, mode: 'MOVE' };
+    }
     
     if (!pasteOperation.list) return;
     
@@ -387,7 +401,12 @@ async function uploadFiles(files, isDirectory) {
 
     for (let i = 0; i < files.length; i++) {
         let file = files[i];
-        let filePath = isDirectory ? file.webkitRelativePath : file.name;
+        let filePath;
+        if (isDirectory) {
+            filePath = file.webkitRelativePath;
+        } else {
+            filePath = file.name;
+        }
         filePath = basePath + encodePath(filePath);
 
         try {
@@ -453,7 +472,7 @@ function enableDragAndDropUpload(dropArea) {
 // ============================================================================
 
 function moveFocus(direction) {
-    const items = Array.from(listGroupElement.children);
+    const items = Array.from(listGroup.children);
     if (items.length === 0) return;
 
     let currentIndex = items.indexOf(document.activeElement);
@@ -472,12 +491,12 @@ function moveFocus(direction) {
 // EVENT LISTENERS - LIST GROUP
 // ============================================================================
 
-listGroupElement.addEventListener('click', event => {
+listGroup.addEventListener('click', event => {
     const clickedItem = event.target.closest('.filename');
     if (clickedItem) handleItemClick(clickedItem);
 });
 
-listGroupElement.addEventListener('keydown', event => {
+listGroup.addEventListener('keydown', event => {
     const focusedItem = event.target.closest('.filename');
     if ((event.key === 'Enter' || event.key === ' ') && focusedItem) {
         event.preventDefault();
@@ -511,8 +530,8 @@ document.addEventListener('keydown', event => {
         case 'arrowright':
             event.preventDefault();
             if (isShiftArrow) {
-                listGroupElement.scrollTo({
-                    left: listGroupElement.scrollWidth, 
+                listGroup.scrollTo({
+                    left: listGroup.scrollWidth, 
                     behavior: 'smooth' 
                 });
             } else {
@@ -522,7 +541,7 @@ document.addEventListener('keydown', event => {
         case 'arrowleft':
             event.preventDefault();
             if (isShiftArrow) {
-                listGroupElement.scrollTo({ 
+                listGroup.scrollTo({ 
                     left: 0, 
                     behavior: 'smooth' 
                 });
@@ -572,13 +591,13 @@ document.addEventListener('keydown', event => {
             window.location.href = '/'; 
             break;
         case '1': 
-            sortByNameButton.click(); 
+            sortByName.click(); 
             break;
         case '2': 
-            sortBySizeButton.click(); 
+            sortBySize.click(); 
             break;
         case '3': 
-            sortByDateButton.click(); 
+            sortByDate.click(); 
             break;
     }
 });

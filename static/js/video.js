@@ -15,20 +15,19 @@ const ANIMATION_START_DELAY = 400;
 // ============================================================================
 
 const volumeControl = document.querySelector('.volume');
-const currentTimeDisplay = document.querySelector('.current-time');
-const durationDisplay = document.querySelector('.duration');
-const bufferDisplay = document.querySelector('.buffer');
-const totalDurationDisplay = document.querySelector('.total-duration');
-const timeContainerDisplay = document.querySelector('.time-container');
-const currentDurationDisplay = document.querySelector('.current-duration');
+const currentTime = document.querySelector('.current-time');
+const duration = document.querySelector('.duration');
+const buffer = document.querySelector('.buffer');
+const totalDuration = document.getElementById('total-duration');
+const currentDuration = document.getElementById('current-duration');
 const controlsContainer = document.querySelector('.controls');
 const volumeSlider = document.getElementById('volume-bar');
-const mainStateDisplay = document.querySelector('.main-state');
-const hoverTimeDisplay = document.querySelector('.hover-time');
-const hoverDurationDisplay = document.querySelector('.hover-duration');
+const mainState = document.querySelector('.main-state');
+const hoverTime = document.querySelector('.hover-time');
+const hoverDuration = document.querySelector('.hover-duration');
 const settingsMenu = document.querySelector('.setting-menu');
 const settingsButton = document.getElementById('settings');
-const menuButtonElements = document.querySelectorAll('.setting-menu li');
+const menuEntries = document.querySelectorAll('.setting-menu li');
 const loadingSpinner = document.querySelector('.custom-loader');
 
 // ============================================================================
@@ -70,7 +69,7 @@ const subtitleCanvas = document.querySelector('canvas');
 const touchInteractionBox = document.getElementById('touch-box');
 const videoElement = document.querySelector('video');
 const videoContainerElement = document.querySelector('.video-container');
-const playbackModeDisplay = document.getElementById('mode');
+const playbackMode = document.getElementById('mode');
 const downloadVideoLink = document.getElementById("download_video");
 const downloadSubtitlesLink = document.getElementById("download_subs");
 
@@ -159,7 +158,7 @@ function initializeVideoPlayer() {
     // Initialize playback mode
     if (currentPlaybackMode != null) {
         currentPlaybackMode = parseInt(currentPlaybackMode);
-        playbackModeDisplay.innerHTML = ['1', '»', '&orarr;'][currentPlaybackMode] || '1';
+        playbackMode.innerHTML = ['1', '»', '&orarr;'][currentPlaybackMode] || '1';
     } else {
         currentPlaybackMode = 0;
     }
@@ -173,7 +172,7 @@ function waitForVideoReady() {
     playVideo();
     if (videoElement.paused) pauseVideo();
     
-    totalDurationDisplay.innerHTML = formatDuration(videoElement.duration);
+    totalDuration.innerHTML = formatDuration(videoElement.duration);
     videoElement.ontimeupdate = updateProgressBar;
     videoElement.onended = handleVideoEnded;
     
@@ -289,12 +288,16 @@ function navigateToPrevious() {
 function changePlaybackMode() {
     const playbackModes = ['1', '»', '&orarr;'];
     currentPlaybackMode = (currentPlaybackMode + 1) % 3;
-    playbackModeDisplay.innerHTML = playbackModes[currentPlaybackMode];
+    playbackMode.innerHTML = playbackModes[currentPlaybackMode];
     localStorage.setItem('videoMode', currentPlaybackMode);
 }
 
 function togglePlayPauseState() {
-    videoElement.paused ? playVideo() : pauseVideo();
+    if (videoElement.paused) {
+        playVideo();
+    } else {
+        pauseVideo();
+    }
 }
 
 function playVideo() {
@@ -314,7 +317,7 @@ function pauseVideo() {
     updateVideoIcon();
     
     if (videoElement.ended) {
-        currentTimeDisplay.style.width = '100%';
+        currentTime.style.width = '100%';
     }
 }
 
@@ -333,8 +336,8 @@ function handleVideoEnded() {
 // ============================================================================
 
 function updateProgressBar() {
-    currentTimeDisplay.style.width = (videoElement.currentTime / videoElement.duration) * 100 + '%';
-    currentDurationDisplay.innerHTML = formatDuration(videoElement.currentTime);
+    currentTime.style.width = (videoElement.currentTime / videoElement.duration) * 100 + '%';
+    currentDuration.innerHTML = formatDuration(videoElement.currentTime);
 }
 
 function formatDuration(timeInSeconds) {
@@ -370,8 +373,6 @@ function toggleMuteState() {
         updateVideoIcon();
         showMainStateAnimation('unmute');
     }
-    
-    timeContainerDisplay.style.display = 'block';
     localStorage.setItem('videoMuted', videoElement.muted);
 }
 
@@ -404,8 +405,8 @@ function hideControlsWithDelay(delay) {
             controlsContainer.classList.remove('show');
             settingsMenu.classList.remove('show');
             
-            for (let i = 0; i < menuButtonElements.length; i++) {
-                menuButtonElements[i].style.display = 'block';
+            for (let i = 0; i < menuEntries.length; i++) {
+                menuEntries[i].style.display = 'block';
             }
             
             document.activeElement.blur();
@@ -467,7 +468,7 @@ function getChapterNameAtTime(timeInSeconds) {
 }
 
 function getTimelinePosition(clientX) {
-    const { x, width, height } = durationDisplay.getBoundingClientRect();
+    const { x, width, height } = duration.getBoundingClientRect();
     const position = Math.min(Math.max(0, clientX - x), width);
     return { 
         percentage: position / width, 
@@ -504,18 +505,22 @@ function setupTimelineChapters() {
 
 function showTimelineHover(clientX) {
     const { percentage, position, height } = getTimelinePosition(clientX);
-    hoverTimeDisplay.style.width = `${percentage * 100}%`;
+    hoverTime.style.width = `${percentage * 100}%`;
     
-    const hoverTime = percentage * videoElement.duration;
-    const timeString = formatDuration(hoverTime);
-    const chapterName = getChapterNameAtTime(hoverTime);
+    const time = percentage * videoElement.duration;
+    const timeString = formatDuration(time);
+    const chapterName = getChapterNameAtTime(time);
     
-    hoverDurationDisplay.innerHTML = chapterName ? `${timeString}<br>${chapterName}` : timeString;
-    hoverDurationDisplay.style.display = 'block';
-    hoverDurationDisplay.style.bottom = `${height + 8}px`;
+    if (chapterName) {
+        hoverDuration.innerHTML = `${timeString}<br>${chapterName}`;
+    } else {
+        hoverDuration.innerHTML = timeString;
+    }
+    hoverDuration.style.display = 'block';
+    hoverDuration.style.bottom = `${height + 8}px`;
     
-    const barRect = durationDisplay.getBoundingClientRect();
-    const tooltipWidth = hoverDurationDisplay.offsetWidth;
+    const barRect = duration.getBoundingClientRect();
+    const tooltipWidth = hoverDuration.offsetWidth;
     let leftPosition = position - tooltipWidth / 2;
     
     if (leftPosition < 0) leftPosition = 0;
@@ -523,13 +528,17 @@ function showTimelineHover(clientX) {
         leftPosition = barRect.width - tooltipWidth;
     }
     
-    hoverDurationDisplay.style.left = `${leftPosition}px`;
-    hoverDurationDisplay.style.visibility = tooltipWidth ? 'visible' : 'hidden';
+    hoverDuration.style.left = `${leftPosition}px`;
+    if (tooltipWidth) {
+        hoverDuration.style.visibility = 'visible';
+    } else {
+        hoverDuration.style.visibility = 'hidden';
+    }
 }
 
 function clearTimelineHover() {
-    hoverTimeDisplay.style.width = '0';
-    hoverDurationDisplay.style.display = 'none';
+    hoverTime.style.width = '0';
+    hoverDuration.style.display = 'none';
 }
 
 function setupMouseDrag(handlerMove) {
@@ -567,35 +576,35 @@ function showMainStateAnimation(animationMode) {
     switch (animationMode) {
         case 'play':
             mainStatePlayIcon.style.display = 'block';
-            mainStateDisplay.classList.add('show');
+            mainState.classList.add('show');
             break;
         case 'pause':
             mainStatePauseIcon.style.display = 'block';
-            mainStateDisplay.classList.add('show');
+            mainState.classList.add('show');
             break;
         case 'mute':
             mainStateMuteIcon.style.display = 'block';
-            mainStateDisplay.classList.add('show');
+            mainState.classList.add('show');
             break;
         case 'unmute':
             mainStateUnmuteIcon.style.display = 'block';
-            mainStateDisplay.classList.add('show');
+            mainState.classList.add('show');
             break;
         case 'back':
             mainStateBackIcon.style.display = 'block';
-            mainStateDisplay.classList.add('show');
+            mainState.classList.add('show');
             break;
         case 'fordward':
             mainStateForwardIcon.style.display = 'block';
-            mainStateDisplay.classList.add('show');
+            mainState.classList.add('show');
             break;
         case 'show_vol':
             mainStateVolumeIcon.innerText = Math.round(videoElement.volume * 100) + '%';
             mainStateVolumeIcon.style.display = 'block';
-            mainStateDisplay.classList.add('show');
+            mainState.classList.add('show');
             break;
         default:
-            mainStateDisplay.classList.remove('show');
+            mainState.classList.remove('show');
             return;
     }
     
@@ -667,9 +676,7 @@ function loadAudioTracks() {
                 audioTracksSelector.selectedIndex = 0;
             }
         }
-    } catch (error) {
-zz
-    }
+    } catch (error) {}
 }
 
 function changeAudioTrack(selectedIndex) {
@@ -857,22 +864,20 @@ controlsContainer.addEventListener('click', () => {
 
 volumeControl.addEventListener('mouseenter', () => {
     clearTimeout(volumeHideTimeout);
-    if (!videoElement.muted) {
-        timeContainerDisplay.style.display = 'none';
+    if (videoElement.muted) {
+        volumeSlider.classList.remove('show');
+    } else {
+        volumeSlider.classList.add('show');
     }
-    videoElement.muted ? volumeSlider.classList.remove('show') : volumeSlider.classList.add('show');
 });
 
 volumeControl.addEventListener('mouseleave', () => {
     clearTimeout(volumeHideTimeout);
     volumeSlider.classList.remove('show');
-    volumeHideTimeout = setTimeout(() => {
-        timeContainerDisplay.style.display = 'block';
-    }, 100);
 });
 
 volumeSlider.addEventListener('input', handleVolumeChange);
-volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); })
+volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); });
 
 // ============================================================================
 // EVENT LISTENERS - SETTINGS
@@ -1003,11 +1008,11 @@ downloadListItem.addEventListener('keydown', (event) => {
 // EVENT LISTENERS - TIMELINE
 // ============================================================================
 
-durationDisplay.addEventListener('mousedown', (event) => {
+duration.addEventListener('mousedown', (event) => {
     setupMouseDrag(moveEvent => updateVideoTime(getTimelinePosition(moveEvent.clientX).percentage));
 });
 
-durationDisplay.addEventListener('touchstart', (event) => {
+duration.addEventListener('touchstart', (event) => {
     setupTouchDrag(moveEvent => updateVideoTime(getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage));
 });
 
@@ -1016,16 +1021,16 @@ document.addEventListener('touchstart', () => {
     clearTimelineHover();
 }, { passive: true });
 
-durationDisplay.addEventListener('mousemove', (event) => {
+duration.addEventListener('mousemove', (event) => {
     if (!touchHoverActive) showTimelineHover(event.clientX);
 });
 
-durationDisplay.addEventListener('mouseleave', () => {
+duration.addEventListener('mouseleave', () => {
     touchHoverActive = false;
     clearTimelineHover();
 });
 
-durationDisplay.addEventListener('click', (event) => {
+duration.addEventListener('click', (event) => {
     updateVideoTime(getTimelinePosition(event.clientX).percentage);
 });
 
@@ -1038,7 +1043,7 @@ document.addEventListener('keydown', (event) => {
     
     if (event.key.match(/[0-9]/gi)) {
         videoElement.currentTime = (videoElement.duration / 100) * (parseInt(event.key) * 10);
-        currentTimeDisplay.style.width = parseInt(event.key) * 10 + '%';
+        currentTime.style.width = parseInt(event.key) * 10 + '%';
         return;
     }
     
@@ -1047,7 +1052,11 @@ document.addEventListener('keydown', (event) => {
             if (document.activeElement === document.body) {
                 event.preventDefault();
                 if (event.repeat) break;
-                videoElement.paused ? playVideo() : pauseVideo();
+                if (videoElement.paused) {
+                    playVideo();
+                } else {
+                    pauseVideo();
+                }
             }
             break;
         case 'arrowright':
@@ -1092,4 +1101,5 @@ document.addEventListener('keydown', (event) => {
 
 initializeVideoPlayer();
 
+ 
  

@@ -6,37 +6,51 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    height: 100vh;
     height: 100dvh;
     background: black;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent !important;
     -webkit-user-select: none;
     user-select: none;
 }
 
 /* -------------------------
-   Subtitle styles
-   ------------------------- */
+ *   Subtitle styles
+ * ------------------------- */
 
 video::cue {
     background: none !important;
     line-height: 1.1 !important;
     text-shadow: 0.07em 0.07em 0.05em black, -0.07em 0.07em 0.05em black,
-                 0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
-                 0.07em 0 0.05em black, -0.07em 0 0.05em black,
-                 0 0.07em 0.05em black, 0 -0.07em 0.05em black !important;
+    0.07em -0.07em 0.05em black, -0.07em -0.07em 0.05em black,
+    0.07em 0 0.05em black, -0.07em 0 0.05em black,
+    0 0.07em 0.05em black, 0 -0.07em 0.05em black !important;
 }
 /* Dont cut the bottom of the bottom subtitles */
 video::-webkit-media-text-track-display { padding: 0.25em !important; }
 /* Dont fucking show native video controls */
-video::-webkit-media-controls, 
+video::-webkit-media-controls,
 video::-moz-media-controls { display: none !important; }
 
 /* -------------------------
-   Main structure
-   ------------------------- */
+ *   Pointer config
+ * ------------------------- */
+
+img, .main-state, .controls,
+.hover-time .hover-duration {
+    pointer-events: none;
+}
+.side-controls, .duration {
+    pointer-events: auto;
+}
+
+/* -------------------------
+ *   Main structure
+ * ------------------------- */
 
 .video-container {
     width: 90vw;
+    height: 90vh;
     height: 90dvh;
     color: white;
     overflow: hidden;
@@ -50,31 +64,34 @@ video::-moz-media-controls { display: none !important; }
     height: 100%;
 }
 .controls {
-    bottom: 0;
     width: 100%;
+    height: 100%;
     position: absolute;
     box-sizing: border-box;
-    padding: 0 12px 8px 12px;
+    padding: 0 12px;
 }
 
 /* -------------------------
-   Controls bar
-   ------------------------- */
+ *   Controls bar
+ * ------------------------- */
 
 .time-container {
+    gap: 3px;
+    left: 50%;
+    display: flex;
     font-size: 13px;
-    padding-right: 16px;
+    position: absolute;
+    transform: translateX(-50%);
 }
-.time-container span {
-    display: inline-block;
+.time-container > span {
     padding: 2px;
     padding-left: 3px;
-    padding-right: 3px;
+    padding-right: 4px;
     border-radius: 5px;
     box-shadow: none !important;
 }
 .btn-controls {
-    margin-top: 10px;
+    margin-top: 4px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -85,42 +102,38 @@ video::-moz-media-controls { display: none !important; }
 }
 
 /* -------------------------
-   Buttons + svg
-   ------------------------- */
+ *   Buttons + svg
+ * ------------------------- */
 
 .round-button {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     color: white;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box;
-    position: relative;
     margin: 0 4px;
     cursor: pointer;
     flex-shrink: 0;
 }
 img {
-    pointer-events: none;
     width: 20px;
     height: 20px;
     display: inline-block;
     vertical-align: middle;
-    filter: brightness(0) invert(1);
 }
 
 /* -------------------------
-   Main state (show status)
-   ------------------------- */
+ *   Main state (show status)
+ * ------------------------- */
 
 .main-state {
     opacity: 0;
     transform: scale(0);
-    height: 75px;
-    width: 75px;
+    height: 70px;
+    width: 70px;
     position: absolute;
     cursor: pointer;
     border-radius: 50%;
@@ -133,45 +146,46 @@ img {
     opacity: 0.8;
     transform: scale(1);
 }
-.main-state img {
+.main-state > img {
     width: 67%;
     height: 67%;
 }
 
 /* -------------------------
-   Main time bar
-   ------------------------- */
+ *   Main time bar
+ * ------------------------- */
 
 .duration {
-    position: relative;
+    height: 8px;
     margin: 0 auto;
-    width: calc(100% - 64px);
-    height: 6px;
     cursor: pointer;
     border-radius: 4px;
+    position: absolute;
+    inset: auto 0 20px;
+    width: calc(100% - 64px);
 }
 .duration::before {
     content: "";
-    position: absolute;
     width: 100%;
     height: 100%;
+    position: absolute;
     border-radius: inherit;
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
 .duration::after {
     content: "";
-    position: absolute;
     top: 50%;
     left: 50%;
-    width: calc(100% + 32px);
     height: 200%;
+    position: absolute;
+    width: calc(100% + 32px);
     transform: translate(-50%, -50%);
 }
 
 /* -------------------------
-   Time bar current time
-   ------------------------- */
+ *   Time bar current time
+ * ------------------------- */
 
 .current-time {
     width: 0;
@@ -202,8 +216,8 @@ img {
 }
 
 /* -------------------------
-   Hover time & Show info
-   ------------------------- */
+ *   Hover time & Show info
+ * ------------------------- */
 
 .hover-time {
     width: 0;
@@ -224,12 +238,12 @@ img {
     visibility: hidden;
     font-weight: bold;
     text-align: center;
-    pointer-events: none;
+    z-index: 1;
 }
 
 /* -------------------------
-   Time bar chapters
-   ------------------------- */
+ *   Time bar chapters
+ * ------------------------- */
 
 .chapter-container {
     position: relative;
@@ -240,15 +254,16 @@ img {
 .chapter {
     position: absolute;
     height: 100%;
-    width: 2px;
+    width: 3px;
     margin-left: -1px;
     background-color: black;
-    z-index: 2;
+    box-shadow: 0 0 1px white;
+    z-index: 1;
 }
 
 /* -------------------------
-   Sound control
-   ------------------------- */
+ *   Sound control
+ * ------------------------- */
 
 .volume {
     display: flex;
@@ -260,6 +275,7 @@ img {
 }
 #volume-bar {
     height: 4px;
+    outline: none;
     cursor: pointer;
     border-radius: 3px;
     visibility: hidden;
@@ -268,8 +284,7 @@ img {
     transition: all 0.1s;
     -webkit-appearance: none;
     appearance: none;
-    outline: none;
-    border: 1px solid #333;
+    box-shadow: 0 0 3px black;
 }
 #volume-bar::-webkit-slider-thumb {
     width: 10px;
@@ -294,45 +309,55 @@ img {
 }
 
 /* -------------------------
-   Option list
-   ------------------------- */
+ *   Option list
+ * ------------------------- */
 
 .setting-menu {
+    position: absolute;
     opacity: 0;
-    visibility: hidden;
-    list-style: none;
     padding: 0;
     margin: 0;
-    position: absolute;
-    bottom: 76px;
-    transition: all 0.2s;
+    right: -20%;
+    top: 40px;
+    max-height: 50vh;
+    max-height: 50dvh;
+    overflow: auto;
+    visibility: hidden;
+    list-style: none;
+    transition: transform 0.2s;
     transform: scaleY(0);
-    transform-origin: bottom;
+    transform-origin: top;
     border-radius: 12px;
-    margin-left: -50px;
 }
 .setting-menu.show {
     opacity: 1;
     transform: scaleY(1);
     visibility: visible;
 }
-.setting-menu li {
-    padding: 0.33rem 0.5rem;
+.setting-menu > li {
+    padding: 0.25rem 0.4rem;
     margin: 0.25rem;
     border-radius: 8px;
-    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     color: white;
 }
-.setting-menu li:nth-child(-n+3):focus-within { outline: auto; }
-.setting-menu li:nth-child(1)::before { content: "Subs"; position: absolute; }
-.setting-menu li:nth-child(2)::before { content: "Tracks"; position: absolute; }
-.setting-menu li:nth-child(3)::before { content: "Speed"; position: absolute; }
+.setting-menu > li:nth-child(-n+3):focus-within {
+    outline: auto;
+}
+.setting-menu > li:nth-child(1)::before {
+    content: "Subs"; position: absolute;
+}
+.setting-menu > li:nth-child(2)::before {
+    content: "Tracks"; position: absolute;
+}
+.setting-menu > li:nth-child(3)::before {
+    content: "Speed"; position: absolute;
+}
 
 /* -------------------------
-   Override select styles
-   ------------------------- */
+ *   Override select styles
+ * ------------------------- */
 
 select {
     position: relative;
@@ -344,6 +369,7 @@ select {
     width: 70px;
     opacity: 0;
     border: none;
+    line-height: 1;
 }
 select option {
     background: #363a43;
@@ -351,8 +377,8 @@ select option {
 }
 
 /* -------------------------
-   Loading animation
-   ------------------------- */
+ *   Loading animation
+ * ------------------------- */
 
 .custom-loader {
     width: 108px;
@@ -371,8 +397,8 @@ select option {
 }
 
 /* -------------------------
-   Full screen control
-   ------------------------- */
+ *   Full screen control
+ * ------------------------- */
 
 .fullscreen {
     position: absolute !important;
@@ -386,8 +412,8 @@ select option {
 }
 
 /* -------------------------
-   Button transparency style
-   ------------------------- */
+ *   Transparent style
+ * ------------------------- */
 
 .duration::before, .main-state, .time-container span,
 .round-button, .setting-menu, .hover-duration {
@@ -398,11 +424,11 @@ select option {
 }
 
 /* -------------------------
-   Show/hide button controls
-   ------------------------- */
+ *   Show/hide button controls
+ * ------------------------- */
 
 /* Just to animate with Opacity but
-WITHOUT BREAKING the backdrop-filter */
+ *WITHOUT BREAKING the backdrop-filter */
 .time-container span, .round-button,
 .duration::before, .duration * {
     opacity: 0;
@@ -414,14 +440,14 @@ WITHOUT BREAKING the backdrop-filter */
 .controls.show .duration * {
     opacity: 1;
 }
-.chapter-container, .duration .current-time,
-.duration .hover-time {
+.chapter-container, .duration .hover-time,
+.duration .current-time {
     transition: none !important;
 }
 
 /* -------------------------
-   Other
-   ------------------------- */
+ *   Other
+ * ------------------------- */
 
 .vol_val_st { font-size: 1.3rem; }
 .full, .contract { display: none; }
@@ -430,11 +456,12 @@ WITHOUT BREAKING the backdrop-filter */
 .lmbsl { background: #8f9f3030 !important; }
 .video-box, .video-container { position: relative; }
 canvas { position: absolute; }
+.settings { position: relative; }
 
 
 /* -------------------------
-   Responsive rules
-   ------------------------- */
+ *   Responsive
+ * ------------------------- */
 
 @media (max-width: 900px) {
     .main-state {
@@ -446,38 +473,26 @@ canvas { position: absolute; }
         width: 90px;
     }
 }
-@media (max-width: 520px) {
-    .play-pause {
-        display: none;
+@media (max-width: 600px) {
+    .duration {
+        bottom: 10px;
+    }
+    .time-container {
+        bottom: 23px;
     }
 }
-@media (max-width: 470px) {
-    .time-container {
-        margin-bottom: 8px;
-        padding-right: 0;
-    }
+@media (max-width: 500px) {
+    .play-pause,
     .volume {
         display: none;
     }
     .btn-controls {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-    }
-    .setting-menu {
-        bottom: 104px;
+        justify-content: center;
     }
 }
 @media (max-width: 320px) {
     .duration {
         width: 90%;
-    }
-    #mode {
-        display: none;
-    }
-    .main-state {
-        height: 40px;
-        width: 40px;
     }
     .custom-loader {
         height: 56px;
@@ -485,33 +500,36 @@ canvas { position: absolute; }
         border-width: 5px;
     }
 }
-@media (max-width: 220px) {
-    .settings {
+@media (max-width: 250px) {
+    #mode {
         display: none;
     }
 }
-@media (max-height: 320px) {
+@media (max-width: 200px) {
+    #settings,
+    .setting-menu {
+        display: none;
+    }
+}
+
+/* -------------------------
+ *   Responsive (hide)
+ * ------------------------- */
+
+@media (max-height: 200px) or (max-width: 150px) {
     .btn-controls {
         display: none;
     }
-    .video-box, .main-state, .custom-loader {
-        margin-bottom: 8px !important;
-    }
 }
-@media (max-aspect-ratio: 1/1) {
-    .video-box, .main-state, .custom-loader {
-        margin-bottom: 30px;
-    }
-}
-@media ((max-width: 160px) or (max-height: 160px)) {
+@media (max-height: 120px) or (max-width: 120px) {
     .video-container {
         display: none;
     }
 }
 
 /* -------------------------
-   Disable hover when touch
-   ------------------------- */
+ *   Disable hover when touch
+ * ------------------------- */
 
 @media (hover: hover) {
     .setting-menu li:hover, .round-button:hover {
@@ -519,3 +537,4 @@ canvas { position: absolute; }
     }
 }
 
+ 

@@ -15,22 +15,23 @@ body {
 }
 
 /* -------------------------
-   Text & scrollbar
-   ------------------------- */
+ *   Text & scrollbar
+ * ------------------------- */
 
-.size  { margin-left: 3em; }
-.date  { margin-left: 1em; }
-.time  { margin-left: 0.5em; }
-
-.size,.capacity,.time,.date { font-size: 15px; }
-.time,.date { font-family: monospace; }
+ .time { margin-left: 0.5em; }
+ .size { 
+     margin-left: 3em;
+     margin-right: 0.33em;
+ }
+.size,.capacity,.time { font-size: 15px; }
+.time { font-family: monospace; }
 
 ::-webkit-scrollbar-thumb { background: #555; }
 ::-webkit-scrollbar-track { background: #1e1e1e; }
 
 /* -------------------------
-   Shared
-   ------------------------- */
+ *   Shared
+ * ------------------------- */
 img {
     pointer-events: none;
     width: 16px;
@@ -46,57 +47,50 @@ pre {
 }
 
 /* -------------------------
-   Sidebar container
-   ------------------------- */
+ *   Sidebar container
+ * ------------------------- */
 
 #sidebar {
-    flex: 0 0 auto; 
-    display: flex;
-    width: 140px;
+    z-index: 1;
     padding-top: 8px;
+    display: flex;
+    width: fit-content;
     flex-direction: column;
     background: #2a2a2a;
     border-right: 1px solid #444;
-    box-shadow: 2px 0 4px #0007;
+    box-shadow: 2px 0 4px #0008;
     transition: transform .3s;
-    z-index: 10;
 }
-#sidebar.hidden { transform: translateX(-100%); }
-
-/* -------------------------
-   Sidebar toggle
-   ------------------------- */
 
 .sidebar-toggle {
+    height: 45px;
+    width: 20px;
     display: none;
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
     cursor: pointer;
-    background: #333e;
-    border: 1px solid #444;
-    border-radius: 50%;
-    align-content: center;
+    position: absolute;
+    background: #2348;
+    inset: 50% 0 auto auto;
+    transform: translate(100%, -50%);
+    border-radius: 0 8px 8px 0;
+    box-shadow: 1px 0 4px #000a;
+    align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px #0007;
-}
-.sidebar-toggle img {
-    width: 24px;
-    height: auto;
-    filter: invert(90%);
 }
 
 /* -------------------------
-   Sidebar content
-   ------------------------- */
+ *   Sidebar content
+ * ------------------------- */
 
 .sidebar-content {
     padding: 6px;
     overflow-y: auto;
 }
-.sidebar-section { margin-bottom: 12px; }
+.sidebar-section {
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
 .sidebar-section h3 {
     margin: 0 0 6px;
     padding: 3px 6px;
@@ -110,14 +104,15 @@ pre {
 }
 
 /* -------------------------
-   Sidebar buttons
-   ------------------------- */
+ *   Sidebar buttons
+ * ------------------------- */
 
 .sidebar-content button {
     width: 100%;
+    white-space: nowrap;
     text-align: left;
     padding: 8px;
-    margin: 1px 0;
+    padding-right: 12px;
     border: none;
     border-radius: 8px;
     font-size: 14px;
@@ -133,8 +128,8 @@ pre {
 }
 
 /* -------------------------
-   Main layout / content
-   ------------------------- */
+ *   Main layout / content
+ * ------------------------- */
 
 .main-container {
     display: flex;
@@ -159,8 +154,8 @@ pre {
 }
 
 /* -------------------------
-   Path bar
-   ------------------------- */
+ *   Path bar
+ * ------------------------- */
 
 .path-bar {
     display: flex;
@@ -181,7 +176,6 @@ pre {
 .path-bar button img {
     width: auto;
     height: 100%;
-    filter: invert(75%);
 }
 .path-title {
     flex: 1;
@@ -200,8 +194,8 @@ pre {
 }
 
 /* -------------------------
-   File item
-   ------------------------- */
+ *   File item
+ * ------------------------- */
 
 .filename {
     display: flex;
@@ -212,7 +206,7 @@ pre {
     border: 1px solid transparent;
     border-radius: 8px;
 }
-.filename:focus-visible { 
+.filename:focus-visible {
     outline: 1px solid white;
 }
 .selected {
@@ -226,8 +220,8 @@ pre {
 }
 
 /* -------------------------
-   Loading/Uploading screen
-   ------------------------- */
+ *   Loading/Uploading screen
+ * ------------------------- */
 
 .load_container {
     height: 100vh;
@@ -268,8 +262,8 @@ pre {
 }
 
 /* -------------------------
-   Keyframes
-   ------------------------- */
+ *   Keyframes
+ * ------------------------- */
 
 @keyframes fadeIn { from{opacity:0} to{opacity:1} }
 @keyframes textFade { from{opacity:.7} to{opacity:1} }
@@ -280,37 +274,15 @@ pre {
 }
 
 /* -------------------------
-   File type icons
-   ------------------------- */
+ *   Responsive
+ * ------------------------- */
 
-.folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) }
-.files { filter: brightness(0) invert(1); }
-.pdf { filter: invert(25%) sepia(100%) hue-rotate(-50deg) saturate(1000%); }
-.doc { filter: brightness(300%) contrast(75%); }
-.pp { filter: invert(25%) sepia(100%) saturate(500%); }
-.src { filter: invert(67%) sepia(25%); }
-.zip { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(3000%) brightness(50%); }
-.disk { filter: brightness(0) invert(1) brightness(67%); }
-.iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
-
-/* -------------------------
-   Responsive
-   ------------------------- */
-
-@media (max-width:200px) { 
-    .main-container { 
-        display: none;
-    }
-    .load_container { 
-        display: none;
-    }
-}
 @media (max-width:1200px) {
-    .filename { 
+    .filename {
         min-width: calc(100% + 256px);
     }
 }
-@media (max-width:400px) { 
+@media (max-width:400px) {
     .filename {
         min-width: calc(100% + 512px);
     }
@@ -320,6 +292,9 @@ pre {
         inset: 0;
         position: fixed;
         transform: translateX(-100%);
+        -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
+        backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
+        background: transparent;
     }
     .sidebar-toggle {
         display: flex;
@@ -335,21 +310,29 @@ pre {
 }
 
 /* -------------------------
-   Disable hover when touch
-   ------------------------- */
+ *   Hide if screen too small
+ * ------------------------- */
+
+@media (max-width:200px) or (max-height: 120px) {
+    .main-container,
+    .load_container { 
+        display: none;
+    }
+}
+
+/* -------------------------
+ *   Disable hover when touch
+ * ------------------------- */
 
 @media (hover:hover) {
     .filename:hover {
         background: #2a2a2a;
         border-color: #555;
     }
-    .sidebar-content 
+    .sidebar-content
     button:not(:disabled):hover {
         background: #444a;
     }
-    .sidebar-toggle:hover {
-        background: #444e !important;
-        border: none !important;
-    }
 }
 
+ 

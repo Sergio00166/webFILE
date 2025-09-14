@@ -48,8 +48,8 @@ button {
 }
 
 /* -------------------------
-   Main structure
-   ------------------------- */
+ *   Main structure
+ * ------------------------- */
 
 .player-header {
     display: flex;
@@ -93,8 +93,8 @@ button {
 }
 
 /* -------------------------
-   Time / progress bar
-   ------------------------- */
+ *   Time / progress bar
+ * ------------------------- */
 
 /* Text time displays */
 #current-time,
@@ -139,8 +139,8 @@ button {
 }
 
 /* -------------------------
-   Hover time show
-   ------------------------- */
+ *   Hover time show
+ * ------------------------- */
 
 .hover-time {
     width: 0;
@@ -189,8 +189,8 @@ button {
 }
 
 /* -------------------------
-   Buttons block
-   ------------------------- */
+ *   Buttons block
+ * ------------------------- */
 
 #play-pause {
     background: #def3;
@@ -199,7 +199,6 @@ button {
     transition: background-color 0.2s;
 }
 #play-pause img {
-    filter: invert(1);
     width: 24px;
     height: 24px;
 }
@@ -210,8 +209,8 @@ button {
     line-height: 1;
 }
 .nav-btn {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
 }
 .extra-controls button {
@@ -220,8 +219,8 @@ button {
 }
 
 /* -------------------------
-   Volume controls
-   ------------------------- */
+ *   Volume controls
+ * ------------------------- */
 
 .volume-control {
     width: 90%;
@@ -234,9 +233,6 @@ button {
     width: 24px;
     height: 24px;
     cursor: pointer;
-}
-.vol-icons img {
-    filter: invert(0.9);
 }
 #volume-bar {
     flex: 1;
@@ -265,9 +261,10 @@ button {
     box-shadow: 0 0 3px black;
 }
 
+
 /* -------------------------
-   Responsive rules
-   ------------------------- */
+ *   Responsive rules
+ * ------------------------- */
 
 @media (max-width: 300px) {
     .audio-player {
@@ -280,10 +277,8 @@ button {
     }
 }
 @media (max-width: 250px) {
+    #total-time,
     #current-time,
-    #total-time {
-        display: none;
-    }
     .volume-control,
     .extra-controls {
         display: none;
@@ -301,40 +296,35 @@ button {
         justify-content: center;
     }
 }
-@media (max-width: 120px) {
-    .audio-player {
-        display: none;
+@media (max-height: 400px) or (max-width: 400px) {
+    .player-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
-
 @media (max-height: 280px) {
-    .volume-control {
-        display: none;
-    }
+    .volume-control,
     .extra-controls {
         display: none;
     }
 }
-@media (max-height: 190px) {
-    .time-bar {
-        display: none;
-    }
+@media (max-height: 190px) or (max-width: 160px) {
+    .time-bar,
     .player-header {
         display: none;
     }
-    .playback-controls {
-        margin: 0;
-    }
 }
-@media (max-height: 110px) {
+@media (max-height: 120px) or (max-width: 120px) {
     .audio-player {
         display: none;
     }
 }
 
 /* -------------------------
-   Disable hover when touch
-   ------------------------- */
+ *   Disable hover when touch
+ * ------------------------- */
+
 @media (hover: hover) {
     .nav-btn:hover img,
     .extra-controls button:hover img {
@@ -349,3 +339,4 @@ button {
     }
 }
 
+ 

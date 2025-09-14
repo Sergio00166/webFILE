@@ -81,6 +81,7 @@ def serveRoot_page(ACL, root, folder_size, useApi):
         return "Method not allowed", 405
     path = safe_path("", root)  # Check if we can access it
     sort = request.args["sort"] if "sort" in request.args else ""
+
     if "tar" in request.args: return send_dir(path, root, ACL, "index")
     return directory(path, root, folder_size, sort, ACL, useApi)
 

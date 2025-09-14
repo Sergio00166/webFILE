@@ -9,9 +9,6 @@ from video import get_chapters, get_info
 from random import choice
 from explorer import *
 
-# Function to compress HTML output without modifying contents
-minify = lambda stream: ("".join(map(str.strip, x.split("\n"))) for x in stream)
-
 
 def redirect_no_query():
     parsed_url = urlparse(request.url)
@@ -105,9 +102,9 @@ def directory(path, root, folder_size, sort, ACL, useApi):
         return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
     else:
         humanize_all(folder_content)  # The arg is a reference
-        return minify(stream_template(
+        return stream_template(
             "index.html", folder_content=folder_content,
             folder_path=folder_path, sort=sort
-        ))
+        )
 
  
