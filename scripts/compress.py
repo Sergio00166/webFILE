@@ -9,6 +9,7 @@ Run it before deploying.
 from re import split as re_split
 from re import sub as re_sub
 from glob import glob
+from sys import path
 
 
 def _strip_comments(src):
@@ -92,8 +93,8 @@ def process_files(pattern, compressor):
 
 
 if __name__ == '__main__':
-    process_files("../static/css/*.css", compress_css)
-    process_files("../static/js/*.js", compress_js)
-    process_files("../templates/*.html", compress_html)
+    process_files(path[0] + "/static/css/*.css", compress_css)
+    process_files(path[0] + "/static/js/*.js", compress_js)
+    process_files(path[0] + "/templates/*.html", compress_html)
 
 
