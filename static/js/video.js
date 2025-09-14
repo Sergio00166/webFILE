@@ -861,7 +861,7 @@ volumeControl.addEventListener('mouseleave', () => {
 });
 
 volumeSlider.addEventListener('input', handleVolumeChange);
-volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); })
+volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); });
 
 // ============================================================================
 // EVENT LISTENERS - SETTINGS
