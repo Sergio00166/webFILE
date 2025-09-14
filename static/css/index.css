@@ -18,12 +18,13 @@ body {
  *   Text & scrollbar
  * ------------------------- */
 
-.size  { margin-left: 3em; }
-.date  { margin-left: 1em; }
-.time  { margin-left: 0.5em; }
-
-.size,.capacity,.time,.date { font-size: 15px; }
-.time,.date { font-family: monospace; }
+ .time { margin-left: 0.5em; }
+ .size { 
+     margin-left: 3em;
+     margin-right: 0.33em;
+ }
+.size,.capacity,.time { font-size: 15px; }
+.time { font-family: monospace; }
 
 ::-webkit-scrollbar-thumb { background: #555; }
 ::-webkit-scrollbar-track { background: #1e1e1e; }
@@ -61,11 +62,10 @@ pre {
     transition: transform .3s;
 }
 
-.sidebar-toggle-notch {
+.sidebar-toggle {
     height: 45px;
     width: 20px;
     display: none;
-    font-size: 24px;
     cursor: pointer;
     position: absolute;
     background: #2348;
@@ -176,7 +176,6 @@ pre {
 .path-bar button img {
     width: auto;
     height: 100%;
-    filter: invert(75%);
 }
 .path-title {
     flex: 1;
@@ -275,20 +274,6 @@ pre {
 }
 
 /* -------------------------
- *   File type icons
- * ------------------------- */
-
-.folder { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(2500%) }
-.files { filter: brightness(0) invert(1); }
-.pdf { filter: invert(25%) sepia(100%) hue-rotate(-50deg) saturate(1000%); }
-.doc { filter: brightness(300%) contrast(75%); }
-.pp { filter: invert(25%) sepia(100%) saturate(500%); }
-.src { filter: invert(67%) sepia(25%); }
-.zip { filter: invert(48%) sepia(79%) hue-rotate(86deg) saturate(3000%) brightness(50%); }
-.disk { filter: brightness(0) invert(1) brightness(67%); }
-.iso { filter: invert(33%) sepia(1) hue-rotate(192deg) saturate(1000%); }
-
-/* -------------------------
  *   Responsive
  * ------------------------- */
 
@@ -311,7 +296,7 @@ pre {
         backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
         background: transparent;
     }
-    .sidebar-toggle-notch {
+    .sidebar-toggle {
         display: flex;
     }
     #sidebar.open {
