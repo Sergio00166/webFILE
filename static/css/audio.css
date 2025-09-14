@@ -199,7 +199,6 @@ button {
     transition: background-color 0.2s;
 }
 #play-pause img {
-    filter: invert(1);
     width: 24px;
     height: 24px;
 }
@@ -234,9 +233,6 @@ button {
     width: 24px;
     height: 24px;
     cursor: pointer;
-}
-.vol-icons img {
-    filter: invert(0.9);
 }
 #volume-bar {
     flex: 1;
