@@ -482,7 +482,7 @@ audioElement.addEventListener('pause', pauseAudio);
 // ============================================================================
 
 volumeSlider.addEventListener('input', handleVolumeChange);
-volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); })
+volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); });
 
 speedButton.addEventListener('click', changePlaybackSpeed);
 speedButton.addEventListener('wheel', handleSpeedWheel);
