@@ -134,8 +134,11 @@ function toggleSelectMode() {
     if (!isSelectModeActive) deselectAllItems();
     
     if (selectButton) {
-        selectButton.textContent = isSelectModeActive 
-            ? '❌ Cancel' : '✅ Enable';
+        if (isSelectModeActive) {
+            selectButton.textContent = '❌ Cancel';
+        } else {
+            selectButton.textContent = '✅ Enable';
+        }
     }
     updateButtonStates();
 }
@@ -207,7 +210,12 @@ async function executeDownloads() {
             const itemURL = div.dataset.value;
             if (!itemURL) continue;
             
-            const suffix = div.hasAttribute('isdir') ? '?tar' : '?raw';
+            let suffix;
+            if (div.hasAttribute('isdir')) {
+                suffix = '?tar';
+            } else {
+                suffix = '?raw';
+            }
             downloadURL(itemURL + suffix);
             await delay(100);
         }
@@ -228,9 +236,13 @@ async function executeDeletes() {
         const response = await fetch(div.dataset.value, { method: 'DELETE' });
         
         if (!response.ok) {
-            errorMessage = response.status === 403 ? 'You dont have permission to do that' :
-                          response.status === 404 ? 'That file/folder does not exist' :
-                          'Something went wrong on the server.';
+            if (response.status === 403) {
+                errorMessage = 'You dont have permission to do that';
+            } else if (response.status === 404) {
+                errorMessage = 'That file/folder does not exist';
+            } else {
+                errorMessage = 'Something went wrong on the server.';
+            }
         }
         await delay(100);
     }
@@ -299,9 +311,12 @@ async function pasteFiles() {
     const copyList = JSON.parse(localStorage.getItem('copy') || '[]');
     const moveList = JSON.parse(localStorage.getItem('move') || '[]');
     
-    const pasteOperation = copyList.length ? 
-        { list: copyList, mode: 'COPY' } : 
-        moveList.length ? { list: moveList, mode: 'MOVE' } : {};
+    let pasteOperation = {};
+    if (copyList.length) {
+        pasteOperation = { list: copyList, mode: 'COPY' };
+    } else if (moveList.length) {
+        pasteOperation = { list: moveList, mode: 'MOVE' };
+    }
     
     if (!pasteOperation.list) return;
     
@@ -386,7 +401,12 @@ async function uploadFiles(files, isDirectory) {
 
     for (let i = 0; i < files.length; i++) {
         let file = files[i];
-        let filePath = isDirectory ? file.webkitRelativePath : file.name;
+        let filePath;
+        if (isDirectory) {
+            filePath = file.webkitRelativePath;
+        } else {
+            filePath = file.name;
+        }
         filePath = basePath + encodePath(filePath);
 
         try {

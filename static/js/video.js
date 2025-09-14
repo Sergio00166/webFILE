@@ -293,7 +293,11 @@ function changePlaybackMode() {
 }
 
 function togglePlayPauseState() {
-    videoElement.paused ? playVideo() : pauseVideo();
+    if (videoElement.paused) {
+        playVideo();
+    } else {
+        pauseVideo();
+    }
 }
 
 function playVideo() {
@@ -507,7 +511,11 @@ function showTimelineHover(clientX) {
     const timeString = formatDuration(time);
     const chapterName = getChapterNameAtTime(time);
     
-    hoverDuration.innerHTML = chapterName ? `${timeString}<br>${chapterName}` : timeString;
+    if (chapterName) {
+        hoverDuration.innerHTML = `${timeString}<br>${chapterName}`;
+    } else {
+        hoverDuration.innerHTML = timeString;
+    }
     hoverDuration.style.display = 'block';
     hoverDuration.style.bottom = `${height + 8}px`;
     
@@ -521,7 +529,11 @@ function showTimelineHover(clientX) {
     }
     
     hoverDuration.style.left = `${leftPosition}px`;
-    hoverDuration.style.visibility = tooltipWidth ? 'visible' : 'hidden';
+    if (tooltipWidth) {
+        hoverDuration.style.visibility = 'visible';
+    } else {
+        hoverDuration.style.visibility = 'hidden';
+    }
 }
 
 function clearTimelineHover() {
@@ -852,7 +864,11 @@ controlsContainer.addEventListener('click', () => {
 
 volumeControl.addEventListener('mouseenter', () => {
     clearTimeout(volumeHideTimeout);
-    videoElement.muted ? volumeSlider.classList.remove('show') : volumeSlider.classList.add('show');
+    if (videoElement.muted) {
+        volumeSlider.classList.remove('show');
+    } else {
+        volumeSlider.classList.add('show');
+    }
 });
 
 volumeControl.addEventListener('mouseleave', () => {
@@ -1036,7 +1052,11 @@ document.addEventListener('keydown', (event) => {
             if (document.activeElement === document.body) {
                 event.preventDefault();
                 if (event.repeat) break;
-                videoElement.paused ? playVideo() : pauseVideo();
+                if (videoElement.paused) {
+                    playVideo();
+                } else {
+                    pauseVideo();
+                }
             }
             break;
         case 'arrowright':

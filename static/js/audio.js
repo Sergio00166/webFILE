@@ -53,9 +53,12 @@ const savedMuted = localStorage.getItem('audioMuted');
 // ============================================================================
 
 const playbackSpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-let currentSpeedIndex = playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0 ?
-    playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) :
-    playbackSpeedOptions.indexOf(1);
+let currentSpeedIndex;
+if (playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0) {
+    currentSpeedIndex = playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed')));
+} else {
+    currentSpeedIndex = playbackSpeedOptions.indexOf(1);
+}
 
 // ============================================================================
 // TOUCH INTERACTION VARIABLES
@@ -133,7 +136,11 @@ function cycleLoopMode() {
 // ============================================================================
 
 function updateShuffleButton() {
-    shuffleButton.style.opacity = isShuffled ? 1 : 0.4;
+    if (isShuffled) {
+        shuffleButton.style.opacity = 1;
+    } else {
+        shuffleButton.style.opacity = 0.4;
+    }
 }
 
 function toggleShuffleMode() {
@@ -363,7 +370,11 @@ function playAudio() {
 }
 
 function togglePlayPauseState() {
-    audioElement.paused ? playAudio() : pauseAudio();
+    if (audioElement.paused) {
+        playAudio();
+    } else {
+        pauseAudio();
+    }
 }
 
 function handleAudioEnded() {
