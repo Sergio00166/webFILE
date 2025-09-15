@@ -198,8 +198,8 @@ def compress_js(src):
 def compress_css(src):
     s = _strip_comments(src)
     s = _collapse_ws(s)
-    # remove space around symbols
-    s = re_sub(r'\s*([{};:,>+~])\s*', r'\1', s)
+    # remove unnecessary spaces
+    s = re_sub(r'\s*([{};:,>~])\s*', r'\1', s)
     # remove final semicolon before closing brace
     s = s.replace(';}', '}')
     return s.strip()
