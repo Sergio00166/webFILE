@@ -1,7 +1,10 @@
-import re
+# Code by Sergio00166
+
+from os.path import abspath, join
+from re import sub as re_sub
 from glob import glob
 from sys import path
-import os
+
 
 # Lightweight Jinja placeholder extractor (no UUIDs, deterministic)
 def _extract_jinja_placeholders(text):
@@ -137,7 +140,7 @@ def _strip_comments(src):
 
 
 def _collapse_ws(s):
-    return re.sub(r'\s+', ' ', s).strip()
+    return re_sub(r'\s+', ' ', s).strip()
 
 
 # ---------------------------
@@ -156,31 +159,31 @@ def compress_js(src):
     s = _collapse_ws(s)
 
     # remove spaces around common delimiters but keep minimal safety
-    s = re.sub(r'\s*([{}\[\]()\.,:;])\s*', r'\1', s)
+    s = re_sub(r'\s*([{}\[\]()\.,:;])\s*', r'\1', s)
 
     # collapse multi-char comparison operators first
-    s = re.sub(r'\s*(===|!==|==|!=|<=|>=)\s*', r'\1', s)
+    s = re_sub(r'\s*(===|!==|==|!=|<=|>=)\s*', r'\1', s)
     # then single-char comparisons
-    s = re.sub(r'\s*([<>])\s*', r'\1', s)
+    s = re_sub(r'\s*([<>])\s*', r'\1', s)
 
     # remove spaces around assignment '=' (after handling ==/=== above)
-    s = re.sub(r'\s*=\s*', '=', s)
+    s = re_sub(r'\s*=\s*', '=', s)
 
     # tighten other binary/unary operators (plus, minus, multiply, divide, modulus, bitwise, logical)
-    s = re.sub(r'\s*([+\-*/%&|^!~])\s*', r'\1', s)
+    s = re_sub(r'\s*([+\-*/%&|^!~])\s*', r'\1', s)
 
     # collapse identifier followed by space then '(' -> function call
-    s = re.sub(r'([A-Za-z0-9_$])\s+\(', r'\1(', s)
+    s = re_sub(r'([A-Za-z0-9_$])\s+\(', r'\1(', s)
 
     # remove space after keywords before '('
-    s = re.sub(r'\b(if|for|while|switch|catch|with|function)\s+\(', r'\1(', s)
+    s = re_sub(r'\b(if|for|while|switch|catch|with|function)\s+\(', r'\1(', s)
 
     # tighten else patterns but avoid touching 'else if'
-    s = re.sub(r'\}\s*else\s*\{', r'}else{', s)
-    s = re.sub(r'\)\s*else\s*\{', r')else{', s)
+    s = re_sub(r'\}\s*else\s*\{', r'}else{', s)
+    s = re_sub(r'\)\s*else\s*\{', r')else{', s)
 
     # remove unnecessary semicolons before '}' (safe)
-    s = re.sub(r';+}', r'}', s)
+    s = re_sub(r';+}', r'}', s)
 
     # remove any remaining space after semicolons
     s = s.replace('; ', ';')
@@ -196,7 +199,7 @@ def compress_css(src):
     s = _strip_comments(src)
     s = _collapse_ws(s)
     # remove space around symbols
-    s = re.sub(r'\s*([{};:,>+~])\s*', r'\1', s)
+    s = re_sub(r'\s*([{};:,>+~])\s*', r'\1', s)
     # remove final semicolon before closing brace
     s = s.replace(';}', '}')
     return s.strip()
@@ -297,9 +300,9 @@ def compress_html(src):
         while i < n and src[i] not in '<{':
             i += 1
         chunk = src[start:i]
-        out.append(re.sub(r'\s+', ' ', chunk))
+        out.append(re_sub(r'\s+', ' ', chunk))
     res = ''.join(out)
-    res = re.sub(r'>\s+<', '><', res)
+    res = re_sub(r'>\s+<', '><', res)
     return res.strip()
 
 
@@ -318,10 +321,10 @@ def process_files(pattern, compressor):
 
 
 if __name__ == '__main__':
-    base = os.path.abspath(os.path.join(path[0], '..'))
-    process_files(os.path.join(base, 'static', 'css', '*.css'), compress_css)
-    process_files(os.path.join(base, 'static', 'js', '*.js'), compress_js)
-    process_files(os.path.join(base, 'templates', '*.html'), compress_html)
+    base = abspath(join(path[0], '..'))
+    process_files(join(base, 'static', 'css', '*.css'), compress_css)
+    process_files(join(base, 'static', 'js', '*.js'), compress_js)
+    process_files(join(base, 'templates', '*.html'), compress_html)
 
 
  
