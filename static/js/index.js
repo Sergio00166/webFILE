@@ -198,7 +198,6 @@ function downloadURL(url) {
     const downloadLink = document.createElement('a');
     downloadLink.href = url;
     downloadLink.download = '';
-    downloadLink.style.display = 'none';
     document.body.appendChild(downloadLink);
     downloadLink.click();
     downloadLink.remove();
