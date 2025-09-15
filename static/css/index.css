@@ -19,10 +19,7 @@ body {
  * ------------------------- */
 
  .time { margin-left: 0.5em; }
- .size { 
-     margin-left: 3em;
-     margin-right: 0.33em;
- }
+ .size { margin-left: 3em; }
 .size,.capacity,.time { font-size: 15px; }
 .time { font-family: monospace; }
 
