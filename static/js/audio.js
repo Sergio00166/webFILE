@@ -274,9 +274,14 @@ function showTimelineHover(clientX) {
     if (leftPosition + tooltipWidth > barRect.width) {
         leftPosition = barRect.width - tooltipWidth;
     }
-    
     hoverDuration.style.left = `${leftPosition}px`;
-    hoverDuration.style.visibility = tooltipWidth ? 'visible' : 'hidden';
+
+    if (tooltipWidth) {
+        hoverDuration.style.visibility = 'visible';
+    } else {
+        hoverDuration.style.visibility = 'hidden';
+    }
+
 }
 
 function clearTimelineHover() {
