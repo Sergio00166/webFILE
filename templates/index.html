@@ -28,13 +28,13 @@
             <div class="sidebar-content">
                 <div class="sidebar-section">
                     <h3>SORT</h3>
-                    <button id="sortName" onclick="changeSortingMode('{% if sort=='np' %}nd{% else %}np{% endif %}')" title="(1)">
+                    <button id="sortName" onclick='changeSortingMode("{% if sort=="np" %}nd{% else %}np{% endif %}")' title="(1)">
                         {% if sort=="np" %}⬆️{% elif sort=="nd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Name
                     </button>
-                    <button id="sortSize" onclick="changeSortingMode('{% if sort=='sp' %}sd{% else %}sp{% endif %}')" title="(2)">
+                    <button id="sortSize" onclick='changeSortingMode("{% if sort=="sp" %}sd{% else %}sp{% endif %}")' title="(2)">
                         {% if sort=="sp" %}⬆️{% elif sort=="sd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Size
                     </button>
-                    <button id="sortDate" onclick="changeSortingMode('{% if sort=='dp' %}dd{% else %}dp{% endif %}')" title="(3)">
+                    <button id="sortDate" onclick='changeSortingMode("{% if sort=="dp" %}dd{% else %}dp{% endif %}")' title="(3)">
                         {% if sort=="dp" %}⬆️{% elif sort=="dd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Date
                     </button>
                 </div>
@@ -89,7 +89,7 @@
             </div>
             <div class="list-group">
                 {% for item in folder_content %}
-                    <div id="{{ loop.index0 }}" class="filename" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %} tabindex="0">
+                    <button id="{{ loop.index0 }}" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %}>
                     {% if item['type'] == 'disk' %}
                         <img src="/?static=svg/index/hard-drive-solid.svg">
                     {% elif item['type'] == 'directory' %}
@@ -123,22 +123,20 @@
                     {% else %}
                         <img src="/?static=svg/index/file-solid.svg">
                     {% endif %}
-                        <span class="name"> 
-                            <pre>{{ item['name'] }}</pre>
-                        </span>
-                        <span>
-                            {% if item['type'] == 'disk' %}
-                                <t class="size">{{ item['size'] }} / {{ item['capacity'] }}</t>
-                                <t class="time">({{ item["used"] }}%)</t>
-                            {% else %}
-                                <t class="size">{{ item['size'] }}</t>
-                                <t class="time">{{ item['mtime'][0] }} {{ item['mtime'][1] }}</t>
-                            {% endif %}
-                        </span>
-                    </div>
+                        <pre class="name">{{ item['name'] }}</pre>
+
+                    {% if item['type'] == 'disk' %}
+                        <span class="size">{{ item['size'] }} / {{ item['capacity'] }}</span>
+                        <span class="time">({{ item["used"] }}%)</span>
+                    {% else %}
+                        <span class="size">{{ item['size'] }}</span>
+                        <span class="time">{{ item['mtime'][0] }} {{ item['mtime'][1] }}</span>
+                    {% endif %}
+                    </button>
                 {% endfor %}
             </div>
         </div>
     </div>
 </body>
 </html>
+

@@ -165,9 +165,9 @@ function selectItem(div) {
 function invertSelection() {
     if (!isSelectModeActive) return;
     
-    const filenameElements = document.getElementsByClassName('filename');
-    for (let i = 0; i < filenameElements.length; i++) {
-        selectItem(filenameElements[i]);
+    const items = listGroup.children;
+    for (let i = 0; i < items.length; i++) {
+        selectItem(items[i]);
     }
 }
 
@@ -491,12 +491,12 @@ function moveFocus(direction) {
 // ============================================================================
 
 listGroup.addEventListener('click', event => {
-    const clickedItem = event.target.closest('.filename');
+    const clickedItem = event.target.closest('.list-group > button');
     if (clickedItem) handleItemClick(clickedItem);
 });
 
 listGroup.addEventListener('keydown', event => {
-    const focusedItem = event.target.closest('.filename');
+    const focusedItem = event.target.closest('.list-group > button');
     if ((event.key === 'Enter' || event.key === ' ') && focusedItem) {
         event.preventDefault();
         handleItemClick(focusedItem);
