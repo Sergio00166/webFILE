@@ -27,7 +27,7 @@ body {
     margin-left: 3em;
     color: #8fd8b3;
 }
-.size,.left { font-size: 15px; }
+.size,.time { font-size: 15px; }
 ::-webkit-scrollbar-thumb { background: #555; }
 ::-webkit-scrollbar-track { background: #1e1e1e; }
 
