@@ -127,13 +127,12 @@
                             <pre>{{ item['name'] }}</pre>
                         </span>
                         <span>
-                            <t class="size">{{ item['size'] }}</t>
                             {% if item['type'] == 'disk' %}
-                                <t class="capacity">/&nbsp;{{item['capacity']}}</t>
-                                <t class="time">({{item["used"]}}%)</t>
+                                <t class="size">{{ item['size'] }} / {{ item['capacity'] }}</t>
+                                <t class="time">({{ item["used"] }}%)</t>
                             {% else %}
-                                <t class="time">{{ item['mtime'][0] }}</t>
-                                <t class="time">{{ item['mtime'][1] }}</t>
+                                <t class="size">{{ item['size'] }}</t>
+                                <t class="time">{{ item['mtime'][0] }} {{ item['mtime'][1] }}</t>
                             {% endif %}
                         </span>
                     </div>

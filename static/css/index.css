@@ -18,17 +18,24 @@ body {
  *   Text & scrollbar
  * ------------------------- */
 
- .time { margin-left: 0.5em; }
- .size { margin-left: 3em; }
-.size,.capacity,.time { font-size: 15px; }
-.time { font-family: monospace; }
-
+ .time {
+    margin-left: 0.5em;
+    font-family: monospace;
+    color: #9fc5ff;
+}
+ .size {
+    margin-left: 3em;
+    color: #8fd8b3;
+}
+.size,.left { font-size: 15px; }
 ::-webkit-scrollbar-thumb { background: #555; }
 ::-webkit-scrollbar-track { background: #1e1e1e; }
+
 
 /* -------------------------
  *   Shared
  * ------------------------- */
+
 img {
     pointer-events: none;
     width: 16px;
@@ -58,7 +65,6 @@ pre {
     box-shadow: 2px 0 4px #0008;
     transition: transform .3s;
 }
-
 .sidebar-toggle {
     height: 45px;
     width: 20px;
@@ -281,7 +287,7 @@ pre {
 }
 @media (max-width:400px) {
     .filename {
-        min-width: calc(100% + 512px);
+        min-width: calc(100% + 384px);
     }
 }
 @media (max-width:700px) {
