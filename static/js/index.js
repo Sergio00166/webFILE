@@ -41,7 +41,7 @@ const sortByDate = document.getElementById('sortDate');
 // ============================================================================
 
 const basePath = (location.pathname.replace(/\/$/, '') || '') + '/';
-const selectedItems = new Map();
+const selectedItems = new Set();
 let isSelectModeActive = false;
 
 // ============================================================================
@@ -100,7 +100,7 @@ function performStorageOperation(operationKey, fileList) {
 }
 
 function getSelectedURLs() {
-    return Array.from(selectedItems.values())
+    return Array.from(selectedItems)
         .map(div => div.dataset.value)
         .filter(Boolean);
 }
@@ -144,21 +144,17 @@ function toggleSelectMode() {
 }
 
 function deselectAllItems() {
-    selectedItems.forEach((div, id) => {
-        div.classList.remove('selected');
-    });
+    selectedItems.forEach(div => { div.classList.remove('selected'); });
     selectedItems.clear();
 }
 
 function selectItem(div) {
-    const itemId = div.id;
-    
-    if (selectedItems.has(itemId)) {
+    if (selectedItems.has(div)) {
         div.classList.remove('selected');
-        selectedItems.delete(itemId);
+        selectedItems.delete(div);
     } else {
         div.classList.add('selected');
-        selectedItems.set(itemId, div);
+        selectedItems.add(div);
     }
 }
 
@@ -205,7 +201,7 @@ function downloadURL(url) {
 
 async function executeDownloads() {
     if (isSelectModeActive && selectedItems.size > 0) {
-        for (const div of selectedItems.values()) {
+        for (const div of selectedItems) {
             const itemURL = div.dataset.value;
             if (!itemURL) continue;
             
@@ -231,7 +227,7 @@ async function executeDeletes() {
     
     let errorMessage = null;
     
-    for (const div of selectedItems.values()) {
+    for (const div of selectedItems) {
         const response = await fetch(div.dataset.value, { method: 'DELETE' });
         
         if (!response.ok) {

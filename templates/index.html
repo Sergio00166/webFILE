@@ -89,7 +89,7 @@
             </div>
             <div class="list-group">
                 {% for item in folder_content %}
-                    <button id="{{ loop.index0 }}" data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %}>
+                    <button data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %}>
                     {% if item['type'] == 'disk' %}
                         <img src="/?static=svg/index/hard-drive-solid.svg">
                     {% elif item['type'] == 'directory' %}
