@@ -83,7 +83,7 @@ img, .main-state, .controls,
     position: absolute;
     transform: translateX(-50%);
 }
-.time-container > span {
+.time-container span {
     padding: 2px;
     padding-left: 3px;
     padding-right: 4px;
@@ -146,7 +146,7 @@ img {
     opacity: 0.8;
     transform: scale(1);
 }
-.main-state > img {
+.main-state img {
     width: 67%;
     height: 67%;
 }
@@ -334,7 +334,7 @@ img {
     transform: scaleY(1);
     visibility: visible;
 }
-.setting-menu > li {
+.setting-menu li {
     padding: 0.25rem 0.4rem;
     margin: 0.25rem;
     border-radius: 8px;
@@ -342,16 +342,16 @@ img {
     cursor: pointer;
     color: white;
 }
-.setting-menu > li:nth-child(-n+3):focus-within {
+.setting-menu li:nth-child(-n+3):focus-within {
     outline: auto;
 }
-.setting-menu > li:nth-child(1)::before {
+.setting-menu li:nth-child(1)::before {
     content: "Subs"; position: absolute;
 }
-.setting-menu > li:nth-child(2)::before {
+.setting-menu li:nth-child(2)::before {
     content: "Tracks"; position: absolute;
 }
-.setting-menu > li:nth-child(3)::before {
+.setting-menu li:nth-child(3)::before {
     content: "Speed"; position: absolute;
 }
 
