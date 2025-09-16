@@ -18,65 +18,54 @@
             <h1 id="progress"></h1>
         </div>
     </div>
-    
     <div class="main-container">
         <div id="sidebar">
             <div class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
                 <img src="/?static=svg/index/three-dots-vertical.svg">
             </div>
-
             <div class="sidebar-content">
-                <div class="sidebar-section">
+                <div>
                     <h3>SORT</h3>
-                    <button id="sortName" onclick='changeSortingMode("{% if sort=="np" %}nd{% else %}np{% endif %}")' title="(1)">
-                        {% if sort=="np" %}⬆️{% elif sort=="nd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Name
-                    </button>
-                    <button id="sortSize" onclick='changeSortingMode("{% if sort=="sp" %}sd{% else %}sp{% endif %}")' title="(2)">
-                        {% if sort=="sp" %}⬆️{% elif sort=="sd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Size
-                    </button>
-                    <button id="sortDate" onclick='changeSortingMode("{% if sort=="dp" %}dd{% else %}dp{% endif %}")' title="(3)">
-                        {% if sort=="dp" %}⬆️{% elif sort=="dd" %}⬇️{% else %}◻️{% endif %}&nbsp;&nbsp;Date
-                    </button>
+                    {%- set sort_name = ('nd', '⬆️') if sort == 'np' else ('np', '⬇️') if sort == 'nd' else ('np', '◻️') -%}
+                    {%- set sort_size = ('sd', '⬆️') if sort == 'sp' else ('sp', '⬇️') if sort == 'sd' else ('sp', '◻️') -%}
+                    {%- set sort_date = ('dd', '⬆️') if sort == 'dp' else ('dp', '⬇️') if sort == 'dd' else ('dp', '◻️') -%}                    
+                    <button id="sortName" onclick="changeSortingMode('{{ sort_name[0] }}')" title="(1)">{{ sort_name[1] }} Name</button>
+                    <button id="sortSize" onclick="changeSortingMode('{{ sort_size[0] }}')" title="(2)">{{ sort_size[1] }} Size</button>
+                    <button id="sortDate" onclick="changeSortingMode('{{ sort_date[0] }}')" title="(3)">{{ sort_date[1] }} Date</button>
                 </div>
-                
-                <div class="sidebar-section">
+                <div>
                     <h3>SELECTION</h3>
                     <button id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Enable</button>
                     <button id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert</button>
                     <button onclick="executeDownloads()" title="(d)">📥 Download</button>
                 </div>
-
-                <div class="sidebar-section">
+                <div>
                     <h3>UPLOAD</h3>
                     <button onclick="openFileUploadMenu()" title="(u)">📤 Files</button>
                     <button onclick="openFileUploadMenu(true)" title="(f)">📤 Folder</button>
                 </div>
-
-                <div class="sidebar-section">
+                <div>
                     <h3>ACTIONS</h3>
                     <button onclick="createDirectory()" title="(m)">📁 New Dir</button>
                     <button id="renBtn" onclick="renameSelectedFiles()" title="(n)" disabled>✏️ Rename</button>
                     <button id="delBtn" onclick="executeDeletes()" title="(r)" disabled>🗑️ Delete</button>
                 </div>
-                
-                <div class="sidebar-section">
+                <div>
                     <h3>MANAGE</h3>
                     <button id="copyBtn" onclick="copySelectedFiles()" title="(c)" disabled>📋 Copy</button>
                     <button id="moveBtn" onclick="moveSelectedFiles()" title="(x)" disabled>✂️ Move</button>
                     <button onclick="pasteFiles()" title="(p)">📋 Paste</button>
                 </div>
-                
-                <div class="sidebar-section">
+                <div>
                     <h3>ACCOUNT</h3>
-                    {% if 'user' in session %}
-                        <button id="login" onclick='window.location.href="?logout"' title="(l)">🚪 Logout</button>
-                    {% else %}
-                        <button id="login" onclick='window.location.href="?login"' title="(l)">🔑 Login</button>
-                    {% endif %}
+                  {%- if 'user' in session %}
+                    <button id="login" onclick='window.location.href="?logout"' title="(l)">🚪 Logout</button>
+                  {%- else %}
+                    <button id="login" onclick='window.location.href="?login"' title="(l)">🔑 Login</button>
+                  {%- endif %}
                 </div>
             </div>
         </div>
-        
         <div class="content-area">
             <div class="path-bar">
                 <button onclick="window.location.href='..'" title="Parent">
@@ -88,52 +77,52 @@
                 <pre class="path-title">{{ folder_path }}</pre>
             </div>
             <div class="list-group">
-                {% for item in folder_content %}
-                    <button data-value="{{ url_for('explorer', path=item['path']) }}"{% if item['type'] in ['directory','disk'] %} isdir="" {% endif %}>
-                    {% if item['type'] == 'disk' %}
+                {%- for item in folder_content %}
+                    <button {%- if item['type'] in ['directory','disk'] +%} isdir="" {%- endif %}>
+                    {%- if item['type'] == 'disk' %}
                         <img src="/?static=svg/index/hard-drive-solid.svg">
-                    {% elif item['type'] == 'directory' %}
+                    {%- elif item['type'] == 'directory' %}
                         <img src="/?static=svg/index/folder-solid.svg">
-                    {% elif item['type'] == 'source' %}
+                    {%- elif item['type'] == 'source' %}
                         <img src="/?static=svg/index/file-code-solid.svg">
-                    {% elif item['type'] == 'video' %}
+                    {%- elif item['type'] == 'video' %}
                         <img src="/?static=svg/index/film-solid.svg">
-                    {% elif item['type'] == 'audio' %}
+                    {%- elif item['type'] == 'audio' %}
                         <img src="/?static=svg/index/music-solid.svg">
-                    {% elif item['type'] == 'text' %}
+                    {%- elif item['type'] == 'text' %}
                         <img src="/?static=svg/index/file-lines-solid.svg">
-                    {% elif item['type'] == 'pdf' %}
+                    {%- elif item['type'] == 'pdf' %}
                         <img src="/?static=svg/index/file-pdf-solid.svg">
-                    {% elif item['type'] == 'photo' %}
+                    {%- elif item['type'] == 'photo' %}
                         <img src="/?static=svg/index/image-solid.svg">
-                    {% elif item['type'] == 'document' %}
+                    {%- elif item['type'] == 'document' %}
                         <img src="/?static=svg/index/file-word-solid.svg">
-                    {% elif item['type'] == 'database' %}
+                    {%- elif item['type'] == 'database' %}
                         <img src="/?static=svg/index/database-solid.svg">
-                    {% elif item['type'] == 'presentation' %}
+                    {%- elif item['type'] == 'presentation' %}
                         <img src="/?static=svg/index/file-powerpoint-solid.svg">
-                    {% elif item['type'] == 'virtualdisk' %}
+                    {%- elif item['type'] == 'virtualdisk' %}
                         <img src="/?static=svg/index/compact-disc-solid.svg">
-                    {% elif item['type'] == 'compressed' %}
+                    {%- elif item['type'] == 'compressed' %}
                         <img src="/?static=svg/index/file-zipper-solid.svg">
-                    {% elif item['type'] == 'binary' %}
+                    {%- elif item['type'] == 'binary' %}
                         <img src="/?static=svg/index/file-binary.svg">
-                    {% elif item['type'] == 'webpage' %}
+                    {%- elif item['type'] == 'webpage' %}
                         <img src="/?static=svg/index/globe-solid.svg">
-                    {% else %}
+                    {%- else %}
                         <img src="/?static=svg/index/file-solid.svg">
-                    {% endif %}
+                    {%- endif %}
                         <pre class="name">{{ item['name'] }}</pre>
 
-                    {% if item['type'] == 'disk' %}
+                    {%- if item['type'] == 'disk' %}
                         <span class="size">{{ item['size'] }} / {{ item['capacity'] }}</span>
                         <span class="time">({{ item["used"] }}%)</span>
-                    {% else %}
+                    {%- else %}
                         <span class="size">{{ item['size'] }}</span>
                         <span class="time">{{ item['mtime'][0] }} {{ item['mtime'][1] }}</span>
-                    {% endif %}
+                    {%- endif %}
                     </button>
-                {% endfor %}
+                {%- endfor %}
             </div>
         </div>
     </div>

@@ -11,7 +11,7 @@
     <script defer src="/?static=js/video.js"></script>
     <script src="/?static=jassub/jassub.js"></script>
     <script>
-      const chapters = {{ chapters | tojson}};
+      const chapters = '{{ chapters | tojson }}';
     </script>
   </head>
   <body>
@@ -20,7 +20,7 @@
     <a href='{{ nxt }}' id="next" tabindex="-1"></a>
     <a href='{{ prev }}' id="prev" tabindex="-1"></a>
     <div class="video-container">
-      <div class="video-box">
+      <div>
           <video src="{{ request.path }}?raw" disablePictureInPicture></video>
           <canvas></canvas>
       </div>
@@ -87,9 +87,9 @@
                 <li>
                   <select id="s0">
                     <option value="-1">None</option>
-                   {% for item in tracks %}
+                   {%- for item in tracks %}
                     <option value={{ tracks.index(item) }}>{{ item }}</option>
-                   {% endfor %}
+                   {%- endfor %}
                   </select>
                 </li>
                 <li>
@@ -121,3 +121,4 @@
     </div>
   </body>
 </html>
+

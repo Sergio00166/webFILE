@@ -89,13 +89,13 @@ pre {
     padding: 6px;
     overflow-y: auto;
 }
-.sidebar-section {
+.sidebar-content > div {
     margin-bottom: 12px;
     display: flex;
     flex-direction: column;
     gap: 1px;
 }
-.sidebar-section h3 {
+.sidebar-content > div > h3 {
     margin: 0 0 6px;
     padding: 3px 6px;
     font-size: 11px;
