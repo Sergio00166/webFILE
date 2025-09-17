@@ -454,8 +454,8 @@ select option {
 .video-container:not(.fullscreen) .full { display: block; }
 .video-container.fullscreen .contract { display: block; }
 .lmbsl { background: #8f9f3030 !important; }
-.video-box, .video-container { position: relative; }
-canvas { position: absolute; }
+.video-container { position: relative; }
+.video-box, canvas { position: absolute; }
 .settings { position: relative; }
 
 
