@@ -77,52 +77,52 @@
                 <pre class="path-title">{{ folder_path }}</pre>
             </div>
             <div class="list-group">
-                {%- for item in folder_content %}
-                    <button {%- if item['type'] in ['directory','disk'] +%} isdir="" {%- endif %}>
-                    {%- if item['type'] == 'disk' %}
-                        <img src="/?static=svg/index/hard-drive-solid.svg">
-                    {%- elif item['type'] == 'directory' %}
-                        <img src="/?static=svg/index/folder-solid.svg">
-                    {%- elif item['type'] == 'source' %}
-                        <img src="/?static=svg/index/file-code-solid.svg">
-                    {%- elif item['type'] == 'video' %}
-                        <img src="/?static=svg/index/film-solid.svg">
-                    {%- elif item['type'] == 'audio' %}
-                        <img src="/?static=svg/index/music-solid.svg">
-                    {%- elif item['type'] == 'text' %}
-                        <img src="/?static=svg/index/file-lines-solid.svg">
-                    {%- elif item['type'] == 'pdf' %}
-                        <img src="/?static=svg/index/file-pdf-solid.svg">
-                    {%- elif item['type'] == 'photo' %}
-                        <img src="/?static=svg/index/image-solid.svg">
-                    {%- elif item['type'] == 'document' %}
-                        <img src="/?static=svg/index/file-word-solid.svg">
-                    {%- elif item['type'] == 'database' %}
-                        <img src="/?static=svg/index/database-solid.svg">
-                    {%- elif item['type'] == 'presentation' %}
-                        <img src="/?static=svg/index/file-powerpoint-solid.svg">
-                    {%- elif item['type'] == 'virtualdisk' %}
-                        <img src="/?static=svg/index/compact-disc-solid.svg">
-                    {%- elif item['type'] == 'compressed' %}
-                        <img src="/?static=svg/index/file-zipper-solid.svg">
-                    {%- elif item['type'] == 'binary' %}
-                        <img src="/?static=svg/index/file-binary.svg">
-                    {%- elif item['type'] == 'webpage' %}
-                        <img src="/?static=svg/index/globe-solid.svg">
-                    {%- else %}
-                        <img src="/?static=svg/index/file-solid.svg">
-                    {%- endif %}
-                        <pre class="name">{{ item['name'] }}</pre>
+              {%- for item in folder_content %}
+                <button {%- if item['type'] in ['directory','disk'] +%} isdir="" {%- endif %}>
+                  {%- if item['type'] == 'disk' %}
+                    <img src="/?static=svg/index/hard-drive-solid.svg">
+                  {%- elif item['type'] == 'directory' %}
+                    <img src="/?static=svg/index/folder-solid.svg">
+                  {%- elif item['type'] == 'source' %}
+                    <img src="/?static=svg/index/file-code-solid.svg">
+                  {%- elif item['type'] == 'video' %}
+                    <img src="/?static=svg/index/film-solid.svg">
+                  {%- elif item['type'] == 'audio' %}
+                    <img src="/?static=svg/index/music-solid.svg">
+                  {%- elif item['type'] == 'text' %}
+                    <img src="/?static=svg/index/file-lines-solid.svg">
+                  {%- elif item['type'] == 'pdf' %}
+                    <img src="/?static=svg/index/file-pdf-solid.svg">
+                  {%- elif item['type'] == 'photo' %}
+                    <img src="/?static=svg/index/image-solid.svg">
+                  {%- elif item['type'] == 'document' %}
+                    <img src="/?static=svg/index/file-word-solid.svg">
+                  {%- elif item['type'] == 'database' %}
+                    <img src="/?static=svg/index/database-solid.svg">
+                  {%- elif item['type'] == 'presentation' %}
+                    <img src="/?static=svg/index/file-powerpoint-solid.svg">
+                  {%- elif item['type'] == 'virtualdisk' %}
+                    <img src="/?static=svg/index/compact-disc-solid.svg">
+                  {%- elif item['type'] == 'compressed' %}
+                    <img src="/?static=svg/index/file-zipper-solid.svg">
+                  {%- elif item['type'] == 'binary' %}
+                    <img src="/?static=svg/index/file-binary.svg">
+                  {%- elif item['type'] == 'webpage' %}
+                    <img src="/?static=svg/index/globe-solid.svg">
+                  {%- else %}
+                    <img src="/?static=svg/index/file-solid.svg">
+                  {%- endif %}
+                    <pre>{{ item['name'] }}</pre>
 
-                    {%- if item['type'] == 'disk' %}
-                        <span class="size">{{ item['size'] }} / {{ item['capacity'] }}</span>
-                        <span class="time">({{ item["used"] }}%)</span>
-                    {%- else %}
-                        <span class="size">{{ item['size'] }}</span>
-                        <span class="time">{{ item['mtime'][0] }} {{ item['mtime'][1] }}</span>
-                    {%- endif %}
-                    </button>
-                {%- endfor %}
+                  {%- if item['type'] == 'disk' %}
+                    <span>{{ item['size'] }} / {{ item['capacity'] }}</span>
+                    <span>({{ item["used"] }}%)</span>
+                  {%- else %}
+                    <span>{{ item['size'] }}</span>
+                    <span>{{ item['mtime'][0] }} {{ item['mtime'][1] }}</span>
+                  {%- endif %}
+                </button>
+              {%- endfor %}
             </div>
         </div>
     </div>

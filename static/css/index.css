@@ -18,17 +18,7 @@ body {
  *   Text & scrollbar
  * ------------------------- */
 
- .time {
-    font-size: 15px;
-    margin-left: 0.6rem;
-    font-family: monospace;
-    color: #9fc5dc;
-}
- .size {
-    font-size: 15px;
-    margin-left: 3em;
-    color: #8fd8b3;
-}
+
 ::-webkit-scrollbar-thumb { background: #555; }
 ::-webkit-scrollbar-track { background: #1e1e1e; }
 
@@ -219,10 +209,21 @@ pre {
     background: #1e3a5f !important;
     border-color: #4a90d9 !important;
 }
-.name {
+.list-group > button > pre {
     flex: 1;
     margin: 0 12px 0 6px;
     text-align: left;
+}
+.list-group > button > span:first-of-type {
+    font-size: 15px;
+    margin-left: 3em;
+    color: #8fd8b3;
+}
+.list-group > button > span:last-of-type {
+    font-size: 15px;
+    margin-left: 0.6rem;
+    font-family: monospace;
+    color: #9fc5dc;
 }
 
 /* -------------------------

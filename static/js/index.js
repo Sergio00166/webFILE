@@ -100,7 +100,7 @@ function performStorageOperation(operationKey, fileList) {
 }
 
 function getItemURL(fileItem) {
-    const nameElement = fileItem.querySelector('.name');
+    const nameElement = fileItem.querySelector('pre');
     if (!nameElement) return null;
     const rawName = nameElement.textContent.trim();
     const encodedName = encodeURIComponent(rawName);
