@@ -99,9 +99,19 @@ function performStorageOperation(operationKey, fileList) {
     }
 }
 
+function getItemURL(fileItem) {
+    const nameElement = fileItem.querySelector('.name');
+    if (!nameElement) return null;
+    const rawName = nameElement.textContent.trim();
+    const encodedName = encodeURIComponent(rawName);
+    let url = basePath + encodedName;
+    if (fileItem.hasAttribute('isdir')) url += '/';
+    return url;
+}
+
 function getSelectedURLs() {
     return Array.from(selectedItems)
-        .map(div => div.dataset.value)
+        .map(fileItem => getItemURL(fileItem))
         .filter(Boolean);
 }
 
@@ -144,17 +154,17 @@ function toggleSelectMode() {
 }
 
 function deselectAllItems() {
-    selectedItems.forEach(div => { div.classList.remove('selected'); });
+    selectedItems.forEach(fileItem => { fileItem.classList.remove('selected'); });
     selectedItems.clear();
 }
 
-function selectItem(div) {
-    if (selectedItems.has(div)) {
-        div.classList.remove('selected');
-        selectedItems.delete(div);
+function selectItem(fileItem) {
+    if (selectedItems.has(fileItem)) {
+        fileItem.classList.remove('selected');
+        selectedItems.delete(fileItem);
     } else {
-        div.classList.add('selected');
-        selectedItems.add(div);
+        fileItem.classList.add('selected');
+        selectedItems.add(fileItem);
     }
 }
 
@@ -171,18 +181,15 @@ function invertSelection() {
 // ITEM INTERACTION
 // ============================================================================
 
-function handleItemClick(div) {
+function handleItemClick(fileItem) {
     if (isSelectModeActive) {
-        selectItem(div);
+        selectItem(fileItem);
     } else {
-        const itemURL = div.dataset.value;
+        const itemURL = getItemURL(fileItem);
         if (!itemURL) return;
 
-        if (div.hasAttribute('isdir')) {
-            location.href = itemURL;
-        } else {
-            window.open(itemURL, '_blank');
-        }
+        if (fileItem.hasAttribute('isdir')) location.href = itemURL;
+        else window.open(itemURL, '_blank');
     }
 }
 
@@ -201,12 +208,12 @@ function downloadURL(url) {
 
 async function executeDownloads() {
     if (isSelectModeActive && selectedItems.size > 0) {
-        for (const div of selectedItems) {
-            const itemURL = div.dataset.value;
+        for (const fileItem of selectedItems) {
+            const itemURL = getItemURL(fileItem);
             if (!itemURL) continue;
             
             let suffix;
-            if (div.hasAttribute('isdir')) {
+            if (fileItem.hasAttribute('isdir')) {
                 suffix = '?tar';
             } else {
                 suffix = '?raw';
@@ -227,8 +234,9 @@ async function executeDeletes() {
     
     let errorMessage = null;
     
-    for (const div of selectedItems) {
-        const response = await fetch(div.dataset.value, { method: 'DELETE' });
+    for (const fileItem of selectedItems) {
+        const itemURL = getItemURL(fileItem);
+        const response = await fetch(itemURL, { method: 'DELETE' });
         
         if (!response.ok) {
             if (response.status === 403) {
