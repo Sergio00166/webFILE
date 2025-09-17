@@ -84,11 +84,9 @@ img, .main-state, .controls,
     transform: translateX(-50%);
 }
 .time-container span {
-    padding: 2px;
-    padding-left: 3px;
-    padding-right: 4px;
+    padding: 2px 4px;
     border-radius: 5px;
-    box-shadow: none !important;
+    box-shadow: none !important
 }
 .btn-controls {
     margin-top: 4px;
