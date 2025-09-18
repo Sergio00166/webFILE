@@ -26,7 +26,7 @@ JS_ELSE_BLOCK_PAT = re_compile(r'\}\s*else\s*\{')
 JS_ELSE_PAREN_PAT = re_compile(r'\)\s*else\s*\{')
 JS_SEMI_CLOSE_PAT = re_compile(r';+}')
 CSS_PUNCT_PAT = re_compile(r'\s*([{};:,>~])\s*')
-TAG_WS_RE = re.compile(r'\s+(?=<)|(?<=>)\s+')
+TAG_WS_RE = re_compile(r'\s+(?=<)|(?<=>)\s+')
 
 # ---------------------------
 # comment stripper (strings/template aware)
