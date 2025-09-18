@@ -26,7 +26,7 @@ JS_ELSE_BLOCK_PAT = re_compile(r'\}\s*else\s*\{')
 JS_ELSE_PAREN_PAT = re_compile(r'\)\s*else\s*\{')
 JS_SEMI_CLOSE_PAT = re_compile(r';+}')
 CSS_PUNCT_PAT = re_compile(r'\s*([{};:,>~])\s*')
-TAG_GAP_RE = re_compile(r'>\s+<')
+TAG_WS_RE = re.compile(r'\s+(?=<)|(?<=>)\s+')
 
 # ---------------------------
 # comment stripper (strings/template aware)
@@ -84,7 +84,7 @@ def compress_css(src):
 
 def compress_html(src: str):
     collapsed = _collapse_ws(src)
-    return TAG_GAP_RE.sub('><', collapsed)
+    return TAG_WS_RE.sub('><', collapsed)
 
 # ---------------------------
 # File processing
