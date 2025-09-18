@@ -6,64 +6,6 @@ from glob import glob
 from sys import path
 
 
-# Lightweight Jinja placeholder extractor (no UUIDs, deterministic)
-def _extract_jinja_placeholders(text):
-    out = []
-    mapping = {}
-    i = 0
-    n = len(text)
-    idx = 0
-    while i < n:
-        if text.startswith('{{', i):
-            j = text.find('}}', i+2)
-            if j == -1:
-                token = text[i:]
-                i = n
-            else:
-                token = text[i:j+2]
-                i = j+2
-            key = f"__JINJA2_{idx}__"
-            mapping[key] = token
-            out.append(key)
-            idx += 1
-        elif text.startswith('{%', i):
-            j = text.find('%}', i+2)
-            if j == -1:
-                token = text[i:]
-                i = n
-            else:
-                token = text[i:j+2]
-                i = j+2
-            key = f"__JINJA2_{idx}__"
-            mapping[key] = token
-            out.append(key)
-            idx += 1
-        elif text.startswith('{#', i):
-            j = text.find('#}', i+2)
-            if j == -1:
-                token = text[i:]
-                i = n
-            else:
-                token = text[i:j+2]
-                i = j+2
-            key = f"__JINJA2_{idx}__"
-            mapping[key] = token
-            out.append(key)
-            idx += 1
-        else:
-            out.append(text[i])
-            i += 1
-    return ''.join(out), mapping
-
-
-def _restore_placeholders(text, mapping):
-    if not mapping:
-        return text
-    for k, v in mapping.items():
-        text = text.replace(k, v)
-    return text
-
-
 # ---------------------------
 # comment stripper (strings/template aware)
 # ---------------------------
@@ -206,7 +148,7 @@ def compress_css(src):
 
 
 # ---------------------------
-# HTML minifier with Jinja2 support
+# HTML minifier (Jinja left intact)
 # ---------------------------
 
 def _find_tag_end(src, start_idx):
@@ -265,15 +207,12 @@ def compress_html(src):
             low = src[i:tag_end+1].lower()
             i = tag_end + 1
             if low.startswith('<script'):
-                # find closing
                 close = src.lower().find('</script>', i)
                 if close == -1:
                     content = src[i:]; i = n
                 else:
                     content = src[i:close]; i = close
-                preserved, mapping = _extract_jinja_placeholders(content)
-                out.append(_restore_placeholders(compress_js(preserved), mapping))
-                # append closing tag
+                out.append(compress_js(content))
                 if i < n:
                     end = _find_tag_end(src, i)
                     if end == -1:
@@ -286,8 +225,7 @@ def compress_html(src):
                     content = src[i:]; i = n
                 else:
                     content = src[i:close]; i = close
-                preserved, mapping = _extract_jinja_placeholders(content)
-                out.append(_restore_placeholders(compress_css(preserved), mapping))
+                out.append(compress_css(content))
                 if i < n:
                     end = _find_tag_end(src, i)
                     if end == -1:
@@ -324,7 +262,6 @@ if __name__ == '__main__':
     base = abspath(join(path[0], '..'))
     process_files(join(base, 'static', 'css', '*.css'), compress_css)
     process_files(join(base, 'static', 'js', '*.js'), compress_js)
-    process_files(join(base, 'templates', '*.html'), compress_html)
-
+    process_files(join(base, 'templates', '*'), compress_html)
 
  
