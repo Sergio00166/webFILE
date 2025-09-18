@@ -36,11 +36,11 @@ video::-moz-media-controls { display: none !important; }
  *   Pointer config
  * ------------------------- */
 
-img, .main-state, .controls,
-.hover-time .hover-duration {
+img, #main-state, #controls,
+#hover-duration {
     pointer-events: none;
 }
-.side-controls, .duration {
+.side-controls, #duration {
     pointer-events: auto;
 }
 
@@ -48,7 +48,7 @@ img, .main-state, .controls,
  *   Main structure
  * ------------------------- */
 
-.video-container {
+#video-container {
     width: 90vw;
     height: 90vh;
     height: 90dvh;
@@ -63,7 +63,7 @@ img, .main-state, .controls,
     width: 100%;
     height: 100%;
 }
-.controls {
+#controls {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -103,7 +103,7 @@ img, .main-state, .controls,
  *   Buttons + svg
  * ------------------------- */
 
-.round-button {
+button {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -116,7 +116,7 @@ img, .main-state, .controls,
     cursor: pointer;
     flex-shrink: 0;
 }
-img {
+button img {
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -127,7 +127,7 @@ img {
  *   Main state (show status)
  * ------------------------- */
 
-.main-state {
+#main-state {
     opacity: 0;
     transform: scale(0);
     height: 70px;
@@ -140,11 +140,11 @@ img {
     justify-content: center;
     transition: all 0.3s;
 }
-.main-state.show {
+#main-state.show {
     opacity: 0.8;
     transform: scale(1);
 }
-.main-state img {
+#main-state img {
     width: 67%;
     height: 67%;
 }
@@ -153,7 +153,7 @@ img {
  *   Main time bar
  * ------------------------- */
 
-.duration {
+#duration {
     height: 8px;
     margin: 0 auto;
     cursor: pointer;
@@ -162,7 +162,7 @@ img {
     inset: auto 0 20px;
     width: calc(100% - 64px);
 }
-.duration::before {
+#duration::before {
     content: "";
     width: 100%;
     height: 100%;
@@ -171,7 +171,7 @@ img {
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
-.duration::after {
+#duration::after {
     content: "";
     top: 50%;
     left: 50%;
@@ -185,7 +185,7 @@ img {
  *   Time bar current time
  * ------------------------- */
 
-.current-time {
+#current-time {
     width: 0;
     height: 100%;
     display: flex;
@@ -195,7 +195,7 @@ img {
     border-radius: 5px;
     z-index: 1;
 }
-.current-time::before {
+#current-time::before {
     opacity: 0;
     content: "";
     width: 12px;
@@ -208,7 +208,7 @@ img {
     transform: scale(0);
     box-shadow: 0 0 3px black;
 }
-.duration:hover .current-time::before {
+#duration:hover #current-time::before {
     opacity: 1;
     transform: scale(1);
 }
@@ -217,7 +217,7 @@ img {
  *   Hover time & Show info
  * ------------------------- */
 
-.hover-time {
+#hover-time {
     width: 0;
     position: absolute;
     display: flex;
@@ -226,7 +226,7 @@ img {
     align-items: center;
     border-radius: 5px;
 }
-.hover-time .hover-duration {
+#hover-duration {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw) !important;
@@ -243,7 +243,7 @@ img {
  *   Time bar chapters
  * ------------------------- */
 
-.chapter-container {
+#chapter-container {
     position: relative;
     height: 100%;
     border-radius: inherit;
@@ -263,7 +263,7 @@ img {
  *   Sound control
  * ------------------------- */
 
-.volume {
+#volume {
     display: flex;
     align-items: center;
 }
@@ -310,7 +310,7 @@ img {
  *   Option list
  * ------------------------- */
 
-.setting-menu {
+#setting-menu {
     position: absolute;
     opacity: 0;
     padding: 0;
@@ -327,12 +327,12 @@ img {
     transform-origin: top;
     border-radius: 12px;
 }
-.setting-menu.show {
+#setting-menu.show {
     opacity: 1;
     transform: scaleY(1);
     visibility: visible;
 }
-.setting-menu li {
+#setting-menu li {
     padding: 0.25rem 0.4rem;
     margin: 0.25rem;
     border-radius: 8px;
@@ -340,17 +340,22 @@ img {
     cursor: pointer;
     color: white;
 }
-.setting-menu li:nth-child(-n+3):focus-within {
+#subsMenu:focus-within,
+#audioMenu:focus-within,
+#speedMenu:focus-within {
     outline: auto;
 }
-.setting-menu li:nth-child(1)::before {
-    content: "Subs"; position: absolute;
+#subsMenu::before {
+    content: "Subs";
+    position: absolute;
 }
-.setting-menu li:nth-child(2)::before {
-    content: "Tracks"; position: absolute;
+#audioMenu::before {
+    content: "Tracks";
+    position: absolute;
 }
-.setting-menu li:nth-child(3)::before {
-    content: "Speed"; position: absolute;
+#speedMenu::before {
+    content: "Speed";
+    position: absolute;
 }
 
 /* -------------------------
@@ -378,7 +383,7 @@ select option {
  *   Loading animation
  * ------------------------- */
 
-.custom-loader {
+#custom-loader {
     width: 108px;
     height: 108px;
     border: 10px solid white;
@@ -395,26 +400,11 @@ select option {
 }
 
 /* -------------------------
- *   Full screen control
- * ------------------------- */
-
-.fullscreen {
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    background: black !important;
-    align-items: center !important;
-    -webkit-tap-highlight-color: transparent !important;
-    user-select: none !important;
-}
-
-/* -------------------------
  *   Transparent style
  * ------------------------- */
 
-.duration::before, .main-state, .time-container span,
-.round-button, .setting-menu, .hover-duration {
+#duration::before, #main-state, .time-container span,
+button, #setting-menu, #hover-duration {
     -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     background: transparent;
@@ -427,19 +417,18 @@ select option {
 
 /* Just to animate with Opacity but
  *WITHOUT BREAKING the backdrop-filter */
-.time-container span, .round-button,
-.duration::before, .duration * {
-    opacity: 0;
+.time-container span, button,
+#duration::before, #duration * {
     transition: opacity 0.3s;
 }
-.controls.show .time-container span,
-.controls.show .duration::before,
-.controls.show .round-button,
-.controls.show .duration * {
+#controls.show .time-container span,
+#controls.show #duration::before,
+#controls.show button,
+#controls.show #duration * {
     opacity: 1;
 }
-.chapter-container, .duration .hover-time,
-.duration .current-time {
+#chapter-container, #duration #hover-time,
+#duration #current-time {
     transition: none !important;
 }
 
@@ -447,12 +436,9 @@ select option {
  *   Other
  * ------------------------- */
 
-.vol_val_st { font-size: 1.3rem; }
-.full, .contract { display: none; }
-.video-container:not(.fullscreen) .full { display: block; }
-.video-container.fullscreen .contract { display: block; }
+#state_volume { font-size: 1.3rem; }
 .lmbsl { background: #8f9f3030 !important; }
-.video-container { position: relative; }
+#video-container { position: relative; }
 .video-box, canvas { position: absolute; }
 .settings { position: relative; }
 
@@ -462,17 +448,17 @@ select option {
  * ------------------------- */
 
 @media (max-width: 900px) {
-    .main-state {
+    #main-state {
         height: 64px;
         width: 64px;
     }
-    .custom-loader {
+    #custom-loader {
         height: 90px;
         width: 90px;
     }
 }
 @media (max-width: 600px) {
-    .duration {
+    #duration {
         bottom: 10px;
     }
     .time-container {
@@ -480,8 +466,8 @@ select option {
     }
 }
 @media (max-width: 500px) {
-    .play-pause,
-    .volume {
+    #play-pause,
+    #volume {
         display: none;
     }
     .btn-controls {
@@ -489,10 +475,10 @@ select option {
     }
 }
 @media (max-width: 320px) {
-    .duration {
+    #duration {
         width: 90%;
     }
-    .custom-loader {
+    #custom-loader {
         height: 56px;
         width: 56px;
         border-width: 5px;
@@ -505,7 +491,7 @@ select option {
 }
 @media (max-width: 200px) {
     #settings,
-    .setting-menu {
+    #setting-menu {
         display: none;
     }
 }
@@ -520,7 +506,7 @@ select option {
     }
 }
 @media (max-height: 120px) or (max-width: 120px) {
-    .video-container {
+    #video-container {
         display: none;
     }
 }
@@ -530,7 +516,7 @@ select option {
  * ------------------------- */
 
 @media (hover: hover) {
-    .setting-menu li:hover, .round-button:hover {
+    #setting-menu li:hover, button:hover {
         outline: 2px solid #fffa !important;
     }
 }
