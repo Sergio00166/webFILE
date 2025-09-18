@@ -15,15 +15,15 @@ const ANIMATION_START_DELAY = 400;
 // ============================================================================
 
 const volumeControl = document.getElementById('volume');
+const progress = document.getElementById('progress');
+const seekBar = document.getElementById('seek-bar');
+const totalTime = document.getElementById('total-time');
 const currentTime = document.getElementById('current-time');
-const duration = document.getElementById('duration');
-const totalDuration = document.getElementById('total-duration');
-const currentDuration = document.getElementById('current-duration');
 const controlsContainer = document.getElementById('controls');
 const volumeSlider = document.getElementById('volume-bar');
 const mainState = document.getElementById('main-state');
 const hoverTime = document.getElementById('hover-time');
-const hoverDuration = document.getElementById('hover-duration');
+const hoverInfo = document.getElementById('hover-info');
 const settingsButton = document.getElementById('settings');
 const loadingSpinner = document.getElementById('custom-loader');
 
@@ -165,7 +165,7 @@ function waitForVideoReady() {
     playVideo();
     if (video.paused) pauseVideo();
     
-    totalDuration.innerHTML = formatDuration(video.duration);
+    totalTime.innerHTML = formatDuration(video.duration);
     video.ontimeupdate = updateProgressBar;
     video.onended = handleVideoEnded;
     
@@ -304,7 +304,7 @@ function pauseVideo() {
     updateVolumeIcon();
     
     if (video.ended) {
-        currentTime.style.width = '100%';
+        progress.style.width = '100%';
     }
 }
 
@@ -323,8 +323,8 @@ function handleVideoEnded() {
 // ============================================================================
 
 function updateProgressBar() {
-    currentTime.style.width = (video.currentTime / video.duration) * 100 + '%';
-    currentDuration.innerHTML = formatDuration(video.currentTime);
+    progress.style.width = (video.currentTime / video.duration) * 100 + '%';
+    currentTime.innerHTML = formatDuration(video.currentTime);
 }
 
 function formatDuration(timeInSeconds) {
@@ -461,7 +461,7 @@ function getChapterNameAtTime(timeInSeconds) {
 }
 
 function getTimelinePosition(clientX) {
-    const { x, width, height } = duration.getBoundingClientRect();
+    const { x, width, height } = seekBar.getBoundingClientRect();
     const position = Math.min(Math.max(0, clientX - x), width);
     return { 
         percentage: position / width, 
@@ -504,32 +504,32 @@ function showTimelineHover(clientX) {
     const chapterName = getChapterNameAtTime(time);
     
     if (chapterName) {
-        hoverDuration.innerHTML = `${timeString}<br>${chapterName}`;
+        hoverInfo.innerHTML = `${timeString}<br>${chapterName}`;
     } else {
-        hoverDuration.innerHTML = timeString;
+        hoverInfo.innerHTML = timeString;
     }
-    hoverDuration.style.display = 'block';
-    hoverDuration.style.bottom = `${height + 8}px`;
+    hoverInfo.style.display = 'block';
+    hoverInfo.style.bottom = `${height + 8}px`;
     
-    const barRect = duration.getBoundingClientRect();
-    const tooltipWidth = hoverDuration.offsetWidth;
+    const barRect = seekBar.getBoundingClientRect();
+    const tooltipWidth = hoverInfo.offsetWidth;
     let leftPosition = position - tooltipWidth / 2;
     
     if (leftPosition < 0) leftPosition = 0;
     if (leftPosition + tooltipWidth > barRect.width) {
         leftPosition = barRect.width - tooltipWidth;
     }
-    hoverDuration.style.left = `${leftPosition}px`;
+    hoverInfo.style.left = `${leftPosition}px`;
     if (tooltipWidth) {
-        hoverDuration.style.visibility = 'visible';
+        hoverInfo.style.visibility = 'visible';
     } else {
-        hoverDuration.style.visibility = 'hidden';
+        hoverInfo.style.visibility = 'hidden';
     }
 }
 
 function clearTimelineHover() {
     hoverTime.style.width = '0';
-    hoverDuration.style.display = 'none';
+    hoverInfo.style.display = 'none';
 }
 
 function setupMouseDrag(handlerMove) {
@@ -952,11 +952,11 @@ downloadButton.addEventListener('keydown', (event) => {
 // EVENT LISTENERS - TIMELINE
 // ============================================================================
 
-duration.addEventListener('mousedown', (event) => {
+seekBar.addEventListener('mousedown', (event) => {
     setupMouseDrag(moveEvent => updateVideoTime(getTimelinePosition(moveEvent.clientX).percentage));
 });
 
-duration.addEventListener('touchstart', (event) => {
+seekBar.addEventListener('touchstart', (event) => {
     setupTouchDrag(moveEvent => updateVideoTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
@@ -967,16 +967,16 @@ document.addEventListener('touchstart', () => {
     clearTimelineHover();
 },{ passive: true });
 
-duration.addEventListener('mousemove', (event) => {
+seekBar.addEventListener('mousemove', (event) => {
     if (!touchHoverActive) showTimelineHover(event.clientX);
 });
 
-duration.addEventListener('mouseleave', () => {
+seekBar.addEventListener('mouseleave', () => {
     touchHoverActive = false;
     clearTimelineHover();
 });
 
-duration.addEventListener('click', (event) => {
+seekBar.addEventListener('click', (event) => {
     updateVideoTime(getTimelinePosition(event.clientX).percentage);
 });
 
@@ -989,7 +989,7 @@ document.addEventListener('keydown', (event) => {
     
     if (event.key.match(/[0-9]/gi)) {
         video.currentTime = (video.duration / 100) * (parseInt(event.key) * 10);
-        currentTime.style.width = parseInt(event.key) * 10 + '%';
+        progress.style.width = parseInt(event.key) * 10 + '%';
         return;
     }
     
@@ -1044,5 +1044,4 @@ document.addEventListener('keydown', (event) => {
 
 initializeVideoPlayer();
 
- 
  

@@ -23,8 +23,8 @@ const invertButton = document.getElementById('invertBtn');
 const progressBar = document.getElementById('progress');
 const sidebar = document.getElementById('sidebar');
 const loader = document.getElementById('loader');
-const mainContainer = document.querySelector('.main-container');
-const listGroup = document.querySelector('.list-group');
+const mainContainer = document.getElementById('main-container');
+const listGroup = document.getElementById('list-group');
 const backButton = document.getElementById('backdir');
 const loginButton = document.getElementById('login');
 
@@ -120,8 +120,8 @@ function getSelectedURLs() {
 // ============================================================================
 
 function showLoader() {
-    if (loader) loader.style.display = '';
-    if (mainContainer) mainContainer.style.display = 'none';
+    loader.style.display = '';
+    mainContainer.style.display = 'none';
 }
 
 // ============================================================================
@@ -495,12 +495,12 @@ function moveFocus(direction) {
 // ============================================================================
 
 listGroup.addEventListener('click', event => {
-    const clickedItem = event.target.closest('.list-group > button');
+    const clickedItem = event.target.closest('#list-group > button');
     if (clickedItem) handleItemClick(clickedItem);
 });
 
 listGroup.addEventListener('keydown', event => {
-    const focusedItem = event.target.closest('.list-group > button');
+    const focusedItem = event.target.closest('#list-group > button');
     if ((event.key === 'Enter' || event.key === ' ') && focusedItem) {
         event.preventDefault();
         handleItemClick(focusedItem);

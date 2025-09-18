@@ -36,11 +36,14 @@ video::-moz-media-controls { display: none !important; }
  *   Pointer config
  * ------------------------- */
 
-img, #main-state, #controls,
-#hover-duration {
+#main-state,
+#hover-info,
+#controls,
+img {
     pointer-events: none;
 }
-.side-controls, #duration {
+.side-controls,
+#seek-bar {
     pointer-events: auto;
 }
 
@@ -153,7 +156,7 @@ button img {
  *   Main time bar
  * ------------------------- */
 
-#duration {
+#seek-bar {
     height: 8px;
     margin: 0 auto;
     cursor: pointer;
@@ -162,7 +165,7 @@ button img {
     inset: auto 0 20px;
     width: calc(100% - 64px);
 }
-#duration::before {
+#seek-bar::before {
     content: "";
     width: 100%;
     height: 100%;
@@ -171,7 +174,7 @@ button img {
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
-#duration::after {
+#seek-bar::after {
     content: "";
     top: 50%;
     left: 50%;
@@ -185,7 +188,7 @@ button img {
  *   Time bar current time
  * ------------------------- */
 
-#current-time {
+#progress {
     width: 0;
     height: 100%;
     display: flex;
@@ -195,7 +198,7 @@ button img {
     border-radius: 5px;
     z-index: 1;
 }
-#current-time::before {
+#progress::before {
     opacity: 0;
     content: "";
     width: 12px;
@@ -208,7 +211,8 @@ button img {
     transform: scale(0);
     box-shadow: 0 0 3px black;
 }
-#duration:hover #current-time::before {
+#seek-bar:hover
+#progress::before {
     opacity: 1;
     transform: scale(1);
 }
@@ -226,7 +230,7 @@ button img {
     align-items: center;
     border-radius: 5px;
 }
-#hover-duration {
+#hover-info {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw) !important;
@@ -403,8 +407,12 @@ select option {
  *   Transparent style
  * ------------------------- */
 
-#duration::before, #main-state, .time-container span,
-button, #setting-menu, #hover-duration {
+.time-container span,
+#seek-bar::before,
+#setting-menu,
+#hover-info,
+#main-state,
+button {
     -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     background: transparent;
@@ -418,17 +426,19 @@ button, #setting-menu, #hover-duration {
 /* Just to animate with Opacity but
  *WITHOUT BREAKING the backdrop-filter */
 .time-container span, button,
-#duration::before, #duration * {
+#seek-bar::before,
+#seek-bar * {
     transition: opacity 0.3s;
 }
 #controls.show .time-container span,
-#controls.show #duration::before,
-#controls.show button,
-#controls.show #duration * {
+#controls.show #seek-bar::before,
+#controls.show #seek-bar *,
+#controls.show button {
     opacity: 1;
 }
-#chapter-container, #duration #hover-time,
-#duration #current-time {
+#chapter-container,
+#hover-time,
+#progress {
     transition: none !important;
 }
 
@@ -458,7 +468,7 @@ button, #setting-menu, #hover-duration {
     }
 }
 @media (max-width: 600px) {
-    #duration {
+    #seek-bar {
         bottom: 10px;
     }
     .time-container {
@@ -475,7 +485,7 @@ button, #setting-menu, #hover-duration {
     }
 }
 @media (max-width: 320px) {
-    #duration {
+    #seek-bar {
         width: 90%;
     }
     #custom-loader {
@@ -490,8 +500,8 @@ button, #setting-menu, #hover-duration {
     }
 }
 @media (max-width: 200px) {
-    #settings,
-    #setting-menu {
+    #setting-menu,
+    #settings {
         display: none;
     }
 }

@@ -1,0 +1,37 @@
+{# _macros.html #}
+
+{%- set icon_map = {
+    'disk':         'hard-drive-solid.svg',
+    'directory':    'folder-solid.svg',
+    'source':       'file-code-solid.svg',
+    'video':        'film-solid.svg',
+    'audio':        'music-solid.svg',
+    'text':         'file-lines-solid.svg',
+    'pdf':          'file-pdf-solid.svg',
+    'photo':        'image-solid.svg',
+    'document':     'file-word-solid.svg',
+    'database':     'database-solid.svg',
+    'presentation': 'file-powerpoint-solid.svg',
+    'virtualdisk':  'compact-disc-solid.svg',
+    'compressed':   'file-zipper-solid.svg',
+    'binary':       'file-binary.svg',
+    'webpage':      'globe-solid.svg'
+} %}
+
+{%- macro render_item(item) %}
+  {%- set is_dir  = item.type in ['directory', 'disk'] %}
+  {%- set is_disk = item.type == 'disk' %}
+  <button {%- if is_dir %} isdir {%- endif %}>
+    <img src="/?static=svg/index/{{ icon_map.get(item.type, 'file-solid.svg') }}">
+    <pre>{{ item.name }}</pre>
+    {%- if is_disk %}
+      <span>{{ item.size }} / {{ item.capacity }}</span>
+      <span>({{ item.used }}%)</span>
+    {%- else %}
+      <span>{{ item.size }}</span>
+      <span>{{ item.mtime[0] }} {{ item.mtime[1] }}</span>
+    {%- endif %}
+  </button>
+{%- endmacro %}
+
+ 

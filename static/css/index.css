@@ -125,7 +125,7 @@ pre {
  *   Main layout / content
  * ------------------------- */
 
-.main-container {
+#main-container {
     display: flex;
     height: 100vh;
     height: 100dvh;
@@ -136,7 +136,7 @@ pre {
     width: 100%;
     height: 100%;
 }
-.list-group {
+#list-group {
     gap: 6px;
     width: 100%;
     height: 100%;
@@ -191,7 +191,7 @@ pre {
  *   File item
  * ------------------------- */
 
-.list-group > button {
+#list-group > button {
     color: #eee;
     display: flex;
     align-items: center;
@@ -202,24 +202,24 @@ pre {
     border-radius: 8px;
     border: 1px solid transparent;
 }
-.list-group > button:focus-visible {
+#list-group > button:focus-visible {
     outline: 1px solid white;
 }
 .selected {
     background: #1e3a5f !important;
     border-color: #4a90d9 !important;
 }
-.list-group > button > pre {
+#list-group > button > pre {
     flex: 1;
     margin: 0 12px 0 6px;
     text-align: left;
 }
-.list-group > button > span:first-of-type {
+#list-group > button > span:first-of-type {
     font-size: 15px;
     margin-left: 3em;
     color: #8fd8b3;
 }
-.list-group > button > span:last-of-type {
+#list-group > button > span:last-of-type {
     font-size: 15px;
     margin-left: 0.6rem;
     font-family: monospace;
@@ -290,12 +290,12 @@ pre {
  * ------------------------- */
 
 @media (max-width:1200px) {
-    .list-group > button {
+    #list-group > button {
         min-width: calc(100% + 256px);
     }
 }
 @media (max-width:400px) {
-    .list-group > button {
+    #list-group > button {
         min-width: calc(100% + 384px);
     }
 }
@@ -326,8 +326,8 @@ pre {
  * ------------------------- */
 
 @media (max-width:200px) or (max-height: 120px) {
-    .main-container,
-    .load_container { 
+    #main-container,
+    .load_container {
         display: none;
     }
 }
@@ -337,7 +337,7 @@ pre {
  * ------------------------- */
 
 @media (hover:hover) {
-    .list-group > button:hover {
+    #list-group > button:hover {
         background: #2a2a2a;
         border-color: #555;
     }
