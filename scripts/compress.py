@@ -1,137 +1,71 @@
 # Code by Sergio00166
 
 from os.path import abspath, join
+from re import compile as re_compile
 from re import sub as re_sub
+from re import S as re_S
 from glob import glob
 from sys import path
 
+# ---------------------------
+# Precompiled regex patterns
+# ---------------------------
+
+STRING_PAT = re_compile(r'(["\'`])(?:\\.|(?!\1).)*\1', re_S)
+BLOCK_COMMENT_PAT = re_compile(r'/\*.*?\*/', re_S)
+LINE_COMMENT_PAT = re_compile(r'//[^\r\n]*')
+WS_COLLAPSE_PAT = re_compile(r'\s+')
+JS_PUNCT_PAT = re_compile(r'\s*([{}\[\]()\.,:;])\s*')
+JS_COMPARE_PAT = re_compile(r'\s*(===|!==|==|!=|<=|>=)\s*')
+JS_LTGT_PAT = re_compile(r'\s*([<>])\s*')
+JS_EQ_PAT = re_compile(r'\s*=\s*')
+JS_OP_PAT = re_compile(r'\s*([+\-*/%&|^!~])\s*')
+JS_FUNC_CALL_PAT = re_compile(r'([A-Za-z0-9_$])\s+\(')
+JS_KEYWORD_CALL_PAT = re_compile(r'\b(if|for|while|switch|catch|with|function)\s+\(')
+JS_ELSE_BLOCK_PAT = re_compile(r'\}\s*else\s*\{')
+JS_ELSE_PAREN_PAT = re_compile(r'\)\s*else\s*\{')
+JS_SEMI_CLOSE_PAT = re_compile(r';+}')
+CSS_PUNCT_PAT = re_compile(r'\s*([{};:,>~])\s*')
+TAG_GAP_RE = re_compile(r'>\s+<')
 
 # ---------------------------
 # comment stripper (strings/template aware)
 # ---------------------------
 
 def _strip_comments(src):
-    out = []
-    i = 0
-    n = len(src)
-    while i < n:
-        ch = src[i]
-        # strings and template literals
-        if ch in ('"', "'", '`'):
-            quote = ch
-            out.append(ch)
-            i += 1
-            while i < n:
-                c = src[i]
-                out.append(c)
-                if c == '\\' and i + 1 < n:
-                    out.append(src[i+1])
-                    i += 2
-                    continue
-                if quote == '`' and c == '$' and i + 1 < n and src[i+1] == '{':
-                    # template expression: copy until matching }
-                    out.append(src[i+1])
-                    i += 2
-                    depth = 1
-                    while i < n and depth:
-                        cc = src[i]
-                        out.append(cc)
-                        if cc == '{':
-                            depth += 1
-                        elif cc == '}':
-                            depth -= 1
-                        elif cc in ('"', "'", '`'):
-                            # skip inner string
-                            q = cc
-                            i += 1
-                            while i < n:
-                                out.append(src[i])
-                                if src[i] == '\\' and i + 1 < n:
-                                    out.append(src[i+1]); i += 2; continue
-                                if src[i] == q:
-                                    break
-                                i += 1
-                        i += 1
-                    continue
-                if c == quote:
-                    i += 1
-                    break
-                i += 1
-            continue
-        # comments
-        if ch == '/' and i + 1 < n:
-            nxt = src[i+1]
-            if nxt == '/':
-                # line comment
-                i += 2
-                while i < n and src[i] not in '\n\r':
-                    i += 1
-                out.append(' ')
-                continue
-            elif nxt == '*':
-                # block comment
-                i += 2
-                while i + 1 < n and not (src[i] == '*' and src[i+1] == '/'):
-                    i += 1
-                i += 2 if i + 1 < n else 0
-                out.append(' ')
-                continue
-        out.append(ch)
-        i += 1
-    return ''.join(out)
-
+    strings = []
+    def _store(m):
+        strings.append(m.group(0))
+        return f"__STR{len(strings)-1}__"
+    src = STRING_PAT.sub(_store, src)
+    src = BLOCK_COMMENT_PAT.sub(' ', src)
+    src = LINE_COMMENT_PAT.sub(' ', src)
+    for i, s in enumerate(strings):
+        src = src.replace(f"__STR{i}__", s)
+    return src
 
 def _collapse_ws(s):
-    return re_sub(r'\s+', ' ', s).strip()
-
+    return WS_COLLAPSE_PAT.sub(' ', s).strip()
 
 # ---------------------------
-# JS minifier (conservative but more aggressive than original)
+# JS minifier
 # ---------------------------
 
 def compress_js(src):
-    """Conservative JS minifier with tighter spacing rules:
-    - removes comments
-    - collapses whitespace
-    - removes spaces around punctuation and most operators
-    - specifically removes spaces after semicolons and around assignments/comparisons
-    - keeps semicolons where they are required and does NOT change control flow (no if->ternary).
-    """
     s = _strip_comments(src)
     s = _collapse_ws(s)
-
-    # remove spaces around common delimiters but keep minimal safety
-    s = re_sub(r'\s*([{}\[\]()\.,:;])\s*', r'\1', s)
-
-    # collapse multi-char comparison operators first
-    s = re_sub(r'\s*(===|!==|==|!=|<=|>=)\s*', r'\1', s)
-    # then single-char comparisons
-    s = re_sub(r'\s*([<>])\s*', r'\1', s)
-
-    # remove spaces around assignment '=' (after handling ==/=== above)
-    s = re_sub(r'\s*=\s*', '=', s)
-
-    # tighten other binary/unary operators (plus, minus, multiply, divide, modulus, bitwise, logical)
-    s = re_sub(r'\s*([+\-*/%&|^!~])\s*', r'\1', s)
-
-    # collapse identifier followed by space then '(' -> function call
-    s = re_sub(r'([A-Za-z0-9_$])\s+\(', r'\1(', s)
-
-    # remove space after keywords before '('
-    s = re_sub(r'\b(if|for|while|switch|catch|with|function)\s+\(', r'\1(', s)
-
-    # tighten else patterns but avoid touching 'else if'
-    s = re_sub(r'\}\s*else\s*\{', r'}else{', s)
-    s = re_sub(r'\)\s*else\s*\{', r')else{', s)
-
-    # remove unnecessary semicolons before '}' (safe)
-    s = re_sub(r';+}', r'}', s)
-
-    # remove any remaining space after semicolons
+    s = JS_PUNCT_PAT.sub(r'\1', s)
+    s = JS_COMPARE_PAT.sub(r'\1', s)
+    s = JS_LTGT_PAT.sub(r'\1', s)
+    s = JS_EQ_PAT.sub('=', s)
+    s = JS_OP_PAT.sub(r'\1', s)
+    s = JS_FUNC_CALL_PAT.sub(r'\1(', s)
+    s = JS_KEYWORD_CALL_PAT.sub(r'\1(', s)
+    s = JS_ELSE_BLOCK_PAT.sub(r'}else{', s)
+    s = JS_ELSE_PAREN_PAT.sub(r')else{', s)
+    s = JS_SEMI_CLOSE_PAT.sub(r'}', s)
     s = s.replace('; ', ';')
-
     return s.strip()
-
 
 # ---------------------------
 # CSS minifier
@@ -140,109 +74,17 @@ def compress_js(src):
 def compress_css(src):
     s = _strip_comments(src)
     s = _collapse_ws(s)
-    # remove unnecessary spaces
-    s = re_sub(r'\s*([{};:,>~])\s*', r'\1', s)
-    # remove final semicolon before closing brace
+    s = CSS_PUNCT_PAT.sub(r'\1', s)
     s = s.replace(';}', '}')
     return s.strip()
 
-
 # ---------------------------
-# HTML minifier (Jinja left intact)
+# Simple HTML minifier (line strip + join)
 # ---------------------------
 
-def _find_tag_end(src, start_idx):
-    i = start_idx + 1
-    n = len(src)
-    in_quote = None
-    while i < n:
-        ch = src[i]
-        if in_quote:
-            if ch == '\\':
-                i += 2
-                continue
-            if ch == in_quote:
-                in_quote = None
-            i += 1
-            continue
-        if ch == '"' or ch == "'":
-            in_quote = ch
-            i += 1
-            continue
-        if ch == '>':
-            return i
-        i += 1
-    return -1
-
-
-def compress_html(src):
-    n = len(src)
-    i = 0
-    out = []
-    while i < n:
-        # Jinja tags: copy verbatim
-        if src.startswith('{{', i) or src.startswith('{%', i) or src.startswith('{#', i):
-            if src.startswith('{{', i):
-                j = src.find('}}', i+2)
-                if j == -1:
-                    out.append(src[i:]); break
-                out.append(src[i:j+2]); i = j+2; continue
-            if src.startswith('{%', i):
-                j = src.find('%}', i+2)
-                if j == -1:
-                    out.append(src[i:]); break
-                out.append(src[i:j+2]); i = j+2; continue
-            j = src.find('#}', i+2)
-            if j == -1:
-                out.append(src[i:]); break
-            out.append(src[i:j+2]); i = j+2; continue
-
-        ch = src[i]
-        if ch == '<':
-            tag_end = _find_tag_end(src, i)
-            if tag_end == -1:
-                out.append(src[i:]); break
-            open_tag = src[i:tag_end+1]
-            out.append(open_tag)
-            low = src[i:tag_end+1].lower()
-            i = tag_end + 1
-            if low.startswith('<script'):
-                close = src.lower().find('</script>', i)
-                if close == -1:
-                    content = src[i:]; i = n
-                else:
-                    content = src[i:close]; i = close
-                out.append(compress_js(content))
-                if i < n:
-                    end = _find_tag_end(src, i)
-                    if end == -1:
-                        out.append(src[i:]); break
-                    out.append(src[i:end+1]); i = end+1
-                continue
-            if low.startswith('<style'):
-                close = src.lower().find('</style>', i)
-                if close == -1:
-                    content = src[i:]; i = n
-                else:
-                    content = src[i:close]; i = close
-                out.append(compress_css(content))
-                if i < n:
-                    end = _find_tag_end(src, i)
-                    if end == -1:
-                        out.append(src[i:]); break
-                    out.append(src[i:end+1]); i = end+1
-                continue
-            continue
-        # text node: collapse whitespace
-        start = i
-        while i < n and src[i] not in '<{':
-            i += 1
-        chunk = src[start:i]
-        out.append(re_sub(r'\s+', ' ', chunk))
-    res = ''.join(out)
-    res = re_sub(r'>\s+<', '><', res)
-    return res.strip()
-
+def compress_html(src: str):
+    collapsed = _collapse_ws(src)
+    return TAG_GAP_RE.sub('><', collapsed)
 
 # ---------------------------
 # File processing
@@ -257,11 +99,15 @@ def process_files(pattern, compressor):
             with open(p, 'w', encoding='utf-8') as f:
                 f.write(compressed)
 
+# ---------------------------
+# Main, run for all
+# ---------------------------
 
 if __name__ == '__main__':
     base = abspath(join(path[0], '..'))
     process_files(join(base, 'static', 'css', '*.css'), compress_css)
     process_files(join(base, 'static', 'js', '*.js'), compress_js)
     process_files(join(base, 'templates', '*'), compress_html)
+
 
  
