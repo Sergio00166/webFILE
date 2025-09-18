@@ -84,7 +84,7 @@ def compress_css(src):
 
 def compress_html(src: str):
     collapsed = _collapse_ws(src)
-    return TAG_WS_RE.sub('><', collapsed)
+    return TAG_WS_RE.sub('', collapsed)
 
 # ---------------------------
 # File processing
