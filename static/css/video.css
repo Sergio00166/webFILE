@@ -425,9 +425,10 @@ button {
 
 /* Just to animate with Opacity but
  *WITHOUT BREAKING the backdrop-filter */
-.time-container span, button,
-#seek-bar::before,
-#seek-bar * {
+.time-container span,
+#seek-bar *, button,
+#seek-bar::before {
+    opacity: 0;
     transition: opacity 0.3s;
 }
 #controls.show .time-container span,
