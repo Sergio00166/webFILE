@@ -9,7 +9,7 @@ body {
     height: 100vh;
     height: 100dvh;
     background: black;
-    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
 }
@@ -36,11 +36,14 @@ video::-moz-media-controls { display: none !important; }
  *   Pointer config
  * ------------------------- */
 
-img, .main-state, .controls,
-.hover-time .hover-duration {
+#main-state,
+#hover-info,
+#controls,
+img {
     pointer-events: none;
 }
-.side-controls, .duration {
+.side-controls,
+#seek-bar {
     pointer-events: auto;
 }
 
@@ -48,7 +51,7 @@ img, .main-state, .controls,
  *   Main structure
  * ------------------------- */
 
-.video-container {
+#video-container {
     width: 90vw;
     height: 90vh;
     height: 90dvh;
@@ -63,7 +66,7 @@ img, .main-state, .controls,
     width: 100%;
     height: 100%;
 }
-.controls {
+#controls {
     width: 100%;
     height: 100%;
     position: absolute;
@@ -83,12 +86,10 @@ img, .main-state, .controls,
     position: absolute;
     transform: translateX(-50%);
 }
-.time-container > span {
-    padding: 2px;
-    padding-left: 3px;
-    padding-right: 4px;
+.time-container span {
+    padding: 2px 4px;
     border-radius: 5px;
-    box-shadow: none !important;
+    box-shadow: none !important
 }
 .btn-controls {
     margin-top: 4px;
@@ -105,7 +106,7 @@ img, .main-state, .controls,
  *   Buttons + svg
  * ------------------------- */
 
-.round-button {
+button {
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -118,7 +119,7 @@ img, .main-state, .controls,
     cursor: pointer;
     flex-shrink: 0;
 }
-img {
+button img {
     width: 20px;
     height: 20px;
     display: inline-block;
@@ -129,7 +130,7 @@ img {
  *   Main state (show status)
  * ------------------------- */
 
-.main-state {
+#main-state {
     opacity: 0;
     transform: scale(0);
     height: 70px;
@@ -142,11 +143,11 @@ img {
     justify-content: center;
     transition: all 0.3s;
 }
-.main-state.show {
+#main-state.show {
     opacity: 0.8;
     transform: scale(1);
 }
-.main-state > img {
+#main-state img {
     width: 67%;
     height: 67%;
 }
@@ -155,16 +156,18 @@ img {
  *   Main time bar
  * ------------------------- */
 
-.duration {
+#seek-bar {
+    left: 0;
+    right: 0;
+    bottom: 20px;
     height: 8px;
     margin: 0 auto;
     cursor: pointer;
     border-radius: 4px;
     position: absolute;
-    inset: auto 0 20px;
-    width: calc(100% - 64px);
+    width: calc(100% - 64px)
 }
-.duration::before {
+#seek-bar::before {
     content: "";
     width: 100%;
     height: 100%;
@@ -173,7 +176,7 @@ img {
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
-.duration::after {
+#seek-bar::after {
     content: "";
     top: 50%;
     left: 50%;
@@ -187,7 +190,7 @@ img {
  *   Time bar current time
  * ------------------------- */
 
-.current-time {
+#progress {
     width: 0;
     height: 100%;
     display: flex;
@@ -197,7 +200,7 @@ img {
     border-radius: 5px;
     z-index: 1;
 }
-.current-time::before {
+#progress::before {
     opacity: 0;
     content: "";
     width: 12px;
@@ -210,7 +213,8 @@ img {
     transform: scale(0);
     box-shadow: 0 0 3px black;
 }
-.duration:hover .current-time::before {
+#seek-bar:hover
+#progress::before {
     opacity: 1;
     transform: scale(1);
 }
@@ -219,7 +223,7 @@ img {
  *   Hover time & Show info
  * ------------------------- */
 
-.hover-time {
+#hover-time {
     width: 0;
     position: absolute;
     display: flex;
@@ -228,7 +232,7 @@ img {
     align-items: center;
     border-radius: 5px;
 }
-.hover-time .hover-duration {
+#hover-info {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw) !important;
@@ -245,7 +249,7 @@ img {
  *   Time bar chapters
  * ------------------------- */
 
-.chapter-container {
+#chapter-container {
     position: relative;
     height: 100%;
     border-radius: inherit;
@@ -265,7 +269,7 @@ img {
  *   Sound control
  * ------------------------- */
 
-.volume {
+#volume {
     display: flex;
     align-items: center;
 }
@@ -312,7 +316,7 @@ img {
  *   Option list
  * ------------------------- */
 
-.setting-menu {
+#setting-menu {
     position: absolute;
     opacity: 0;
     padding: 0;
@@ -329,12 +333,12 @@ img {
     transform-origin: top;
     border-radius: 12px;
 }
-.setting-menu.show {
+#setting-menu.show {
     opacity: 1;
     transform: scaleY(1);
     visibility: visible;
 }
-.setting-menu > li {
+#setting-menu li {
     padding: 0.25rem 0.4rem;
     margin: 0.25rem;
     border-radius: 8px;
@@ -342,17 +346,22 @@ img {
     cursor: pointer;
     color: white;
 }
-.setting-menu > li:nth-child(-n+3):focus-within {
+#subsMenu:focus-within,
+#audioMenu:focus-within,
+#speedMenu:focus-within {
     outline: auto;
 }
-.setting-menu > li:nth-child(1)::before {
-    content: "Subs"; position: absolute;
+#subsMenu::before {
+    content: "Subs";
+    position: absolute;
 }
-.setting-menu > li:nth-child(2)::before {
-    content: "Tracks"; position: absolute;
+#audioMenu::before {
+    content: "Tracks";
+    position: absolute;
 }
-.setting-menu > li:nth-child(3)::before {
-    content: "Speed"; position: absolute;
+#speedMenu::before {
+    content: "Speed";
+    position: absolute;
 }
 
 /* -------------------------
@@ -380,7 +389,7 @@ select option {
  *   Loading animation
  * ------------------------- */
 
-.custom-loader {
+#custom-loader {
     width: 108px;
     height: 108px;
     border: 10px solid white;
@@ -397,26 +406,15 @@ select option {
 }
 
 /* -------------------------
- *   Full screen control
- * ------------------------- */
-
-.fullscreen {
-    position: absolute !important;
-    width: 100% !important;
-    height: 100% !important;
-    display: flex !important;
-    background: black !important;
-    align-items: center !important;
-    -webkit-tap-highlight-color: transparent !important;
-    user-select: none !important;
-}
-
-/* -------------------------
  *   Transparent style
  * ------------------------- */
 
-.duration::before, .main-state, .time-container span,
-.round-button, .setting-menu, .hover-duration {
+.time-container span,
+#seek-bar::before,
+#setting-menu,
+#hover-info,
+#main-state,
+button {
     -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(3px);
     background: transparent;
@@ -429,19 +427,21 @@ select option {
 
 /* Just to animate with Opacity but
  *WITHOUT BREAKING the backdrop-filter */
-.time-container span, .round-button,
-.duration::before, .duration * {
+.time-container span,
+#seek-bar *, button,
+#seek-bar::before {
     opacity: 0;
     transition: opacity 0.3s;
 }
-.controls.show .time-container span,
-.controls.show .duration::before,
-.controls.show .round-button,
-.controls.show .duration * {
+#controls.show .time-container span,
+#controls.show #seek-bar::before,
+#controls.show #seek-bar *,
+#controls.show button {
     opacity: 1;
 }
-.chapter-container, .duration .hover-time,
-.duration .current-time {
+#chapter-container,
+#hover-time,
+#progress {
     transition: none !important;
 }
 
@@ -449,13 +449,10 @@ select option {
  *   Other
  * ------------------------- */
 
-.vol_val_st { font-size: 1.3rem; }
-.full, .contract { display: none; }
-.video-container:not(.fullscreen) .full { display: block; }
-.video-container.fullscreen .contract { display: block; }
+#state_volume { font-size: 1.3rem; }
 .lmbsl { background: #8f9f3030 !important; }
-.video-box, .video-container { position: relative; }
-canvas { position: absolute; }
+#video-container { position: relative; }
+.video-box, canvas { position: absolute; }
 .settings { position: relative; }
 
 
@@ -464,17 +461,17 @@ canvas { position: absolute; }
  * ------------------------- */
 
 @media (max-width: 900px) {
-    .main-state {
+    #main-state {
         height: 64px;
         width: 64px;
     }
-    .custom-loader {
+    #custom-loader {
         height: 90px;
         width: 90px;
     }
 }
 @media (max-width: 600px) {
-    .duration {
+    #seek-bar {
         bottom: 10px;
     }
     .time-container {
@@ -482,8 +479,8 @@ canvas { position: absolute; }
     }
 }
 @media (max-width: 500px) {
-    .play-pause,
-    .volume {
+    #play-pause,
+    #volume {
         display: none;
     }
     .btn-controls {
@@ -491,10 +488,10 @@ canvas { position: absolute; }
     }
 }
 @media (max-width: 320px) {
-    .duration {
+    #seek-bar {
         width: 90%;
     }
-    .custom-loader {
+    #custom-loader {
         height: 56px;
         width: 56px;
         border-width: 5px;
@@ -506,8 +503,8 @@ canvas { position: absolute; }
     }
 }
 @media (max-width: 200px) {
-    #settings,
-    .setting-menu {
+    #setting-menu,
+    #settings {
         display: none;
     }
 }
@@ -522,7 +519,7 @@ canvas { position: absolute; }
     }
 }
 @media (max-height: 120px) or (max-width: 120px) {
-    .video-container {
+    #video-container {
         display: none;
     }
 }
@@ -532,7 +529,7 @@ canvas { position: absolute; }
  * ------------------------- */
 
 @media (hover: hover) {
-    .setting-menu li:hover, .round-button:hover {
+    #setting-menu li:hover, button:hover {
         outline: 2px solid #fffa !important;
     }
 }

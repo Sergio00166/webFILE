@@ -1,5 +1,4 @@
 <!-- Code by Sergio00166 -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,7 +10,7 @@
     <script defer src="/?static=js/video.js"></script>
     <script src="/?static=jassub/jassub.js"></script>
     <script>
-      const chapters = {{ chapters | tojson}};
+      const chapters = {{ chapters | tojson }};
     </script>
   </head>
   <body>
@@ -19,43 +18,39 @@
     <a href="{{ subs_file }}" id="download_subs" tabindex="-1"></a>
     <a href='{{ nxt }}' id="next" tabindex="-1"></a>
     <a href='{{ prev }}' id="prev" tabindex="-1"></a>
-    <div class="video-container">
+    <div id="video-container">
       <div class="video-box">
-          <video src="{{ request.path }}?raw" disablePictureInPicture></video>
-          <canvas></canvas>
+        <video src="{{ request.path }}?raw" disablePictureInPicture></video>
+        <canvas></canvas>
       </div>
       <div id="touch-box"></div>
-      <span class="custom-loader" style="display: none;"></span>
-  
-      <span class="main-state">
+      <span id="custom-loader" style="display: none;"></span>
+      <span id="main-state">
         <img src="/?static=svg/videoplayer/play-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/pause-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/volume-mute-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/volume-high-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/chevron-forward-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/chevron-back-outline.svg" style="display: none;">
-        <div class="vol_val_st" style="display: none;"></div>
+        <div id="state_volume" style="display: none;"></div>
       </span>
-  
-      <div class="controls">
-        <div class="duration">
-          <div class="current-time"></div>
-          <div class="hover-time">
-            <span class="hover-duration" style="display: none;"></span>
+      <div id="controls">
+        <div id="seek-bar">
+          <div id="progress"></div>
+          <div id="hover-time">
+            <span id="hover-info" style="display: none;"></span>
           </div>
-          <div class="chapter-container"></div>
-          <div class="buffer"></div>
+          <div id="chapter-container"></div>
         </div>
         <div class="btn-controls">
-
           <div class="side-controls">
-            <button class="round-button play-pause" onclick="togglePlayPauseState()" title="Play">
+            <button id="play-pause" onclick="togglePlayPauseState()" title="Play">
               <img src="/?static=svg/videoplayer/play-outline.svg" style="display: block;">
               <img src="/?static=svg/videoplayer/pause-outline.svg" style="display: none;">
             </button>
-            <button class="round-button" id="mode" onclick="changePlaybackMode()" title="Loop (L)">1</button>
-            <span class="volume">
-              <button class="round-button" onclick="toggleMuteState()" title="Mute (M)">
+            <button id="mode" onclick="changePlaybackMode()" title="Loop (L)">1</button>
+            <span id="volume">
+              <button onclick="toggleMuteState()" title="Mute (M)">
                 <img src="/?static=svg/videoplayer/volume-mute-outline.svg" style="display: none;">
                 <img src="/?static=svg/videoplayer/volume-high-outline.svg" style="display: block;">
                 <img src="/?static=svg/videoplayer/volume-medium-outline.svg" style="display: none;">
@@ -65,38 +60,36 @@
               <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
             </span>
           </div>
-    
           <span class="time-container">
-            <span id="current-duration">00:00</span>
+            <span id="current-time">00:00</span>
             <span>/</span>
-            <span id="total-duration">00:00</span>
+            <span id="total-time">00:00</span>
           </span>
-
           <div class="side-controls">
-            <button class="round-button" onclick="navigateToPrevious()" title="Prev (P)">
+            <button onclick="navigateToPrevious()" title="Prev (P)">
               <img src="/?static=svg/videoplayer/play-skip-back-outline.svg">
             </button>
-            <button class="round-button" onclick="navigateToNext()" title="Next (N)">
+            <button onclick="navigateToNext()" title="Next (N)">
               <img src="/?static=svg/videoplayer/play-skip-forward-outline.svg">
             </button>
             <span class="settings">
-              <button class="round-button" id="settings" title="Menu (hold:legacy)">
+              <button id="settings" title="Menu (hold:legacy)">
                 <img src="/?static=svg/videoplayer/settings-outline.svg">
               </button>
-              <ul class="setting-menu">
-                <li>
-                  <select id="s0">
+              <ul id="setting-menu">
+                <li id="subsMenu">
+                  <select>
                     <option value="-1">None</option>
-                   {% for item in tracks %}
+                   {%- for item in tracks %}
                     <option value={{ tracks.index(item) }}>{{ item }}</option>
-                   {% endfor %}
+                   {%- endfor %}
                   </select>
                 </li>
-                <li>
-                  <select id="s1"></select>
+                <li id="audioMenu">
+                  <select></select>
                 </li>
-                <li>
-                  <select id="s2">
+                <li id="speedMenu">
+                  <select>
                     <option value="0.25">0.25x</option>
                     <option value="0.5">0.5x</option>
                     <option value="0.75">0.75x</option>
@@ -107,17 +100,18 @@
                     <option value="2">2x</option>
                   </select>
                 </li>
-                <li id="liD" tabindex="0">Download</li>
+                <li id="download" tabindex="0">Download</li>
               </ul>
             </span>
-            <button class="round-button" onclick="toggleFullscreenMode()" title="Fullscren (F)">
-              <img class="full" src="/?static=svg/videoplayer/scan-outline.svg">
-              <img class="contract" src="/?static=svg/videoplayer/contract-outline.svg">
+            <button id="screenToggle" onclick="toggleFullscreenMode()" title="Fullscren (F)">
+              <img src="/?static=svg/videoplayer/scan-outline.svg" style="display: block;">
+              <img src="/?static=svg/videoplayer/contract-outline.svg" style="display: none;">
             </button>
           </div>
-
         </div>
       </div>
     </div>
   </body>
 </html>
+
+ 

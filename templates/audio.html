@@ -1,13 +1,12 @@
 <!-- Code by Sergio00166 -->
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <title>{{ name }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="icon" href="/?static=ico/audio.ico"/>
-    <link rel="stylesheet" href="/?static=css/audio.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/?static=ico/audio.ico" />
+    <link rel="stylesheet" href="/?static=css/audio.css" />
     <script defer src="/?static=js/audio.js"></script>
   </head>
   <body>
@@ -15,14 +14,14 @@
       <header class="player-header">
         <h1 class="player-title">{{ name }}</h1>
       </header>
-      <audio id="audio" src="{{ request.path }}?raw"></audio>
+      <audio src="{{ request.path }}?raw"></audio>
       <div class="controls">
-        <div class="time-bar">
+        <div class="time-row">
           <span id="current-time">00:00</span>
-          <div class="duration">
-            <div class="current-time"></div>
-            <div class="hover-time">
-              <span class="hover-duration" style="display: none;"></span>
+          <div id="seek-bar">
+            <div id="progress"></div>
+            <div id="hover-time">
+              <span id="hover-info" style="display: none;"></span>
             </div>
           </div>
           <span id="total-time">00:00</span>
@@ -36,31 +35,31 @@
             <img src="/?static=svg/videoplayer/pause-outline.svg" style="display: none;">
           </button>
           <button class="nav-btn" onclick="navigateToNext()" title="Next (N)">
-            <img src="/?static=svg/audioplayer/round-double-alt-arrow-right.svg"/>
+            <img src="/?static=svg/audioplayer/round-double-alt-arrow-right.svg" />
           </button>
         </div>
         <div class="volume-control">
-          <div class="vol-icons" tabindex="0" onclick="toggleMuteState()" title="Mute (M)">
+          <div id="vol-icons" tabindex="0" onclick="toggleMuteState()" title="Mute (M)">
+            <img src="/?static=svg/videoplayer/volume-mute-outline.svg" style="display: none;">
             <img src="/?static=svg/videoplayer/volume-high-outline.svg" style="display: block;">
             <img src="/?static=svg/videoplayer/volume-medium-outline.svg" style="display: none;">
             <img src="/?static=svg/videoplayer/volume-low-outline.svg" style="display: none;">
             <img src="/?static=svg/videoplayer/volume-off-outline.svg" style="display: none;">
-            <img src="/?static=svg/videoplayer/volume-mute-outline.svg"  style="display: none;">
           </div>
           <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
         </div>
       </div>
       <div class="extra-controls">
         <button id="shuffle-btn" onclick="toggleShuffleMode()" title="Shuffle (S)">
-            <img src="/?static=svg/audioplayer/shuffle-tracks-button.svg">
+          <img src="/?static=svg/audioplayer/shuffle-tracks-button.svg">
         </button>
         <button id="loop-btn" onclick="cycleLoopMode()" title="Loop (L)">
-            <img src="/?static=svg/audioplayer/repeat-button.svg" style="display: block;">
-            <img src="/?static=svg/audioplayer/repeat-single-button.svg" style="display: none;">
+          <img src="/?static=svg/audioplayer/repeat-button.svg" style="display: block;">
+          <img src="/?static=svg/audioplayer/repeat-single-button.svg" style="display: none;">
         </button>
         <button id="speed-btn" title="Speed">1x</button>
-        <button onclick="downloadAudio()" title="Download">
-            <img src="/?static=svg/audioplayer/down-arrow.svg"/>
+        <button onclick="download()" title="Download">
+          <img src="/?static=svg/audioplayer/down-arrow.svg" />
         </button>
       </div>
     </div>
@@ -70,3 +69,5 @@
     <a href="{{ rnd }}" id="random" tabindex="-1"></a>
   </body>
 </html>
+
+ 

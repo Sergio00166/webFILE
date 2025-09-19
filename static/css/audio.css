@@ -7,10 +7,10 @@ body {
     height: 100vh;
     height: 100dvh;
     display: flex;
+    color: #eee;
     align-items: center;
     justify-content: center;
     background-color: black;
-    color: #eee;
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
@@ -111,15 +111,15 @@ button {
     margin-left: 8px;
     margin-right: 12px;
 }
-.time-bar {
+.time-row {
     display: flex;
     width: 100%;
     align-items: center;
 }
-.duration {
+#seek-bar {
     position: relative;
     margin: auto;
-    width: calc((100% - 64px));
+    width: calc(100% - 64px);
     height: 6px;
     background: #555;
     cursor: pointer;
@@ -128,7 +128,7 @@ button {
 /* This weird shit is only to let the */
 /* user select easily the start and end */
 /* and also try to fix one bug */
-.duration::before {
+#seek-bar::before {
     content: "";
     position: absolute;
     top: 50%;
@@ -142,7 +142,7 @@ button {
  *   Hover time show
  * ------------------------- */
 
-.hover-time {
+#hover-time {
     width: 0;
     overflow: show;
     height: 100%;
@@ -152,7 +152,7 @@ button {
     align-items: center;
     border-radius: 5px;
 }
-.hover-time .hover-duration {
+#hover-info {
     position: absolute;
     font-size: 0.7rem;
     visibility: hidden;
@@ -160,7 +160,7 @@ button {
     pointer-events: none;
     transform: translateZ(0);
 }
-.duration .current-time {
+#progress {
     width: 0;
     height: 100%;
     display: flex;
@@ -170,7 +170,7 @@ button {
     border-radius: 5px;
     z-index: 1;
 }
-.current-time::before {
+#progress::before {
     opacity: 0;
     content: '';
     width: 12px;
@@ -183,7 +183,7 @@ button {
     transform: scale(0);
     box-shadow: 0 0 3px black;
 }
-.duration:hover .current-time::before {
+#seek-bar:hover #progress::before {
     opacity: 1;
     transform: scale(1);
 }
@@ -229,7 +229,7 @@ button {
     gap: 8px;
     padding-right: 12px;
 }
-.vol-icons {
+#vol-icons {
     width: 24px;
     height: 24px;
     cursor: pointer;
@@ -283,8 +283,8 @@ button {
     .extra-controls {
         display: none;
     }
-    .duration {
-        width: calc((100% - 16px));
+    #seek-bar {
+        width: calc(100% - 16px);
     }
 }
 @media (max-width: 180px) {
@@ -310,7 +310,7 @@ button {
     }
 }
 @media (max-height: 190px) or (max-width: 160px) {
-    .time-bar,
+    .time-row,
     .player-header {
         display: none;
     }
