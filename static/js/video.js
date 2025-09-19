@@ -869,7 +869,7 @@ settingsButton.addEventListener('touchcancel', cancelPressTimer);
 // EVENT LISTENERS - TRACK SELECTION
 // ============================================================================
 
-audioTracksSelector.addEventListener('change', function() {
+audioTracksSelector.addEventListener('change', () => {
     const selectedIndex = parseInt(this.value, 10);
     changeAudioTrack(selectedIndex);
     const trackText = audioTracksSelector[selectedIndex].text;
@@ -890,7 +890,7 @@ subtitleSelector.addEventListener('change', async function() {
     toggleSettingsMenu();
 });
 
-playbackSpeedSelector.addEventListener('change', function() {
+playbackSpeedSelector.addEventListener('change', () => {
     video.playbackRate = parseFloat(this.value);
     localStorage.setItem('videoSpeed', video.playbackRate);
     toggleSettingsMenu();
