@@ -12,6 +12,7 @@ body {
     justify-content: center;
     background-color: black;
     font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
 }
