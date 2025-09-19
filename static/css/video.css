@@ -9,7 +9,7 @@ body {
     height: 100vh;
     height: 100dvh;
     background: black;
-    -webkit-tap-highlight-color: transparent !important;
+    -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
 }
