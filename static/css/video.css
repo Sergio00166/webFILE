@@ -158,11 +158,11 @@ button img {
 
 #seek-bar {
     height: 8px;
+    bottom: 20px;
     margin: 0 auto;
     cursor: pointer;
     border-radius: 4px;
     position: absolute;
-    inset: auto 0 20px;
     width: calc(100% - 64px);
 }
 #seek-bar::before {
