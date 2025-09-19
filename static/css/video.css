@@ -157,13 +157,15 @@ button img {
  * ------------------------- */
 
 #seek-bar {
-    height: 8px;
+    left: 0;
+    right: 0;
     bottom: 20px;
+    height: 8px;
     margin: 0 auto;
     cursor: pointer;
     border-radius: 4px;
     position: absolute;
-    width: calc(100% - 64px);
+    width: calc(100% - 64px)
 }
 #seek-bar::before {
     content: "";
