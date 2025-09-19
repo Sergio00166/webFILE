@@ -407,7 +407,7 @@ function showCursor() {
     document.body.style.cursor = 'auto';
     
     if (!video.paused) {
-        cursorHideTimeout = setTimeout(function() {
+        cursorHideTimeout = setTimeout(() => {
             if (!video.paused) {
                 document.body.style.cursor = 'none';
             }
@@ -877,7 +877,7 @@ audioTracksSelector.addEventListener('change', () => {
     toggleSettingsMenu();
 });
 
-subtitleSelector.addEventListener('change', async function() {
+subtitleSelector.addEventListener('change', async () => {
     selectedSubtitleIndex = parseInt(this.value);
     
     if (selectedSubtitleIndex == -1) {
