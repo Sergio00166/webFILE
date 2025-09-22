@@ -878,7 +878,7 @@ audioTracksSelector.addEventListener('change', () => {
 });
 
 subtitleSelector.addEventListener('change', async (event) => {
-    selectedSubtitleIndex = parseInt(event.target.value));
+    selectedSubtitleIndex = parseInt(event.target.value);
     
     if (selectedSubtitleIndex == -1) {
         localStorage.removeItem('videoSubs');
