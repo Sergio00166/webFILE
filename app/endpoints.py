@@ -48,8 +48,7 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
             return audio(path, root, file_type, ACL)
 
         else:  # Send the file and set mime for text
-            mime = None if is_binary(path) else "text/css"\
-                  if path.endswith(".css") else "text/plain"
+            mime = "text/css" if path.endswith(".css") else None
             return send_file(path, mimetype=mime, cache=encache)
 
     else:
