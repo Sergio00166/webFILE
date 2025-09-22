@@ -877,8 +877,8 @@ audioTracksSelector.addEventListener('change', () => {
     toggleSettingsMenu();
 });
 
-subtitleSelector.addEventListener('change', async () => {
-    selectedSubtitleIndex = parseInt(this.value);
+subtitleSelector.addEventListener('change', async (event) => {
+    selectedSubtitleIndex = parseInt(event.target.value));
     
     if (selectedSubtitleIndex == -1) {
         localStorage.removeItem('videoSubs');
