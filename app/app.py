@@ -3,11 +3,11 @@
 from init import *
 
 method_map = {
-    "delete": delfile,
-    "move":   move,
-    "copy":   copy,
-    "mkcol":  mkdir,
-    "put":    handle_upload
+    "DELETE": delfile,
+    "MOVE":   move,
+    "COPY":   copy,
+    "MKCOL":  mkdir,
+    "PUT":    handle_upload
 }
 
 @app.route("/<path:path>", methods=["GET","POST","DELETE","MKCOL","COPY","MOVE","PUT"])
