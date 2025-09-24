@@ -12,8 +12,8 @@ autoload_webpage = "index" + webpage_file_ext
 
 
 def serveFiles_page(path, ACL, root, folder_size, useApi):
-    if not request.method.lower() in ["get", "head"]: 
-         return "Method not allowed", 405
+    if not request.method in ["GET", "HEAD"]:
+        return "Method not allowed", 405
 
     validate_acl(path, ACL)
     path = safe_path(path, root)
@@ -77,35 +77,43 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
 
 
 def serveRoot_page(ACL, root, folder_size, useApi):
-    if not request.method.lower() in ["get", "head"]: 
+    if not request.method in ["GET", "HEAD"]:
         return "Method not allowed", 405
+
     path = safe_path("", root)  # Check if we can access it
     sort = request.args["sort"] if "sort" in request.args else ""
 
-    if "tar" in request.args: return send_dir(path, root, ACL, "index")
+    if "tar" in request.args:
+        return send_dir(path, root, ACL, "index")
+
     return directory(path, root, folder_size, sort, ACL, useApi)
 
 
 def login(USERS, useApi):
-    if request.method.lower() == "post":
+    if request.method == "POST":
         user = request.form.get("username")
         password = request.form.get("password")
         hashed_password = sha256(password.encode()).hexdigest()
 
         if USERS.get(user) == hashed_password:
             session["user"] = user
-            if useApi: return "Logged in", 200
-            else: return redirect_no_query()
+            if useApi:
+                return "Logged in", 200
+            else:
+                return redirect_no_query()
+        elif useApi: 
+            return "Invalid username or password.", 401
+        else: 
+            return render_template("login.html", error="Invalid username or password.")
 
-        elif useApi: return "Invalid username or password.", 401
-        else: return render_template("login.html", error="Invalid username or password.")
-
-    elif request.method.lower() == "get": return render_template("login.html")
-    else: return "Method not allowed", 405
+    elif request.method == "GET":
+        return render_template("login.html")
+    else:
+        return "Method not allowed", 405
 
 
 def logout(useApi):
-    if not request.method.lower() == "get": 
+    if not request.method == "GET": 
         return "Method not allowed", 405
 
     try: session.pop("user")
@@ -113,8 +121,10 @@ def logout(useApi):
         if useApi: return "Not logged in", 401
         else: pass
 
-    if useApi: return "Logged out", 200
-    else: return redirect_no_query()
+    if useApi:
+        return "Logged out", 200
+    else:
+        return redirect_no_query()
 
 
 def error(e, error_file, useApi):

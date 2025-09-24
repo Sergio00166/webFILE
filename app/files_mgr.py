@@ -10,17 +10,17 @@ from flask import request
 
 
 def check_recursive(path, ACL, root, write=False):
+    mode = W_OK if write else R_OK
     for fulldir, _, files in walk(path):
         for item in files:
             item_path = fulldir+sep+item
-            
-            if not access(item_path, W_OK if write else R_OK):
+
+            if access(item_path, mode):
+                item_path = relpath(item_path, start=root)
+                item_path = item_path.replace(sep, "/")
+                validate_acl(item_path, ACL, write)
+            else:
                 raise PermissionError
-
-            item_path = relpath(item_path, start=root)
-            item_path = item_path.replace(sep, "/")
-
-            validate_acl(item_path, ACL, write)
 
 
 def check_rec_chg_parent(path, ACL, root, new_parent):

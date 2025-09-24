@@ -11,8 +11,12 @@ from explorer import *
 
 
 def redirect_no_query():
-    parsed_url = urlparse(request.url)
-    return redirect(urlunparse(("", "", parsed_url.path, "", "", "")))
+    new_url = urlunparse((
+        "", "", 
+        urlparse(request.url).path, 
+        "", "", ""
+    ))
+    return redirect(new_url)
 
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False):
@@ -27,12 +31,14 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False)
     lst = [x["path"] for x in out if x["type"] == filetype]
 
     # Get next one
-    try:    nxt = lst[lst.index(path) + 1]
-    except: nxt = "#" if ngtst else lst[0]
+    try:
+        nxt = lst[lst.index(path) + 1]
+    except:
+        nxt = "#" if ngtst else lst[0]
 
     # Get previous one
     if lst.index(path) == 0:
-        prev = "#" if ngtst else lst[-1]
+        prev = "#" if ngtst else lst[-1])
     else:
         prev = lst[lst.index(path) - 1]
 
@@ -40,8 +46,10 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False)
     if prev != "#": prev = "/"+prev
     if nxt  != "#": nxt  = "/"+nxt
 
-    if not random: return prev, nxt, name
-    else: return prev, nxt, name, "/"+choice(lst)
+    if not random:
+        return prev, nxt, name
+    else:
+        return prev, nxt, name, "/"+choice(lst)
 
 
 def get_index_data(folder_path, root, folder_size, sort, ACL):
@@ -49,12 +57,8 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
     folder_content = get_folder_content(folder_path, root, folder_size, ACL)
 
     # Get relative path from root
-    folder_path = relpath(folder_path, start=root)
-
-    if folder_path != ".":
-        folder_path = "/" + folder_path.replace(sep, "/") + "/"
-    else:
-        folder_path = "/"
+    folder_path = relpath(folder_path, start=root).replace(sep, "/")
+    folder_path = "/" if folder_path == "." else f"/{folder_path}/"
 
     # Sort the result items
     folder_content = sort_contents(folder_content, sort, root)
@@ -64,9 +68,10 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
 def subtitles(path, mode):
     if (legacy := mode.endswith("legacy")):
         mode = mode[: mode.find("legacy")]
-
-    try: index = int(mode)
-    except: raise FileNotFoundError
+    try:
+        index = int(mode)
+    except:
+        raise FileNotFoundError
 
     if path.endswith("/"): path = path[:-1]
     return get_subtitles(index, path, legacy)

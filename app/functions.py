@@ -30,14 +30,13 @@ def safe_path(path, root, igntf=False):
             raise FileNotFoundError
         if not access(path, R_OK):
             raise PermissionError
-    else:
+    else: 
         raise PermissionError
     return path
 
 
 def load_userACL(USERS, ACL, users_file, acl_file):
-    USERS.clear()
-    ACL.clear()
+    USERS.clear(); ACL.clear()
     USERS.update(jsload(open(users_file)))
     ACL.update(jsload(open(acl_file)))
 
