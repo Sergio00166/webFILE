@@ -93,7 +93,7 @@ def login(USERS, useApi):
             if useApi:
                 return "Logged in", 200
             else:
-                return redirect_no_query()
+                return redirect_no_query("login")
         elif useApi:
             return "Invalid username or password.", 401
         else:
@@ -117,7 +117,7 @@ def logout(useApi):
     if useApi:
         return "Logged out", 200
     else:
-        return redirect_no_query()
+        return redirect_no_query("logout")
 
 
 def error(e, error_file, useApi):

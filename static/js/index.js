@@ -120,7 +120,7 @@ function showLoader() {
 }
 
 // ============================================================================
-// URL & SORTING MANAGEMENT
+// URL MANAGEMENT
 // ============================================================================
 
 function changeSortingMode(sortMode) {
@@ -128,6 +128,20 @@ function changeSortingMode(sortMode) {
     currentURL.searchParams.set('sort', sortMode);
     history.replaceState({}, document.title, currentURL);
     location.reload();
+}
+
+function redirectWithKey(name) {
+    let parts = [];
+    const url = new URL(window.location.href);
+
+    if (url.search) {
+        parts = url.search.slice(1).split("&");
+    }
+    if (!parts.includes(name)) {
+        parts.push(encodeURIComponent(name));
+        url.search = parts.join("&");
+        window.location.href = url.toString();
+    }
 }
 
 // ============================================================================

@@ -59,9 +59,9 @@
           <div>
             <h3>ACCOUNT</h3>
           {%- if 'user' in session %}
-            <button id="login" onclick='window.location.href="?logout"' title="(l)">🚪 Logout</button>
+            <button id="login" onclick="redirectWithKey('logout')" title="(l)">🚪 Logout</button>
           {%- else %}
-            <button id="login" onclick='window.location.href="?login"' title="(l)">🔑 Login</button>
+            <button id="login" onclick="redirectWithKey('login')" title="(l)">🔑 Login</button>
           {%- endif %}
           </div>
         </div>

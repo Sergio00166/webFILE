@@ -1,20 +1,26 @@
 # Code by Sergio00166
 
 from flask import render_template, stream_template, redirect, request
+from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 from os.path import pardir, basename, abspath, relpath, dirname
 from video import get_subtitles, external_subs
-from urllib.parse import urlparse, urlunparse
 from urllib.parse import quote as encurl
 from video import get_chapters, get_info
 from random import choice
 from explorer import *
 
 
-def redirect_no_query():
+def redirect_no_query(query):
+    parsed_url = urlparse(request.url)
+    query_params = parse_qsl(parsed_url.query, keep_blank_values=True)
+    filtered_params = [(k, v) for k, v in query_params if k.lower() != query]
+
     new_url = urlunparse((
         "", "",
-        urlparse(request.url).path,
-        "", "", ""
+        parsed_url.path,
+        parsed_url.params,
+        urlencode(filtered_params),
+        parsed_url.fragment
     ))
     return redirect(new_url)
 
