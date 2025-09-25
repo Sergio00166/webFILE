@@ -19,30 +19,28 @@ def redirect_no_query():
     return redirect(new_url)
 
 
-def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False):
+def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_start=False):
     path = relpath(file_path, start=root).replace(sep, "/")
     folder, name = dirname(file_path), basename(path)
 
-    out = get_folder_content(folder, root, False, ACL)
-    lst = [x["path"] for x in out if x["type"] == filetype]
+    content = get_folder_content(folder, root, False, ACL)
+    files = [x["path"] for x in content if x["type"] == filetype]
 
     try:
-        nxt = lst[lst.index(path) + 1]
+        next = files[files.index(path) + 1]
     except:
-        nxt = "#" if ngtst else lst[0]
+        next = "#" if no_goto_start else files[0]
 
-    if lst.index(path) == 0:
-        prev = "#" if ngtst else lst[-1]
+    if files.index(path) == 0:
+        prev = "#" if no_goto_start else files[-1]
     else:
-        prev = lst[lst.index(path) - 1]
+        prev = files[files.index(path) - 1]
 
     if prev != "#": prev = "/"+prev
-    if nxt  != "#": nxt  = "/"+nxt
+    if next  != "#": next  = "/"+next
 
-    if not random:
-        return prev, nxt, name
-    else:
-        return prev, nxt, name, "/"+choice(lst)
+    if not random: return prev, next, name
+    else: return prev, next, name, "/"+choice(files)
 
 
 def get_index_data(folder_path, root, folder_size, sort, ACL):

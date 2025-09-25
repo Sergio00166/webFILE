@@ -74,13 +74,11 @@ def sort_contents(folder_content, sort, root):
 
 def get_file_type(path):
     item = Path(path)
-
     if item.is_mount(): return "disk"
     if isdir(path):     return "directory"
 
     file_type = file_type_map.get(item.suffix)
     if file_type:       return file_type
-
     return "file" if is_binary(path) else "text"
 
 
