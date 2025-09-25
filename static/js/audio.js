@@ -86,7 +86,7 @@ function initializeAudioPlayer() {
     updateSpeed();
 }
 
-function waitForAudioReady() {e
+function waitForAudioReady() {
     if (isNaN(audio.duration) || audio.duration === 0) {
         return setTimeout(waitForAudioReady, 25);
     }
