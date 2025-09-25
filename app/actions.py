@@ -66,7 +66,7 @@ def subtitles(path, mode):
 
 
 def video(path, root, file_type, ACL):
-    prev, nxt, name = get_filepage_data(path, root, file_type, ACL, ngtst=True)
+    prev, nxt, name = get_filepage_data(path, root, file_type, ACL, True)
     tracks, chapters = get_info(path), get_chapters(path)
 
     subs = external_subs(path)
