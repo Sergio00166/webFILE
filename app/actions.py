@@ -15,12 +15,11 @@ def redirect_no_query(query):
     query_params = parse_qsl(parsed_url.query, keep_blank_values=True)
     filtered_params = [(k, v) for k, v in query_params if k != query]
 
-    print(filtered_params)
     new_url = urlunparse((
         "", "",
-        parsed_url.path,
+        parsed_url.path, 
         parsed_url.params,
-        urlencode(filtered_params),
+        urlencode(filtered_params).replace("=&","&").removesuffix("="),
         parsed_url.fragment
     ))
     return redirect(new_url)
@@ -68,7 +67,7 @@ def subtitles(path, mode):
     except:
         raise FileNotFoundError
 
-    if path.endswith("/"): path = path[:-1]
+    path = path.removesuffix("/")
     return get_subtitles(index, path, legacy)
 
 

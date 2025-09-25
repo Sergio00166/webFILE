@@ -12,12 +12,11 @@ method_map = {
 
 @app.route("/<path:path>", methods=["GET","POST","DELETE","MKCOL","COPY","MOVE","PUT"])
 def explorer(path):
+    path = path.removesuffix("/")
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
         if "logout" in request.args: return logout(useApi)
         if "login" in request.args:  return login(USERS, useApi)
-
-        if path.endswith("/"): path = path[:-1]
 
         if request.method in method_map:
             return method_map[request.method](path,ACL,root)
