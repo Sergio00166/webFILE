@@ -11,7 +11,7 @@
   <body>
     <div class="container">
       {% if error %}<h2 id="error">{{ error }}</h2>{% endif %}
-      <form method="POST" action="?login" autocomplete="on">
+      <form method="POST" autocomplete="on">
         <input required class="username" type="text" name="username"
           placeholder="User" autofocus autocomplete="username">
         <input required class="password" type="password" name="password"

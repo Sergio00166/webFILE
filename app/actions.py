@@ -13,8 +13,9 @@ from explorer import *
 def redirect_no_query(query):
     parsed_url = urlparse(request.url)
     query_params = parse_qsl(parsed_url.query, keep_blank_values=True)
-    filtered_params = [(k, v) for k, v in query_params if k.lower() != query]
+    filtered_params = [(k, v) for k, v in query_params if k != query]
 
+    print(filtered_params)
     new_url = urlunparse((
         "", "",
         parsed_url.path,
