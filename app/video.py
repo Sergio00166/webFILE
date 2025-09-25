@@ -68,7 +68,7 @@ def ffmpeg_get_subs(file,index,legacy,sz,mt):
         ass2vtt = get_codec(file,index)=="ass"
         codec = "ass" if ass2vtt else "webvtt"
     else: ass2vtt,codec = False,"ass"
-  
+
     out = run( [
         "ffmpeg", "-i", file, "-map",
         f"0:s:{index}", "-f", codec, "-"
@@ -120,5 +120,4 @@ def get_subtitles(index,file,legacy):
     # Return the subtittle track with the right mime
     return Response(out, mimetype=mime, headers=headers)
 
-
-
+ 

@@ -38,7 +38,7 @@ def parse_ranges(range_header, file_size):
         start = int(range_match.group(1))
         end = range_match.group(2)
         end = int(end) if end else file_size - 1
-            
+
         if not (start <= end < file_size): return
         ranges.append((start, end))
     return ranges
@@ -60,9 +60,7 @@ def generate(file_path, ranges):
 
 
 
-
 """ TO SEND FOLDER AS TAR FILES IN REALTIME """
-
 
 def safe_calc_tar_size(directory, ACL, root):
     total_size, stack = 0, [directory]
@@ -103,12 +101,11 @@ def create_tar_header(file_path, arcname):
 
 
 def stream_tar_file(file_path, arcname):
-    # Create the tar header for the file
     yield create_tar_header(file_path, arcname)
-    # Stream file contents from disk
+
     with open(file_path, "rb") as f:
         while (chunk := f.read(65536)): yield chunk
-    # Generate padding for the block
+
     file_size = getsize(file_path)
     padding_size = (512 - (file_size % 512)) % 512
     yield b"\0" * padding_size
@@ -125,4 +122,4 @@ def generate_tar(directory_path):
 
     yield b"\0" * 1024
 
-
+ 

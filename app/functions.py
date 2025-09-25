@@ -17,9 +17,9 @@ is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
 
 """ Global functions """
 
+# Checks if the path is inside the root dir
+# else raise an exception depending on the case
 def safe_path(path, root, igntf=False):
-    # Checks if the path is inside the root dir
-    # else raise an exception depending on the case
     path = path.replace("/", sep)
     path = abspath(sep.join([root,path]))
 
@@ -139,5 +139,4 @@ def get_dir_size(root):
             except: pass
     return total
 
-
-
+ 

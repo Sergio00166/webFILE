@@ -12,37 +12,30 @@ from explorer import *
 
 def redirect_no_query():
     new_url = urlunparse((
-        "", "", 
-        urlparse(request.url).path, 
+        "", "",
+        urlparse(request.url).path,
         "", "", ""
     ))
     return redirect(new_url)
 
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False):
-    # Get relative path from the root dir
     path = relpath(file_path, start=root).replace(sep, "/")
-    # Get the name of the folder
     folder, name = dirname(file_path), basename(path)
 
-    # Get all folder contents
     out = get_folder_content(folder, root, False, ACL)
-    # Get all folder contents that has the same filetype
     lst = [x["path"] for x in out if x["type"] == filetype]
 
-    # Get next one
     try:
         nxt = lst[lst.index(path) + 1]
     except:
         nxt = "#" if ngtst else lst[0]
 
-    # Get previous one
     if lst.index(path) == 0:
         prev = "#" if ngtst else lst[-1]
     else:
         prev = lst[lst.index(path) - 1]
 
-    # All should start with /
     if prev != "#": prev = "/"+prev
     if nxt  != "#": nxt  = "/"+nxt
 
@@ -53,14 +46,11 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False)
 
 
 def get_index_data(folder_path, root, folder_size, sort, ACL):
-    # Get all folder contents
     folder_content = get_folder_content(folder_path, root, folder_size, ACL)
 
-    # Get relative path from root
     folder_path = relpath(folder_path, start=root).replace(sep, "/")
     folder_path = "/" if folder_path == "." else f"/{folder_path}/"
 
-    # Sort the result items
     folder_content = sort_contents(folder_content, sort, root)
     return folder_content, folder_path
 
@@ -97,7 +87,6 @@ def audio(path, root, file_type, ACL):
 
 
 def directory(path, root, folder_size, sort, ACL, useApi):
-    # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
 
     folder_content, folder_path =\

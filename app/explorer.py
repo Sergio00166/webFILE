@@ -123,5 +123,4 @@ def is_binary(filepath):
             if b"\x00" in chunk: return True
     return False
 
-
-
+ 

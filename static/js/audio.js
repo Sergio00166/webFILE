@@ -72,25 +72,21 @@ let isTouchHoverActive = false;
 // ============================================================================
 
 function initializeAudioPlayer() {
-    // Set initial playback speed
     audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     
-    // Set initial volume
     if (!isNaN(savedVolume)) {
         audio.volume = savedVolume;
     }
-    // Set initial muted state
     if (savedMuted !== null) {
         audio.muted = savedMuted === 'true';
     }
-    // Update UI elements
     updateVolumeIcon();
     updateLoopButton();
     updateShuffleButton();
     updateSpeed();
 }
 
-function waitForAudioReady() {
+function waitForAudioReady() {e
     if (isNaN(audio.duration) || audio.duration === 0) {
         return setTimeout(waitForAudioReady, 25);
     }
@@ -138,7 +134,6 @@ function updateShuffleButton() {
         shuffleButton.style.opacity = 0.4;
     }
 }
-
 function toggleShuffleMode() {
     isShuffled = !isShuffled;
     localStorage.setItem('audioShuffle', JSON.stringify(isShuffled));
@@ -168,7 +163,6 @@ function handleSpeedWheel(event) {
     } else if (event.deltaY > 0 && currentSpeedIndex > 0) {
         currentSpeedIndex--;
     }
-    
     audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
     updateSpeed();
@@ -190,7 +184,6 @@ function handleSpeedTouchEnd(event) {
     } else if (Math.abs(speedButtonDeltaY) < 10) {
         speedButton.click();
     }
-
     audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
     updateSpeed();
@@ -277,7 +270,6 @@ function showTimelineHover(clientX) {
     } else {
         hoverInfo.style.visibility = 'hidden';
     }
-
 }
 
 function clearTimelineHover() {
@@ -312,7 +304,6 @@ function updateVolumeBar() {
 
 function updateVolumeIcon() {
     let index;
-
     if (audio.muted) {
         index = 0; // mute
     } else if (audio.volume === 0) {
@@ -334,12 +325,11 @@ function updateVolumeIcon() {
 }
 
 function handleVolumeChange(event) {
-    audio.volume = event.target.value;
-    
     if (audio.muted) {
         audio.muted = false;
         localStorage.setItem('audioMuted', 'false');
     }
+    audio.volume = event.target.value;
     localStorage.setItem('audioVolume', audio.volume);
     updateVolumeIcon();
     updateVolumeBar();
@@ -510,11 +500,15 @@ speedButton.addEventListener('touchend', handleSpeedTouchEnd);
 // ============================================================================
 
 seekBar.addEventListener('mousedown', (event) => {
-    setupMouseDrag(moveEvent => updateAudioTime(getTimelinePosition(moveEvent.clientX).percentage));
+    setupMouseDrag(moveEvent => updateAudioTime(
+        getTimelinePosition(moveEvent.clientX).percentage)
+    );
 });
 
 seekBar.addEventListener('touchstart', (event) => {
-    setupTouchDrag(moveEvent => updateAudioTime(getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage));
+    setupTouchDrag(moveEvent => updateAudioTime(
+        getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
+    );
 });
 
 document.addEventListener('touchstart', () => {

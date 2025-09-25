@@ -45,7 +45,7 @@ const selectedItems = new Set();
 let isSelectModeActive = false;
 
 // ============================================================================
-// BUTTON STATE MANAGEMENT
+// MANAGEMENT FUNCTIONS
 // ============================================================================
 
 function updateButtonStates() {
@@ -55,10 +55,6 @@ function updateButtonStates() {
     renameButton.disabled = !isSelectModeActive;
     deleteButton.disabled = !isSelectModeActive;
 }
-
-// ============================================================================
-// SIDEBAR MANAGEMENT
-// ============================================================================
 
 function toggleSidebar() {
     sidebar.classList.toggle('open');
@@ -101,7 +97,6 @@ function performStorageOperation(operationKey, fileList) {
 
 function getItemURL(fileItem) {
     const nameElement = fileItem.querySelector('pre');
-    if (!nameElement) return null;
     const rawName = nameElement.textContent.trim();
     const encodedName = encodeURIComponent(rawName);
     let url = basePath + encodedName;
@@ -142,7 +137,7 @@ function changeSortingMode(sortMode) {
 function toggleSelectMode() {
     isSelectModeActive = !isSelectModeActive;
     if (!isSelectModeActive) deselectAllItems();
-    
+
     if (selectButton) {
         if (isSelectModeActive) {
             selectButton.textContent = '❌ Cancel';
@@ -170,7 +165,7 @@ function selectItem(fileItem) {
 
 function invertSelection() {
     if (!isSelectModeActive) return;
-    
+
     const items = listGroup.children;
     for (let i = 0; i < items.length; i++) {
         selectItem(items[i]);
@@ -186,8 +181,6 @@ function handleItemClick(fileItem) {
         selectItem(fileItem);
     } else {
         const itemURL = getItemURL(fileItem);
-        if (!itemURL) return;
-
         if (fileItem.hasAttribute('isdir')) location.href = itemURL;
         else window.open(itemURL, '_blank');
     }
@@ -211,7 +204,7 @@ async function executeDownloads() {
         for (const fileItem of selectedItems) {
             const itemURL = getItemURL(fileItem);
             if (!itemURL) continue;
-            
+
             let suffix;
             if (fileItem.hasAttribute('isdir')) {
                 suffix = '?tar';
@@ -231,13 +224,13 @@ async function executeDownloads() {
 async function executeDeletes() {
     if (!isSelectModeActive || !selectedItems.size) return;
     if (!confirm('Are you sure to delete?')) return;
-    
+
     let errorMessage = null;
-    
+
     for (const fileItem of selectedItems) {
         const itemURL = getItemURL(fileItem);
         const response = await fetch(itemURL, { method: 'DELETE' });
-        
+
         if (!response.ok) {
             if (response.status === 403) {
                 errorMessage = 'You dont have permission to do that';
@@ -260,15 +253,14 @@ async function executeDeletes() {
 async function sendHTTPRequest(path, destination, method) {
     try {
         const requestOptions = { method };
-        
+
         if (destination) {
-            requestOptions.headers = { 
+            requestOptions.headers = {
                 Destination: decodeURIComponent(destination)
             };
         }
         const response = await fetch(path, requestOptions);
         if (!response.ok) throw response.status;
-        
         return true;
 
     } catch (statusCode) {
@@ -289,17 +281,15 @@ async function sendHTTPRequest(path, destination, method) {
 
 async function renameSelectedFiles() {
     if (!isSelectModeActive || !selectedItems.size) return;
-    
+
     for (const itemURL of getSelectedURLs()) {
         const cleanURL = itemURL.replace(/\/$/, '');
         const fileName = decodeURIComponent(cleanURL.split('/').pop());
         const newFileName = prompt('New Name for ' + fileName);
-        
+
         if (!newFileName) break;
-        
         const encodedNewName = encodeURIComponent(newFileName);
         const destinationPath = cleanURL.substring(0, cleanURL.lastIndexOf('/')) + '/' + encodedNewName;
-        
         if (!await sendHTTPRequest(cleanURL, destinationPath, 'MOVE')) break;
     }
     clearAllCopyMoveOperations();
@@ -313,23 +303,20 @@ async function renameSelectedFiles() {
 async function pasteFiles() {
     const copyList = JSON.parse(localStorage.getItem('copy') || '[]');
     const moveList = JSON.parse(localStorage.getItem('move') || '[]');
-    
     let pasteOperation = {};
+
     if (copyList.length) {
         pasteOperation = { list: copyList, mode: 'COPY' };
     } else if (moveList.length) {
         pasteOperation = { list: moveList, mode: 'MOVE' };
     }
-    
     if (!pasteOperation.list) return;
-    
     showLoader();
     await delay(250);
-    
+
     for (let i = 0; i < pasteOperation.list.length; i++) {
         const sourcePath = pasteOperation.list[i].replace(/\/$/, '');
         const destinationPath = basePath + sourcePath.split('/').pop();
-        
         if (!await sendHTTPRequest(sourcePath, destinationPath, pasteOperation.mode)) break;
     }
     clearAllCopyMoveOperations();
@@ -343,10 +330,8 @@ async function pasteFiles() {
 async function createDirectory() {
     const directoryName = prompt('Create dir');
     if (!directoryName) return;
-    
     const encodedName = encodeURIComponent(directoryName);
     const success = await sendHTTPRequest(basePath + encodedName, null, 'MKCOL');
-    
     if (success) location.reload();
 }
 
@@ -367,7 +352,6 @@ async function createDirectoryStructure(files) {
     for (const directory of directories) {
         const directoryURL = basePath + encodePath(directory);
         const response = await fetch(directoryURL, { method: 'MKCOL' });
-        
         if (!response.ok) throw response.status;
     }
 }
@@ -411,7 +395,6 @@ async function uploadFiles(files, isDirectory) {
             filePath = file.name;
         }
         filePath = basePath + encodePath(filePath);
-
         try {
             await uploadFileWithProgress(file, filePath, (loaded, total) => {
                 let totalUploaded = uploadedBytes + loaded;
@@ -443,7 +426,7 @@ function openFileUploadMenu(selectDirectory = false) {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.multiple = !selectDirectory;
-    
+
     if (selectDirectory) {
         fileInput.setAttribute('webkitdirectory', true);
     }
@@ -456,14 +439,13 @@ function openFileUploadMenu(selectDirectory = false) {
 }
 
 function enableDragAndDropUpload(dropArea) {
-    dropArea.addEventListener('dragover', event => { 
-        event.preventDefault(); 
+    dropArea.addEventListener('dragover', event => {
+        event.preventDefault();
     });
-    
     dropArea.addEventListener('drop', event => {
         event.preventDefault();
         const files = Array.prototype.slice.call(event.dataTransfer.files);
-        
+
         if (files.length && confirm('¿Upload ' + files.length + ' item(s)?')) {
             uploadFiles(files);
         }
@@ -477,9 +459,8 @@ function enableDragAndDropUpload(dropArea) {
 function moveFocus(direction) {
     const items = Array.from(listGroup.children);
     if (items.length === 0) return;
-
     let currentIndex = items.indexOf(document.activeElement);
-    
+
     if (direction === -Infinity) {
         currentIndex = 0;
     } else if (direction === Infinity) {
@@ -523,7 +504,7 @@ document.addEventListener('keydown', event => {
             event.preventDefault();
             if (key === "arrowup") moveFocus(-1);
             else moveFocus(1);
-            break;            
+            break;
         case 'home':
         case 'end':
             event.preventDefault();
@@ -534,8 +515,8 @@ document.addEventListener('keydown', event => {
             event.preventDefault();
             if (isShiftArrow) {
                 listGroup.scrollTo({
-                    left: listGroup.scrollWidth, 
-                    behavior: 'smooth' 
+                    left: listGroup.scrollWidth,
+                    behavior: 'smooth'
                 });
             } else {
                 document.activeElement.click();
@@ -544,9 +525,9 @@ document.addEventListener('keydown', event => {
         case 'arrowleft':
             event.preventDefault();
             if (isShiftArrow) {
-                listGroup.scrollTo({ 
-                    left: 0, 
-                    behavior: 'smooth' 
+                listGroup.scrollTo({
+                    left: 0,
+                    behavior: 'smooth'
                 });
             } else if (isSelectModeActive) {
                 document.activeElement.click();
@@ -554,53 +535,53 @@ document.addEventListener('keydown', event => {
                 window.location.href = '..';
             }
             break;
-        case 'a': 
-            invertSelection(); 
+        case 'a':
+            invertSelection();
             break;
-        case 'd': 
-            executeDownloads(); 
+        case 'd':
+            executeDownloads();
             break;
-        case 'c': 
-            copySelectedFiles(); 
+        case 'c':
+            copySelectedFiles();
             break;
-        case 'x': 
-            moveSelectedFiles(); 
+        case 'x':
+            moveSelectedFiles();
             break;
-        case 'p': 
-            pasteFiles(); 
+        case 'p':
+            pasteFiles();
             break;
-        case 'u': 
-            openFileUploadMenu(); 
+        case 'u':
+            openFileUploadMenu();
             break;
-        case 'f': 
-            openFileUploadMenu(true); 
+        case 'f':
+            openFileUploadMenu(true);
             break;
-        case 's': 
-            toggleSelectMode(); 
+        case 's':
+            toggleSelectMode();
             break;
-        case 'n': 
-            renameSelectedFiles(); 
+        case 'n':
+            renameSelectedFiles();
             break;
-        case 'r': 
-            executeDeletes(); 
+        case 'r':
+            executeDeletes();
             break;
-        case 'm': 
-            createDirectory(); 
+        case 'm':
+            createDirectory();
             break;
-        case 'l': 
-            loginButton.click(); 
+        case 'l':
+            loginButton.click();
             break;
-        case 'i': 
-            window.location.href = '/'; 
+        case 'i':
+            window.location.href = '/';
             break;
-        case '1': 
-            sortByName.click(); 
+        case '1':
+            sortByName.click();
             break;
-        case '2': 
-            sortBySize.click(); 
+        case '2':
+            sortBySize.click();
             break;
-        case '3': 
-            sortByDate.click(); 
+        case '3':
+            sortByDate.click();
             break;
     }
 });

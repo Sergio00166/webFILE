@@ -14,34 +14,27 @@ method_map = {
 def explorer(path):
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
-        # User login/logout stuff
         if "logout" in request.args: return logout(useApi)
         if "login" in request.args:  return login(USERS, useApi)
 
-        # Paths must not end on slash
         if path.endswith("/"): path = path[:-1]
-        
-        # File management stuff for users
+
         if request.method in method_map:
             return method_map[request.method](path,ACL,root)
-        
-        # Send/stream files or directory listing
+
         return serveFiles_page(path,ACL,root,folder_size,useApi)
-  
+
     except Exception as e:
         return error(e,error_file,useApi)
-
 
 
 @app.route("/", methods=["GET","POST"])
 def index():
     useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
-        # User login/logout stuff
         if "logout" in request.args: return logout(useApi)
         if "login" in request.args:  return login(USERS, useApi)
 
-        # Check if static page is requested
         if "static" in request.args:
             path = request.args["static"]
             path = safe_path(path,sroot)
@@ -57,4 +50,4 @@ def index():
 
 if __name__=="__main__": app.run(host="127.0.0.1", port=8000, debug=False)
 
-
+ 

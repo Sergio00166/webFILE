@@ -20,14 +20,11 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
     file_type = get_file_type(path)
     encache = "cache" in request.args
 
-    # Check if the path is not a dir
     if not file_type in ["directory", "disk"]:
-        
-        # Serve page (for plugin-like stuff)
+
         if file_type == "webpage" and not useApi:
             return send_file(path, mimetype="text/html")
 
-        # Those are the sub-endpoints
         if "raw" in request.args:
             return send_file(path)
 
@@ -39,7 +36,6 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
         if request.path.endswith("/") and not useApi:
             return redirect(request.path[:-1])
 
-        # Serve the files depending of filetype
         if file_type == "video" and not useApi:
             check_ffmpeg_installed()
             return video(path, root, file_type, ACL)
@@ -47,17 +43,15 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
         elif file_type == "audio" and not useApi:
             return audio(path, root, file_type, ACL)
 
-        else:  # Send the file and set mime for text
+        else:
             mime = None if file_type not in ["text","source"] else\
             "text/css" if path.endswith(".css") else "text/plain"
             return send_file(path, mimetype=mime, cache=encache)
 
     else:
-        # Sub-endpoint to get the dir as tar
         if "tar" in request.args:
             return send_dir(path, root, ACL)
 
-        # Autoload index.web if available (plugins-like)
         if (
             isfile(join(path, autoload_webpage))
             and not ("noauto" in request.args or useApi)
@@ -71,7 +65,6 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
             query = "?" + query if query else ""
             return redirect(request.path + "/" + query)
 
-        # Return the directory explorer
         sort = request.args["sort"] if "sort" in request.args else ""
         return directory(path, root, folder_size, sort, ACL, useApi)
 
@@ -80,7 +73,7 @@ def serveRoot_page(ACL, root, folder_size, useApi):
     if not request.method in ["GET", "HEAD"]:
         return "Method not allowed", 405
 
-    path = safe_path("", root)  # Check if we can access it
+    path = safe_path("", root)
     sort = request.args["sort"] if "sort" in request.args else ""
 
     if "tar" in request.args:
@@ -101,9 +94,9 @@ def login(USERS, useApi):
                 return "Logged in", 200
             else:
                 return redirect_no_query()
-        elif useApi: 
+        elif useApi:
             return "Invalid username or password.", 401
-        else: 
+        else:
             return render_template("login.html", error="Invalid username or password.")
 
     elif request.method == "GET":
@@ -113,7 +106,7 @@ def login(USERS, useApi):
 
 
 def logout(useApi):
-    if not request.method == "GET": 
+    if not request.method == "GET":
         return "Method not allowed", 405
 
     try: session.pop("user")
@@ -141,4 +134,4 @@ def error(e, error_file, useApi):
         if useApi: return "[]", 500
         return render_template("500.html"), 500
 
-
+ 

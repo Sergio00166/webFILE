@@ -33,12 +33,12 @@ def check_rec_chg_parent(path, ACL, root, new_parent):
             validate_acl(item_path, ACL, True)
 
 
-def move(path,ACL,root):  
+def move(path,ACL,root):
     destination = request.headers.get('Destination')
     if not destination: return "Bad Request", 400
     return mvcp_worker(ACL,path,destination,root,True)
 
-def copy(path,ACL,root):  
+def copy(path,ACL,root):
     destination = request.headers.get('Destination')
     if not destination: return "Bad Request", 400
     return mvcp_worker(ACL,path,destination,root,False)
@@ -93,7 +93,7 @@ def delfile(path, ACL, root):
             check_recursive(path,ACL,root,True)
             rmtree(path)
         else: remove(path)
- 
+
     except FileNotFoundError: return "Not Found",    404
     except PermissionError:   return "Forbidden",    403
     except Exception:         return "Server Error", 500
@@ -109,7 +109,7 @@ def mvcp_worker(ACL, path, destination, root, mv):
         if isdir(path):
             check_recursive(path, ACL, root, mv)
             check_rec_chg_parent(path,ACL,root,destination)
-        
+
         destination = safe_path(destination,root,True)
         if exists(destination): raise FileExistsError
 
@@ -126,4 +126,4 @@ def mvcp_worker(ACL, path, destination, root, mv):
     except Exception:         return "Server Error",       500
     else:                     return "Created",            201
 
-
+ 
