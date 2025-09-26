@@ -315,7 +315,7 @@ function updateVolumeIcon() {
     } else {
         index = 3; // low
     }
-    for (var i = 0; i < volumeIcons.length; i++) {
+    for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index) {
             volumeIcons[i].style.display = 'block';
         } else {

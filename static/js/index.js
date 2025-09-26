@@ -60,9 +60,21 @@ function toggleSidebar() {
     sidebar.classList.toggle('open');
 }
 
+function showLoader() {
+    loader.style.display = '';
+    mainContainer.style.display = 'none';
+}
+
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
+
+function setUrlKey(name, value = "") {
+    const url = new URL(window.location.href);
+    url.searchParams.set(name, value);
+    let keys = url.searchParams.toString()
+    location.search = keys.replace(/=&/g, "&").replace(/=$/g, "");
+}
 
 function encodePath(path) {
     return path.split('/').map(encodeURIComponent).join('/');
@@ -108,40 +120,6 @@ function getSelectedURLs() {
     return Array.from(selectedItems)
         .map(fileItem => getItemURL(fileItem))
         .filter(Boolean);
-}
-
-// ============================================================================
-// LOADER & UI MANAGEMENT
-// ============================================================================
-
-function showLoader() {
-    loader.style.display = '';
-    mainContainer.style.display = 'none';
-}
-
-// ============================================================================
-// URL MANAGEMENT
-// ============================================================================
-
-function changeSortingMode(sortMode) {
-    const currentURL = new URL(window.location.href);
-    currentURL.searchParams.set('sort', sortMode);
-    history.replaceState({}, document.title, currentURL);
-    location.reload();
-}
-
-function redirectWithKey(name) {
-    let parts = [];
-    const url = new URL(window.location.href);
-
-    if (url.search) {
-        parts = url.search.slice(1).split("&");
-    }
-    if (!parts.includes(name)) {
-        parts.push(encodeURIComponent(name));
-        url.search = parts.join("&");
-        window.location.href = url.toString();
-    }
 }
 
 // ============================================================================

@@ -29,9 +29,9 @@
             {%- set sort_name = ('nd', '⬆️') if sort == 'np' else ('np', '⬇️') if sort == 'nd' else ('np', '◻️') -%}
             {%- set sort_size = ('sd', '⬆️') if sort == 'sp' else ('sp', '⬇️') if sort == 'sd' else ('sp', '◻️') -%}
             {%- set sort_date = ('dd', '⬆️') if sort == 'dp' else ('dp', '⬇️') if sort == 'dd' else ('dp', '◻️') -%}
-            <button id="sortName" onclick="changeSortingMode('{{ sort_name[0] }}')" title="(1)">{{ sort_name[1] }} Name</button>
-            <button id="sortSize" onclick="changeSortingMode('{{ sort_size[0] }}')" title="(2)">{{ sort_size[1] }} Size</button>
-            <button id="sortDate" onclick="changeSortingMode('{{ sort_date[0] }}')" title="(3)">{{ sort_date[1] }} Date</button>
+            <button id="sortName" onclick="setUrlKey('sort','{{ sort_name[0] }}')" title="(1)">{{ sort_name[1] }} Name</button>
+            <button id="sortSize" onclick="setUrlKey('sort','{{ sort_size[0] }}')" title="(2)">{{ sort_size[1] }} Size</button>
+            <button id="sortDate" onclick="setUrlKey('sort','{{ sort_date[0] }}')" title="(3)">{{ sort_date[1] }} Date</button>
           </div>
           <div>
             <h3>SELECTION</h3>
@@ -59,9 +59,9 @@
           <div>
             <h3>ACCOUNT</h3>
           {%- if 'user' in session %}
-            <button id="login" onclick="redirectWithKey('logout')" title="(l)">🚪 Logout</button>
+            <button id="login" onclick="setUrlKey('logout')" title="(l)">🚪 Logout</button>
           {%- else %}
-            <button id="login" onclick="redirectWithKey('login')" title="(l)">🔑 Login</button>
+            <button id="login" onclick="setUrlKey('login')" title="(l)">🔑 Login</button>
           {%- endif %}
           </div>
         </div>

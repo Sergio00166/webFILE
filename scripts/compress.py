@@ -27,33 +27,39 @@ JS_ELSE_PAREN_PAT = re_compile(r'\)\s*else\s*\{')
 JS_SEMI_CLOSE_PAT = re_compile(r';+}')
 CSS_PUNCT_PAT = re_compile(r'\s*([{};:,>~])\s*')
 TAG_WS_RE = re_compile(r'\s+(?=<)|(?<=>)\s+')
+PLACEHOLDER_PATTERN = re_compile(r'__STR_REPL_(\d+)__')
+
 
 # ---------------------------
-# comment stripper (strings/template aware)
+# string + comment handling
 # ---------------------------
 
-def _strip_comments(src):
+def extract_strings(src, strings):
+    idx = len(strings)
+    strings.append(src)
+    return f"__STR_REPL_{idx}__"
+
+def strip_comments(src):
     strings = []
-    def _store(m):
-        strings.append(m.group(0))
-        return f"__STR{len(strings)-1}__"
-    src = STRING_PAT.sub(_store, src)
+    src = STRING_PAT.sub(lambda m: extract_strings(m.group(0), strings), src)
     src = BLOCK_COMMENT_PAT.sub(' ', src)
     src = LINE_COMMENT_PAT.sub(' ', src)
-    for i, s in enumerate(strings):
-        src = src.replace(f"__STR{i}__", s)
-    return src
+    return src, strings
 
-def _collapse_ws(s):
+def restore_strings(src, strings):
+    return PLACEHOLDER_PATTERN.sub(lambda m: strings[int(m.group(1))], src)
+
+def collapse_ws(s):
     return WS_COLLAPSE_PAT.sub(' ', s).strip()
+
 
 # ---------------------------
 # JS minifier
 # ---------------------------
 
 def compress_js(src):
-    s = _strip_comments(src)
-    s = _collapse_ws(s)
+    s, strings = strip_comments(src)
+    s = collapse_ws(s)
     s = JS_PUNCT_PAT.sub(r'\1', s)
     s = JS_COMPARE_PAT.sub(r'\1', s)
     s = JS_LTGT_PAT.sub(r'\1', s)
@@ -65,26 +71,34 @@ def compress_js(src):
     s = JS_ELSE_PAREN_PAT.sub(r')else{', s)
     s = JS_SEMI_CLOSE_PAT.sub(r'}', s)
     s = s.replace('; ', ';')
+    s = restore_strings(s, strings)
     return s.strip()
+
 
 # ---------------------------
 # CSS minifier
 # ---------------------------
 
 def compress_css(src):
-    s = _strip_comments(src)
-    s = _collapse_ws(s)
+    s, strings = strip_comments(src)
+    s = collapse_ws(s)
     s = CSS_PUNCT_PAT.sub(r'\1', s)
     s = s.replace(';}', '}')
+    s = restore_strings(s, strings)
     return s.strip()
+
 
 # ---------------------------
 # Simple HTML minifier (line strip + join)
 # ---------------------------
 
-def compress_html(src: str):
-    collapsed = _collapse_ws(src)
-    return TAG_WS_RE.sub('', collapsed)
+def compress_html(src):
+    s, strings = strip_comments(src)
+    s = collapse_ws(s)
+    s = TAG_WS_RE.sub('', s)
+    s = restore_strings(s, strings)
+    return s
+
 
 # ---------------------------
 # File processing
@@ -98,6 +112,7 @@ def process_files(pattern, compressor):
         if compressed != content:
             with open(p, 'w', encoding='utf-8') as f:
                 f.write(compressed)
+
 
 # ---------------------------
 # Main, run for all
