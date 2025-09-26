@@ -72,7 +72,7 @@ function showLoader() {
 function setUrlKey(name, value = "") {
     const url = new URL(window.location.href);
     url.searchParams.set(name, value);
-    let keys = url.searchParams.toString()
+    let keys = url.searchParams.toString();
     location.search = keys.replace(/=&/g, "&").replace(/=$/g, "");
 }
 
