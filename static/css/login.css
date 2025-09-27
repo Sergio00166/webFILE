@@ -1,6 +1,5 @@
 /* Code by Sergio00166 */
 
-#fileInput { display: none; }
 .username { margin-bottom: 13px; }
 .password { margin-bottom: 18px; }
 
@@ -8,8 +7,8 @@ body {
     margin: 0;
     background-color: #111;
     font-family: 'Segoe UI', sans-serif;
-    min-height: 100vh;
-    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
     color: white;
     display: flex;
     justify-content: center;
@@ -19,7 +18,8 @@ body {
     -webkit-user-select: none;
     user-select: none;
     /* For when the keyboard opens on mobile */
-    transition: 0.2s; 
+    transition: height 0.3s;
+    will-change: height;
 }
 #error {
     text-align: center;
@@ -126,4 +126,4 @@ button {
     }
 }
 
-
+ 

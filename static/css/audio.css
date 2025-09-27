@@ -51,16 +51,9 @@ button {
  *   Main structure
  * ------------------------- */
 
-.player-header {
-    display: flex;
-    align-items: center;
+.header {
     width: 100%;
-    -webkit-user-select: text;
-    user-select: text;
-}
-.player-title {
-    margin: auto;
-    margin-top: 6px;
+    margin-top: 8px;
     margin-bottom: 30px;
     text-align: center;
     font-size: 24px;
@@ -68,6 +61,8 @@ button {
     color: #eee;
     word-break: break-word;
     overflow-wrap: break-word;
+    -webkit-user-select: text;
+    user-select: text;
 }
 .controls {
     width: 100%;
@@ -127,7 +122,6 @@ button {
 }
 /* This weird shit is only to let the */
 /* user select easily the start and end */
-/* and also try to fix one bug */
 #seek-bar::before {
     content: "";
     position: absolute;
@@ -266,29 +260,24 @@ button {
  *   Responsive rules
  * ------------------------- */
 
-@media (max-width: 300px) {
-    .audio-player {
-        padding: 8px;
-    }
-    .player-title {
-        margin-top: 12px;
-        margin-bottom: 24px;
-        font-size: 20px;
-    }
-}
-@media (max-width: 250px) {
+
+@media (max-width: 260px) {
     #total-time,
     #current-time,
     .volume-control,
-    .extra-controls {
+    #speed-btn {
         display: none;
+    }
+    .extra-controls {
+        margin-top: 0;
     }
     #seek-bar {
         width: calc(100% - 16px);
     }
 }
 @media (max-width: 180px) {
-    .nav-btn {
+    .nav-btn,
+    .extra-controls {
         display: none;
     }
     .playback-controls {
@@ -297,7 +286,8 @@ button {
     }
 }
 @media (max-height: 400px) or (max-width: 400px) {
-    .player-title {
+    .header {
+        font-size: 20px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -309,9 +299,9 @@ button {
         display: none;
     }
 }
-@media (max-height: 190px) or (max-width: 160px) {
+@media (max-height: 190px) {
     .time-row,
-    .player-header {
+    .header {
         display: none;
     }
 }

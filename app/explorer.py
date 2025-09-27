@@ -20,6 +20,7 @@ boms = ( b"\xef\xbb\xbf", b"\xff\xfe", b"\xfe\xff", b"\xff\xfe\x00\x00", b"\x00\
 
 def get_folder_content(folder_path, root, folder_size, ACL):
     dirs, files, content = [], [], []
+
     for x in sorted(listdir(folder_path)):
         (dirs if isdir(join(folder_path, x)) else files).append(x)
 
@@ -43,7 +44,6 @@ def get_folder_content(folder_path, root, folder_size, ACL):
                     (get_dir_size(item_path) if folder_size else 0)
                     if data["type"] == "directory" else getsize(item_path)
                 )
-
             try:    data["mtime"] = getmtime(item_path)
             except: data["mtime"] = None
                             
@@ -56,58 +56,46 @@ def sort_contents(folder_content, sort, root):
     dirs, files = [], []
 
     for x in folder_content:
-        # path is a relative path 
-        path = x["path"].replace("/", sep)
-        if isdir(join(root,path)):
-            dirs.append(x)
-        else:
-            files.append(x)
+        path = join(root, x["path"].replace("/", sep))
+        if isdir(path): dirs.append(x)
+        else:          files.append(x)
 
-    # Sort folder content based on raw values
-    if sort[0] == "d":
-        dirs = sorted(dirs, key=lambda x: x["mtime"] or 0)
-        files = sorted(files, key=lambda x: x["mtime"] or 0)
-        if sort[1] == "p":
-            dirs, files = dirs[::-1], files[::-1]
+    if sort[0] in ["s", "d"]:
+        if sort[0] == "d":
+            key = lambda x: x["mtime"] or 0
+        if sort[0] == "s":
+            key = lambda x: x["size"]
 
-    elif sort[0] == "s":
-        dirs = sorted(dirs, key=lambda x: x["size"])
-        files = sorted(files, key=lambda x: x["size"])
-        if sort[1] == "p":
-            dirs, files = dirs[::-1], files[::-1]
+        dirs  = sorted(dirs,  key=key, reverse=True)
+        files = sorted(files, key=key, reverse=True)
 
-    elif sort[1] == "d":
-        dirs, files = dirs[::-1], files[::-1]
-    return dirs + files
+    return dirs[::-1]+files[::-1] if sort[1] == "d" else dirs+files
 
 
 def get_file_type(path):
-    if Path(path).is_mount():
-        return "disk"
-    if isdir(path):
-        return "directory"
-    file_type = file_type_map.get(Path(path).suffix)
-    if file_type is not None:
-        return file_type
+    item = Path(path)
+    if item.is_mount(): return "disk"
+    if isdir(path):     return "directory"
+
+    file_type = file_type_map.get(item.suffix)
+    if file_type:       return file_type
     return "file" if is_binary(path) else "text"
+
 
 
 def humanize_all(data):
     for item in data:
         if "capacity" in item:
-            if item["capacity"] == 0: item["used"] = 0
-            else: item["used"] = round(item["size"] / item["capacity"] * 100)
+            item["used"] = 0 if item["capacity"] == 0 else round(item["size"] / item["capacity"] * 100)
             item["capacity"] = readable_size(item["capacity"])
 
-        if "mtime" in item:
-            item["mtime"] = readable_date(item["mtime"])
+        if "mtime" in item: item["mtime"] = readable_date(item["mtime"])
         item["size"] = readable_size(item["size"])
 
 
 def readable_size(num, suffix="B"):
-    # Connverts byte values to a human readable format
     for unit in ("", "Ki", "Mi", "Gi", "Ti"):
-        if num < 1024:
+        if num < 1024: 
             return f"{num:.1f} {unit}{suffix}"
         num /= 1024
     return f"{num:.1f} Yi{suffix}"
@@ -124,14 +112,13 @@ def readable_date(date):
 def is_binary(filepath):
     with open(filepath, "rb") as f:
         head = f.read(4)
-        if any(head.startswith(bom) for bom in boms):
-            return False
-        if b"\x00" in head:
-            return True
+        if any(
+            head.startswith(bom)
+            for bom in boms
+        ):  return False
+
         while chunk := f.read(1024):
-            if b"\x00" in chunk:
-                return True
+            if b"\x00" in chunk: return True
     return False
 
-
-
+ 

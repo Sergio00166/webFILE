@@ -11,15 +11,12 @@
   <body>
     <div class="container">
       {% if error %}<h2 id="error">{{ error }}</h2>{% endif %}
-      <form method="POST" action="?login" autocomplete="on">
-        <input required class="username" type="text" name="username"
-          placeholder="User" autofocus autocomplete="username">
-        <input required class="password" type="password" name="password"
-          placeholder="Password" autocomplete="current-password">
+      <form method="POST" autocomplete="on">
+        <input required class="username" type="text" name="username" placeholder="User" autofocus autocomplete="username">
+        <input required class="password" type="password" name="password" placeholder="Password" autocomplete="current-password">
         <button class="button-upload">Login</button>
       </form>
-      <button onclick="window.location.href = window.location.origin+window.location.pathname;"
-        class="button-danger">Cancel</button>
+      <button onclick="window.history.go(-1);" class="button-danger">Cancel</button>
     </div>
   </body>
 </html>

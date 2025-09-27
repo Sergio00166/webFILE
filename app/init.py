@@ -64,4 +64,4 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 3600
 # Init session
 Session(app)
 
-
+ 

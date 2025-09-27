@@ -1,62 +1,60 @@
 # Code by Sergio00166
 
 from flask import render_template, stream_template, redirect, request
+from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 from os.path import pardir, basename, abspath, relpath, dirname
 from video import get_subtitles, external_subs
-from urllib.parse import urlparse, urlunparse
 from urllib.parse import quote as encurl
 from video import get_chapters, get_info
 from random import choice
 from explorer import *
 
 
-def redirect_no_query():
+def redirect_no_query(query):
     parsed_url = urlparse(request.url)
-    return redirect(urlunparse(("", "", parsed_url.path, "", "", "")))
+    query_params = parse_qsl(parsed_url.query, keep_blank_values=True)
+    filtered_params = [(k, v) for k, v in query_params if k != query]
+
+    new_url = urlunparse((
+        "", "",
+        parsed_url.path, 
+        parsed_url.params,
+        urlencode(filtered_params).replace("=&","&").removesuffix("="),
+        parsed_url.fragment
+    ))
+    return redirect(new_url)
 
 
-def get_filepage_data(file_path, root, filetype, ACL, random=False, ngtst=False):
-    # Get relative path from the root dir
+def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_start=False):
     path = relpath(file_path, start=root).replace(sep, "/")
-    # Get the name of the folder
     folder, name = dirname(file_path), basename(path)
 
-    # Get all folder contents
-    out = get_folder_content(folder, root, False, ACL)
-    # Get all folder contents that has the same filetype
-    lst = [x["path"] for x in out if x["type"] == filetype]
+    content = get_folder_content(folder, root, False, ACL)
+    files = [x["path"] for x in content if x["type"] == filetype]
 
-    # Get next one
-    try:    nxt = lst[lst.index(path) + 1]
-    except: nxt = "#" if ngtst else lst[0]
+    try:
+        next = files[files.index(path) + 1]
+    except:
+        next = "#" if no_goto_start else files[0]
 
-    # Get previous one
-    if lst.index(path) == 0:
-        prev = "#" if ngtst else lst[-1]
+    if files.index(path) == 0:
+        prev = "#" if no_goto_start else files[-1]
     else:
-        prev = lst[lst.index(path) - 1]
+        prev = files[files.index(path) - 1]
 
-    # All should start with /
     if prev != "#": prev = "/"+prev
-    if nxt  != "#": nxt  = "/"+nxt
+    if next  != "#": next  = "/"+next
 
-    if not random: return prev, nxt, name
-    else: return prev, nxt, name, "/"+choice(lst)
+    if not random: return prev, next, name
+    else: return prev, next, name, "/"+choice(files)
 
 
 def get_index_data(folder_path, root, folder_size, sort, ACL):
-    # Get all folder contents
     folder_content = get_folder_content(folder_path, root, folder_size, ACL)
 
-    # Get relative path from root
-    folder_path = relpath(folder_path, start=root)
+    folder_path = relpath(folder_path, start=root).replace(sep, "/")
+    folder_path = "/" if folder_path == "." else f"/{folder_path}/"
 
-    if folder_path != ".":
-        folder_path = "/" + folder_path.replace(sep, "/") + "/"
-    else:
-        folder_path = "/"
-
-    # Sort the result items
     folder_content = sort_contents(folder_content, sort, root)
     return folder_content, folder_path
 
@@ -64,16 +62,17 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
 def subtitles(path, mode):
     if (legacy := mode.endswith("legacy")):
         mode = mode[: mode.find("legacy")]
+    try:
+        index = int(mode)
+    except:
+        raise FileNotFoundError
 
-    try: index = int(mode)
-    except: raise FileNotFoundError
-
-    if path.endswith("/"): path = path[:-1]
+    path = path.removesuffix("/")
     return get_subtitles(index, path, legacy)
 
 
 def video(path, root, file_type, ACL):
-    prev, nxt, name = get_filepage_data(path, root, file_type, ACL, ngtst=True)
+    prev, nxt, name = get_filepage_data(path, root, file_type, ACL, no_goto_start=True)
     tracks, chapters = get_info(path), get_chapters(path)
 
     subs = external_subs(path)
@@ -92,7 +91,6 @@ def audio(path, root, file_type, ACL):
 
 
 def directory(path, root, folder_size, sort, ACL, useApi):
-    # Get the sort value if it is on the list else set default value
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
 
     folder_content, folder_path =\

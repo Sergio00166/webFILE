@@ -10,17 +10,17 @@ from flask import request
 
 
 def check_recursive(path, ACL, root, write=False):
+    mode = W_OK if write else R_OK
     for fulldir, _, files in walk(path):
         for item in files:
             item_path = fulldir+sep+item
-            
-            if not access(item_path, W_OK if write else R_OK):
+
+            if access(item_path, mode):
+                item_path = relpath(item_path, start=root)
+                item_path = item_path.replace(sep, "/")
+                validate_acl(item_path, ACL, write)
+            else:
                 raise PermissionError
-
-            item_path = relpath(item_path, start=root)
-            item_path = item_path.replace(sep, "/")
-
-            validate_acl(item_path, ACL, write)
 
 
 def check_rec_chg_parent(path, ACL, root, new_parent):
@@ -33,12 +33,12 @@ def check_rec_chg_parent(path, ACL, root, new_parent):
             validate_acl(item_path, ACL, True)
 
 
-def move(path,ACL,root):  
+def move(path,ACL,root):
     destination = request.headers.get('Destination')
     if not destination: return "Bad Request", 400
     return mvcp_worker(ACL,path,destination,root,True)
 
-def copy(path,ACL,root):  
+def copy(path,ACL,root):
     destination = request.headers.get('Destination')
     if not destination: return "Bad Request", 400
     return mvcp_worker(ACL,path,destination,root,False)
@@ -93,7 +93,7 @@ def delfile(path, ACL, root):
             check_recursive(path,ACL,root,True)
             rmtree(path)
         else: remove(path)
- 
+
     except FileNotFoundError: return "Not Found",    404
     except PermissionError:   return "Forbidden",    403
     except Exception:         return "Server Error", 500
@@ -109,7 +109,7 @@ def mvcp_worker(ACL, path, destination, root, mv):
         if isdir(path):
             check_recursive(path, ACL, root, mv)
             check_rec_chg_parent(path,ACL,root,destination)
-        
+
         destination = safe_path(destination,root,True)
         if exists(destination): raise FileExistsError
 
@@ -126,4 +126,4 @@ def mvcp_worker(ACL, path, destination, root, mv):
     except Exception:         return "Server Error",       500
     else:                     return "Created",            201
 
-
+ 

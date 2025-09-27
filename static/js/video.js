@@ -107,7 +107,6 @@ function initializeVideoPlayer() {
     savedVolumeValue = parseFloat(savedVolumeValue);
     video.volume = savedVolumeValue;
 
-    // Initialize legacy subtitles
     if (legacySubtitlesEnabled != null) {
         if (legacySubtitlesEnabled == 'true') {
             legacySubtitlesEnabled = true;
@@ -118,7 +117,6 @@ function initializeVideoPlayer() {
     } else {
         legacySubtitlesEnabled = false;
     }
-    // Initialize muted state
     if (savedMutedState != null) {
         video.muted = (savedMutedState == 'true');
     } else {
@@ -126,7 +124,6 @@ function initializeVideoPlayer() {
     }
     updateVolumeIcon();
 
-    // Initialize subtitle selection
     for (let i = 0; i < subtitleSelector.options.length; i++) {
         if (subtitleSelector.options[i].text === localStorage.getItem('videoSubs')) {
             selectedSubtitleIndex = i;
@@ -149,7 +146,6 @@ function initializeVideoPlayer() {
     } else {
         playbackSpeedSelector.selectedIndex = 3;
     }
-    // Initialize playback mode
     if (currentPlaybackMode != null) {
         currentPlaybackMode = parseInt(currentPlaybackMode);
         playbackMode.innerHTML = ['1', '»', '&orarr;'][currentPlaybackMode] || '1';
@@ -164,11 +160,11 @@ function waitForVideoReady() {
     }
     playVideo();
     if (video.paused) pauseVideo();
-    
+
     totalTime.innerHTML = formatDuration(video.duration);
     video.ontimeupdate = updateProgressBar;
     video.onended = handleVideoEnded;
-    
+
     setupTimelineChapters();
     loadAudioTracks();
     fixVideoAspectRatio();
@@ -215,7 +211,7 @@ function loadWebVttSubtitles(subtitleUrl) {
 async function changeSubtitles(subtitleIndex) {
     const existingTrack = video.querySelector('track[kind="subtitles"]');
     subtitleCanvas.getContext('2d').clearRect(0, 0, subtitleCanvas.width, subtitleCanvas.height);
-    
+
     if (assSubtitleWorker) {
         assSubtitleWorker.destroy();
     }
@@ -256,7 +252,7 @@ function scaleVideoToFit() {
     const videoWidth = video.videoWidth;
     const videoHeight = video.videoHeight;
     const scale = Math.min(containerWidth / videoWidth, containerHeight / videoHeight);
-    
+
     video.style.width = (videoWidth * scale) + 'px';
     video.style.height = (videoHeight * scale) + 'px';
 }
@@ -301,11 +297,6 @@ function pauseVideo() {
     showMainStateAnimation('pause');
     playIcons [0].style.display = 'block';
     playIcons [1].style.display = 'none';
-    updateVolumeIcon();
-    
-    if (video.ended) {
-        progress.style.width = '100%';
-    }
 }
 
 function handleVideoEnded() {
@@ -331,7 +322,7 @@ function formatDuration(timeInSeconds) {
     const hours = Math.floor(timeInSeconds / 3600);
     const minutes = Math.floor((timeInSeconds / 60) % 60);
     const seconds = Math.floor(timeInSeconds % 60);
-    
+
     if (hours > 0) {
         return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`;
     } else {
@@ -352,7 +343,7 @@ function formatNumber(number) {
 function toggleMuteState() {
     volumeSlider.classList.remove('show');
     video.muted = !video.muted;
-    
+
     if (video.muted) {
         updateVolumeIcon();
         showMainStateAnimation('mute');
@@ -388,16 +379,14 @@ function hideControlsWithDelay(delay) {
     controlsHideTimeout = setTimeout(() => {
         if (!video.paused) {
             if (isCursorOnControls) return;
-            
             controlsContainer.classList.remove('show');
             settingsMenu.classList.remove('show');
-            
+            document.activeElement.blur();
+
             subsMenu.style.display  = 'block';
             audioMenu.style.display = 'block';
             speedMenu.style.display = 'block';
             download.style.display  = 'block';
-            
-            document.activeElement.blur();
         }
     }, delay);
 }
@@ -405,7 +394,7 @@ function hideControlsWithDelay(delay) {
 function showCursor() {
     clearTimeout(cursorHideTimeout);
     document.body.style.cursor = 'auto';
-    
+
     if (!video.paused) {
         cursorHideTimeout = setTimeout(() => {
             if (!video.paused) {
@@ -463,10 +452,10 @@ function getChapterNameAtTime(timeInSeconds) {
 function getTimelinePosition(clientX) {
     const { x, width, height } = seekBar.getBoundingClientRect();
     const position = Math.min(Math.max(0, clientX - x), width);
-    return { 
-        percentage: position / width, 
-        position: position, 
-        height: height 
+    return {
+        percentage: position / width,
+        position: position,
+        height: height
     };
 }
 
@@ -477,11 +466,8 @@ function updateVideoTime(percentage) {
 
 function setupTimelineChapters() {
     const videoDuration = video.duration;
-    
-    // Sort times and add the initial time (0 seconds)
     const chapterData = [...chapters.map(item => item.start_time), videoDuration];
-    
-    // Create sections within the div
+
     chapterData.slice(0, -1).forEach((time, index) => {
         const startPercent = Math.min((time / videoDuration) * 100, 100);
         const chapterSection = document.createElement('div');
@@ -498,11 +484,11 @@ function setupTimelineChapters() {
 function showTimelineHover(clientX) {
     const { percentage, position, height } = getTimelinePosition(clientX);
     hoverTime.style.width = `${percentage * 100}%`;
-    
+
     const time = percentage * video.duration;
     const timeString = formatDuration(time);
     const chapterName = getChapterNameAtTime(time);
-    
+
     if (chapterName) {
         hoverInfo.innerHTML = `${timeString}<br>${chapterName}`;
     } else {
@@ -510,11 +496,11 @@ function showTimelineHover(clientX) {
     }
     hoverInfo.style.display = 'block';
     hoverInfo.style.bottom = `${height + 8}px`;
-    
+
     const barRect = seekBar.getBoundingClientRect();
     const tooltipWidth = hoverInfo.offsetWidth;
     let leftPosition = position - tooltipWidth / 2;
-    
+
     if (leftPosition < 0) leftPosition = 0;
     if (leftPosition + tooltipWidth > barRect.width) {
         leftPosition = barRect.width - tooltipWidth;
@@ -582,7 +568,6 @@ function showMainStateAnimation(animationMode) {
 
 function updateVolumeIcon() {
     let index;
-
     if (video.muted) {
         index = 0; // mute
     } else if (video.volume === 0) {
@@ -594,7 +579,7 @@ function updateVolumeIcon() {
     } else {
         index = 3; // low
     }
-    for (var i = 0; i < volumeIcons.length; i++) {
+    for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index) {
             volumeIcons[i].style.display = 'block';
         } else {
@@ -611,16 +596,16 @@ function loadAudioTracks() {
     try {
         const savedAudioTrack = localStorage.getItem('videoAudio');
         const audioTracks = video.audioTracks;
-        
+
         for (let i = 0; i < audioTracks.length; i++) {
             const track = audioTracks[i];
             const option = document.createElement('option');
             option.value = i;
-            
+
             const trackName = (track.label || track.language || 'Track ' + (i + 1));
             option.textContent = trackName;
             audioTracksSelector.appendChild(option);
-            
+
             if (trackName === savedAudioTrack) {
                 audioTracksSelector.selectedIndex = i;
                 changeAudioTrack(i);
@@ -634,7 +619,7 @@ function loadAudioTracks() {
 function changeAudioTrack(selectedIndex) {
     if (!isNaN(selectedIndex)) {
         previousVideoTime = video.currentTime;
-        
+
         for (let i = 0; i < video.audioTracks.length; i++) {
             video.audioTracks[i].enabled = (i === selectedIndex);
         }
@@ -649,7 +634,7 @@ function changeAudioTrack(selectedIndex) {
 function handleDoubleTouch(event) {
     event.preventDefault();
     clearTimeout(touchActionTimeout);
-    
+
     if (touchInteractionActive) {
         touchInteractionActive = false;
         return;
@@ -685,7 +670,7 @@ function handleDoubleTouch(event) {
 
 async function toggleLegacySubtitles() {
     settingsButtonPressed = true;
-    
+
     if (settingsButton.classList.contains('lmbsl')) {
         legacySubtitlesEnabled = false;
         settingsButton.classList.remove('lmbsl');
@@ -699,7 +684,7 @@ async function toggleLegacySubtitles() {
 
 function startPressTimer() {
     if (isPressing || pressHasTriggered) return;
-    
+
     isPressing = true;
     pressTimer = setTimeout(() => {
         toggleLegacySubtitles();
@@ -869,17 +854,17 @@ settingsButton.addEventListener('touchcancel', cancelPressTimer);
 // EVENT LISTENERS - TRACK SELECTION
 // ============================================================================
 
-audioTracksSelector.addEventListener('change', () => {
-    const selectedIndex = parseInt(this.value, 10);
+audioTracksSelector.addEventListener('change', (event) => {
+    const selectedIndex = parseInt(event.target.value, 10);
     changeAudioTrack(selectedIndex);
     const trackText = audioTracksSelector[selectedIndex].text;
     localStorage.setItem('videoAudio', trackText);
     toggleSettingsMenu();
 });
 
-subtitleSelector.addEventListener('change', async () => {
-    selectedSubtitleIndex = parseInt(this.value);
-    
+subtitleSelector.addEventListener('change', async (event) => {
+    selectedSubtitleIndex = parseInt(event.target.value);
+
     if (selectedSubtitleIndex == -1) {
         localStorage.removeItem('videoSubs');
     } else {
@@ -890,8 +875,8 @@ subtitleSelector.addEventListener('change', async () => {
     toggleSettingsMenu();
 });
 
-playbackSpeedSelector.addEventListener('change', () => {
-    video.playbackRate = parseFloat(this.value);
+playbackSpeedSelector.addEventListener('change', (event) => {
+    video.playbackRate = parseFloat(event.target.value);
     localStorage.setItem('videoSpeed', video.playbackRate);
     toggleSettingsMenu();
 });
@@ -932,7 +917,7 @@ touchInteractionBox.addEventListener('click', (event) => {
 
 downloadButton.addEventListener("click", () => {
     const subtitlesHref = downloadSubtitlesLink.href;
-    
+
     if (!subtitlesHref || subtitlesHref !== "#") {
         alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
         downloadSubtitlesLink.click();
@@ -986,13 +971,13 @@ seekBar.addEventListener('click', (event) => {
 
 document.addEventListener('keydown', (event) => {
     if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
-    
+
     if (event.key.match(/[0-9]/gi)) {
         video.currentTime = (video.duration / 100) * (parseInt(event.key) * 10);
         progress.style.width = parseInt(event.key) * 10 + '%';
         return;
     }
-    
+
     switch (event.key.toLowerCase()) {
         case ' ':
             if (document.activeElement === document.body) {

@@ -17,9 +17,9 @@ is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
 
 """ Global functions """
 
+# Checks if the path is inside the root dir
+# else raise an exception depending on the case
 def safe_path(path, root, igntf=False):
-    # Checks if the path is inside the root dir
-    # else raise an exception depending on the case
     path = path.replace("/", sep)
     path = abspath(sep.join([root,path]))
 
@@ -30,14 +30,13 @@ def safe_path(path, root, igntf=False):
             raise FileNotFoundError
         if not access(path, R_OK):
             raise PermissionError
-    else:
+    else: 
         raise PermissionError
     return path
 
 
 def load_userACL(USERS, ACL, users_file, acl_file):
-    USERS.clear()
-    ACL.clear()
+    USERS.clear(); ACL.clear()
     USERS.update(jsload(open(users_file)))
     ACL.update(jsload(open(acl_file)))
 
@@ -140,5 +139,4 @@ def get_dir_size(root):
             except: pass
     return total
 
-
-
+ 
