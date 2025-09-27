@@ -11,9 +11,7 @@
   </head>
   <body>
     <div class="audio-player">
-      <header class="player-header">
-        <h1 class="player-title">{{ name }}</h1>
-      </header>
+      <h1 class="header">{{ name }}</h1>
       <audio src="{{ request.path }}?raw"></audio>
       <div class="controls">
         <div class="time-row">
