@@ -12,6 +12,7 @@ body {
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
+    line-height: 1;
 }
 
 /* -------------------------
@@ -87,7 +88,7 @@ img {
     transform: translateX(-50%);
 }
 .time-container span {
-    padding: 2px 4px;
+    padding: 3px 4px;
     border-radius: 5px;
     box-shadow: none !important
 }
@@ -339,7 +340,7 @@ button img {
     visibility: visible;
 }
 #setting-menu li {
-    padding: 0.25rem 0.4rem;
+    padding: 0.3rem 0.4rem;
     margin: 0.25rem;
     border-radius: 8px;
     font-weight: 500;
