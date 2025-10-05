@@ -79,9 +79,10 @@ video::-moz-media-controls { display: none !important; }
     gap: 4px;
     left: 50%;
     display: flex;
-    font-size: 13px;
+    font-size: 12px;
     position: absolute;
     padding: 2px 4px;
+    padding-right: 4.7px;
     border-radius: 6px;
     transform: translateX(-50%);
     box-shadow: none !important
@@ -127,8 +128,8 @@ button img {
 #main-state {
     opacity: 0;
     transform: scale(0);
-    height: 70px;
-    width: 70px;
+    height: 64px;
+    width: 64px;
     position: absolute;
     cursor: pointer;
     border-radius: 50%;
@@ -142,8 +143,8 @@ button img {
     transform: scale(1);
 }
 #main-state img {
-    width: 67%;
-    height: 67%;
+    width: 75%;
+    height: 75%;
 }
 
 /* -------------------------
@@ -333,12 +334,14 @@ button img {
     visibility: visible;
 }
 #setting-menu li {
-    padding: 0.3rem 0.4rem;
-    margin: 0.25rem;
+    margin: 5px;
+    padding: 0 4px;
+    line-height: 1.5;
     border-radius: 8px;
     font-weight: 500;
     cursor: pointer;
 }
+
 #subsMenu:focus-within,
 #audioMenu:focus-within,
 #speedMenu:focus-within {
@@ -362,16 +365,11 @@ button img {
  * ------------------------- */
 
 select {
-    position: relative;
-    cursor: pointer;
-    appearance: none;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 500;
-    width: 70px;
     opacity: 0;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1rem;
     border: none;
-    line-height: 1;
 }
 select option {
     background: #222;
