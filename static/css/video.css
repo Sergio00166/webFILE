@@ -80,6 +80,7 @@ video::-moz-media-controls { display: none !important; }
     left: 50%;
     display: flex;
     font-size: 12px;
+    line-height: 1;
     position: absolute;
     padding: 2px 4px;
     padding-right: 4.7px;
