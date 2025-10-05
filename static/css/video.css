@@ -81,7 +81,7 @@ video::-moz-media-controls { display: none !important; }
     display: flex;
     font-size: 13px;
     position: absolute;
-    padding: 3px 6px;
+    padding: 2px 4px;
     border-radius: 6px;
     transform: translateX(-50%);
     box-shadow: none !important
