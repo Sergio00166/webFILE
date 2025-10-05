@@ -36,10 +36,7 @@ img {
     transition: filter 0.1s;
 }
 button {
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: none;
+    all: unset;
     cursor: pointer;
     display: flex;
     align-items: center;
