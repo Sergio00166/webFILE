@@ -14,10 +14,6 @@
     </script>
   </head>
   <body>
-    <a href="{{ request.path }}?raw" download id="download_video" tabindex="-1"></a>
-    <a href="{{ subs_file }}" id="download_subs" tabindex="-1"></a>
-    <a href='{{ nxt }}' id="next" tabindex="-1"></a>
-    <a href='{{ prev }}' id="prev" tabindex="-1"></a>
     <div id="video-container">
       <div class="video-box">
         <video src="{{ request.path }}?raw" disablePictureInPicture></video>
@@ -30,8 +26,8 @@
         <img src="/?static=svg/videoplayer/pause-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/volume-mute-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/volume-high-outline.svg" style="display: none;">
-        <img src="/?static=svg/videoplayer/chevron-forward-outline.svg" style="display: none;">
         <img src="/?static=svg/videoplayer/chevron-back-outline.svg" style="display: none;">
+        <img src="/?static=svg/videoplayer/chevron-forward-outline.svg" style="display: none;">
         <div id="state_volume" style="display: none;"></div>
       </span>
       <div id="controls">
@@ -111,6 +107,10 @@
         </div>
       </div>
     </div>
+    <a href="?raw" download id="download_video" tabindex="-1"></a>
+    <a href="{{ subs_file }}" id="download_subs" tabindex="-1"></a>
+    <a href='{{ nxt }}' id="next" tabindex="-1"></a>
+    <a href='{{ prev }}' id="prev" tabindex="-1"></a>
   </body>
 </html>
 

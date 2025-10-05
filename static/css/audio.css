@@ -19,10 +19,9 @@ body {
 .audio-player {
     max-width: 500px;
     width: 90vw;
-    background: #ffffff1a;
+    background: #aaa2;
     border-radius: 20px;
-    border: 1px solid #ffffff4d;
-    box-shadow: 0 4px 16px #00000033;
+    border: 1px solid #eee4;
     display: flex;
     padding: 12px;
     box-sizing: border-box;
@@ -37,10 +36,7 @@ img {
     transition: filter 0.1s;
 }
 button {
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: none;
+    all: unset;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -58,7 +54,6 @@ button {
     text-align: center;
     font-size: 24px;
     font-weight: 600;
-    color: #eee;
     word-break: break-word;
     overflow-wrap: break-word;
     -webkit-user-select: text;
@@ -255,11 +250,9 @@ button {
     box-shadow: 0 0 3px black;
 }
 
-
 /* -------------------------
  *   Responsive rules
  * ------------------------- */
-
 
 @media (max-width: 260px) {
     #total-time,

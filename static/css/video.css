@@ -8,11 +8,11 @@ body {
     justify-content: center;
     height: 100vh;
     height: 100dvh;
+    color: white;
     background: black;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
-    line-height: 1;
 }
 
 /* -------------------------
@@ -37,14 +37,11 @@ video::-moz-media-controls { display: none !important; }
  *   Pointer config
  * ------------------------- */
 
-#main-state,
-#hover-info,
-#controls,
-img {
+#custom-loader, #main-state,
+#hover-info, #controls, img {
     pointer-events: none;
 }
-.side-controls,
-#seek-bar {
+.side-controls, #seek-bar {
     pointer-events: auto;
 }
 
@@ -56,7 +53,6 @@ img {
     width: 90vw;
     height: 90vh;
     height: 90dvh;
-    color: white;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -80,16 +76,15 @@ img {
  * ------------------------- */
 
 .time-container {
-    gap: 3px;
+    gap: 4px;
     left: 50%;
     display: flex;
-    font-size: 13px;
+    font-size: 12px;
     position: absolute;
+    padding: 2px 4px;
+    padding-right: 4.7px;
+    border-radius: 6px;
     transform: translateX(-50%);
-}
-.time-container span {
-    padding: 3px 4px;
-    border-radius: 5px;
     box-shadow: none !important
 }
 .btn-controls {
@@ -108,11 +103,10 @@ img {
  * ------------------------- */
 
 button {
+    all: unset;
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    color: white;
-    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -134,8 +128,8 @@ button img {
 #main-state {
     opacity: 0;
     transform: scale(0);
-    height: 70px;
-    width: 70px;
+    height: 64px;
+    width: 64px;
     position: absolute;
     cursor: pointer;
     border-radius: 50%;
@@ -149,8 +143,8 @@ button img {
     transform: scale(1);
 }
 #main-state img {
-    width: 67%;
-    height: 67%;
+    width: 75%;
+    height: 75%;
 }
 
 /* -------------------------
@@ -340,13 +334,14 @@ button img {
     visibility: visible;
 }
 #setting-menu li {
-    padding: 0.3rem 0.4rem;
-    margin: 0.25rem;
+    margin: 5px;
+    padding: 0 4px;
+    line-height: 1.5;
     border-radius: 8px;
     font-weight: 500;
     cursor: pointer;
-    color: white;
 }
+
 #subsMenu:focus-within,
 #audioMenu:focus-within,
 #speedMenu:focus-within {
@@ -370,19 +365,14 @@ button img {
  * ------------------------- */
 
 select {
-    position: relative;
-    cursor: pointer;
-    appearance: none;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 500;
-    width: 70px;
     opacity: 0;
+    width: 100%;
+    cursor: pointer;
+    font-size: 1rem;
     border: none;
-    line-height: 1;
 }
 select option {
-    background: #363a43;
+    background: #222;
     color: white;
 }
 
@@ -391,8 +381,8 @@ select option {
  * ------------------------- */
 
 #custom-loader {
-    width: 108px;
-    height: 108px;
+    width: 96px;
+    height: 96px;
     border: 10px solid white;
     border-bottom-color: transparent;
     border-radius: 50%;
@@ -410,8 +400,8 @@ select option {
  *   Transparent style
  * ------------------------- */
 
-.time-container span,
 #seek-bar::before,
+.time-container,
 #setting-menu,
 #hover-info,
 #main-state,
@@ -428,21 +418,20 @@ button {
 
 /* Just to animate with Opacity but
  *WITHOUT BREAKING the backdrop-filter */
-.time-container span,
-#seek-bar *, button,
-#seek-bar::before {
+
+#seek-bar::before, #seek-bar *,
+.time-container, button {
     opacity: 0;
     transition: opacity 0.3s;
 }
-#controls.show .time-container span,
 #controls.show #seek-bar::before,
+#controls.show .time-container,
 #controls.show #seek-bar *,
 #controls.show button {
     opacity: 1;
 }
 #chapter-container,
-#hover-time,
-#progress {
+#hover-time, #progress {
     transition: none !important;
 }
 
@@ -461,16 +450,6 @@ button {
  *   Responsive
  * ------------------------- */
 
-@media (max-width: 900px) {
-    #main-state {
-        height: 64px;
-        width: 64px;
-    }
-    #custom-loader {
-        height: 90px;
-        width: 90px;
-    }
-}
 @media (max-width: 600px) {
     #seek-bar {
         bottom: 10px;
@@ -491,11 +470,6 @@ button {
 @media (max-width: 320px) {
     #seek-bar {
         width: 90%;
-    }
-    #custom-loader {
-        height: 56px;
-        width: 56px;
-        border-width: 5px;
     }
 }
 @media (max-width: 250px) {

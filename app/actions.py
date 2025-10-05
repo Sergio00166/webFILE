@@ -42,11 +42,11 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
     else:
         prev = files[files.index(path) - 1]
 
-    if prev != "#": prev = "/"+prev
-    if next  != "#": next  = "/"+next
+    if prev != "#": prev = basename(prev)
+    if next  != "#": next  = basename(next)
 
     if not random: return prev, next, name
-    else: return prev, next, name, "/"+choice(files)
+    else: return prev, next, name, basename(choice(files))
 
 
 def get_index_data(folder_path, root, folder_size, sort, ACL):
@@ -76,7 +76,7 @@ def video(path, root, file_type, ACL):
     tracks, chapters = get_info(path), get_chapters(path)
 
     subs = external_subs(path)
-    subs = "/" + relpath(subs, start=root) if subs != path else "#"
+    subs = basename(subs) if subs != path else "#"
 
     return render_template(
         "video.html", path=path, name=name,

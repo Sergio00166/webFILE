@@ -613,7 +613,7 @@ function loadAudioTracks() {
                 audioTracksSelector.selectedIndex = 0;
             }
         }
-    } catch (error) {}
+    } catch {}
 }
 
 function changeAudioTrack(selectedIndex) {
@@ -684,7 +684,6 @@ async function toggleLegacySubtitles() {
 
 function startPressTimer() {
     if (isPressing || pressHasTriggered) return;
-
     isPressing = true;
     pressTimer = setTimeout(() => {
         toggleLegacySubtitles();
