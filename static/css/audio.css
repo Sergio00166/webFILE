@@ -250,11 +250,9 @@ button {
     box-shadow: 0 0 3px black;
 }
 
-
 /* -------------------------
  *   Responsive rules
  * ------------------------- */
-
 
 @media (max-width: 260px) {
     #total-time,
