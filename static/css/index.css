@@ -81,7 +81,7 @@ pre {
     flex-direction: column;
     gap: 12px;
 }
-.sidebar-content>div {
+.sidebar-content > div {
     display: flex;
     flex-direction: column;
     gap: 2px;
@@ -103,7 +103,6 @@ pre {
  * ------------------------- */
 
 .sidebar-content button {
-    width: 100%;
     white-space: nowrap;
     text-align: left;
     padding: 8px;

@@ -82,7 +82,7 @@ video::-moz-media-controls { display: none !important; }
     font-size: 12px;
     position: absolute;
     padding: 2px 4px;
-    padding-right: 4.7px;
+    padding-right: 5px;
     border-radius: 6px;
     transform: translateX(-50%);
     box-shadow: none !important
@@ -103,10 +103,11 @@ video::-moz-media-controls { display: none !important; }
  * ------------------------- */
 
 button {
-    all: unset;
     width: 32px;
     height: 32px;
     border-radius: 50%;
+    color: white;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
