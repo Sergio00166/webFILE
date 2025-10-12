@@ -1,6 +1,6 @@
 # Code by Sergio00166
 
-from functions import validate_acl, safe_path
+from functions import validate_acl, safe_path, printerr
 from shutil import move as sh_move, copy as sh_copy
 from os.path import exists, isdir, relpath, dirname
 from os import sep, remove, walk, mkdir as os_mkdir
