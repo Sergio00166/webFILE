@@ -199,7 +199,7 @@ function loadWebVttSubtitles(subtitleUrl) {
     trackElement.kind = 'subtitles';
     trackElement.src = subtitleUrl;
     trackElement.default = true;
-    trackElement.onerror = () => {
+    trackElement.onerror = ()=>{
         alert('Cannot load subtitle [legacy mode]');
     };
     video.appendChild(trackElement);
@@ -284,7 +284,7 @@ function togglePlayPauseState() {
 }
 
 function playVideo() {
-    video.play().catch(() => {});
+    video.play().catch(()=>{});
     playIcons [0].style.display = 'none';
     playIcons [1].style.display = 'block';
     showMainStateAnimation('play');
@@ -376,7 +376,7 @@ function handleVolumeChange(event) {
 
 function hideControlsWithDelay(delay) {
     clearTimeout(controlsHideTimeout);
-    controlsHideTimeout = setTimeout(() => {
+    controlsHideTimeout = setTimeout(()=>{
         if (!video.paused) {
             if (isCursorOnControls) return;
             controlsContainer.classList.remove('show');
@@ -396,7 +396,7 @@ function showCursor() {
     document.body.style.cursor = 'auto';
 
     if (!video.paused) {
-        cursorHideTimeout = setTimeout(() => {
+        cursorHideTimeout = setTimeout(()=>{
             if (!video.paused) {
                 document.body.style.cursor = 'none';
             }
@@ -416,7 +416,7 @@ function toggleFullscreenMode() {
     }
 }
 
-videoContainer.addEventListener('fullscreenchange', () => {
+videoContainer.addEventListener('fullscreenchange', ()=>{
     if (document.fullscreenElement) {
         fullscreenIcons[0].style.display = 'none';
         fullscreenIcons[1].style.display = 'block';
@@ -425,9 +425,9 @@ videoContainer.addEventListener('fullscreenchange', () => {
         fullscreenIcons[1].style.display = 'none';
     }
     if (video.videoWidth >= video.videoHeight) {
-        screen.orientation.lock('landscape').catch(() => {});
+        screen.orientation.lock('landscape');
     } else {
-        screen.orientation.lock('portrait').catch(() => {});
+        screen.orientation.lock('portrait');
     }
 });
 
@@ -685,7 +685,7 @@ async function toggleLegacySubtitles() {
 function startPressTimer() {
     if (isPressing || pressHasTriggered) return;
     isPressing = true;
-    pressTimer = setTimeout(() => {
+    pressTimer = setTimeout(()=>{
         toggleLegacySubtitles();
         pressHasTriggered = true;
     }, 600);
@@ -734,7 +734,7 @@ function handleTimeChangeKeyboard(mode) {
 // EVENT LISTENERS - WINDOW & VIDEO
 // ============================================================================
 
-window.addEventListener('pageshow', () => {
+window.addEventListener('pageshow', ()=>{
     volumeSlider.value = video.volume;
     updateVolumeSlider();
     waitForVideoReady();
@@ -745,10 +745,10 @@ window.addEventListener('fullscreenchange', scaleVideoToFit);
 
 video.addEventListener('play', playVideo);
 video.addEventListener('pause', pauseVideo);
-video.addEventListener('waiting', () => {
+video.addEventListener('waiting', ()=>{
     loadingSpinner.style.display = 'block';
 });
-video.addEventListener('playing', () => {
+video.addEventListener('playing', ()=>{
     loadingSpinner.style.display = 'none';
 });
 
@@ -756,24 +756,24 @@ video.addEventListener('playing', () => {
 // EVENT LISTENERS - VIDEO CONTAINER
 // ============================================================================
 
-videoContainer.addEventListener('mouseleave', () => {
+videoContainer.addEventListener('mouseleave', ()=>{
     clearTimeout(cursorHideTimeout);
     document.body.style.cursor = 'auto';
     hideControlsWithDelay(50);
 });
 
-videoContainer.addEventListener('mousemove', (event) => {
+videoContainer.addEventListener('mousemove', event => {
     controlsContainer.classList.add('show');
     showCursor();
     hideControlsWithDelay(MOUSE_CONTROL_DELAY);
 });
 
-videoContainer.addEventListener('focusin', (event) => {
+videoContainer.addEventListener('focusin', event => {
     controlsContainer.classList.add('show');
     hideControlsWithDelay(MOUSE_CONTROL_DELAY);
 });
 
-videoContainer.addEventListener('touchmove', () => {
+videoContainer.addEventListener('touchmove', ()=>{
     touchInteractionActive = true;
     controlsContainer.classList.add('show');
     hideControlsWithDelay(TOUCH_CONTROL_DELAY);
@@ -783,7 +783,7 @@ videoContainer.addEventListener('touchmove', () => {
 // EVENT LISTENERS - CONTROLS
 // ============================================================================
 
-controlsContainer.addEventListener('click', () => {
+controlsContainer.addEventListener('click', ()=>{
     controlsContainer.classList.add('show');
     showCursor();
     hideControlsWithDelay(MOUSE_CONTROL_DELAY);
@@ -793,7 +793,7 @@ controlsContainer.addEventListener('click', () => {
 // EVENT LISTENERS - VOLUME
 // ============================================================================
 
-volumeControl.addEventListener('mouseenter', () => {
+volumeControl.addEventListener('mouseenter', ()=>{
     clearTimeout(volumeHideTimeout);
     if (video.muted) {
         volumeSlider.classList.remove('show');
@@ -802,19 +802,19 @@ volumeControl.addEventListener('mouseenter', () => {
     }
 });
 
-volumeControl.addEventListener('mouseleave', () => {
+volumeControl.addEventListener('mouseleave', ()=>{
     clearTimeout(volumeHideTimeout);
     volumeSlider.classList.remove('show');
 });
 
 volumeSlider.addEventListener('input', handleVolumeChange);
-volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); });
+volumeSlider.addEventListener('keydown', e => e.preventDefault());
 
 // ============================================================================
 // EVENT LISTENERS - SETTINGS
 // ============================================================================
 
-settingsButton.addEventListener('click', (event) => {
+settingsButton.addEventListener('click', event => {
     if (settingsButtonPressed) {
         event.preventDefault();
         settingsButtonPressed = false;
@@ -823,7 +823,7 @@ settingsButton.addEventListener('click', (event) => {
     }
 });
 
-settingsButton.addEventListener('touchend', (event) => {
+settingsButton.addEventListener('touchend', event => {
     if (settingsButtonPressed) {
         event.preventDefault();
         settingsButtonPressed = false;
@@ -832,7 +832,7 @@ settingsButton.addEventListener('touchend', (event) => {
 });
 
 // Mouse events for legacy subtitle toggle
-settingsButton.addEventListener('mousedown', (event) => {
+settingsButton.addEventListener('mousedown', event => {
     event.preventDefault();
     startPressTimer();
 });
@@ -841,7 +841,7 @@ settingsButton.addEventListener('mouseup', cancelPressTimer);
 settingsButton.addEventListener('mouseleave', cancelPressTimer);
 
 // Touch events for legacy subtitle toggle
-settingsButton.addEventListener('touchstart', (event) => {
+settingsButton.addEventListener('touchstart', event => {
     event.preventDefault();
     startPressTimer();
 }, { passive: false });
@@ -853,7 +853,7 @@ settingsButton.addEventListener('touchcancel', cancelPressTimer);
 // EVENT LISTENERS - TRACK SELECTION
 // ============================================================================
 
-audioTracksSelector.addEventListener('change', (event) => {
+audioTracksSelector.addEventListener('change', event => {
     const selectedIndex = parseInt(event.target.value, 10);
     changeAudioTrack(selectedIndex);
     const trackText = audioTracksSelector[selectedIndex].text;
@@ -861,7 +861,7 @@ audioTracksSelector.addEventListener('change', (event) => {
     toggleSettingsMenu();
 });
 
-subtitleSelector.addEventListener('change', async (event) => {
+subtitleSelector.addEventListener('change', async event => {
     selectedSubtitleIndex = parseInt(event.target.value);
 
     if (selectedSubtitleIndex == -1) {
@@ -874,7 +874,7 @@ subtitleSelector.addEventListener('change', async (event) => {
     toggleSettingsMenu();
 });
 
-playbackSpeedSelector.addEventListener('change', (event) => {
+playbackSpeedSelector.addEventListener('change', event => {
     video.playbackRate = parseFloat(event.target.value);
     localStorage.setItem('videoSpeed', video.playbackRate);
     toggleSettingsMenu();
@@ -885,7 +885,7 @@ playbackSpeedSelector.addEventListener('change', (event) => {
 // ============================================================================
 
 touchInteractionBox.addEventListener('touchend', handleDoubleTouch);
-touchInteractionBox.addEventListener('click', (event) => {
+touchInteractionBox.addEventListener('click', event => {
     event.preventDefault();
     togglePlayPauseState();
     showCursor();
@@ -897,14 +897,14 @@ touchInteractionBox.addEventListener('click', (event) => {
 
 [subtitleSelector, audioTracksSelector, playbackSpeedSelector]
 .forEach(selectElement => {
-    selectElement.addEventListener('mouseenter', () => {
+    selectElement.addEventListener('mouseenter', ()=>{
         isMouseOnSelect = true;
         selectElement.parentElement.style.outline = "none";
     });
-    selectElement.addEventListener('mouseleave', () => {
+    selectElement.addEventListener('mouseleave', ()=>{
         isMouseOnSelect = false;
     });
-    selectElement.addEventListener('focus', () => {
+    selectElement.addEventListener('focus', ()=>{
         if (isMouseOnSelect) return;
         selectElement.parentElement.style = "";
     });
@@ -914,7 +914,7 @@ touchInteractionBox.addEventListener('click', (event) => {
 // EVENT LISTENERS - DOWNLOAD
 // ============================================================================
 
-downloadButton.addEventListener("click", () => {
+downloadButton.addEventListener("click", ()=>{
     const subtitlesHref = downloadSubtitlesLink.href;
 
     if (!subtitlesHref || subtitlesHref !== "#") {
@@ -925,7 +925,7 @@ downloadButton.addEventListener("click", () => {
     setTimeout(toggleSettingsMenu, 100);
 });
 
-downloadButton.addEventListener('keydown', (event) => {
+downloadButton.addEventListener('keydown', event => {
     if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         downloadButton.click();
@@ -936,31 +936,31 @@ downloadButton.addEventListener('keydown', (event) => {
 // EVENT LISTENERS - TIMELINE
 // ============================================================================
 
-seekBar.addEventListener('mousedown', (event) => {
+seekBar.addEventListener('mousedown', event => {
     setupMouseDrag(moveEvent => updateVideoTime(getTimelinePosition(moveEvent.clientX).percentage));
 });
 
-seekBar.addEventListener('touchstart', (event) => {
+seekBar.addEventListener('touchstart', event => {
     setupTouchDrag(moveEvent => updateVideoTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
 });
 
-document.addEventListener('touchstart', () => {
+document.addEventListener('touchstart', ()=>{
     touchHoverActive = true;
     clearTimelineHover();
 },{ passive: true });
 
-seekBar.addEventListener('mousemove', (event) => {
+seekBar.addEventListener('mousemove', event => {
     if (!touchHoverActive) showTimelineHover(event.clientX);
 });
 
-seekBar.addEventListener('mouseleave', () => {
+seekBar.addEventListener('mouseleave', ()=>{
     touchHoverActive = false;
     clearTimelineHover();
 });
 
-seekBar.addEventListener('click', (event) => {
+seekBar.addEventListener('click', event => {
     updateVideoTime(getTimelinePosition(event.clientX).percentage);
 });
 
@@ -968,7 +968,22 @@ seekBar.addEventListener('click', (event) => {
 // EVENT LISTENERS - KEYBOARD
 // ============================================================================
 
-document.addEventListener('keydown', (event) => {
+document.addEventListener('mouseup', event => {
+    switch (event.button) {
+        case 3:
+            event.preventDefault();
+            navigateToPrevious();
+            break;
+        case 4:
+            event.preventDefault();
+            navigateToNext();
+            break;
+        default:
+            break;
+    }
+});
+
+document.addEventListener('keydown', event => {
     if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
@@ -976,7 +991,6 @@ document.addEventListener('keydown', (event) => {
         progress.style.width = parseInt(event.key) * 10 + '%';
         return;
     }
-
     switch (event.key.toLowerCase()) {
         case ' ':
             if (document.activeElement === document.body) {

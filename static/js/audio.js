@@ -360,7 +360,7 @@ function pauseAudio() {
 }
 
 function playAudio() {
-    audio.play().catch(() => {});
+    audio.play().catch(()=>{});
     playIcons[0].style.display = 'none';
     playIcons[1].style.display = 'block';
 }
@@ -399,9 +399,7 @@ function navigateToPrevious() {
 function navigateToNext() {
     if (isShuffled) {
         window.history.forward();
-        setTimeout(() => {
-            randomLink.click();
-        }, 250);
+        setTimeout(() => randomLink.click(), 250);
     } else {
         nextLink.click();
     }
@@ -415,7 +413,22 @@ function download() {
 // KEYBOARD SHORTCUTS
 // ============================================================================
 
-function handleKeyboardShortcuts(event) {
+document.addEventListener('mouseup', event => {
+    switch (event.button) {
+        case 3:
+            event.preventDefault();
+            navigateToPrevious();
+            break;
+        case 4:
+            event.preventDefault();
+            navigateToNext();
+            break;
+        default:
+            break;
+    }
+});
+
+document.addEventListener('keydown', event => {
     if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
@@ -462,7 +475,7 @@ function handleKeyboardShortcuts(event) {
         default:
             break;
     }
-}
+});
 
 // ============================================================================
 // MEDIA SESSION API
@@ -488,7 +501,7 @@ audio.addEventListener('pause', pauseAudio);
 // ============================================================================
 
 volumeSlider.addEventListener('input', handleVolumeChange);
-volumeSlider.addEventListener('keydown', (e) => { e.preventDefault(); });
+volumeSlider.addEventListener('keydown', e => e.preventDefault());
 
 speedButton.addEventListener('click', changePlaybackSpeed);
 speedButton.addEventListener('wheel', handleSpeedWheel);
@@ -499,47 +512,41 @@ speedButton.addEventListener('touchend', handleSpeedTouchEnd);
 // EVENT LISTENERS - TIMELINE
 // ============================================================================
 
-seekBar.addEventListener('mousedown', (event) => {
+seekBar.addEventListener('mousedown', event => {
     setupMouseDrag(moveEvent => updateAudioTime(
         getTimelinePosition(moveEvent.clientX).percentage)
     );
 });
 
-seekBar.addEventListener('touchstart', (event) => {
+seekBar.addEventListener('touchstart', event => {
     setupTouchDrag(moveEvent => updateAudioTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
 });
 
-document.addEventListener('touchstart', () => {
+document.addEventListener('touchstart', ()=>{
     isTouchHoverActive = true;
     clearTimelineHover();
 }, { passive: true });
 
-seekBar.addEventListener('click', (event) => {
+seekBar.addEventListener('click', event => {
     updateAudioTime(getTimelinePosition(event.clientX).percentage);
 });
 
-seekBar.addEventListener('mousemove', (event) => {
+seekBar.addEventListener('mousemove', event => {
     if (!isTouchHoverActive) showTimelineHover(event.clientX);
 });
 
-seekBar.addEventListener('mouseleave', () => {
+seekBar.addEventListener('mouseleave', ()=>{
     isTouchHoverActive = false;
     clearTimelineHover();
 });
 
 // ============================================================================
-// EVENT LISTENERS - KEYBOARD
-// ============================================================================
-
-document.addEventListener('keydown', handleKeyboardShortcuts);
-
-// ============================================================================
 // EVENT LISTENERS - WINDOW
 // ============================================================================
 
-window.addEventListener('pageshow', () => {
+window.addEventListener('pageshow', ()=>{
     volumeSlider.value = audio.volume;
     updateVolumeBar();
     waitForAudioReady();

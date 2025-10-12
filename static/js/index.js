@@ -141,7 +141,7 @@ function toggleSelectMode() {
 }
 
 function deselectAllItems() {
-    selectedItems.forEach(fileItem => { fileItem.classList.remove('selected'); });
+    selectedItems.forEach(fileItem => fileItem.classList.remove('selected'));
     selectedItems.clear();
 }
 
@@ -358,14 +358,14 @@ function uploadFileWithProgress(file, uploadURL, progressCallback) {
                 progressCallback(event.loaded, event.total);
             }
         };
-        xhr.onload = () => {
+        xhr.onload = ()=>{
             if (xhr.status >= 200 && xhr.status < 300) {
                 resolve();
             } else {
                 reject(xhr.status);
             }
         };
-        xhr.onerror = () => { reject('Connection Error'); };
+        xhr.onerror = () => reject('Connection Error');
         xhr.send(file);
     });
 }
@@ -422,7 +422,7 @@ function openFileUploadMenu(selectDirectory = false) {
     if (selectDirectory) {
         fileInput.setAttribute('webkitdirectory', true);
     }
-    fileInput.onchange = () => {
+    fileInput.onchange = ()=>{
         if (fileInput.files.length && (selectDirectory || confirm('Upload ' + fileInput.files.length + ' item(s)?'))) {
             uploadFiles(fileInput.files, selectDirectory);
         }
@@ -487,7 +487,6 @@ listGroup.addEventListener('keydown', event => {
 document.addEventListener('keydown', event => {
     const key = event.key.toLowerCase();
     const isShiftArrow = event.shiftKey && (key === 'arrowleft' || key === 'arrowright');
-
     if ((event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) && !isShiftArrow) return;
 
     switch (key) {
