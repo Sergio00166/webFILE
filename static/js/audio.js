@@ -417,11 +417,11 @@ document.addEventListener('mouseup', event => {
     switch (event.button) {
         case 3:
             event.preventDefault();
-            navigateToNext();
+            navigateToPrevious();
             break;
         case 4:
             event.preventDefault();
-            navigateToPrevious();
+            navigateToNext();
             break;
         default:
             break;
