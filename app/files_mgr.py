@@ -10,7 +10,7 @@ from flask import request
 
 
 def log(text, code, e, error_file):
-    printerr(e, log_path)
+    printerr(e, error_file)
     return text, code
 
 
