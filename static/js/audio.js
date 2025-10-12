@@ -413,7 +413,22 @@ function download() {
 // KEYBOARD SHORTCUTS
 // ============================================================================
 
-function handleKeyboardShortcuts(event) {
+document.addEventListener('mouseup', event => {
+    switch (event.button) {
+        case 3:
+            event.preventDefault();
+            navigateToNext();
+            break;
+        case 4:
+            event.preventDefault();
+            navigateToPrevious();
+            break;
+        default:
+            break;
+    }
+});
+
+document.addEventListener('keydown', event => {
     if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
@@ -460,7 +475,7 @@ function handleKeyboardShortcuts(event) {
         default:
             break;
     }
-}
+});
 
 // ============================================================================
 // MEDIA SESSION API
@@ -526,12 +541,6 @@ seekBar.addEventListener('mouseleave', ()=>{
     isTouchHoverActive = false;
     clearTimelineHover();
 });
-
-// ============================================================================
-// EVENT LISTENERS - KEYBOARD
-// ============================================================================
-
-document.addEventListener('keydown', handleKeyboardShortcuts);
 
 // ============================================================================
 // EVENT LISTENERS - WINDOW

@@ -487,7 +487,6 @@ listGroup.addEventListener('keydown', event => {
 document.addEventListener('keydown', event => {
     const key = event.key.toLowerCase();
     const isShiftArrow = event.shiftKey && (key === 'arrowleft' || key === 'arrowright');
-
     if ((event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) && !isShiftArrow) return;
 
     switch (key) {
