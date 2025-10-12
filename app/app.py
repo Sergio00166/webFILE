@@ -19,7 +19,7 @@ def explorer(path):
         if "login" in request.args:  return login(USERS, useApi)
 
         if request.method in method_map:
-            return method_map[request.method](path,ACL,root)
+            return method_map[request.method](path,ACL,root,error_file)
 
         return serveFiles_page(path,ACL,root,folder_size,useApi)
 
