@@ -425,9 +425,9 @@ videoContainer.addEventListener('fullscreenchange', ()=>{
         fullscreenIcons[1].style.display = 'none';
     }
     if (video.videoWidth >= video.videoHeight) {
-        screen.orientation.lock('landscape');
+        screen.orientation.lock('landscape').catch(()=>{});
     } else {
-        screen.orientation.lock('portrait');
+        screen.orientation.lock('portrait').catch(()=>{});
     }
 });
 
@@ -437,15 +437,12 @@ videoContainer.addEventListener('fullscreenchange', ()=>{
 
 function getChapterNameAtTime(timeInSeconds) {
     for (let i = 0; i < chapters.length; i++) {
-        if (timeInSeconds >= chapters[i].start_time) {
-            try {
-                if (timeInSeconds < chapters[i + 1].start_time) {
-                    return chapters[i].title;
-                }
-            } catch {
-                return chapters[i].title;
-            }
-        }
+        const current = chapters[i];
+        const next = chapters[i + 1];
+
+        const hasStarted = timeInSeconds >= current.start_time;
+        const beforeNext = !next || timeInSeconds < next.start_time;
+        if (hasStarted && beforeNext) return current.title;
     }
 }
 
@@ -593,38 +590,37 @@ function updateVolumeIcon() {
 // ============================================================================
 
 function loadAudioTracks() {
-    try {
-        const savedAudioTrack = localStorage.getItem('videoAudio');
-        const audioTracks = video.audioTracks;
+    const savedAudioTrack = localStorage.getItem('videoAudio');
+    const audioTracks = video.audioTracks;
+    if (!audioTracks) return;
 
-        for (let i = 0; i < audioTracks.length; i++) {
-            const track = audioTracks[i];
-            const option = document.createElement('option');
-            option.value = i;
+    for (let i = 0; i < audioTracks.length; i++) {
+        const track = audioTracks[i];
+        const option = document.createElement('option');
+        option.value = i;
 
-            const trackName = (track.label || track.language || 'Track ' + (i + 1));
-            option.textContent = trackName;
-            audioTracksSelector.appendChild(option);
+        const trackName = (track.label || track.language || 'Track ' + (i + 1));
+        option.textContent = trackName;
+        audioTracksSelector.appendChild(option);
 
-            if (trackName === savedAudioTrack) {
-                audioTracksSelector.selectedIndex = i;
-                changeAudioTrack(i);
-            } else {
-                audioTracksSelector.selectedIndex = 0;
-            }
+        if (trackName === savedAudioTrack) {
+            audioTracksSelector.selectedIndex = i;
+            changeAudioTrack(i);
+        } else {
+            audioTracksSelector.selectedIndex = 0;
         }
-    } catch {}
+    }
 }
 
 function changeAudioTrack(selectedIndex) {
-    if (!isNaN(selectedIndex)) {
-        previousVideoTime = video.currentTime;
+    const tracks = video.audioTracks;
+    if (!tracks || !selectedIndex) return;
 
-        for (let i = 0; i < video.audioTracks.length; i++) {
-            video.audioTracks[i].enabled = (i === selectedIndex);
-        }
-        video.currentTime = previousVideoTime;
+    previousVideoTime = video.currentTime;
+    for (let i = 0; i < tracks.length; i++) {
+        video.audioTracks[i].enabled = (i === selectedIndex);
     }
+    video.currentTime = previousVideoTime;
 }
 
 // ============================================================================
