@@ -62,7 +62,7 @@ const mainStateVolume = document.querySelector('#state_volume');
 const previousLink = document.getElementById('prev');
 const nextLink = document.getElementById('next');
 const subtitleCanvas = document.querySelector('canvas');
-const touchInteractionBox = document.getElementById('touch-box');
+// Using controls background instead of separate touch box
 const video = document.querySelector('video');
 const videoContainer = document.getElementById('video-container');
 const playbackMode = document.getElementById('mode');
@@ -641,7 +641,7 @@ function handleDoubleTouch(event) {
     }
     const now = Date.now();
     const touchInterval = now - lastTouchTimestamp;
-    const touchBoxRect = touchInteractionBox.getBoundingClientRect();
+    const touchBoxRect = controlsContainer.getBoundingClientRect();
 
     if (touchInterval < DOUBLE_TOUCH_DELAY) {
         const touchX = event.changedTouches[0].clientX;
@@ -884,11 +884,22 @@ playbackSpeedSelector.addEventListener('change', event => {
 // EVENT LISTENERS - TOUCH INTERACTION
 // ============================================================================
 
-touchInteractionBox.addEventListener('touchend', handleDoubleTouch);
-touchInteractionBox.addEventListener('click', event => {
-    event.preventDefault();
-    togglePlayPauseState();
-    showCursor();
+controlsContainer.addEventListener('touchend', event => {
+    // Only if tapping the background of controls (not interactive children)
+    const target = event.target;
+    const isInteractive = target.closest('button, select, input, #seek-bar, #setting-menu, .side-controls, .btn-controls');
+    if (!isInteractive) handleDoubleTouch(event);
+}, { passive: false });
+
+controlsContainer.addEventListener('click', event => {
+    // Only toggle when clicking empty background area
+    const target = event.target;
+    const isInteractive = target.closest('button, select, input, #seek-bar, #setting-menu, .side-controls, .btn-controls');
+    if (!isInteractive) {
+        event.preventDefault();
+        togglePlayPauseState();
+        showCursor();
+    }
 });
 
 // ============================================================================
