@@ -102,7 +102,6 @@ let touchHoverActive = false;
 // ============================================================================
 
 function initializeVideoPlayer() {
-    // Initialize volume
     if (savedVolumeValue === null) savedVolumeValue = 1;
     savedVolumeValue = parseFloat(savedVolumeValue);
     video.volume = savedVolumeValue;
@@ -134,7 +133,6 @@ function initializeVideoPlayer() {
     selectedSubtitleIndex = selectedSubtitleIndex - 1;
     changeSubtitles(selectedSubtitleIndex);
 
-    // Initialize playback speed
     if (savedPlaybackSpeed != null) {
         video.playbackRate = parseFloat(savedPlaybackSpeed);
         for (let i = 0; i < playbackSpeedSelector.options.length; i++) {
@@ -749,7 +747,7 @@ video.addEventListener('playing', ()=>{
 });
 
 // ============================================================================
-// EVENT LISTENERS - VIDEO CONTAINER
+// EVENT LISTENERS - SHOW/HIDE CONTROLS
 // ============================================================================
 
 videoContainer.addEventListener('mouseleave', ()=>{
@@ -758,31 +756,37 @@ videoContainer.addEventListener('mouseleave', ()=>{
     hideControlsWithDelay(50);
 });
 
-videoContainer.addEventListener('mousemove', event => {
+function showControls(delay, cursor=false) {
+    if (cursor) showCursor();
     controlsContainer.classList.add('show');
-    showCursor();
-    hideControlsWithDelay(MOUSE_CONTROL_DELAY);
-});
-
-videoContainer.addEventListener('focusin', event => {
-    controlsContainer.classList.add('show');
-    hideControlsWithDelay(MOUSE_CONTROL_DELAY);
-});
+    hideControlsWithDelay(delay);
+}
 
 videoContainer.addEventListener('touchmove', ()=>{
     touchInteractionActive = true;
-    controlsContainer.classList.add('show');
-    hideControlsWithDelay(TOUCH_CONTROL_DELAY);
+    showControls(TOUCH_CONTROL_DELAY);
 }, { passive: false });
 
-// ============================================================================
-// EVENT LISTENERS - CONTROLS
-// ============================================================================
+controlsContainer.addEventListener('touchend', event => {
+    if (event.target === controlsContainer) {
+        handleDoubleTouch(event);
+    } else {
+        showControls(TOUCH_CONTROL_DELAY);
+    }
+}, { passive: false });
 
-controlsContainer.addEventListener('click', ()=>{
-    controlsContainer.classList.add('show');
-    showCursor();
-    hideControlsWithDelay(MOUSE_CONTROL_DELAY);
+controlsContainer.addEventListener('click', event => {
+    if (event.target === controlsContainer) {
+        togglePlayPauseState();
+    }
+    showControls(MOUSE_CONTROL_DELAY,true);
+});
+
+videoContainer.addEventListener('mousemove', event => {
+    showControls(MOUSE_CONTROL_DELAY,true);
+});
+videoContainer.addEventListener('focusin', event => {
+    showControls(MOUSE_CONTROL_DELAY);
 });
 
 // ============================================================================
@@ -874,28 +878,6 @@ playbackSpeedSelector.addEventListener('change', event => {
     video.playbackRate = parseFloat(event.target.value);
     localStorage.setItem('videoSpeed', video.playbackRate);
     toggleSettingsMenu();
-});
-
-// ============================================================================
-// EVENT LISTENERS - TOUCH INTERACTION
-// ============================================================================
-
-controlsContainer.addEventListener('touchend', event => {
-    // Only if tapping the background of controls (not interactive children)
-    const target = event.target;
-    const isInteractive = target.closest('button, select, input, #seek-bar, #setting-menu, .side-controls, .btn-controls');
-    if (!isInteractive) handleDoubleTouch(event);
-}, { passive: false });
-
-controlsContainer.addEventListener('click', event => {
-    // Only toggle when clicking empty background area
-    const target = event.target;
-    const isInteractive = target.closest('button, select, input, #seek-bar, #setting-menu, .side-controls, .btn-controls');
-    if (!isInteractive) {
-        event.preventDefault();
-        togglePlayPauseState();
-        showCursor();
-    }
 });
 
 // ============================================================================
