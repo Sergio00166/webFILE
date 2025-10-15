@@ -429,7 +429,7 @@ document.addEventListener('mouseup', event => {
 });
 
 document.addEventListener('keydown', event => {
-    if (event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
         audio.currentTime = (audio.duration / 100) * (parseInt(event.key) * 10);
