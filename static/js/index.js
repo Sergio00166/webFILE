@@ -538,22 +538,20 @@ document.addEventListener('keydown', event => {
         case 'x':
             moveSelectedFiles();
             break;
-        case 'p':
+        case 'v':
             pasteFiles();
             break;
         case 'u':
-            openFileUploadMenu();
-            break;
-        case 'f':
-            openFileUploadMenu(true);
+            openFileUploadMenu(event.shiftKey && true);
             break;
         case 's':
             toggleSelectMode();
             break;
-        case 'n':
+        case 'r':
             renameSelectedFiles();
             break;
-        case 'r':
+        case 'delete':
+        case 'backspace':
             executeDeletes();
             break;
         case 'm':
@@ -562,7 +560,7 @@ document.addEventListener('keydown', event => {
         case 'l':
             loginButton.click();
             break;
-        case 'i':
+        case 'h':
             window.location.href = '/';
             break;
         case '1':

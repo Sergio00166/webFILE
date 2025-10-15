@@ -42,19 +42,19 @@
           <div>
             <h3>UPLOAD</h3>
             <button onclick="openFileUploadMenu()" title="(u)">📤 Files</button>
-            <button onclick="openFileUploadMenu(true)" title="(f)">📤 Folder</button>
+            <button onclick="openFileUploadMenu(true)" title="(⇧u)">📤 Folder</button>
           </div>
           <div>
             <h3>ACTIONS</h3>
             <button onclick="createDirectory()" title="(m)">📁 New Dir</button>
-            <button id="renBtn" onclick="renameSelectedFiles()" title="(n)" disabled>✏️ Rename</button>
-            <button id="delBtn" onclick="executeDeletes()" title="(r)" disabled>🗑️ Delete</button>
+            <button id="renBtn" onclick="renameSelectedFiles()" title="(r)" disabled>✏️ Rename</button>
+            <button id="delBtn" onclick="executeDeletes()" title="(Del)" disabled>🗑️ Delete</button>
           </div>
           <div>
             <h3>MANAGE</h3>
             <button id="copyBtn" onclick="copySelectedFiles()" title="(c)" disabled>📋 Copy</button>
-            <button id="moveBtn" onclick="moveSelectedFiles()" title="(x)" disabled>✂️ Move</button>
-            <button onclick="pasteFiles()" title="(p)">📋 Paste</button>
+            <button id="moveBtn" onclick="moveSelectedFiles()" title="(x)" disabled>✂️ Cut</button>
+            <button onclick="pasteFiles()" title="(v)">📋 Paste</button>
           </div>
           <div>
             <h3>ACCOUNT</h3>
@@ -71,7 +71,7 @@
           <button onclick="window.location.href='..'" title="Parent">
             <img src="/?static=svg/index/arrow-left-solid.svg">
           </button>
-          <button onclick="window.location.href='/'" title="Index (i)">
+          <button onclick="window.location.href='/'" title="Home (h)">
             <img src="/?static=svg/index/house-chimney-solid.svg">
           </button>
           <pre class="path-title">{{ folder_path }}</pre>
