@@ -26,16 +26,16 @@ Supports ACL-based access control, uploads, and file operations.
 
 This service exposes a filesystem directory over HTTP, enabling:
 
-* **Streaming**: direct streaming of media via browser-supported formats. No transcoding, no overhead.
-* **File operations**: upload, create, delete (controlled by write ACL).
-* **Access control** via JSON-based ACLs (read/write/deny per resource).
+* **File operations**: upload, create, delete.
+* **Streaming**: streaming via browser-supported formats using HTTP 206. No transcoding, no overhead.
+* **Access control** via On-memory hashmap-based ACLs (read/write/deny per resource and user).
 * Also it detects if a directory is a mount point and changes its type (and icon).
 
 ## Multimedia Streaming
 
 * Leverages browser-native codecs only.
 * Caches metadata and subtitles to minimize `ffmpeg` calls.
-* Switch audio tracks in-browser (requires experimental Web Platform flags).
+* Switch audio tracks in-browser (requires experimental Web Platform Features).
 * SSA/ASS subtitle support via `JASSUB` on the client.
 * On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    
   To enable, press and hold the settings button in the player until it changes color.
@@ -47,6 +47,8 @@ This service exposes a filesystem directory over HTTP, enabling:
 * Managed by `aclmgr.py` in the `app/` directory.
 * ACLs define per-path permissions: read-only, write, or denied.
 * User accounts stored in JSON (`data/users.json`).
+* ACL rules stored in JSON (`data/acl.json`).
+* Both files will be loaded onto RAM as an dict.
 * See [aclmgr documentation](aclmgr.md).
 
 ## Requirements
@@ -75,7 +77,7 @@ Configure via environment variables:
 ## File Listing API
 
 When using the API (with the header `Accept: application/json`) the DIR contents will be returned as JSON.
-Valid `type` values are defined in `app/file_types.json` and the internal `disk`, `directory`, `text` and `file`.
+Valid `type` are `disk`, `directory`, `text` and `file` and the extra types are defined in `app/file_types.json`.
 
 **Example of response for /**
 
@@ -163,9 +165,6 @@ python3 app.py
 ```bash
 gunicorn -b 127.0.0.1:8000 app:app
 ```
-
-> If behind NGINX or another reverse proxy, disable POST buffering:
-> `proxy_request_buffering off;`
 
 ## License
 

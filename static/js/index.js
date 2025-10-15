@@ -486,8 +486,7 @@ listGroup.addEventListener('keydown', event => {
 
 document.addEventListener('keydown', event => {
     const key = event.key.toLowerCase();
-    const isShiftArrow = event.shiftKey && (key === 'arrowleft' || key === 'arrowright');
-    if ((event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) && !isShiftArrow) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     switch (key) {
         case 'arrowdown':
@@ -504,7 +503,7 @@ document.addEventListener('keydown', event => {
             break;
         case 'arrowright':
             event.preventDefault();
-            if (isShiftArrow) {
+            if (event.shiftKey) {
                 listGroup.scrollTo({
                     left: listGroup.scrollWidth,
                     behavior: 'smooth'
@@ -515,7 +514,7 @@ document.addEventListener('keydown', event => {
             break;
         case 'arrowleft':
             event.preventDefault();
-            if (isShiftArrow) {
+            if (event.shiftKey) {
                 listGroup.scrollTo({
                     left: 0,
                     behavior: 'smooth'
@@ -538,22 +537,20 @@ document.addEventListener('keydown', event => {
         case 'x':
             moveSelectedFiles();
             break;
-        case 'p':
+        case 'v':
             pasteFiles();
             break;
         case 'u':
-            openFileUploadMenu();
-            break;
-        case 'f':
-            openFileUploadMenu(true);
+            openFileUploadMenu(event.shiftKey && true);
             break;
         case 's':
             toggleSelectMode();
             break;
-        case 'n':
+        case 'r':
             renameSelectedFiles();
             break;
-        case 'r':
+        case 'delete':
+        case 'backspace':
             executeDeletes();
             break;
         case 'm':
@@ -562,7 +559,7 @@ document.addEventListener('keydown', event => {
         case 'l':
             loginButton.click();
             break;
-        case 'i':
+        case 'h':
             window.location.href = '/';
             break;
         case '1':
