@@ -426,7 +426,7 @@ function openFileUploadMenu(selectDirectory = false) {
         fileInput.setAttribute('webkitdirectory', true);
 
     fileInput.onchange = ()=>{
-        const msg = 'Upload ' + fileInput.files.length + ' item(s)?'
+        const msg = 'Upload ' + fileInput.files.length + ' item(s)?';
         if (fileInput.files.length && (selectDirectory || confirm(msg)))
             uploadFiles(fileInput.files, selectDirectory);
     };
