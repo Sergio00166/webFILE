@@ -73,11 +73,11 @@ const chapterContainer = document.getElementById('chapter-container');
 // STATE VARIABLES
 // ============================================================================
 
-let savedPlaybackSpeed = localStorage.getItem('videoSpeed');
-let savedVolumeValue = localStorage.getItem('videoVolume');
+let savedSpeed = localStorage.getItem('videoSpeed');
+let savedVolume = localStorage.getItem('videoVolume');
 let loopMode = localStorage.getItem('videoMode');
-let savedMutedState = localStorage.getItem('videoMuted');
-let legacySubtitlesEnabled = localStorage.getItem('subsLegacy');
+let savedMuted = localStorage.getItem('videoMuted');
+let legacySubtitles = localStorage.getItem('subsLegacy');
 
 let pressTimer;
 let assSubtitleWorker;
@@ -92,7 +92,7 @@ let controlsHideTimeout;
 let volumeHideTimeout;
 let touchActionTimeout;
 let cursorHideTimeout;
-let selectedSubtitleIndex = 0;
+let subtitleIndex = 0;
 let lastTouchTimestamp = 0;
 let touchHoverActive = false;
 
@@ -101,23 +101,23 @@ let touchHoverActive = false;
 // ============================================================================
 
 function initializeVideoPlayer() {
-    if (savedVolumeValue === null) savedVolumeValue = 1;
-    savedVolumeValue = parseFloat(savedVolumeValue);
-    video.volume = savedVolumeValue;
+    if (savedVolume === null) savedVolume = 1;
+    savedVolume = parseFloat(savedVolume);
+    video.volume = savedVolume;
 
-    if (legacySubtitlesEnabled != null) {
-        if (legacySubtitlesEnabled == 'true') {
-            legacySubtitlesEnabled = true;
+    if (legacySubtitles != null) {
+        if (legacySubtitles == 'true') {
+            legacySubtitles = true;
             settingsButton.classList.add('lmbsl');
         } else {
-            legacySubtitlesEnabled = false;
+            legacySubtitles = false;
         }
     } else {
-        legacySubtitlesEnabled = false;
+        legacySubtitles = false;
     }
 
-    if (savedMutedState != null)
-        video.muted = (savedMutedState == 'true');
+    if (savedMuted != null)
+        video.muted = (savedMuted == 'true');
     else
         video.muted = false;
 
@@ -125,18 +125,18 @@ function initializeVideoPlayer() {
 
     for (let i = 0; i < subtitleSelector.options.length; i++) {
         if (subtitleSelector.options[i].text === localStorage.getItem('videoSubs')) {
-            selectedSubtitleIndex = i;
+            subtitleIndex = i;
             break;
         }
     }
-    subtitleSelector.selectedIndex = selectedSubtitleIndex;
-    selectedSubtitleIndex = selectedSubtitleIndex - 1;
-    changeSubtitles(selectedSubtitleIndex);
+    subtitleSelector.selectedIndex = subtitleIndex;
+    subtitleIndex = subtitleIndex - 1;
+    changeSubtitles(subtitleIndex);
 
-    if (savedPlaybackSpeed != null) {
-        video.playbackRate = parseFloat(savedPlaybackSpeed);
+    if (savedSpeed != null) {
+        video.playbackRate = parseFloat(savedSpeed);
         for (let i = 0; i < speedSelector.options.length; i++) {
-            if (speedSelector.options[i].value === savedPlaybackSpeed) {
+            if (speedSelector.options[i].value === savedSpeed) {
                 speedSelector.selectedIndex = i;
                 break;
             }
@@ -218,7 +218,7 @@ async function changeSubtitles(subtitleIndex) {
     }
     if (subtitleIndex > -1) {
         const subtitleUrl = window.location.pathname + '?subs=' + subtitleIndex;
-        if (legacySubtitlesEnabled)
+        if (legacySubtitles)
             loadWebVttSubtitles(subtitleUrl + 'legacy');
         else
             assSubtitleWorker = await createAssSubtitleWorker(subtitleUrl);
@@ -558,16 +558,17 @@ function showMainStateAnimation(animationMode) {
 // ============================================================================
 
 function updateVolumeIcon() {
+    let index;
     if (video.muted)
-       const index = 0; // mute
+       index = 0; // mute
     else if (video.volume === 0)
-        const index = 4; // no volume
+        index = 4; // no volume
     else if (video.volume > 0.67)
-        const index = 1; // full
+        index = 1; // full
     else if (video.volume > 0.33)
-        const index = 2; // medium
+        index = 2; // medium
     else
-        const index = 3; // low
+        index = 3; // low
 
     for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index)
@@ -660,14 +661,14 @@ async function toggleLegacySubtitles() {
     settingsButtonPressed = true;
 
     if (settingsButton.classList.contains('lmbsl')) {
-        legacySubtitlesEnabled = false;
+        legacySubtitles = false;
         settingsButton.classList.remove('lmbsl');
     } else {
-        legacySubtitlesEnabled = true;
+        legacySubtitles = true;
         settingsButton.classList.add('lmbsl');
     }
-    localStorage.setItem('subsLegacy', legacySubtitlesEnabled);
-    await changeSubtitles(selectedSubtitleIndex);
+    localStorage.setItem('subsLegacy', legacySubtitles);
+    await changeSubtitles(subtitleIndex);
 }
 
 function startPressTimer() {
@@ -854,15 +855,15 @@ trackSelector.addEventListener('change', event => {
 });
 
 subtitleSelector.addEventListener('change', async event => {
-    selectedSubtitleIndex = parseInt(event.target.value);
+    subtitleIndex = parseInt(event.target.value);
 
-    if (selectedSubtitleIndex == -1) {
+    if (subtitleIndex == -1) {
         localStorage.removeItem('videoSubs');
     } else {
-        const subtitleText = subtitleSelector.options[selectedSubtitleIndex + 1].text;
+        const subtitleText = subtitleSelector.options[subtitleIndex + 1].text;
         localStorage.setItem('videoSubs', subtitleText);
     }
-    await changeSubtitles(selectedSubtitleIndex);
+    await changeSubtitles(subtitleIndex);
     toggleSettingsMenu();
 });
 

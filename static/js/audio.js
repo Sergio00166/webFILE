@@ -53,11 +53,13 @@ const savedSpeed = parseFloat(localStorage.getItem('audioSpeed'));
 // PLAYBACK SPEED CONFIGURATION
 // ============================================================================
 
-const playbackSpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-if (playbackSpeedOptions.indexOf(savedSpeed) >= 0)
-    const currentSpeedIndex = playbackSpeedOptions.indexOf(savedSpeed);
+let speedIndex;
+const speedValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
+if (speedValues.indexOf(savedSpeed) >= 0)
+    speedIndex = speedValues.indexOf(savedSpeed);
 else
-    const currentSpeedIndex = playbackSpeedOptions.indexOf(1);
+    speedIndex = speedValues.indexOf(1);
 
 // ============================================================================
 // TOUCH INTERACTION VARIABLES
@@ -71,7 +73,7 @@ let isTouchHoverActive = false;
 // ============================================================================
 
 function initializeAudioPlayer() {
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
+    audio.playbackRate = speedValues[speedIndex];
     
     if (!isNaN(savedVolume))
         audio.volume = savedVolume;
@@ -143,26 +145,26 @@ function toggleShuffleMode() {
 // ============================================================================
 
 function updateSpeed() {
-    speedButton.textContent = playbackSpeedOptions[currentSpeedIndex] + 'x';
+    speedButton.textContent = speedValues[speedIndex] + 'x';
 }
 
 function changePlaybackSpeed() {
-    currentSpeedIndex = (currentSpeedIndex + 1) % playbackSpeedOptions.length;
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
-    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    speedIndex = (speedIndex + 1) % speedValues.length;
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
     updateSpeed();
 }
 
 function handleSpeedWheel(event) {
     event.preventDefault();
     
-    if (event.deltaY < 0 && currentSpeedIndex < playbackSpeedOptions.length - 1)
-        currentSpeedIndex++;
-    else if (event.deltaY > 0 && currentSpeedIndex > 0)
-        currentSpeedIndex--;
+    if (event.deltaY < 0 && speedIndex < speedValues.length - 1)
+        speedIndex++;
+    else if (event.deltaY > 0 && speedIndex > 0)
+        speedIndex--;
 
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
-    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
     updateSpeed();
 }
 
@@ -175,15 +177,15 @@ function handleSpeedTouchEnd(event) {
     const speedButtonEndY = event.changedTouches[0].clientY;
     const speedButtonDeltaY = speedButtonEndY - speedButtonStartY;
 
-    if (speedButtonDeltaY > 10 && currentSpeedIndex < playbackSpeedOptions.length - 1)
-        currentSpeedIndex++;
-    else if (speedButtonDeltaY < -10 && currentSpeedIndex > 0)
-        currentSpeedIndex--;
+    if (speedButtonDeltaY > 10 && speedIndex < speedValues.length - 1)
+        speedIndex++;
+    else if (speedButtonDeltaY < -10 && speedIndex > 0)
+        speedIndex--;
     else if (Math.abs(speedButtonDeltaY) < 10)
         speedButton.click();
 
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
-    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
     updateSpeed();
 }
 
@@ -298,16 +300,17 @@ function updateVolumeBar() {
 }
 
 function updateVolumeIcon() {
+    let index;
     if (audio.muted)
-        const index = 0; // mute
+        index = 0; // mute
     else if (audio.volume === 0)
-        const index = 4; // no volume
+        index = 4; // no volume
     else if (audio.volume > 0.67)
-        const index = 1; // full
+        index = 1; // full
     else if (audio.volume > 0.33)
-        const index = 2; // medium
+        index = 2; // medium
     else
-        const index = 3; // low
+        index = 3; // low
 
     for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index)

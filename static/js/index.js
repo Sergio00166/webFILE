@@ -195,10 +195,11 @@ async function executeDownloads() {
             const itemURL = getItemURL(fileItem);
             if (!itemURL) continue;
 
+            let suffix;
             if (fileItem.hasAttribute('isdir'))
-                const suffix = '?tar';
+                suffix = '?tar';
             else
-                const suffix = '?raw';
+                suffix = '?raw';
 
             downloadURL(itemURL + suffix);
             await delay(100);
@@ -381,11 +382,12 @@ async function uploadFiles(files, isDirectory) {
 
     for (let i = 0; i < files.length; i++) {
         let file = files[i];
+        let filePath;
 
         if (isDirectory)
-            const filePath = file.webkitRelativePath;
+            filePath = file.webkitRelativePath;
         else
-            const filePath = file.name;
+            filePath = file.name;
 
         filePath = basePath + encodePath(filePath);
         try {
