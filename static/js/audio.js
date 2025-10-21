@@ -47,18 +47,17 @@ let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
 let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
 const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
 const savedMuted = localStorage.getItem('audioMuted');
+const savedSpeed = parseFloat(localStorage.getItem('audioSpeed'));
 
 // ============================================================================
 // PLAYBACK SPEED CONFIGURATION
 // ============================================================================
 
 const playbackSpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-let currentSpeedIndex;
-if (playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0) {
-    currentSpeedIndex = playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed')));
-} else {
-    currentSpeedIndex = playbackSpeedOptions.indexOf(1);
-}
+if (playbackSpeedOptions.indexOf(savedSpeed) >= 0)
+    const currentSpeedIndex = playbackSpeedOptions.indexOf(savedSpeed);
+else
+    const currentSpeedIndex = playbackSpeedOptions.indexOf(1);
 
 // ============================================================================
 // TOUCH INTERACTION VARIABLES
@@ -74,12 +73,11 @@ let isTouchHoverActive = false;
 function initializeAudioPlayer() {
     audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     
-    if (!isNaN(savedVolume)) {
+    if (!isNaN(savedVolume))
         audio.volume = savedVolume;
-    }
-    if (savedMuted !== null) {
+    if (savedMuted !== null)
         audio.muted = savedMuted === 'true';
-    }
+
     updateVolumeIcon();
     updateLoopButton();
     updateShuffleButton();
@@ -87,9 +85,9 @@ function initializeAudioPlayer() {
 }
 
 function waitForAudioReady() {
-    if (isNaN(audio.duration) || audio.duration === 0) {
+    if (isNaN(audio.duration) || audio.duration === 0)
         return setTimeout(waitForAudioReady, 25);
-    }
+
     playAudio();
     if (audio.paused) pauseAudio();
     
@@ -128,12 +126,12 @@ function cycleLoopMode() {
 // ============================================================================
 
 function updateShuffleButton() {
-    if (isShuffled) {
+    if (isShuffled)
         shuffleButton.style.opacity = 1;
-    } else {
+    else
         shuffleButton.style.opacity = 0.4;
-    }
 }
+
 function toggleShuffleMode() {
     isShuffled = !isShuffled;
     localStorage.setItem('audioShuffle', JSON.stringify(isShuffled));
@@ -158,11 +156,11 @@ function changePlaybackSpeed() {
 function handleSpeedWheel(event) {
     event.preventDefault();
     
-    if (event.deltaY < 0 && currentSpeedIndex < playbackSpeedOptions.length - 1) {
+    if (event.deltaY < 0 && currentSpeedIndex < playbackSpeedOptions.length - 1)
         currentSpeedIndex++;
-    } else if (event.deltaY > 0 && currentSpeedIndex > 0) {
+    else if (event.deltaY > 0 && currentSpeedIndex > 0)
         currentSpeedIndex--;
-    }
+
     audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
     updateSpeed();
@@ -177,13 +175,13 @@ function handleSpeedTouchEnd(event) {
     const speedButtonEndY = event.changedTouches[0].clientY;
     const speedButtonDeltaY = speedButtonEndY - speedButtonStartY;
 
-    if (speedButtonDeltaY > 10 && currentSpeedIndex < playbackSpeedOptions.length - 1) {
+    if (speedButtonDeltaY > 10 && currentSpeedIndex < playbackSpeedOptions.length - 1)
         currentSpeedIndex++;
-    } else if (speedButtonDeltaY < -10 && currentSpeedIndex > 0) {
+    else if (speedButtonDeltaY < -10 && currentSpeedIndex > 0)
         currentSpeedIndex--;
-    } else if (Math.abs(speedButtonDeltaY) < 10) {
+    else if (Math.abs(speedButtonDeltaY) < 10)
         speedButton.click();
-    }
+
     audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
     localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
     updateSpeed();
@@ -204,11 +202,10 @@ function formatDuration(timeInSeconds) {
     const minutes = Math.floor((timeInSeconds / 60) % 60);
     const seconds = Math.floor(timeInSeconds % 60);
     
-    if (hours > 0) {
+    if (hours > 0)
         return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`;
-    } else {
+    else
         return `${formatNumber(minutes)}:${formatNumber(seconds)}`;
-    }
 }
 
 function formatNumber(number) {
@@ -260,16 +257,15 @@ function showTimelineHover(clientX) {
     let leftPosition = position - tooltipWidth / 2;
     
     if (leftPosition < 0) leftPosition = 0;
-    if (leftPosition + tooltipWidth > barRect.width) {
+    if (leftPosition + tooltipWidth > barRect.width)
         leftPosition = barRect.width - tooltipWidth;
-    }
+
     hoverInfo.style.left = `${leftPosition}px`;
 
-    if (tooltipWidth) {
+    if (tooltipWidth)
         hoverInfo.style.visibility = 'visible';
-    } else {
+    else
         hoverInfo.style.visibility = 'hidden';
-    }
 }
 
 function clearTimelineHover() {
@@ -295,32 +291,29 @@ function setupTouchDrag(handlerMove) {
 
 function updateVolumeBar() {
     const volumePercent = volumeSlider.value * 100;
-    if (audio.muted) {
+    if (audio.muted)
         volumeSlider.style.background = '#e1e1e1';
-    } else {
+    else
         volumeSlider.style.background = `linear-gradient(to right, #007aff ${volumePercent}%, #e1e1e1 ${volumePercent}%)`;
-    }
 }
 
 function updateVolumeIcon() {
-    let index;
-    if (audio.muted) {
-        index = 0; // mute
-    } else if (audio.volume === 0) {
-        index = 4; // no volume
-    } else if (audio.volume > 0.67) {
-        index = 1; // full
-    } else if (audio.volume > 0.33) {
-        index = 2; // medium
-    } else {
-        index = 3; // low
-    }
+    if (audio.muted)
+        const index = 0; // mute
+    else if (audio.volume === 0)
+        const index = 4; // no volume
+    else if (audio.volume > 0.67)
+        const index = 1; // full
+    else if (audio.volume > 0.33)
+        const index = 2; // medium
+    else
+        const index = 3; // low
+
     for (let i = 0; i < volumeIcons.length; i++) {
-        if (i === index) {
+        if (i === index)
             volumeIcons[i].style.display = 'block';
-        } else {
+        else
             volumeIcons[i].style.display = 'none';
-        }
     }
 }
 
@@ -366,21 +359,25 @@ function playAudio() {
 }
 
 function togglePlayPauseState() {
-    if (audio.paused) {
+    if (audio.paused)
         playAudio();
-    } else {
+    else
         pauseAudio();
-    }
 }
 
 function handleAudioEnded() {
-    if (loopMode === 2) {
-        playAudio();
-    } else if (loopMode === 1) {
-        navigateToNext();
-    } else {
-        playIcons[1].style.display = 'none';
-        playIcons[0].style.display = 'block';
+    switch (loopMode) {
+        case 1:
+            navigateToNext();
+            break;
+        case 2:
+            playAudio();
+            break;
+        default:
+            playIcons[1].style.display = 'none';
+            playIcons[0].style.display = 'block';
+            break;
+
     }
 }
 
@@ -389,11 +386,10 @@ function handleAudioEnded() {
 // ============================================================================
 
 function navigateToPrevious() {
-    if (isShuffled) {
+    if (isShuffled)
         window.history.go(-1);
-    } else {
+    else
         previousLink.click();
-    }
 }
 
 function navigateToNext() {
@@ -527,7 +523,7 @@ seekBar.addEventListener('touchstart', event => {
 document.addEventListener('touchstart', ()=>{
     isTouchHoverActive = true;
     clearTimelineHover();
-}, { passive: true });
+},{ passive: true });
 
 seekBar.addEventListener('click', event => {
     updateAudioTime(getTimelinePosition(event.clientX).percentage);
