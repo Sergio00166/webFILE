@@ -43,42 +43,31 @@ const playIcons = Array.from(
 // STATE VARIABLES
 // ============================================================================
 
-let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
-let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
-const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
-const savedMuted = localStorage.getItem('audioMuted');
-const savedSpeed = parseFloat(localStorage.getItem('audioSpeed'));
-
-// ============================================================================
-// PLAYBACK SPEED CONFIGURATION
-// ============================================================================
-
-let speedIndex;
-const speedValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-
-if (speedValues.indexOf(savedSpeed) >= 0)
-    speedIndex = speedValues.indexOf(savedSpeed);
-else
-    speedIndex = speedValues.indexOf(1);
-
-// ============================================================================
-// TOUCH INTERACTION VARIABLES
-// ============================================================================
-
+let isShuffled = false;
+let loopMode = 0;
+let speedIndex = 1;
 let speedButtonStartY = 0;
 let isTouchHoverActive = false;
+const speedValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
 
 function initializeAudioPlayer() {
+    const savedShuffled = localStorage.getItem('audioShuffle');
+    const savedLoopMode = localStorage.getItem('audioLoopMode');
+    const savedVolume   = localStorage.getItem('audioVolume');
+    const savedMuted    = localStorage.getItem('audioMuted');
+    const savedSpeed    = localStorage.getItem('audioSpeed');
+
+    loopMode = parseInt(savedLoopMode || '0');
+    isShuffled = savedShuffled === 'true';
+    audio.volume = parseFloat(savedVolume || 1);
+    audio.muted = savedMuted === 'true';
+
+    speedIndex = Math.max(speedValues.indexOf(savedSpeed), speedValues.indexOf(1));
     audio.playbackRate = speedValues[speedIndex];
-    
-    if (!isNaN(savedVolume))
-        audio.volume = savedVolume;
-    if (savedMuted !== null)
-        audio.muted = savedMuted === 'true';
 
     updateVolumeIcon();
     updateLoopButton();

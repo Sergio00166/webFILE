@@ -31,11 +31,15 @@ const loadingSpinner = document.getElementById('custom-loader');
 // DOM ELEMENTS - MENU
 // ============================================================================
 
-const subtitleSelector = document.querySelector('#subsMenu select');
-const trackSelector = document.querySelector('#audioMenu select');
-const speedSelector = document.querySelector('#speedMenu select');
 const settingsMenu = document.getElementById('setting-menu');
-const downloadButton = document.getElementById('download');
+const mainMenu = document.getElementById('main-menu');
+const subsSubmenu = document.getElementById('subs-submenu');
+const audioSubmenu = document.getElementById('audio-submenu');
+const speedSubmenu = document.getElementById('speed-submenu');
+const menuLegacyText = document.getElementById('menuLegacyText');
+const menuSubsText = document.getElementById('menuSubsText');
+const menuSpeedText = document.getElementById('menuSpeedText');
+const menuAudioText = document.getElementById('menuAudioText');
 
 // ============================================================================
 // DOM ELEMENTS - ICONS & STATES
@@ -73,15 +77,9 @@ const chapterContainer = document.getElementById('chapter-container');
 // STATE VARIABLES
 // ============================================================================
 
-let savedSpeed = localStorage.getItem('videoSpeed');
-let savedVolume = localStorage.getItem('videoVolume');
-let loopMode = localStorage.getItem('videoMode');
-let savedMuted = localStorage.getItem('videoMuted');
-let legacySubtitles = localStorage.getItem('subsLegacy');
-
-let pressTimer;
+let loopMode = 0;
+let legacySubtitles = false;
 let assSubtitleWorker;
-let settingsButtonPressed = false;
 let isCursorOnControls = false;
 let isMouseOnSelect = false;
 let isPressing = false;
@@ -101,55 +99,44 @@ let touchHoverActive = false;
 // ============================================================================
 
 function initializeVideoPlayer() {
-    if (savedVolume === null) savedVolume = 1;
-    savedVolume = parseFloat(savedVolume);
-    video.volume = savedVolume;
+    const savedSpeed      = localStorage.getItem('videoSpeed');
+    const savedVolume     = localStorage.getItem('videoVolume');
+    const savedMuted      = localStorage.getItem('videoMuted');
+    const savedSubtitle   = localStorage.getItem('videoSubs');
+    const savedLegacySubs = localStorage.getItem('subsLegacy');
+    const savedLoopMode   = localStorage.getItem('videoMode');
 
-    if (legacySubtitles != null) {
-        if (legacySubtitles == 'true') {
-            legacySubtitles = true;
-            settingsButton.classList.add('lmbsl');
-        } else {
-            legacySubtitles = false;
-        }
-    } else {
-        legacySubtitles = false;
-    }
-
-    if (savedMuted != null)
-        video.muted = (savedMuted == 'true');
-    else
-        video.muted = false;
-
-    updateVolumeIcon();
-
-    for (let i = 0; i < subtitleSelector.options.length; i++) {
-        if (subtitleSelector.options[i].text === localStorage.getItem('videoSubs')) {
-            subtitleIndex = i;
-            break;
-        }
-    }
-    subtitleSelector.selectedIndex = subtitleIndex;
-    subtitleIndex = subtitleIndex - 1;
-    changeSubtitles(subtitleIndex);
-
-    if (savedSpeed != null) {
-        video.playbackRate = parseFloat(savedSpeed);
-        for (let i = 0; i < speedSelector.options.length; i++) {
-            if (speedSelector.options[i].value === savedSpeed) {
-                speedSelector.selectedIndex = i;
+    video.muted = savedMuted === 'true';
+    video.volume = parseFloat(savedVolume || 1);
+    legacySubtitles = savedLegacySubs === 'true';
+    video.playbackRate = parseFloat(savedSpeed || '1');
+    loopMode = parseInt(savedLoopMode || '0');
+    modeBtn.innerHTML = ['1', '»', '&orarr;'][loopMode] || '1';
+    
+    if (savedSubtitle) {
+        const subtitleOptions = subsSubmenu.querySelectorAll('.menu-content button');
+        for (let i = 0; i < subtitleOptions.length; i++) {
+            if (subtitleOptions[i].textContent === savedSubtitle) {
+                subtitleIndex = i-1;
                 break;
             }
         }
-    } else {
-        speedSelector.selectedIndex = 3;
-    }
-    if (loopMode != null) {
-        loopMode = parseInt(loopMode);
-        modeBtn.innerHTML = ['1', '»', '&orarr;'][loopMode] || '1';
-    } else {
-        loopMode = 0;
-    }
+    } else subtitleIndex = -1;
+
+    updateVolumeIcon();
+    updateSubtitleDisplay();
+    updateSpeedDisplay();
+    updateSubtitleDisplay();
+    changeSubtitles(subtitleIndex);
+
+    // Disable FX if not supported
+    const test = document.createElement('canvas');
+    const gl2 = !!test.getContext('webgl2');
+    
+    if (!/firefox/i.test(navigator.userAgent) && gl2)
+        document.body.dataset.fx = 'yes';
+    else
+        document.body.dataset.fx = 'no';
 }
 
 function waitForVideoReady() {
@@ -225,6 +212,13 @@ async function changeSubtitles(subtitleIndex) {
     }
 }
 
+async function toggleLegacySubtitles() {
+    legacySubtitles = !legacySubtitles;
+    localStorage.setItem('subsLegacy', legacySubtitles);
+    await changeSubtitles(subtitleIndex);
+    updateLegacyDisplay();
+}
+
 // ============================================================================
 // VIDEO LAYOUT & ASPECT RATIO
 // ============================================================================
@@ -251,6 +245,15 @@ function scaleVideoToFit() {
 
     video.style.width = (videoWidth * scale) + 'px';
     video.style.height = (videoHeight * scale) + 'px';
+
+    // Align settings menu with buttons
+    if (window.innerWidth <= 500) {
+        const buttonRect = settingsButton.getBoundingClientRect();
+        const buttonTop = buttonRect.top + window.scrollY;
+        settingsMenu.style.top = (buttonTop + buttonRect.height + 8) + 'px';
+    } else {
+        settingsMenu.style.top = '';
+    }
 }
 
 // ============================================================================
@@ -380,11 +383,6 @@ function hideControlsWithDelay(delay) {
             controlsContainer.classList.remove('show');
             settingsMenu.classList.remove('show');
             document.activeElement.blur();
-
-            subsMenu.style.display  = 'block';
-            audioMenu.style.display = 'block';
-            speedMenu.style.display = 'block';
-            download.style.display  = 'block';
         }
     }, delay);
 }
@@ -554,7 +552,7 @@ function showMainStateAnimation(animationMode) {
 }
 
 // ============================================================================
-// VIDEO ICON MANAGEMENT
+// VOLE ICON MANAGEMENT
 // ============================================================================
 
 function updateVolumeIcon() {
@@ -584,36 +582,34 @@ function updateVolumeIcon() {
 
 function loadAudioTracks() {
     const savedAudioTrack = localStorage.getItem('videoAudio');
+    const audioContent = audioSubmenu.querySelector('.menu-content');
     const audioTracks = video.audioTracks;
     if (!audioTracks) return;
 
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
-        const option = document.createElement('option');
-        option.value = i;
-
+        const button = document.createElement('button');
+        
         const trackName = (track.label || track.language || 'Track ' + (i + 1));
-        option.textContent = trackName;
-        trackSelector.appendChild(option);
+        button.textContent = trackName;
+        audioContent.appendChild(button);
 
-        if (trackName === savedAudioTrack) {
-            trackSelector.selectedIndex = i;
+        if (trackName === savedAudioTrack)
             changeAudioTrack(i);
-        } else {
-            trackSelector.selectedIndex = 0;
-        }
     }
+    updateAudioDisplay();
 }
 
 function changeAudioTrack(selectedIndex) {
     const tracks = video.audioTracks;
-    if (!tracks || !selectedIndex) return;
+    if (!tracks) return;
 
     previousVideoTime = video.currentTime;
     for (let i = 0; i < tracks.length; i++)
         video.audioTracks[i].enabled = (i === selectedIndex);
 
     video.currentTime = previousVideoTime;
+    updateAudioDisplay();
 }
 
 // ============================================================================
@@ -654,37 +650,42 @@ function handleDoubleTouch(event) {
 }
 
 // ============================================================================
-// LEGACY SUBTITLE TOGGLE
+// MAIN MENU VALUE UPDATERs
 // ============================================================================
 
-async function toggleLegacySubtitles() {
-    settingsButtonPressed = true;
-
-    if (settingsButton.classList.contains('lmbsl')) {
-        legacySubtitles = false;
-        settingsButton.classList.remove('lmbsl');
+function updateSubtitleDisplay() {
+    if (subtitleIndex === -1) {
+        menuSubsText.textContent = 'None';
     } else {
-        legacySubtitles = true;
-        settingsButton.classList.add('lmbsl');
+        const subtitleOptions = subsSubmenu.querySelectorAll('.menu-content button');
+        const buttonIndex = subtitleIndex + 1;
+        if (buttonIndex < subtitleOptions.length)
+            menuSubsText.textContent = subtitleOptions[buttonIndex].textContent;
     }
-    localStorage.setItem('subsLegacy', legacySubtitles);
-    await changeSubtitles(subtitleIndex);
 }
 
-function startPressTimer() {
-    if (isPressing || pressHasTriggered) return;
-    isPressing = true;
-    pressTimer = setTimeout(()=>{
-        toggleLegacySubtitles();
-        pressHasTriggered = true;
-    }, 600);
+function updateSpeedDisplay() {
+    menuSpeedText.textContent = video.playbackRate + 'x';
 }
 
-function cancelPressTimer() {
-    clearTimeout(pressTimer);
-    pressTimer = null;
-    isPressing = false;
-    pressHasTriggered = false;
+function updateLegacyDisplay() {
+    if (legacySubtitles)
+        menuLegacyText.textContent = 'ON';
+    else
+        menuLegacyText.textContent = 'OFF';
+}
+
+function updateAudioDisplay() {
+    const tracks = video.audioTracks;
+    if (!tracks || tracks.length < 1) return;
+
+    for (let i = 0; i < tracks.length; i++) {
+        if (tracks[i].enabled) {
+            const trackName = tracks[i].label || tracks[i].language || 'Track ' + (i + 1);
+            menuAudioText.textContent = trackName;
+            break;
+        }
+    }
 }
 
 // ============================================================================
@@ -692,16 +693,64 @@ function cancelPressTimer() {
 // ============================================================================
 
 function toggleSettingsMenu() {
-    if (settingsButtonPressed) {
-        settingsButtonPressed = false;
-    } else {
-        settingsMenu.classList.toggle('show');
-        isCursorOnControls = !isCursorOnControls;
+    settingsMenu.classList.toggle('show');
+    isCursorOnControls = !isCursorOnControls;
+    if (settingsMenu.classList.contains('show'))
+        showMainMenu();
+}
+
+function showMainMenu() {
+    mainMenu.style.display = 'block';
+    subsSubmenu.style.display = 'none';
+    audioSubmenu.style.display = 'none';
+    speedSubmenu.style.display = 'none';
+}
+
+function showSubmenu(submenuId) {
+    mainMenu.style.display = 'none';
+    subsSubmenu.style.display = 'none';
+    audioSubmenu.style.display = 'none';
+    speedSubmenu.style.display = 'none';
+    
+    document.getElementById(submenuId).style.display = 'block';
+}
+
+function handleMenuSelection(element) {
+    const submenu = element.closest('[id$="-submenu"]');
+    
+    if (submenu) {
+        const buttons = Array.from(submenu.querySelectorAll('.menu-content button'));
+        const index = buttons.indexOf(element);
+        
+        if (submenu.id === 'subs-submenu') {
+            subtitleIndex = index-1;
+            updateSubtitleDisplay();
+            changeSubtitles(subtitleIndex);
+            const subtitleText = element.textContent;
+
+            if (subtitleIndex === -1)
+                localStorage.removeItem('videoSubs');
+            else
+                localStorage.setItem('videoSubs', subtitleText);
+
+        } else if (submenu.id === 'audio-submenu') {
+            changeAudioTrack(index);
+            const trackText = element.textContent;
+            localStorage.setItem('videoAudio', trackText);
+
+        } else if (submenu.id === 'speed-submenu') {
+            const speedText = element.textContent;
+            const menuSpeedText = parseFloat(speedText.replace('x', ''));
+            video.playbackRate = menuSpeedText;
+            updateSpeedDisplay();
+            localStorage.setItem('videoSpeed', video.playbackRate);
+        }
+        showMainMenu();
     }
 }
 
 // ============================================================================
-// KEYBOARD HELPERS
+// SOME HELPERS
 // ============================================================================
 
 function handleVolumeKeyboardChange() {
@@ -717,6 +766,14 @@ function handleTimeChangeKeyboard(mode) {
     hideControlsWithDelay(TIME_CHANGE_DELAY);
     updateProgressBar();
     showMainStateAnimation(mode);
+}
+
+function download() {
+    if (downloadSubtitlesLink.href !== "#") {
+        alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
+        downloadSubtitlesLink.click();
+    }
+    downloadVideoLink.click();
 }
 
 // ============================================================================
@@ -804,114 +861,26 @@ volumeSlider.addEventListener('input', handleVolumeChange);
 volumeSlider.addEventListener('keydown', e => e.preventDefault());
 
 // ============================================================================
-// EVENT LISTENERS - SETTINGS
+// EVENT LISTENERS - MENU NAVIGATION
 // ============================================================================
 
-settingsButton.addEventListener('click', event => {
-    if (settingsButtonPressed) {
-        event.preventDefault();
-        settingsButtonPressed = false;
-    } else {
-        toggleSettingsMenu();
+mainMenu.addEventListener('click', event => {
+    const target = event.target.closest('button[data-submenu]');
+    if (target) {
+        const submenuTarget = target.getAttribute('data-submenu');
+        showSubmenu(submenuTarget + '-submenu');
     }
 });
 
-settingsButton.addEventListener('touchend', event => {
-    if (settingsButtonPressed) {
-        event.preventDefault();
-        settingsButtonPressed = false;
-    }
-    toggleSettingsMenu();
+document.querySelectorAll('.back-button').forEach(button => {
+    button.addEventListener('click', showMainMenu);
 });
 
-// Mouse events for legacy subtitle toggle
-settingsButton.addEventListener('mousedown', event => {
-    event.preventDefault();
-    startPressTimer();
-});
-
-settingsButton.addEventListener('mouseup', cancelPressTimer);
-settingsButton.addEventListener('mouseleave', cancelPressTimer);
-
-// Touch events for legacy subtitle toggle
-settingsButton.addEventListener('touchstart', event => {
-    event.preventDefault();
-    startPressTimer();
-},{ passive: false });
-
-settingsButton.addEventListener('touchend', cancelPressTimer);
-settingsButton.addEventListener('touchcancel', cancelPressTimer);
-
-// ============================================================================
-// EVENT LISTENERS - TRACK SELECTION
-// ============================================================================
-
-trackSelector.addEventListener('change', event => {
-    const selectedIndex = parseInt(event.target.value, 10);
-    changeAudioTrack(selectedIndex);
-    const trackText = trackSelector[selectedIndex].text;
-    localStorage.setItem('videoAudio', trackText);
-    toggleSettingsMenu();
-});
-
-subtitleSelector.addEventListener('change', async event => {
-    subtitleIndex = parseInt(event.target.value);
-
-    if (subtitleIndex == -1) {
-        localStorage.removeItem('videoSubs');
-    } else {
-        const subtitleText = subtitleSelector.options[subtitleIndex + 1].text;
-        localStorage.setItem('videoSubs', subtitleText);
-    }
-    await changeSubtitles(subtitleIndex);
-    toggleSettingsMenu();
-});
-
-speedSelector.addEventListener('change', event => {
-    video.playbackRate = parseFloat(event.target.value);
-    localStorage.setItem('videoSpeed', video.playbackRate);
-    toggleSettingsMenu();
-});
-
-// ============================================================================
-// EVENT LISTENERS - SELECT ELEMENTS
-// ============================================================================
-
-[subtitleSelector, trackSelector, speedSelector]
-.forEach(selectElement => {
-    selectElement.addEventListener('mouseenter', ()=>{
-        isMouseOnSelect = true;
-        selectElement.parentElement.style.outline = "none";
+[subsSubmenu, audioSubmenu, speedSubmenu].forEach(submenu => {
+    submenu.addEventListener('click', event => {
+        const target = event.target.closest('.menu-content button');
+        if (target) handleMenuSelection(target);
     });
-    selectElement.addEventListener('mouseleave', ()=>{
-        isMouseOnSelect = false;
-    });
-    selectElement.addEventListener('focus', ()=>{
-        if (isMouseOnSelect) return;
-        selectElement.parentElement.style = "";
-    });
-});
-
-// ============================================================================
-// EVENT LISTENERS - DOWNLOAD
-// ============================================================================
-
-downloadButton.addEventListener("click", ()=>{
-    const subtitlesHref = downloadSubtitlesLink.href;
-
-    if (!subtitlesHref || subtitlesHref !== "#") {
-        alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
-        downloadSubtitlesLink.click();
-    }
-    downloadVideoLink.click();
-    setTimeout(toggleSettingsMenu, 100);
-});
-
-downloadButton.addEventListener('keydown', event => {
-    if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        downloadButton.click();
-    }
 });
 
 // ============================================================================
@@ -966,6 +935,7 @@ document.addEventListener('mouseup', event => {
 });
 
 document.addEventListener('keydown', event => {
+    if (settingsMenu.contains(event.target)) return
     if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
