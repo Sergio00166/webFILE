@@ -935,7 +935,7 @@ document.addEventListener('mouseup', event => {
 });
 
 document.addEventListener('keydown', event => {
-    if (settingsMenu.contains(event.target)) return
+    if (settingsMenu.contains(event.target)) return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
