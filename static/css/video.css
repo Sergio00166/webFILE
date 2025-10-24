@@ -339,6 +339,16 @@ button img {
     scrollbar-width: thin;
     scrollbar-color: #fff3 transparent;
 }
+.menu-content::-webkit-scrollbar {
+    width: 6px;
+}
+.menu-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.menu-content::-webkit-scrollbar-thumb {
+    background-color: #fff3;
+    border-radius: 3px;
+}
 .back-button {
     background: #2345 !important;
     border-radius: 12px 12px 0 0 !important;
