@@ -431,7 +431,7 @@ button img {
 #state_volume { font-size: 1.3rem; }
 #video-container { position: relative; }
 .video-box, canvas { position: absolute; }
-.settings { position: relative; }
+#settings { position: relative; }
 
 /* -------------------------
  *   Responsive
