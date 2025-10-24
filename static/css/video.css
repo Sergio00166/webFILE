@@ -458,7 +458,7 @@ button img {
         right: unset;
         position: fixed;
         transform: translateX(-50%) scale(0);
-        transform-origin: 69% 0;
+        transform-origin: 68% 0;
         max-width: 80vw;
     }
     #setting-menu.show {
