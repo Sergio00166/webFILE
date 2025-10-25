@@ -59,7 +59,7 @@ pip install -r requirements.txt
 Install `ffmpeg` at the system level for media playback.   
 A `Redis` sever for session storage and other cache.   
 
-Requires a modern browser - styles may break otherwise (c’mon, it’s +2025, ditch that pre-2021 relic).   
+Requires an updated browser - styles may break otherwise (c’mon, it’s +2025, ditch that pre-2021 relic).   
 
 ## Configuration
 
