@@ -298,9 +298,8 @@ button {
         position: fixed;
         transform: translateX(-100%);
     }
-    @supports (backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px)) {
+    @supports (backdrop-filter: blur(4px)) {
         #sidebar {
-            -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
             backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
             background: transparent;
         }

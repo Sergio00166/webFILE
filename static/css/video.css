@@ -394,10 +394,9 @@ button img {
     background-color: #222A;
     box-shadow: 0 0 2px #FFFA;
 }
-@supports (backdrop-filter: blur(4px)) or (-webkit-backdrop-filter: blur(4px)) {
+@supports (backdrop-filter: blur(4px)) {
     body[data-fx="yes"] #seek-bar::before,
     body[data-fx="yes"] .glass{
-        -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(4px);
         backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(4px);
         background: transparent;
         box-shadow: 0 0 2px #FFFA;
