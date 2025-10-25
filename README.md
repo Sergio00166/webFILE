@@ -51,7 +51,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 * See [aclmgr documentation](aclmgr.md).
 
 ## Requirements
-
+### Server-side
 ```bash
 pip install -r requirements.txt
 ```
@@ -59,7 +59,10 @@ pip install -r requirements.txt
 Install `ffmpeg` at the system level for media playback.   
 A `Redis` sever for session storage and other cache.   
 
-Requires an updated browser - styles may break otherwise (c’mon, it’s +2025, ditch that pre-2021 relic).   
+### Client-side
+
+The WEB interface requires a modern browser (2021 or newer).   
+If you're using something ancient—like a 2018-era fossil that hasn't seen an update in half a decade—expect broken styles, layout quirks, and a generally degraded experience. 
 
 ## Configuration
 
