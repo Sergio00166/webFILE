@@ -38,7 +38,6 @@ This service exposes a filesystem directory over HTTP, enabling:
 * Switch audio tracks in-browser (requires experimental Web Platform Features).
 * SSA/ASS subtitle support via `JASSUB` on the client.
 * On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    
-  To enable, press and hold the settings button in the player until it changes color.
 * Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.
 * Auto-loads external `.mks` subtitles matching video basename.
 
@@ -59,6 +58,8 @@ pip install -r requirements.txt
 
 Install `ffmpeg` at the system level for media playback.   
 A `Redis` sever for session storage and other cache.   
+
+Requires a modern browser - styles may break otherwise (c’mon, it’s +2025, ditch that pre-2021 relic).   
 
 ## Configuration
 
