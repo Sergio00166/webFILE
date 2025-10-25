@@ -76,7 +76,6 @@ Configure via environment variables:
 | USERS\_FILE     | No       | data/users.json  | User accounts file.                             |
 | SECRET\_KEY     | No       | Auto-generated   | Secret key for multi-worker setups.             |
 | SHOW\_DIRSIZE   | No       | False            | Display directory sizes.                        |
-| MAX\_CACHE (MB) | No       | 256              | RAM limit for video metadata/subtitle cache     |
 
 ## File Listing API
 
