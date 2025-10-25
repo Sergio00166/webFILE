@@ -128,15 +128,13 @@ function initializeVideoPlayer() {
     updateSpeedDisplay();
     updateSubtitleDisplay();
     changeSubtitles(subtitleIndex);
+  
+    const isGecko = navigator.userAgent.includes('Gecko') &&
+                   !navigator.userAgent.includes('like Gecko');
 
-    // Disable FX if not supported
-    const test = document.createElement('canvas');
-    const gl2 = !!test.getContext('webgl2');
-    
-    if (!/firefox/i.test(navigator.userAgent) && gl2)
-        document.body.dataset.fx = 'yes';
-    else
-        document.body.dataset.fx = 'no';
+    if (isGecko) document.body.dataset.fx = 'no';
+    else         document.body.dataset.fx = 'yes';
+        
 }
 
 function waitForVideoReady() {
