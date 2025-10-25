@@ -56,7 +56,7 @@ const speedValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 function initializeAudioPlayer() {
     const savedShuffled = localStorage.getItem('audioShuffle');
-    const savedLoopMode = localStorage.getItem('audioLoopMode');
+    const savedLoopMode = localStorage.getItem('audioLoop');
     const savedVolume   = localStorage.getItem('audioVolume');
     const savedMuted    = localStorage.getItem('audioMuted');
     const savedSpeed    = localStorage.getItem('audioSpeed');
@@ -104,7 +104,7 @@ function updateLoopButton() {
         loopIcons[0].style.display = 'none';
         loopIcons[1].style.display = 'block';
     }
-    localStorage.setItem('audioLoopMode', loopMode);
+    localStorage.setItem('audioLoop', loopMode);
 }
 
 function cycleLoopMode() {

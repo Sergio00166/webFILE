@@ -90,7 +90,7 @@ let controlsHideTimeout;
 let volumeHideTimeout;
 let touchActionTimeout;
 let cursorHideTimeout;
-let subtitleIndex = 0;
+let subtitleIndex = -1;
 let lastTouchTimestamp = 0;
 let touchHoverActive = false;
 
@@ -104,7 +104,7 @@ function initializeVideoPlayer() {
     const savedMuted      = localStorage.getItem('videoMuted');
     const savedSubtitle   = localStorage.getItem('videoSubs');
     const savedLegacySubs = localStorage.getItem('subsLegacy');
-    const savedLoopMode   = localStorage.getItem('videoMode');
+    const savedLoopMode   = localStorage.getItem('videoLoop');
 
     video.muted = savedMuted === 'true';
     video.volume = parseFloat(savedVolume || 1);
@@ -121,8 +121,7 @@ function initializeVideoPlayer() {
                 break;
             }
         }
-    } else subtitleIndex = -1;
-
+    }
     updateVolumeIcon();
     updateSubtitleDisplay();
     updateSpeedDisplay();
@@ -269,7 +268,7 @@ function changePlaybackMode() {
     const playbackModes = ['1', '»', '&orarr;'];
     loopMode = (loopMode + 1) % 3;
     modeBtn.innerHTML = playbackModes[loopMode];
-    localStorage.setItem('videoMode', loopMode);
+    localStorage.setItem('videoLoop', loopMode);
 }
 
 function togglePlayPauseState() {
