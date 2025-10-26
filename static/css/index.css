@@ -17,21 +17,18 @@ body {
  *  SCROLL-BARS
  *  ------------------------- */
 
-#list-group::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-}
-.sidebar-content::-webkit-scrollbar{
-    width: 6px;
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 ::-webkit-scrollbar-thumb {
     background-color: #555;
     border-radius: 4px;
 }
-#list-group::-webkit-scrollbar-track {
-    background: #1e1e1e
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
 }
-#list-group {
+body {
     scrollbar-width: thin;
     scrollbar-color: #fff3 #1e1e1e;
 }
