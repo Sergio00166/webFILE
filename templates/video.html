@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="/?static=css/video.css">
     <script defer src="/?static=js/video.js"></script>
     <script src="/?static=jassub/jassub.js"></script>
-    <script>
-      const chapters = {{ chapters | tojson }};
-    </script>
   </head>
   <body>
     <div id="video-container">
@@ -98,9 +95,6 @@
                   <button class="back-button">‹ Subtitles</button>
                   <div class="menu-content">
                     <button>None</button>
-                   {%- for item in tracks %}
-                    <button>{{ item }}</button>
-                   {%- endfor %}
                   </div>
                 </div>
                 <div id="audio-submenu" style="display: none;">
