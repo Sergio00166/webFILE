@@ -357,7 +357,7 @@ button img {
     max-height: min(50dvh, 360px); 
 }
 #main-menu, .menu-content {
-    padding: 4px 2px;
+    padding: 2px;
     overflow: auto;
 }
 .back-button {
