@@ -16,6 +16,22 @@ body {
 }
 
 /* -------------------------
+ *  SCROLL-BARS
+ *  ------------------------- */
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #fff3;
+    border-radius: 4px;
+}
+body {
+    scrollbar-width: thin;
+    scrollbar-color: #fff3 transparent;
+}
+
+/* -------------------------
  *   Subtitle styles
  * ------------------------- */
 
@@ -333,21 +349,16 @@ button img {
     justify-content: flex-start;
 }
 .menu-content {
-    overflow: auto;
+    max-height: calc(min(50vh, 360px) - 30px);
+    max-height: calc(min(50dvh, 360px) - 30px);
+}
+#main-menu {
+    max-height: min(50vh, 360px);
+    max-height: min(50dvh, 360px); 
+}
+#main-menu, .menu-content {
     padding: 4px 2px;
-    max-height: calc(min(50vh, 50dvh, 360px) - 20px);
-    scrollbar-width: thin;
-    scrollbar-color: #fff3 transparent;
-}
-.menu-content::-webkit-scrollbar {
-    width: 6px;
-}
-.menu-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-.menu-content::-webkit-scrollbar-thumb {
-    background-color: #fff3;
-    border-radius: 3px;
+    overflow: auto;
 }
 .back-button {
     background: #2345 !important;
