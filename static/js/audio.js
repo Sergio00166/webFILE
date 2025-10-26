@@ -43,53 +43,45 @@ const playIcons = Array.from(
 // STATE VARIABLES
 // ============================================================================
 
-let isShuffled = JSON.parse(localStorage.getItem('audioShuffle')) || false;
-let loopMode = parseInt(localStorage.getItem('audioLoopMode'), 10) || 0;
-const savedVolume = parseFloat(localStorage.getItem('audioVolume'));
-const savedMuted = localStorage.getItem('audioMuted');
-
-// ============================================================================
-// PLAYBACK SPEED CONFIGURATION
-// ============================================================================
-
-const playbackSpeedOptions = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-let currentSpeedIndex;
-if (playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed'))) >= 0) {
-    currentSpeedIndex = playbackSpeedOptions.indexOf(parseFloat(localStorage.getItem('audioSpeed')));
-} else {
-    currentSpeedIndex = playbackSpeedOptions.indexOf(1);
-}
-
-// ============================================================================
-// TOUCH INTERACTION VARIABLES
-// ============================================================================
-
+let isShuffled = false;
+let loopMode = 0;
+let speedIndex = 1;
 let speedButtonStartY = 0;
 let isTouchHoverActive = false;
+const speedValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
 
 function initializeAudioPlayer() {
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
-    
-    if (!isNaN(savedVolume)) {
-        audio.volume = savedVolume;
-    }
-    if (savedMuted !== null) {
-        audio.muted = savedMuted === 'true';
-    }
+    const savedShuffled = localStorage.getItem('audioShuffle');
+    const savedLoopMode = localStorage.getItem('audioLoop');
+    const savedVolume   = localStorage.getItem('audioVolume');
+    const savedMuted    = localStorage.getItem('audioMuted');
+    const savedSpeed    = localStorage.getItem('audioSpeed');
+
+    loopMode = parseInt(savedLoopMode || '0');
+    isShuffled = savedShuffled === 'true';
+    audio.volume = parseFloat(savedVolume || 1);
+    audio.muted = savedMuted === 'true';
+    speedIndex = Math.max(speedValues.indexOf(savedSpeed), speedValues.indexOf(1));
+    audio.playbackRate = speedValues[speedIndex];
+    volumeSlider.value = audio.volume;
+
+    updateSpeed();
+    updateVolumeBar();
     updateVolumeIcon();
     updateLoopButton();
     updateShuffleButton();
-    updateSpeed();
+    waitForAudioReady();
+    setupMediaSession();
 }
 
 function waitForAudioReady() {
-    if (isNaN(audio.duration) || audio.duration === 0) {
+    if (isNaN(audio.duration) || audio.duration === 0)
         return setTimeout(waitForAudioReady, 25);
-    }
+
     playAudio();
     if (audio.paused) pauseAudio();
     
@@ -115,7 +107,7 @@ function updateLoopButton() {
         loopIcons[0].style.display = 'none';
         loopIcons[1].style.display = 'block';
     }
-    localStorage.setItem('audioLoopMode', loopMode);
+    localStorage.setItem('audioLoop', loopMode);
 }
 
 function cycleLoopMode() {
@@ -128,12 +120,12 @@ function cycleLoopMode() {
 // ============================================================================
 
 function updateShuffleButton() {
-    if (isShuffled) {
+    if (isShuffled)
         shuffleButton.style.opacity = 1;
-    } else {
+    else
         shuffleButton.style.opacity = 0.4;
-    }
 }
+
 function toggleShuffleMode() {
     isShuffled = !isShuffled;
     localStorage.setItem('audioShuffle', JSON.stringify(isShuffled));
@@ -145,26 +137,26 @@ function toggleShuffleMode() {
 // ============================================================================
 
 function updateSpeed() {
-    speedButton.textContent = playbackSpeedOptions[currentSpeedIndex] + 'x';
+    speedButton.textContent = speedValues[speedIndex] + 'x';
 }
 
 function changePlaybackSpeed() {
-    currentSpeedIndex = (currentSpeedIndex + 1) % playbackSpeedOptions.length;
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
-    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    speedIndex = (speedIndex + 1) % speedValues.length;
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
     updateSpeed();
 }
 
 function handleSpeedWheel(event) {
     event.preventDefault();
     
-    if (event.deltaY < 0 && currentSpeedIndex < playbackSpeedOptions.length - 1) {
-        currentSpeedIndex++;
-    } else if (event.deltaY > 0 && currentSpeedIndex > 0) {
-        currentSpeedIndex--;
-    }
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
-    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+    if (event.deltaY < 0 && speedIndex < speedValues.length - 1)
+        speedIndex++;
+    else if (event.deltaY > 0 && speedIndex > 0)
+        speedIndex--;
+
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
     updateSpeed();
 }
 
@@ -177,15 +169,15 @@ function handleSpeedTouchEnd(event) {
     const speedButtonEndY = event.changedTouches[0].clientY;
     const speedButtonDeltaY = speedButtonEndY - speedButtonStartY;
 
-    if (speedButtonDeltaY > 10 && currentSpeedIndex < playbackSpeedOptions.length - 1) {
-        currentSpeedIndex++;
-    } else if (speedButtonDeltaY < -10 && currentSpeedIndex > 0) {
-        currentSpeedIndex--;
-    } else if (Math.abs(speedButtonDeltaY) < 10) {
+    if (speedButtonDeltaY > 10 && speedIndex < speedValues.length - 1)
+        speedIndex++;
+    else if (speedButtonDeltaY < -10 && speedIndex > 0)
+        speedIndex--;
+    else if (Math.abs(speedButtonDeltaY) < 10)
         speedButton.click();
-    }
-    audio.playbackRate = playbackSpeedOptions[currentSpeedIndex];
-    localStorage.setItem('audioSpeed', playbackSpeedOptions[currentSpeedIndex]);
+
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
     updateSpeed();
 }
 
@@ -204,11 +196,10 @@ function formatDuration(timeInSeconds) {
     const minutes = Math.floor((timeInSeconds / 60) % 60);
     const seconds = Math.floor(timeInSeconds % 60);
     
-    if (hours > 0) {
+    if (hours > 0)
         return `${formatNumber(hours)}:${formatNumber(minutes)}:${formatNumber(seconds)}`;
-    } else {
+    else
         return `${formatNumber(minutes)}:${formatNumber(seconds)}`;
-    }
 }
 
 function formatNumber(number) {
@@ -260,16 +251,15 @@ function showTimelineHover(clientX) {
     let leftPosition = position - tooltipWidth / 2;
     
     if (leftPosition < 0) leftPosition = 0;
-    if (leftPosition + tooltipWidth > barRect.width) {
+    if (leftPosition + tooltipWidth > barRect.width)
         leftPosition = barRect.width - tooltipWidth;
-    }
+
     hoverInfo.style.left = `${leftPosition}px`;
 
-    if (tooltipWidth) {
+    if (tooltipWidth)
         hoverInfo.style.visibility = 'visible';
-    } else {
+    else
         hoverInfo.style.visibility = 'hidden';
-    }
 }
 
 function clearTimelineHover() {
@@ -295,32 +285,30 @@ function setupTouchDrag(handlerMove) {
 
 function updateVolumeBar() {
     const volumePercent = volumeSlider.value * 100;
-    if (audio.muted) {
+    if (audio.muted)
         volumeSlider.style.background = '#e1e1e1';
-    } else {
+    else
         volumeSlider.style.background = `linear-gradient(to right, #007aff ${volumePercent}%, #e1e1e1 ${volumePercent}%)`;
-    }
 }
 
 function updateVolumeIcon() {
     let index;
-    if (audio.muted) {
+    if (audio.muted)
         index = 0; // mute
-    } else if (audio.volume === 0) {
+    else if (audio.volume === 0)
         index = 4; // no volume
-    } else if (audio.volume > 0.67) {
+    else if (audio.volume > 0.67)
         index = 1; // full
-    } else if (audio.volume > 0.33) {
+    else if (audio.volume > 0.33)
         index = 2; // medium
-    } else {
+    else
         index = 3; // low
-    }
+
     for (let i = 0; i < volumeIcons.length; i++) {
-        if (i === index) {
+        if (i === index)
             volumeIcons[i].style.display = 'block';
-        } else {
+        else
             volumeIcons[i].style.display = 'none';
-        }
     }
 }
 
@@ -366,21 +354,25 @@ function playAudio() {
 }
 
 function togglePlayPauseState() {
-    if (audio.paused) {
+    if (audio.paused)
         playAudio();
-    } else {
+    else
         pauseAudio();
-    }
 }
 
 function handleAudioEnded() {
-    if (loopMode === 2) {
-        playAudio();
-    } else if (loopMode === 1) {
-        navigateToNext();
-    } else {
-        playIcons[1].style.display = 'none';
-        playIcons[0].style.display = 'block';
+    switch (loopMode) {
+        case 1:
+            navigateToNext();
+            break;
+        case 2:
+            playAudio();
+            break;
+        default:
+            playIcons[1].style.display = 'none';
+            playIcons[0].style.display = 'block';
+            break;
+
     }
 }
 
@@ -389,11 +381,10 @@ function handleAudioEnded() {
 // ============================================================================
 
 function navigateToPrevious() {
-    if (isShuffled) {
+    if (isShuffled)
         window.history.go(-1);
-    } else {
+    else
         previousLink.click();
-    }
 }
 
 function navigateToNext() {
@@ -527,7 +518,7 @@ seekBar.addEventListener('touchstart', event => {
 document.addEventListener('touchstart', ()=>{
     isTouchHoverActive = true;
     clearTimelineHover();
-}, { passive: true });
+},{ passive: true });
 
 seekBar.addEventListener('click', event => {
     updateAudioTime(getTimelinePosition(event.clientX).percentage);
@@ -543,20 +534,9 @@ seekBar.addEventListener('mouseleave', ()=>{
 });
 
 // ============================================================================
-// EVENT LISTENERS - WINDOW
-// ============================================================================
-
-window.addEventListener('pageshow', ()=>{
-    volumeSlider.value = audio.volume;
-    updateVolumeBar();
-    waitForAudioReady();
-});
-
-// ============================================================================
 // INITIALIZATION CALL
 // ============================================================================
 
-initializeAudioPlayer();
-setupMediaSession();
+window.addEventListener('pageshow', initializeAudioPlayer);
 
  

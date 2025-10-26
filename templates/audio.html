@@ -2,11 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>{{ name }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/?static=ico/audio.ico" />
-    <link rel="stylesheet" href="/?static=css/audio.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/?static=ico/audio.ico">
+    <link rel="stylesheet" href="/?static=css/audio.css">
     <script defer src="/?static=js/audio.js"></script>
   </head>
   <body>
@@ -26,14 +26,14 @@
         </div>
         <div class="playback-controls">
           <button class="nav-btn" onclick="navigateToPrevious()" title="Prev (P)">
-            <img src="/?static=svg/audioplayer/round-double-alt-arrow-left.svg">
+            <img src="/?static=svg/audioplayer/round-play-skip-back.svg">
           </button>
           <button id="play-pause" onclick="togglePlayPauseState()" title="Play">
             <img src="/?static=svg/videoplayer/play-outline.svg" style="display: block;">
             <img src="/?static=svg/videoplayer/pause-outline.svg" style="display: none;">
           </button>
           <button class="nav-btn" onclick="navigateToNext()" title="Next (N)">
-            <img src="/?static=svg/audioplayer/round-double-alt-arrow-right.svg" />
+            <img src="/?static=svg/audioplayer/round-play-skip-forward.svg">
           </button>
         </div>
         <div class="volume-control">
@@ -57,7 +57,7 @@
         </button>
         <button id="speed-btn" title="Speed">1x</button>
         <button onclick="download()" title="Download">
-          <img src="/?static=svg/audioplayer/down-arrow.svg" />
+          <img src="/?static=svg/audioplayer/down-arrow.svg">
         </button>
       </div>
     </div>

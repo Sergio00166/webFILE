@@ -9,9 +9,6 @@
     <link rel="stylesheet" href="/?static=css/video.css">
     <script defer src="/?static=js/video.js"></script>
     <script src="/?static=jassub/jassub.js"></script>
-    <script>
-      const chapters = {{ chapters | tojson }};
-    </script>
   </head>
   <body>
     <div id="video-container">
@@ -39,13 +36,13 @@
         </div>
         <div class="btn-controls">
           <div class="side-controls">
-            <button id="play-pause" onclick="togglePlayPauseState()" title="Play">
+            <button id="play-pause" onclick="togglePlayPauseState()" class="glass" title="Play">
               <img src="/?static=svg/videoplayer/play-outline.svg" style="display: block;">
               <img src="/?static=svg/videoplayer/pause-outline.svg" style="display: none;">
             </button>
-            <button id="mode" onclick="changePlaybackMode()" title="Loop (L)">1</button>
+            <button id="mode" onclick="changePlaybackMode()" class="glass" title="Loop (L)">1</button>
             <span id="volume">
-              <button onclick="toggleMuteState()" title="Mute (M)">
+              <button onclick="toggleMuteState()" class="glass" title="Mute (M)">
                 <img src="/?static=svg/videoplayer/volume-mute-outline.svg" style="display: none;">
                 <img src="/?static=svg/videoplayer/volume-high-outline.svg" style="display: block;">
                 <img src="/?static=svg/videoplayer/volume-medium-outline.svg" style="display: none;">
@@ -61,44 +58,66 @@
             <span id="total-time">00:00</span>
           </span>
           <div class="side-controls">
-            <button onclick="navigateToPrevious()" title="Prev (P)">
+            <button onclick="navigateToPrevious()" class="glass" title="Prev (P)">
               <img src="/?static=svg/videoplayer/play-skip-back-outline.svg">
             </button>
-            <button onclick="navigateToNext()" title="Next (N)">
+            <button onclick="navigateToNext()" class="glass" title="Next (N)">
               <img src="/?static=svg/videoplayer/play-skip-forward-outline.svg">
             </button>
-            <span class="settings">
-              <button id="settings" title="Menu (hold:legacy)">
+            <span id="settings">
+              <button class="glass" onclick="toggleSettingsMenu()" title="Menu">
                 <img src="/?static=svg/videoplayer/settings-outline.svg">
               </button>
-              <ul id="setting-menu" class="glass">
-                <li id="subsMenu">
-                  <select>
-                    <option value="-1">None</option>
-                   {%- for item in tracks %}
-                    <option value={{ tracks.index(item) }}>{{ item }}</option>
-                   {%- endfor %}
-                  </select>
-                </li>
-                <li id="audioMenu">
-                  <select></select>
-                </li>
-                <li id="speedMenu">
-                  <select>
-                    <option value="0.25">0.25x</option>
-                    <option value="0.5">0.5x</option>
-                    <option value="0.75">0.75x</option>
-                    <option value="1">1x</option>
-                    <option value="1.25">1.25x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="1.75">1.75x</option>
-                    <option value="2">2x</option>
-                  </select>
-                </li>
-                <li id="download" tabindex="0">Download</li>
-              </ul>
+              <div id="setting-menu" class="glass">
+                <div id="main-menu">
+                  <button data-submenu="subs">
+                    <span>Subtitles</span>
+                    <span id="menuSubsText">None</span>
+                  </button>
+                  <button data-submenu="audio">
+                    <span>Audio Track</span>
+                    <span id="menuAudioText">Default</span>
+                  </button>
+                  <button data-submenu="speed">
+                    <span>Playback Speed</span>
+                    <span id="menuSpeedText">1x</span>
+                  </button>
+                  <button onClick="toggleLegacySubtitles()">
+                    <span>Legacy Subtitles</span>
+                    <span id="menuLegacyText">OFF</span>
+                  </button>
+                  <button onClick="download()">
+                    <span>Download</span>
+                    <span>↓</span>
+                  </button>
+                </div>
+                <div id="subs-submenu" style="display: none;">
+                  <button class="back-button">‹ Subtitles</button>
+                  <div class="menu-content">
+                    <button>None</button>
+                  </div>
+                </div>
+                <div id="audio-submenu" style="display: none;">
+                  <button class="back-button">‹ Audio Track</button>
+                  <div class="menu-content">
+                  </div>
+                </div>
+                <div id="speed-submenu" style="display: none;">
+                  <button class="back-button">‹ Playback Speed</button>
+                  <div class="menu-content">
+                    <button>0.25x</button>
+                    <button>0.5x</button>
+                    <button>0.75x</button>
+                    <button>1x</button>
+                    <button>1.25x</button>
+                    <button>1.5x</button>
+                    <button>1.75x</button>
+                    <button>2x</button>
+                  </div>
+                </div>
+              </div>
             </span>
-            <button id="screenToggle" onclick="toggleFullscreenMode()" title="Fullscren (F)">
+            <button id="screenToggle" onclick="toggleFullscreenMode()" class="glass" title="Fullscren (F)">
               <img src="/?static=svg/videoplayer/scan-outline.svg" style="display: block;">
               <img src="/?static=svg/videoplayer/contract-outline.svg" style="display: none;">
             </button>

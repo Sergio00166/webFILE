@@ -50,8 +50,8 @@ let isSelectModeActive = false;
 
 function updateButtonStates() {
     invertButton.disabled = !isSelectModeActive;
-    copyButton.disabled = !isSelectModeActive;
-    moveButton.disabled = !isSelectModeActive;
+    copyButton.disabled =   !isSelectModeActive;
+    moveButton.disabled =   !isSelectModeActive;
     renameButton.disabled = !isSelectModeActive;
     deleteButton.disabled = !isSelectModeActive;
 }
@@ -102,15 +102,15 @@ function clearAllCopyMoveOperations() {
 
 function performStorageOperation(operationKey, fileList) {
     if (isSelectModeActive) toggleSelectMode();
-    if (fileList && fileList.length) {
+    if (fileList && fileList.length)
         localStorage.setItem(operationKey, JSON.stringify(fileList));
-    }
 }
 
 function getItemURL(fileItem) {
     const nameElement = fileItem.querySelector('pre');
     const rawName = nameElement.textContent.trim();
     const encodedName = encodeURIComponent(rawName);
+
     let url = basePath + encodedName;
     if (fileItem.hasAttribute('isdir')) url += '/';
     return url;
@@ -131,11 +131,10 @@ function toggleSelectMode() {
     if (!isSelectModeActive) deselectAllItems();
 
     if (selectButton) {
-        if (isSelectModeActive) {
+        if (isSelectModeActive)
             selectButton.textContent = '❌ Cancel';
-        } else {
+        else
             selectButton.textContent = '✅ Enable';
-        }
     }
     updateButtonStates();
 }
@@ -157,11 +156,10 @@ function selectItem(fileItem) {
 
 function invertSelection() {
     if (!isSelectModeActive) return;
-
     const items = listGroup.children;
-    for (let i = 0; i < items.length; i++) {
+
+    for (let i = 0; i < items.length; i++)
         selectItem(items[i]);
-    }
 }
 
 // ============================================================================
@@ -198,15 +196,17 @@ async function executeDownloads() {
             if (!itemURL) continue;
 
             let suffix;
-            if (fileItem.hasAttribute('isdir')) {
+            if (fileItem.hasAttribute('isdir'))
                 suffix = '?tar';
-            } else {
+            else
                 suffix = '?raw';
-            }
+
             downloadURL(itemURL + suffix);
             await delay(100);
         }
-    } else downloadURL(basePath + '?tar');
+    } else {
+        downloadURL(basePath + '?tar');
+    }
 }
 
 // ============================================================================
@@ -223,14 +223,20 @@ async function executeDeletes() {
         const itemURL = getItemURL(fileItem);
         const response = await fetch(itemURL, { method: 'DELETE' });
 
-        if (!response.ok) {
-            if (response.status === 403) {
+        if (response.ok) {
+            await delay(100);
+            continue;
+        }
+        switch (response.status) {
+            case 403:
                 errorMessage = 'You dont have permission to do that';
-            } else if (response.status === 404) {
+                break;
+            case 404:
                 errorMessage = 'That file/folder does not exist';
-            } else {
-                errorMessage = 'Something went wrong on the server.';
-            }
+                break;
+            default:
+                errorMessage = 'Something went wrong on the server';
+                break;
         }
         await delay(100);
     }
@@ -245,12 +251,10 @@ async function executeDeletes() {
 async function sendHTTPRequest(path, destination, method) {
     try {
         const requestOptions = { method };
-
-        if (destination) {
+        if (destination)
             requestOptions.headers = {
                 Destination: decodeURIComponent(destination)
             };
-        }
         const response = await fetch(path, requestOptions);
         if (!response.ok) throw response.status;
         return true;
@@ -297,11 +301,11 @@ async function pasteFiles() {
     const moveList = JSON.parse(localStorage.getItem('move') || '[]');
     let pasteOperation = {};
 
-    if (copyList.length) {
+    if (copyList.length)
         pasteOperation = { list: copyList, mode: 'COPY' };
-    } else if (moveList.length) {
+    else if (moveList.length)
         pasteOperation = { list: moveList, mode: 'MOVE' };
-    }
+
     if (!pasteOperation.list) return;
     showLoader();
     await delay(250);
@@ -354,16 +358,14 @@ function uploadFileWithProgress(file, uploadURL, progressCallback) {
         xhr.open('PUT', uploadURL);
 
         xhr.upload.onprogress = event => {
-            if (event.lengthComputable && progressCallback) {
+            if (event.lengthComputable && progressCallback)
                 progressCallback(event.loaded, event.total);
-            }
         };
         xhr.onload = ()=>{
-            if (xhr.status >= 200 && xhr.status < 300) {
+            if (xhr.status >= 200 && xhr.status < 300)
                 resolve();
-            } else {
+            else
                 reject(xhr.status);
-            }
         };
         xhr.onerror = () => reject('Connection Error');
         xhr.send(file);
@@ -381,11 +383,12 @@ async function uploadFiles(files, isDirectory) {
     for (let i = 0; i < files.length; i++) {
         let file = files[i];
         let filePath;
-        if (isDirectory) {
+
+        if (isDirectory)
             filePath = file.webkitRelativePath;
-        } else {
+        else
             filePath = file.name;
-        }
+
         filePath = basePath + encodePath(filePath);
         try {
             await uploadFileWithProgress(file, filePath, (loaded, total) => {
@@ -419,13 +422,13 @@ function openFileUploadMenu(selectDirectory = false) {
     fileInput.type = 'file';
     fileInput.multiple = !selectDirectory;
 
-    if (selectDirectory) {
+    if (selectDirectory)
         fileInput.setAttribute('webkitdirectory', true);
-    }
+
     fileInput.onchange = ()=>{
-        if (fileInput.files.length && (selectDirectory || confirm('Upload ' + fileInput.files.length + ' item(s)?'))) {
+        const msg = 'Upload ' + fileInput.files.length + ' item(s)?';
+        if (fileInput.files.length && (selectDirectory || confirm(msg)))
             uploadFiles(fileInput.files, selectDirectory);
-        }
     };
     fileInput.click();
 }
@@ -438,9 +441,8 @@ function enableDragAndDropUpload(dropArea) {
         event.preventDefault();
         const files = Array.prototype.slice.call(event.dataTransfer.files);
 
-        if (files.length && confirm('¿Upload ' + files.length + ' item(s)?')) {
-            uploadFiles(files);
-        }
+        const msg = '¿Upload ' + files.length + ' item(s)?';
+        if (files.length && confirm(msg)) uploadFiles(files);
     });
 }
 
@@ -453,13 +455,13 @@ function moveFocus(direction) {
     if (items.length === 0) return;
     let currentIndex = items.indexOf(document.activeElement);
 
-    if (direction === -Infinity) {
+    if (direction === -Infinity)
         currentIndex = 0;
-    } else if (direction === Infinity) {
+    else if (direction === Infinity)
         currentIndex = items.length - 1;
-    } else {
+    else
         currentIndex = (currentIndex + direction + items.length) % items.length;
-    }
+
     items[currentIndex].focus();
 }
 
@@ -503,27 +505,25 @@ document.addEventListener('keydown', event => {
             break;
         case 'arrowright':
             event.preventDefault();
-            if (event.shiftKey) {
+            if (event.shiftKey)
                 listGroup.scrollTo({
                     left: listGroup.scrollWidth,
                     behavior: 'smooth'
                 });
-            } else {
+            else
                 document.activeElement.click();
-            }
             break;
         case 'arrowleft':
             event.preventDefault();
-            if (event.shiftKey) {
+            if (event.shiftKey)
                 listGroup.scrollTo({
                     left: 0,
                     behavior: 'smooth'
                 });
-            } else if (isSelectModeActive) {
+            else if (isSelectModeActive)
                 document.activeElement.click();
-            } else {
+            else
                 window.location.href = '..';
-            }
             break;
         case 'a':
             invertSelection();

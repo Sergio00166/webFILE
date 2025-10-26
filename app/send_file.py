@@ -28,7 +28,7 @@ def send_file(file_path, mimetype=None, cache=False):
         return Response(generate(file_path, ranges), status=206, headers=headers)
 
     response = df_send_file(file_path, mimetype=mimetype)
-    if cache: response.headers["Cache-Control"] = "public, max-age=3600"
+    if cache: response.headers["Cache-Control"] = "public, max-age=36000"
     return response
 
 

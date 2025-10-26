@@ -38,7 +38,6 @@ This service exposes a filesystem directory over HTTP, enabling:
 * Switch audio tracks in-browser (requires experimental Web Platform Features).
 * SSA/ASS subtitle support via `JASSUB` on the client.
 * On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    
-  To enable, press and hold the settings button in the player until it changes color.
 * Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.
 * Auto-loads external `.mks` subtitles matching video basename.
 
@@ -52,13 +51,18 @@ This service exposes a filesystem directory over HTTP, enabling:
 * See [aclmgr documentation](aclmgr.md).
 
 ## Requirements
-
+### Server-side
 ```bash
 pip install -r requirements.txt
 ```
 
 Install `ffmpeg` at the system level for media playback.   
 A `Redis` sever for session storage and other cache.   
+
+### Client-side
+
+The WEB interface requires a modern browser (2021 or newer).   
+If you're using something ancient—like a 2018-era fossil that hasn't seen an update in half a decade—expect broken styles, layout quirks, and a generally degraded experience. 
 
 ## Configuration
 
@@ -72,7 +76,6 @@ Configure via environment variables:
 | USERS\_FILE     | No       | data/users.json  | User accounts file.                             |
 | SECRET\_KEY     | No       | Auto-generated   | Secret key for multi-worker setups.             |
 | SHOW\_DIRSIZE   | No       | False            | Display directory sizes.                        |
-| MAX\_CACHE (MB) | No       | 256              | RAM limit for video metadata/subtitle cache     |
 
 ## File Listing API
 
@@ -122,6 +125,10 @@ Valid `type` are `disk`, `directory`, `text` and `file` and the extra types are 
   Streams the raw video/audio file; without `?raw`, returns the player page.
 * `GET /videopath?subs=index`
   Returns the `index` subtitle track. Add `legacy` to the end to convert SSA→WebVTT.
+ * `GET /videopath?tracks`
+  Returns a list of all subtitle tracks names, for the video player.
+ * `GET /videopath?chapters`
+  Returns the chapters with its name and startime, for the video player.
 * `GET /path?sort=XY`
   Sorts directory listing by `X` (n=name, s=size, d=date) and order `Y` (p=ascending, d=descending).
 

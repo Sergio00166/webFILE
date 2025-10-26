@@ -2,19 +2,36 @@
 
 body {
     margin: 0;
+    height: 100vh;
+    height: 100dvh;
     color: #eee;
     background: #1a1a1a;
     font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
-    scrollbar-color: #555 #1e1e1e;
     -webkit-user-select: none;
     user-select: none;
     word-break: break-all;
-    height: 100vh;
-    height: 100dvh;
 }
-::-webkit-scrollbar-thumb { background: #555; }
-::-webkit-scrollbar-track { background: #1e1e1e; }
+
+/* -------------------------
+ *  SCROLL-BARS
+ *  ------------------------- */
+
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+body {
+    scrollbar-width: thin;
+    scrollbar-color: #fff3 #1e1e1e;
+}
 
 /* -------------------------
  *   Shared
@@ -141,7 +158,7 @@ button {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 6px 9px 16px;
+    padding: 6px 9px 12px;
     box-sizing: border-box;
     overflow: auto;
 }
@@ -297,9 +314,12 @@ button {
         height: 100%;
         position: fixed;
         transform: translateX(-100%);
-        -webkit-backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
-        backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
-        background: transparent;
+    }
+    @supports (backdrop-filter: blur(4px)) {
+        #sidebar {
+            backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
+            background: transparent;
+        }
     }
     .sidebar-toggle {
         display: flex;

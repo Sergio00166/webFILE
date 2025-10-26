@@ -2,7 +2,6 @@
 
 from functions import safe_path, validate_acl, printerr
 from flask import redirect, session, request
-from video import check_ffmpeg_installed
 from send_file import send_file, send_dir
 from hashlib import sha256
 from os.path import isfile
@@ -28,16 +27,14 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
         if "raw" in request.args:
             return send_file(path)
 
-        if "subs" in request.args and file_type == "video":
-            check_ffmpeg_installed()
-            return subtitles(path, request.args["subs"])
+        if file_type == "video":
+            if out := video_info(path): return out
 
         # For main pages redirect without /$
         if request.path.endswith("/") and not useApi:
             return redirect(request.path[:-1])
 
         if file_type == "video" and not useApi:
-            check_ffmpeg_installed()
             return video(path, root, file_type, ACL)
 
         elif file_type == "audio" and not useApi:
