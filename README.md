@@ -125,6 +125,10 @@ Valid `type` are `disk`, `directory`, `text` and `file` and the extra types are 
   Streams the raw video/audio file; without `?raw`, returns the player page.
 * `GET /videopath?subs=index`
   Returns the `index` subtitle track. Add `legacy` to the end to convert SSA→WebVTT.
+ * `GET /videopath?tracks`
+  Returns a list of all subtitle tracks names, for the video player.
+ * `GET /videopath?chapters`
+  Returns the chapters with its name and startime, for the video player.
 * `GET /path?sort=XY`
   Sorts directory listing by `X` (n=name, s=size, d=date) and order `Y` (p=ascending, d=descending).
 
