@@ -1,11 +1,10 @@
 # Code by Sergio00166
 
+from video import get_subtitles, external_subs, get_chapters, get_tracks, check_ffmpeg_installed
 from flask import render_template, stream_template, redirect, request
 from urllib.parse import urlparse, urlunparse, parse_qsl, urlencode
 from os.path import pardir, basename, abspath, relpath, dirname
-from video import get_subtitles, external_subs
 from urllib.parse import quote as encurl
-from video import get_chapters, get_info
 from random import choice
 from explorer import *
 
@@ -59,29 +58,18 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
     return folder_content, folder_path
 
 
-def subtitles(path, mode):
-    if (legacy := mode.endswith("legacy")):
-        mode = mode[: mode.find("legacy")]
-    try:
-        index = int(mode)
-    except:
-        raise FileNotFoundError
-
-    path = path.removesuffix("/")
-    return get_subtitles(index, path, legacy)
-
-
 def video(path, root, file_type, ACL):
-    prev, nxt, name = get_filepage_data(path, root, file_type, ACL, no_goto_start=True)
-    tracks, chapters = get_info(path), get_chapters(path)
+    check_ffmpeg_installed()
 
+    prev, nxt, name = get_filepage_data(
+        path, root, file_type, ACL, no_goto_start=True
+    )
     subs = external_subs(path)
     subs = basename(subs) if subs != path else "#"
 
     return render_template(
         "video.html", path=path, name=name,
-        prev=prev,nxt=nxt, tracks=tracks,
-        chapters=chapters, subs_file=subs
+        prev=prev,nxt=nxt, subs_file=subs
     )
 
 
@@ -104,5 +92,22 @@ def directory(path, root, folder_size, sort, ACL, useApi):
             "index.html", folder_content=folder_content,
             folder_path=folder_path, sort=sort
         )
+
+
+def video_info(path):
+    check_ffmpeg_installed()
+
+    if "subs" in request.args:
+        mode = request.args["subs"];
+        if (legacy := mode.endswith("legacy")):
+            mode = mode[: mode.find("legacy")]
+
+        if not mode.isnumeric(): raise FileNotFoundError 
+        return get_subtitles(int(mode), path, legacy)
+
+    if "chapters" in request.args: return get_chapters(path);
+    if "tracks"   in request.args: return get_tracks(path);
+
+    return None
 
  

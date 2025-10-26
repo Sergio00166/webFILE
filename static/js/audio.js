@@ -69,10 +69,12 @@ function initializeAudioPlayer() {
     speedIndex = Math.max(speedValues.indexOf(savedSpeed), speedValues.indexOf(1));
     audio.playbackRate = speedValues[speedIndex];
 
+    updateSpeed();
     updateVolumeIcon();
     updateLoopButton();
     updateShuffleButton();
-    updateSpeed();
+    waitForAudioReady();
+    setupMediaSession();
 }
 
 function waitForAudioReady() {
@@ -531,20 +533,9 @@ seekBar.addEventListener('mouseleave', ()=>{
 });
 
 // ============================================================================
-// EVENT LISTENERS - WINDOW
-// ============================================================================
-
-window.addEventListener('pageshow', ()=>{
-    volumeSlider.value = audio.volume;
-    updateVolumeBar();
-    waitForAudioReady();
-});
-
-// ============================================================================
 // INITIALIZATION CALL
 // ============================================================================
 
-initializeAudioPlayer();
-setupMediaSession();
+window.addEventListener('pageshow', initializeAudioPlayer);
 
  

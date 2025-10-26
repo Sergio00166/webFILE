@@ -5,6 +5,7 @@ from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
 from shutil import which as find_proc
 from json import loads as jsload
+from json import dumps as jsdump
 from cache import setup_cache
 from flask import Response
 
@@ -24,22 +25,22 @@ def external_subs(file):
 
 
 @cache.cached("sz","mt")
-def ffmpeg_extract_chapters(file_path,sz,mt):
+def ffmpeg_get_chapters(file_path,sz,mt):
     ffprobe_output = jsload( run([
         "ffprobe", "-v", "quiet", "-show_entries",
         "chapters",  "-of", "json", file_path
     ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
     try:
-        return [ {
+        return jsdump([ {
             "title": chapter["tags"].get("title", "Untitled"),
             "start_time": int(float(chapter["start_time"]))
-        } for chapter in ffprobe_output["chapters"] ]
+        } for chapter in ffprobe_output["chapters"] ])
 
     except: return ""
 
 
 @cache.cached("sz","mt")
-def ffmpeg_extract_info(file_path,sz,mt):
+def ffmpeg_get_tracks(file_path,sz,mt):
     # This is to get all the subtitles name or language
     ffprobe_output = jsload( run([
         "ffprobe", "-v", "quiet", "-select_streams",
@@ -59,7 +60,7 @@ def ffmpeg_extract_info(file_path,sz,mt):
             f"{title} - [{lang}]" if title
             else f"Track {p} - [{lang}]"
         )
-    return subtitles_list
+    return jsdump(subtitles_list)
 
 
 @cache.cached("sz","mt")
@@ -81,23 +82,16 @@ def ffmpeg_get_subs(file,index,legacy,sz,mt):
     return convert_ssa(out) if ass2vtt else out
 
 
-
 # sz & mt are just to invalidate cache
 
-def extract_subtitles(index,file,legacy):
-    file = external_subs(file)
-    sz,mt = getsize(file),getmtime(file)
-    args = (file,index,legacy,sz,mt)
-    return ffmpeg_get_subs(*args)
-
-def get_info(file):
+def get_tracks(file):
     file = external_subs(file)
     sz,mt = getsize(file), getmtime(file)
-    return ffmpeg_extract_info(file,sz,mt)
+    return ffmpeg_get_tracks(file,sz,mt)
 
 def get_chapters(file):
     sz,mt = getsize(file), getmtime(file)
-    return ffmpeg_extract_chapters(file,sz,mt)
+    return ffmpeg_get_chapters(file,sz,mt)
 
 
 def get_codec(source,index):
@@ -111,7 +105,11 @@ def get_codec(source,index):
 
 
 def get_subtitles(index,file,legacy):
-    out = extract_subtitles(index,file,legacy)
+    # Set invalidator and call it
+    file = external_subs(file)
+    sz,mt = getsize(file),getmtime(file)
+    args = (file,index,legacy,sz,mt)
+    out = ffmpeg_get_subs(*args)
     # Get filename and for downloading the subtitles
     subsname = basename(file)+f".track{str(index)}."
     subsname += "vtt" if legacy else "ssa"

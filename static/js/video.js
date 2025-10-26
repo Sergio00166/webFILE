@@ -77,6 +77,7 @@ const chapterContainer = document.getElementById('chapter-container');
 // STATE VARIABLES
 // ============================================================================
 
+let chapters;
 let loopMode = 0;
 let legacySubtitles = false;
 let assSubtitleWorker;
@@ -97,46 +98,38 @@ let touchHoverActive = false;
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
-
 function initializeVideoPlayer() {
     const savedSpeed      = localStorage.getItem('videoSpeed');
     const savedVolume     = localStorage.getItem('videoVolume');
     const savedMuted      = localStorage.getItem('videoMuted');
-    const savedSubtitle   = localStorage.getItem('videoSubs');
-    const savedLegacySubs = localStorage.getItem('subsLegacy');
     const savedLoopMode   = localStorage.getItem('videoLoop');
+    const savedLegacySubs = localStorage.getItem('subsLegacy');
 
     video.muted = savedMuted === 'true';
     video.volume = parseFloat(savedVolume || 1);
-    legacySubtitles = savedLegacySubs === 'true';
+    volumeSlider.value = video.volume;
     video.playbackRate = parseFloat(savedSpeed || '1');
     loopMode = parseInt(savedLoopMode || '0');
+    legacySubtitles = savedLegacySubs === 'true';
     modeBtn.innerHTML = ['1', '»', '&orarr;'][loopMode] || '1';
-    
-    if (savedSubtitle) {
-        const subtitleOptions = subsSubmenu.querySelectorAll('.menu-content button');
-        for (let i = 0; i < subtitleOptions.length; i++) {
-            if (subtitleOptions[i].textContent === savedSubtitle) {
-                subtitleIndex = i-1;
-                break;
-            }
-        }
-    }
+
+    updateVolumeSlider();
     updateVolumeIcon();
-    updateSubtitleDisplay();
     updateSpeedDisplay();
-    updateSubtitleDisplay();
+    updateLegacyDisplay();
     changeSubtitles(subtitleIndex);
-  
+
     const isGecko = navigator.userAgent.includes('Gecko') &&
                    !navigator.userAgent.includes('like Gecko');
 
     if (isGecko) document.body.dataset.fx = 'no';
     else         document.body.dataset.fx = 'yes';
-        
+
+    loadSubtitleTracks();
+    waitForVideoReady();
 }
 
-function waitForVideoReady() {
+async function waitForVideoReady() {
     if (isNaN(video.duration) || video.duration === 0)
         return setTimeout(waitForVideoReady, 25);
 
@@ -146,10 +139,10 @@ function waitForVideoReady() {
     totalTime.innerHTML = formatDuration(video.duration);
     video.ontimeupdate = updateProgressBar;
     video.onended = handleVideoEnded;
-
-    setupTimelineChapters();
     loadAudioTracks();
     fixVideoAspectRatio();
+
+    await setupTimelineChapters();
 }
 
 // ============================================================================
@@ -209,11 +202,34 @@ async function changeSubtitles(subtitleIndex) {
     }
 }
 
+// ============================================================================
+// SUBTITLE UTILS
+// ============================================================================
+
 async function toggleLegacySubtitles() {
     legacySubtitles = !legacySubtitles;
     localStorage.setItem('subsLegacy', legacySubtitles);
     await changeSubtitles(subtitleIndex);
     updateLegacyDisplay();
+}
+
+async function loadSubtitleTracks() {
+    const subsContent = subsSubmenu.querySelector('.menu-content');
+    const subtitleList = await fetch('?tracks').then(res => res.json());
+    const savedSubtitle = localStorage.getItem('videoSubs');
+
+    for (let i = 0; i < subtitleList.length; i++) {
+        const trackName = subtitleList[i];
+        const button = document.createElement('button');
+        button.textContent = trackName;
+        subsContent.appendChild(button);
+
+        if (trackName === savedSubtitle) {
+            changeSubtitles(i);
+            subtitleIndex = i;
+        }
+    }
+    updateSubtitleDisplay();
 }
 
 // ============================================================================
@@ -450,7 +466,8 @@ function updateVideoTime(percentage) {
     updateProgressBar();
 }
 
-function setupTimelineChapters() {
+async function setupTimelineChapters() {
+    chapters = await fetch('?chapters').then(res => res.json());
     const videoDuration = video.duration;
     const chapterData = [...chapters.map(item => item.start_time), videoDuration];
 
@@ -777,12 +794,6 @@ function download() {
 // EVENT LISTENERS - WINDOW & VIDEO
 // ============================================================================
 
-window.addEventListener('pageshow', ()=>{
-    volumeSlider.value = video.volume;
-    updateVolumeSlider();
-    waitForVideoReady();
-});
-
 window.addEventListener('resize', scaleVideoToFit);
 window.addEventListener('fullscreenchange', scaleVideoToFit);
 
@@ -989,6 +1000,6 @@ document.addEventListener('keydown', event => {
 // INITIALIZATION CALL
 // ============================================================================
 
-initializeVideoPlayer();
+window.addEventListener('pageshow', initializeVideoPlayer);
 
  
