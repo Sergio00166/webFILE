@@ -65,11 +65,12 @@ function initializeAudioPlayer() {
     isShuffled = savedShuffled === 'true';
     audio.volume = parseFloat(savedVolume || 1);
     audio.muted = savedMuted === 'true';
-
     speedIndex = Math.max(speedValues.indexOf(savedSpeed), speedValues.indexOf(1));
     audio.playbackRate = speedValues[speedIndex];
+    volumeSlider.value = audio.volume;
 
     updateSpeed();
+    updateVolumeBar();
     updateVolumeIcon();
     updateLoopButton();
     updateShuffleButton();
