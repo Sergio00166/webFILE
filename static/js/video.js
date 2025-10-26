@@ -117,7 +117,6 @@ function initializeVideoPlayer() {
     updateVolumeIcon();
     updateSpeedDisplay();
     updateLegacyDisplay();
-    changeSubtitles(subtitleIndex);
 
     const isGecko = navigator.userAgent.includes('Gecko') &&
                    !navigator.userAgent.includes('like Gecko');
@@ -139,9 +138,9 @@ async function waitForVideoReady() {
     totalTime.innerHTML = formatDuration(video.duration);
     video.ontimeupdate = updateProgressBar;
     video.onended = handleVideoEnded;
+
     loadAudioTracks();
     fixVideoAspectRatio();
-
     await setupTimelineChapters();
 }
 
