@@ -945,8 +945,6 @@ document.addEventListener('mouseup', event => {
     }
 });
 
-const minmax = (val,top,low) => { return Math.Min(Math.Max(val,low),top); }
-
 document.addEventListener('keydown', event => {
     if (settingsMenu.contains(event.target)) return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
