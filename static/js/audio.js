@@ -426,6 +426,8 @@ document.addEventListener('keydown', event => {
         audio.currentTime = (audio.duration / 100) * (parseInt(event.key) * 10);
         return;
     }
+    let delta = 1;
+
     switch (event.key.toLowerCase()) {
         case ' ':
             if (document.activeElement === document.body) {
@@ -434,18 +436,13 @@ document.addEventListener('keydown', event => {
                 togglePlayPauseState();
             }
             break;
+        case 'arrowleft': delta -= 2;
         case 'arrowright':
-            audio.currentTime += 2;
+            audio.currentTime += delta * 2;
             break;
-        case 'arrowleft':
-            audio.currentTime -= 2;
-            break;
-        case 'arrowup':
-            audio.volume = Math.min(audio.volume + 0.02, 1);
-            handleVolumeKeyboardChange();
-            break;
-        case 'arrowdown':
-            audio.volume = Math.max(audio.volume - 0.02, 0);
+        case 'arrowdown': delta -= 2;
+        case 'arrowup': 
+            audio.volume = Math.max(audio.volume + (delta * 0.02), 0);
             handleVolumeKeyboardChange();
             break;
         case 'm':

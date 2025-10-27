@@ -489,41 +489,32 @@ listGroup.addEventListener('keydown', event => {
 document.addEventListener('keydown', event => {
     const key = event.key.toLowerCase();
     if (event.ctrlKey || event.metaKey || event.altKey) return;
+    let delta = 1;
 
     switch (key) {
+        case 'arrowup': delta -= 2;
         case 'arrowdown':
-        case 'arrowup':
             event.preventDefault();
-            if (key === "arrowup") moveFocus(-1);
-            else moveFocus(1);
+            moveFocus(delta);
             break;
+        case 'end': delta -= 2;
         case 'home':
-        case 'end':
             event.preventDefault();
-            if (key === "end") moveFocus(Infinity);
-            else moveFocus(-Infinity);
+            moveFocus(delta * Infinity);
             break;
+        case 'arrowleft': delta -= 2;
         case 'arrowright':
             event.preventDefault();
-            if (event.shiftKey)
-                listGroup.scrollTo({
-                    left: listGroup.scrollWidth,
-                    behavior: 'smooth'
-                });
-            else
+            if (event.shiftKey) {
+                listGroup.scrollLeft += delta * 36;
+            } else if (delta < 0) {
+                if (isSelectModeActive)
+                    document.activeElement.click();
+                else
+                    window.location.href = '..';
+            } else {
                 document.activeElement.click();
-            break;
-        case 'arrowleft':
-            event.preventDefault();
-            if (event.shiftKey)
-                listGroup.scrollTo({
-                    left: 0,
-                    behavior: 'smooth'
-                });
-            else if (isSelectModeActive)
-                document.activeElement.click();
-            else
-                window.location.href = '..';
+            }
             break;
         case 'a':
             invertSelection();

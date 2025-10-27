@@ -774,7 +774,9 @@ function handleVolumeKeyboardChange() {
     showMainStateAnimation('show_vol');
 }
 
-function handleTimeChangeKeyboard(mode) {
+function handleTimeChangeKeyboard(delta) {
+    let mode = 'fordward';
+    if (delta < 0) mode = 'back';
     controlsContainer.classList.add('show');
     hideControlsWithDelay(TIME_CHANGE_DELAY);
     updateProgressBar();
@@ -950,6 +952,8 @@ document.addEventListener('keydown', event => {
         progress.style.width = parseInt(event.key) * 10 + '%';
         return;
     }
+    let delta = 1;
+
     switch (event.key.toLowerCase()) {
         case ' ':
             if (document.activeElement === document.body) {
@@ -959,20 +963,14 @@ document.addEventListener('keydown', event => {
                 else pauseVideo();
             }
             break;
+        case 'arrowleft': delta -= 2;
         case 'arrowright':
-            video.currentTime += 2;
-            handleTimeChangeKeyboard('fordward');
+            video.currentTime += delta * 2;
+            handleTimeChangeKeyboard(delta);
             break;
-        case 'arrowleft':
-            video.currentTime -= 2;
-            handleTimeChangeKeyboard('back');
-            break;
+        case 'arrowdown': delta -= 2;
         case 'arrowup':
-            video.volume = Math.min(video.volume + 0.02, 1);
-            handleVolumeKeyboardChange();
-            break;
-        case 'arrowdown':
-            video.volume = Math.max(video.volume - 0.02, 0);
+            video.volume = Math.min(video.volume + (delta * 0.02), 1);
             handleVolumeKeyboardChange();
             break;
         case 'f':
