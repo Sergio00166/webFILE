@@ -445,7 +445,7 @@ document.addEventListener('keydown', event => {
         case 'arrowdown': delta -= 2;
         case 'arrowup':
             audio.volume = minmax(
-                video.volume + (delta * 0.02), 0, 1
+                audio.volume + (delta * 0.02), 0, 1
             );
             handleVolumeKeyboardChange();
             break;
