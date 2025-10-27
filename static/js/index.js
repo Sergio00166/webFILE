@@ -506,15 +506,13 @@ document.addEventListener('keydown', event => {
         case 'arrowright':
             event.preventDefault();
             if (event.shiftKey) {
-                listGroup.scrollLeft += delta * 36;
-            } else if (delta < 0) {
-                if (isSelectModeActive)
-                    document.activeElement.click();
-                else
-                    window.location.href = '..';
-            } else {
-                document.activeElement.click();
+                listGroup.scrollLeft += delta * 24;
+                break;
             }
+            if (delta > 0 || isSelectModeActive)
+                document.activeElement.click();
+            else
+                window.location.href = '..';
             break;
         case 'a':
             invertSelection();

@@ -1,5 +1,7 @@
 /* Code by Sergio00166 */
 
+const minmax = (val, low, top) => Math.min(Math.max(val, low), top);
+
 // ============================================================================
 // DOM ELEMENTS - AUDIO PLAYER
 // ============================================================================
@@ -441,8 +443,10 @@ document.addEventListener('keydown', event => {
             audio.currentTime += delta * 2;
             break;
         case 'arrowdown': delta -= 2;
-        case 'arrowup': 
-            audio.volume = Math.max(audio.volume + (delta * 0.02), 0);
+        case 'arrowup':
+            audio.volume = minmax(
+                video.volume + (delta * 0.02), 0, 1
+            );
             handleVolumeKeyboardChange();
             break;
         case 'm':

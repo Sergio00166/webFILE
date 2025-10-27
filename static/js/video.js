@@ -1,5 +1,7 @@
 /* Code by Sergio00166 */
 
+const minmax = (val, low, top) => Math.min(Math.max(val, low), top);
+
 // ============================================================================
 // CONSTANTS & CONFIGURATION
 // ============================================================================
@@ -943,6 +945,8 @@ document.addEventListener('mouseup', event => {
     }
 });
 
+const minmax = (val,top,low) => { return Math.Min(Math.Max(val,low),top); }
+
 document.addEventListener('keydown', event => {
     if (settingsMenu.contains(event.target)) return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
@@ -970,7 +974,9 @@ document.addEventListener('keydown', event => {
             break;
         case 'arrowdown': delta -= 2;
         case 'arrowup':
-            video.volume = Math.min(video.volume + (delta * 0.02), 1);
+            video.volume = minmax(
+                video.volume + (delta * 0.02), 0, 1
+            );
             handleVolumeKeyboardChange();
             break;
         case 'f':
