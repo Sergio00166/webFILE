@@ -539,7 +539,6 @@ document.addEventListener('keydown', event => {
             renameSelectedFiles();
             break;
         case 'delete':
-        case 'backspace':
             executeDeletes();
             break;
         case 'm':
