@@ -438,10 +438,12 @@ document.addEventListener('keydown', event => {
                 togglePlayPauseState();
             }
             break;
+
         case 'arrowleft': delta -= 2;
         case 'arrowright':
             audio.currentTime += delta * 2;
             break;
+
         case 'arrowdown': delta -= 2;
         case 'arrowup':
             audio.volume = minmax(
@@ -449,6 +451,7 @@ document.addEventListener('keydown', event => {
             );
             handleVolumeKeyboardChange();
             break;
+
         case 'm':
             toggleMuteState();
             break;

@@ -965,11 +965,13 @@ document.addEventListener('keydown', event => {
                 else pauseVideo();
             }
             break;
+
         case 'arrowleft': delta -= 2;
         case 'arrowright':
             video.currentTime += delta * 2;
             handleTimeChangeKeyboard(delta);
             break;
+
         case 'arrowdown': delta -= 2;
         case 'arrowup':
             video.volume = minmax(
@@ -977,6 +979,7 @@ document.addEventListener('keydown', event => {
             );
             handleVolumeKeyboardChange();
             break;
+
         case 'f':
             toggleFullscreenMode();
             break;
