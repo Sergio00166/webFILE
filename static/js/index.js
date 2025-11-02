@@ -466,64 +466,51 @@ function moveFocus(direction) {
 }
 
 // ============================================================================
-// EVENT LISTENERS - LIST GROUP
+// EVENT LISTENERS - NAVIGATION & ACTIONS
 // ============================================================================
 
 listGroup.addEventListener('click', event => {
     const clickedItem = event.target.closest('#list-group > button');
-    if (clickedItem) handleItemClick(clickedItem);
+    if (!clickedItem) return;
+    handleItemClick(clickedItem);
 });
 
 listGroup.addEventListener('keydown', event => {
-    const focusedItem = event.target.closest('#list-group > button');
-    if ((event.key === 'Enter' || event.key === ' ') && focusedItem) {
-        event.preventDefault();
-        handleItemClick(focusedItem);
-    }
+    if (event.key === ' ') event.preventDefault();
 });
 
-// ============================================================================
-// EVENT LISTENERS - KEYBOARD SHORTCUTS
-// ============================================================================
-
 document.addEventListener('keydown', event => {
-    const key = event.key.toLowerCase();
     if (event.ctrlKey || event.metaKey || event.altKey) return;
+    let delta = 1;
 
-    switch (key) {
+    switch (event.key.toLowerCase()) {
+        case 'arrowup': delta -= 2;
         case 'arrowdown':
-        case 'arrowup':
             event.preventDefault();
-            if (key === "arrowup") moveFocus(-1);
-            else moveFocus(1);
+            moveFocus(delta);
             break;
-        case 'home':
+
+        case 'home': delta -= 2;
         case 'end':
             event.preventDefault();
-            if (key === "end") moveFocus(Infinity);
-            else moveFocus(-Infinity);
+            moveFocus(delta * Infinity);
             break;
+
+        case 'arrowleft': delta -= 2;
         case 'arrowright':
             event.preventDefault();
-            if (event.shiftKey)
-                listGroup.scrollTo({
-                    left: listGroup.scrollWidth,
-                    behavior: 'smooth'
-                });
-            else
-                document.activeElement.click();
-            break;
-        case 'arrowleft':
-            event.preventDefault();
-            if (event.shiftKey)
-                listGroup.scrollTo({
-                    left: 0,
-                    behavior: 'smooth'
-                });
-            else if (isSelectModeActive)
+            if (event.shiftKey) {
+                listGroup.scrollLeft += delta * 24;
+                break;
+            }
+            if (delta > 0 || isSelectModeActive)
                 document.activeElement.click();
             else
                 window.location.href = '..';
+            break;
+
+        case 'backspace':
+            window.location.href = '..';
             break;
         case 'a':
             invertSelection();
@@ -550,7 +537,6 @@ document.addEventListener('keydown', event => {
             renameSelectedFiles();
             break;
         case 'delete':
-        case 'backspace':
             executeDeletes();
             break;
         case 'm':

@@ -12,8 +12,8 @@ Supports ACL-based access control, uploads, and file operations.
 * [🔐 ACL & User Management](#acl--user-management)
 * [📂 Requirements](#requirements)
 * [⚙️ Configuration](#configuration)
-* [🔢 File Listing API](#file-listing-api)
 * [🔍 Endpoints](#endpoints)
+* [🔢 API Mode](#api-mode)
 * [💡 Other HTTP Methods](#other-http-methods)
 * [📄 HTML vs .web Extensions](#html-vs-web-extensions)
 * [🔹 Official Plugins](#official-plugins)
@@ -77,12 +77,66 @@ Configure via environment variables:
 | SECRET\_KEY     | No       | Auto-generated   | Secret key for multi-worker setups.             |
 | SHOW\_DIRSIZE   | No       | False            | Display directory sizes.                        |
 
-## File Listing API
+## Endpoints
 
-When using the API (with the header `Accept: application/json`) the DIR contents will be returned as JSON.
-Valid `type` are `disk`, `directory`, `text` and `file` and the extra types are defined in `app/file_types.json`.
+This server has no endpoints, everything is path‑based with optional query modifiers.  
+Exceptions:
+- `/path/?login` / `/path/?logout` → Session handling.  
+  - Enables login/logout from any path, returning to the same location without extra headers
+  - Simplifies GUI flows and supports API usage with status-only responses.
+    - `200` → login successful / logout acknowledged.
+    - `401` → invalid credentials or not logged in.
 
-**Example of response for /**
+- `/?static=path` → for frontend assets
+  - Serves files from the given path, used only for GUI.
+  - Keeps routing file-centric—no without subendpoints.
+
+### Authentication
+- `GET /path?login` → Returns login page.
+- `POST /path?login` → Authenticates with `username`, `password`.
+- `GET /path?logout` → Logs out and redirects back.
+
+### Media Access
+- `GET /path?raw` → Return always the file.
+  - Applies only for video and audio files.
+  - Send file instead of the player page.
+  - Used internally to access media directly from the browser.  
+  - Ignored in API mode, files are returned directly.
+
+- `GET /videopath?subs=index` → Get subtitle by index.
+  - Applies only for video files.
+  - Used internally on video player GUI.
+  - Returns subtitle track by its index in SSA format.
+  - To use VTT instead of SSA, append the `legacy` suffix to the subtitle index.
+
+- `GET /videopath?tracks` → Get subtitle tracks
+  - Applies only for video files.
+  - Used internally on video player GUI.
+  - Return all subtitle tracks as an JSON list with its names.
+  
+- `GET /videopath?chapters` → Get chapters
+  - Applies only for video files.
+  - Used internally on video player GUI.
+  - Return all chapters with names and start times as JSON.
+
+### Directory Listing
+- `GET /path?sort=XY` → Sorts directory listing by field and order.
+  - `X` specifies the sort field: `n` = name, `s` = size, `d` = date.
+  - `Y` specifies the sort order: `p` = ascending, `d` = descending.
+
+## API Mode
+
+Set the header `Accept: application/json` to enable API mode.  
+In this mode, directory listings are returned as JSON.
+
+**Behavior:**
+- `?sort` is ignored — results follow the server’s default order.  
+  (Sorting is only used for frontend rendering.)
+
+- Valid `type` values include `disk`, `directory`, `text`, and `file`.  
+  Additional types are defined in `app/file_types.json`.
+
+**Example response for `/`:**
 
 ```json
 [
@@ -111,33 +165,10 @@ Valid `type` are `disk`, `directory`, `text` and `file` and the extra types are 
 ]
 ```
 
-## Endpoints
-
-* `GET /path?login`
-  Returns the login page.
-* `POST /path?login`
-  Accepts form data (`username`, `password`) to authenticate.
-* `GET /path?logout`
-  Logs out the current session and redirects to the current page.
-* `PUT /dest`
-  Uploads a file.
-* `GET /path?raw`
-  Streams the raw video/audio file; without `?raw`, returns the player page.
-* `GET /videopath?subs=index`
-  Returns the `index` subtitle track. Add `legacy` to the end to convert SSA→WebVTT.
- * `GET /videopath?tracks`
-  Returns a list of all subtitle tracks names, for the video player.
- * `GET /videopath?chapters`
-  Returns the chapters with its name and startime, for the video player.
-* `GET /path?sort=XY`
-  Sorts directory listing by `X` (n=name, s=size, d=date) and order `Y` (p=ascending, d=descending).
-
-**NOTE**: When using the API (`Accept: application/json`) it ignores the `?sort`, and `?raw` is not necessary as it sends directly the file).
-
 ## Other HTTP Methods
 
-The server internally uses some WebDAV methods to handle file and folder operations in a more standard way.    
-**Note:** This is not full WebDAV support—these methods are adopted for internal use only.
+The server internally uses some WebDAV methods to handle file and folder operations.  
+**Note:** This is not full WebDAV support—these methods are adopted for internal use only.    
 
 | Method | Action performed           |
 | ------ | -------------------------- |
@@ -145,6 +176,7 @@ The server internally uses some WebDAV methods to handle file and folder operati
 | MKCOL  | Create a new folder        |
 | MOVE   | Rename or move an item     |
 | COPY   | Duplicate a file or folder |
+| PUT    | Upload a file              |
 
 ## HTML vs .web Extensions
 
