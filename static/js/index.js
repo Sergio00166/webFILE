@@ -490,8 +490,8 @@ document.addEventListener('keydown', event => {
             moveFocus(delta);
             break;
 
-        case 'end': delta -= 2;
-        case 'home':
+        case 'home': delta -= 2;
+        case 'end':
             event.preventDefault();
             moveFocus(delta * Infinity);
             break;
