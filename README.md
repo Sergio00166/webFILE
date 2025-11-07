@@ -48,7 +48,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 * User accounts stored in JSON (`data/users.json`).
 * ACL rules stored in JSON (`data/acl.json`).
 * Both files will be loaded onto RAM as an dict.
-* See [aclmgr documentation](aclmgr.md).
+* See [aclmgr documentation](scripts/aclmgr.md).
 
 ## Requirements
 ### Server-side
