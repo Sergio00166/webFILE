@@ -88,10 +88,11 @@ video::-moz-media-controls { display: none !important; }
     gap: 4px;
     left: 50%;
     display: flex;
+    line-height: 1;
     font-size: 12px;
     position: absolute;
-    padding: 2px 4px;
-    padding-right: 5px;
+    padding: 4px 5px;
+    padding-right: 6px;
     border-radius: 6px;
     transform: translateX(-50%);
     box-shadow: none !important
@@ -242,9 +243,10 @@ button img {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw);
-    padding: 0.3rem;
+    line-height: 1.2;
+    padding: 6px;
     border-radius: 8px;
-    font-size: 0.8rem;
+    font-size: 13px;
     font-weight: bold;
     text-align: center;
     z-index: 1;
@@ -438,7 +440,7 @@ button img {
  *   Other
  * ------------------------- */
 
-#state_volume { font-size: 1.3rem; }
+#state_volume { font-size: 20px; }
 #video-container { position: relative; }
 .video-box, canvas { position: absolute; }
 #settings { position: relative; }

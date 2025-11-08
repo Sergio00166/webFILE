@@ -146,7 +146,7 @@ button {
 }
 #hover-info {
     position: absolute;
-    font-size: 0.7rem;
+    font-size: 11px;
     visibility: hidden;
     font-weight: bold;
     pointer-events: none;
