@@ -226,12 +226,12 @@ button {
 }
 #list-group > button > span:first-of-type {
     font-size: 15px;
-    margin-left: 3em;
+    margin-left: 4px;
     color: #8fd8b3;
 }
 #list-group > button > span:last-of-type {
     font-size: 15px;
-    margin-left: 0.6rem;
+    margin-left: 10px;
     font-family: monospace;
     color: #9fc5dc;
 }
@@ -264,7 +264,7 @@ button {
     border-radius: 8px;
     overflow: hidden;
     position: relative;
-    margin: 2rem 0;
+    margin: 24px 0;
     border: 1px solid #555;
 }
 .load_container .progress-bar::before {
@@ -330,7 +330,7 @@ button {
 }
 @media (max-width:400px) {
     .load_container h1 {
-        font-size: 1.5em;
+        font-size: x-large;
     }
 }
 
