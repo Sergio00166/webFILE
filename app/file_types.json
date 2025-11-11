@@ -35,10 +35,6 @@
         ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz",
         ".zst", ".spzip"
     ],
-    "binary": [
-        ".exe", ".dll", ".bin", ".sys", ".so", ".apk",
-        ".jar", ".app", ".deb", ".rpm", ".wasm"
-    ],
     "pdf": [ ".pdf" ], "webpage": [ ".web" ]
 }
 
