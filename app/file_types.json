@@ -1,6 +1,6 @@
 {
     "source": [
-        ".js", ".py", ".java", ".cpp", ".c", ".html", ".htm", ".css",
+        ".js", ".py", ".pyw", ".java", ".cpp", ".c", ".html", ".htm", ".css",
         ".php", ".ts", ".swift", ".go", ".kt", ".lua", ".pl", ".rb",
         ".vb", ".c#", ".rs", ".asm", ".perl", ".bat", ".ps1", ".zig",
         ".jsx", ".tsx", ".julia", ".ocaml", ".java", ".cmd", ".fish",
@@ -31,9 +31,10 @@
         ".vhdx", ".dmg", ".raw", ".qcow2", ".pkg"
     ],
     "compressed": [
-        ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz",
-        ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz",
-        ".zst", ".spzip"
+        ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", ".xz", ".zst"
+    ],
+    "executable": [
+        ".exe", ".dll", ".bin", ".sys", ".com"
     ],
     "pdf": [ ".pdf" ], "webpage": [ ".web" ]
 }
