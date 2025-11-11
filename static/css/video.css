@@ -454,8 +454,7 @@ button img {
         bottom: 10px;
     }
     .time-container {
-        bottom: 24px;
-        padding-bottom: 3px;
+        bottom: 25px;
     }
 }
 @media (max-width: 500px) {
