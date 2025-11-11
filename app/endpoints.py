@@ -76,6 +76,12 @@ def serveRoot_page(ACL, root, folder_size, useApi):
     if "tar" in request.args:
         return send_dir(path, root, ACL, "index")
 
+    if (
+        isfile(join(path, autoload_webpage))
+        and not ("noauto" in request.args or useApi)
+    ):
+        return redirect(request.path + autoload_webpage)
+
     return directory(path, root, folder_size, sort, ACL, useApi)
 
 
