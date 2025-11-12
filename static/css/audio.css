@@ -71,14 +71,14 @@ button {
 .extra-controls {
     width: 100%;
     margin-top: 24px;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: space-around;
 }
 .playback-controls {
-    margin-top: 24px;
-    margin-bottom: 20px;
+    margin-top: 26px;
+    margin-bottom: 24px;
     width: calc(100% - 16px);
     display: flex;
     align-items: center;
