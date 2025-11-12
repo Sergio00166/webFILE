@@ -89,7 +89,7 @@ video::-moz-media-controls { display: none !important; }
     display: flex;
     line-height: 1;
     padding: 4px;
-    padding-right: 6px;
+    padding-right: 5px;
     font-size: 12px;
     position: absolute;
     border-radius: 6px;
