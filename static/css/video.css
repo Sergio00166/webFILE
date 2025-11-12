@@ -240,6 +240,7 @@ button img {
     max-width: min(150px, 40vw);
     line-height: 1.2;
     padding: 6px 8px;
+    padding-right: 9px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: bold;
