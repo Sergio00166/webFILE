@@ -88,8 +88,8 @@ video::-moz-media-controls { display: none !important; }
     left: 50%;
     display: flex;
     line-height: 1;
-    padding: 4px 6px;
-    padding-right: 7px;
+    padding: 4px;
+    padding-right: 5px;
     font-size: 12px;
     position: absolute;
     border-radius: 6px;
@@ -238,7 +238,6 @@ button img {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw);
-    line-height: 1.2;
     padding: 6px 8px;
     padding-right: 9px;
     border-radius: 8px;
