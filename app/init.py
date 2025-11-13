@@ -2,7 +2,7 @@
 
 if __name__=="__main__": exit(0)
 
-from endpoints import serveFiles_page, serveRoot_page, login, logout, error
+from endpoints import serveFiles_page, login, logout, error
 from functions import printerr, load_userACL, safe_path, validate_acl
 from files_mgr import handle_upload, mkdir, delfile, move, copy
 from os.path import abspath, isfile, join
@@ -50,7 +50,7 @@ except Exception as e:
 
 
 # Initialize main flask app
-app = Flask(__name__,static_folder=None,template_folder=join(parent_path,"templates"))
+app = Flask(__name__, static_folder=None, template_folder=join(parent_path,"templates"))
 app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
 pool = ConnectionPool(host='127.0.0.1', port=6379, db=0)
 

@@ -163,12 +163,12 @@ async function createAssSubtitleWorker(subtitleUrl) {
         video: video,
         canvas: subtitleCanvas,
         subContent: await response.text(),
-        workerUrl: '/?static=jassub/worker.js',
-        wasmUrl: '/?static=jassub/worker.wasm',
+        workerUrl: '/static/jassub/worker.js',
+        wasmUrl: '/static/jassub/worker.wasm',
         useLocalFonts: true,
         fallbackFont: 'liberation sans',
         availableFonts: {
-            'liberation sans': '/?static=jassub/default.woff2'
+            'liberation sans': '/static/jassub/default.woff2'
         }
     });
 }

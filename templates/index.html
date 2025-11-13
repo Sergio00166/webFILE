@@ -6,9 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webFILE server</title>
-    <link rel="icon" type="image/x-icon" href="/?static=ico/favicon.ico">
-    <link rel="stylesheet" href="/?static=css/index.css">
-    <script defer src="/?static=js/index.js"></script>
+    <link rel="icon" type="image/x-icon" href="/static/ico/favicon.ico">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <script defer src="/static/js/index.js"></script>
   </head>
   <body>
     <div id="loader" style="display: none;">
@@ -21,7 +21,7 @@
     <div id="main-container">
       <div id="sidebar">
         <div class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
-          <img src="/?static=svg/index/three-dots-vertical.svg">
+          <img src="/static/svg/index/three-dots-vertical.svg">
         </div>
         <div class="sidebar-content">
           <div>
@@ -69,10 +69,10 @@
       <div class="content-area">
         <div class="path-bar">
           <button onclick="window.location.href='..'" title="Parent">
-            <img src="/?static=svg/index/arrow-left-solid.svg">
+            <img src="/static/svg/index/arrow-left-solid.svg">
           </button>
           <button onclick="window.location.href='/'" title="Home (h)">
-            <img src="/?static=svg/index/house-chimney-solid.svg">
+            <img src="/static/svg/index/house-chimney-solid.svg">
           </button>
           <pre class="path-title">{{ folder_path }}</pre>
         </div>
