@@ -47,7 +47,10 @@ def validate_acl(path, ACL, write=False):
     askd_perm = 2 if write else 1
     user = session.get("user", "DEFAULT")
     path = normpath(path)
-    if path == ".": path = "/"
+
+    # Always allow root
+    if path == ".": return
+
     path = path.replace(sep, "/")
     prop = False
 
