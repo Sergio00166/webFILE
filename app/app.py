@@ -35,7 +35,7 @@ def explorer(path):
 
 
 # Using all methods avoiding explorer intercept them
-@app.route("/static/", defaults={'path': ''}, methods=http_methods)
+@app.route("/static", defaults={'path': ''}, methods=http_methods)
 @app.route("/static/<path:path>", methods=http_methods)
 def static_files(path):
     try:
