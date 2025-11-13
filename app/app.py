@@ -4,9 +4,9 @@ from init import *
 
 # Define data
 http_methods = [
-    "GET","POST",
+    "GET","PUT","POST",
     "DELETE","MKCOL",
-    "COPY","MOVE","PUT"
+    "COPY","MOVE"
 ]
 method_map = {
     "DELETE": delfile,

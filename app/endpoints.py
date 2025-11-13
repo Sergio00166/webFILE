@@ -14,7 +14,8 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
     if not request.method in ["GET", "HEAD"]:
         return "Method not allowed", 405
 
-    validate_acl(path, ACL)
+    # Allow root listing
+    if path: validate_acl(path, ACL)
     path = safe_path(path, root)
     file_type = get_file_type(path)
     encache = "cache" in request.args
