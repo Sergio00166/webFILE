@@ -84,16 +84,17 @@ video::-moz-media-controls { display: none !important; }
  * ------------------------- */
 
 .time-container {
+    gap: 2px;
     left: 50%;
-    line-height: 1;
-    font-size: 12px;
+    display: flex;
     position: absolute;
     transform: translateX(-50%);
 }
 .time-container > span {
-    margin: 1px;
     padding: 4px 6px;
     border-radius: 6px;
+    line-height: 1;
+    font-size: 12px;
     box-shadow: none;
 }
 .btn-controls {
