@@ -233,6 +233,7 @@ button {
     font-size: 15px;
     margin-left: 10px;
     font-family: monospace;
+    letter-spacing: -0.5px;
     color: #9fc5dc;
 }
 
