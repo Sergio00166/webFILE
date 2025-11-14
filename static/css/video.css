@@ -417,15 +417,15 @@ button img {
  *   filter and layers.
  * ------------------------- */
 
- #controls .time-container,
+ #controls .time-container > span,
  #controls #seek-bar::before,
  #controls #seek-bar > *,
  #controls button.glass {
      opacity: 0;
      transition: opacity 0.3s;
 }
+ #controls.show .time-container > span,
  #controls.show #seek-bar::before,
- #controls.show .time-container,
  #controls.show #seek-bar > *,
  #controls.show button.glass {
      opacity: 1;
