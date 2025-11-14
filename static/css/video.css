@@ -84,16 +84,17 @@ video::-moz-media-controls { display: none !important; }
  * ------------------------- */
 
 .time-container {
-    gap: 4px;
     left: 50%;
-    display: flex;
     line-height: 1;
-    padding: 4px;
-    padding-right: 5px;
     font-size: 12px;
     position: absolute;
-    border-radius: 6px;
     transform: translateX(-50%);
+}
+.time-container > span {
+    margin: 1px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    box-shadow: none;
 }
 .btn-controls {
     margin-top: 4px;
@@ -146,9 +147,10 @@ button img {
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
+    box-shadow: none;
 }
 #main-state.show {
-    opacity: 0.8;
+    opacity: 0.9;
     transform: scale(1);
 }
 #main-state img {
@@ -239,7 +241,6 @@ button img {
     width: max-content;
     max-width: min(150px, 40vw);
     padding: 6px 8px;
-    padding-right: 9px;
     border-radius: 8px;
     font-size: 12px;
     font-weight: bold;
@@ -319,7 +320,7 @@ button img {
  * ------------------------- */
 
 #setting-menu {
-    top: 40px;
+    top: 42px;
     opacity: 0;
     z-index: 1;
     right: -10px;
@@ -401,9 +402,6 @@ button img {
 #seek-bar::before, .glass {
     background-color: #222A;
     box-shadow: 0 0 2px #FFFA;
-}
-#main-state, #hover-info, .time-container {
-    box-shadow: none !important;
 }
 @supports (backdrop-filter: blur(4px)) {
     body[data-fx="yes"] #seek-bar::before,

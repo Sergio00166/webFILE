@@ -267,7 +267,7 @@ function scaleVideoToFit() {
     if (window.innerWidth <= 500) {
         const buttonRect = settingsButton.getBoundingClientRect();
         const buttonTop = buttonRect.top + window.scrollY;
-        settingsMenu.style.top = (buttonTop + buttonRect.height + 8) + 'px';
+        settingsMenu.style.top = (buttonTop + buttonRect.height + 12) + 'px';
     } else {
         settingsMenu.style.top = '';
     }
