@@ -546,7 +546,8 @@ document.addEventListener('keydown', event => {
         case 'l':
             if (event.shiftKey)
                 logoutButton.click();
-            loginButton.click();
+            else
+                loginButton.click();
             break;
         case 'h':
             window.location.href = '/';
