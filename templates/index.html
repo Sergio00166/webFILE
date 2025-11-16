@@ -38,7 +38,7 @@
             {%- set username = session['user'] if 'user' in session else 'Not logged in' -%}
             <button onclick="alert('{{ username }}')" title="Show username">👤 User</button>
           {% if 'user' in session %}
-            <button id="logout" onclick="setUrlKey('logout')" title="(⇧l)" {{noLogout}}>🚪 Logout</button>
+            <button id="login" onclick="setUrlKey('logout')" title="(l)">🚪 Logout</button>
           {% else %}
             <button id="login" onclick="setUrlKey('login')" title="(l)">🔑 Login</button>
           {% endif %}
