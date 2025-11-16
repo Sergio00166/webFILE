@@ -210,4 +210,4 @@ gunicorn -b 127.0.0.1:8000 app:app
 
 ## License
 
-Distributed under the GPL License. See `LICENSE` for details.
+Distributed under the GPLv3 License. See `LICENSE` for details.
