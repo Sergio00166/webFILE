@@ -19,14 +19,14 @@ body {
  *  SCROLL-BARS
  *  ------------------------- */
 
-::-webkit-scrollbar {
-    width: 6px;
+.menu-content::-webkit-scrollbar {
+    width: 5px;
 }
-::-webkit-scrollbar-thumb {
+.menu-content::-webkit-scrollbar-thumb {
     background-color: #fff3;
     border-radius: 4px;
 }
-body {
+.menu-content {
     scrollbar-width: thin;
     scrollbar-color: #fff3 transparent;
 }

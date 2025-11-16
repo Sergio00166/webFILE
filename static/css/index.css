@@ -19,19 +19,28 @@ body {
  *  SCROLL-BARS
  *  ------------------------- */
 
-::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
-}
 ::-webkit-scrollbar-thumb {
     background-color: #555;
     border-radius: 4px;
 }
-::-webkit-scrollbar-track {
+#list-group::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+.sidebar-content::-webkit-scrollbar {
+    width: 5px;
+}
+#list-group::-webkit-scrollbar-track {
     background: #1e1e1e;
 }
-body {
+.sidebar-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-content {
     scrollbar-width: thin;
+    scrollbar-color: #fff3 transparent;
+}
+#list-group {
     scrollbar-color: #fff3 #1e1e1e;
 }
 
