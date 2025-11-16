@@ -11,13 +11,22 @@
     <script defer src="/static/js/index.js"></script>
   </head>
   <body>
-    <div id="loader" style="display: none;">
-      <div class="load_container">
-        <h1>PROCESSING</h1>
-        <div class="progress-bar"></div>
-        <h1 id="progress"></h1>
-      </div>
+    <div class="path-bar">
+      <button onclick="window.location.href='..'" title="Parent">
+        <img src="/static/svg/index/arrow-left-solid.svg">
+      </button>
+      <button onclick="window.location.href='/'" title="Home (h)">
+        <img src="/static/svg/index/house-chimney-solid.svg">
+      </button>
+      <pre class="path-title">{{ folder_path }}</pre>
     </div>
+    
+    <div id="loader" style="display: none;">
+      <h1>PROCESSING</h1>
+      <div class="progress-bar"></div>
+      <h1 id="progress"></h1>
+    </div>
+
     <div id="main-container">
       <div id="sidebar">
         <div class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
@@ -27,10 +36,12 @@
           <div>
             <h3>ACCOUNT</h3>
             {%- set username = session['user'] if 'user' in session else 'Not logged in' -%}
-            {%- set noLogout = "disabled" if 'user' not in session else "" -%}
-            <button onclick="alert('{{username}}');" title="Show username">👤 User</button>
-            <button id="login" onclick="setUrlKey('login')" title="(l)">🔑 Login</button>
+            <button onclick="alert('{{ username }}')" title="Show username">👤 User</button>
+          {% if 'user' in session %}
             <button id="logout" onclick="setUrlKey('logout')" title="(⇧l)" {{noLogout}}>🚪 Logout</button>
+          {% else %}
+            <button id="login" onclick="setUrlKey('login')" title="(l)">🔑 Login</button>
+          {% endif %}
           </div>
           <div>
             <h3>SORT</h3>
@@ -66,22 +77,11 @@
           </div>
         </div>
       </div>
-      <div class="content-area">
-        <div class="path-bar">
-          <button onclick="window.location.href='..'" title="Parent">
-            <img src="/static/svg/index/arrow-left-solid.svg">
-          </button>
-          <button onclick="window.location.href='/'" title="Home (h)">
-            <img src="/static/svg/index/house-chimney-solid.svg">
-          </button>
-          <pre class="path-title">{{ folder_path }}</pre>
-        </div>
-        <div id="list-group">
-          {%- from "macros.j2" import render_item %}
-          {%- for item in folder_content %}
-            {{ render_item(item) }}
-          {%- endfor %}
-        </div>
+      <div id="list-group">
+        {%- from "macros.j2" import render_item %}
+        {%- for item in folder_content %}
+          {{ render_item(item) }}
+        {%- endfor %}
       </div>
     </div>
   </body>
