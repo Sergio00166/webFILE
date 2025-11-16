@@ -15,7 +15,7 @@
       <button onclick="window.location.href='..'" title="Parent">
         <img src="/static/svg/index/arrow-left-solid.svg">
       </button>
-      <button onclick="window.location.href='/'" title="Home (h)">
+      <button onclick="window.location.href='/'" title="Home (H)">
         <img src="/static/svg/index/house-chimney-solid.svg">
       </button>
       <pre class="path-title">{{ folder_path }}</pre>
@@ -38,9 +38,9 @@
             {%- set username = session['user'] if 'user' in session else 'Not logged in' -%}
             <button onclick="alert('{{ username }}')" title="Show username">👤 User</button>
           {% if 'user' in session %}
-            <button id="login" onclick="setUrlKey('logout')" title="(l)">🚪 Logout</button>
+            <button id="login" onclick="setUrlKey('logout')" title="(L)">🚪 Logout</button>
           {% else %}
-            <button id="login" onclick="setUrlKey('login')" title="(l)">🔑 Login</button>
+            <button id="login" onclick="setUrlKey('login')" title="(L)">🔑 Login</button>
           {% endif %}
           </div>
           <div>
@@ -54,26 +54,26 @@
           </div>
           <div>
             <h3>SELECTION</h3>
-            <button id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Enable</button>
-            <button id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert</button>
-            <button onclick="executeDownloads()" title="(d)">📥 Download</button>
+            <button id="selectBtn" onclick="toggleSelectMode()" title="(S)">✅ Enable</button>
+            <button id="invertBtn" onclick="invertSelection()" title="(A)" disabled>🔄 Invert</button>
+            <button onclick="executeDownloads()" title="(D)">📥 Download</button>
           </div>
           <div>
             <h3>UPLOAD</h3>
-            <button onclick="openFileUploadMenu()" title="(u)">📤 Files</button>
-            <button onclick="openFileUploadMenu(true)" title="(⇧u)">📤 Folder</button>
+            <button onclick="openFileUploadMenu()" title="(U)">📤 Files</button>
+            <button onclick="openFileUploadMenu(true)" title="(⇧U)">📤 Folder</button>
           </div>
           <div>
             <h3>ACTIONS</h3>
             <button onclick="createDirectory()" title="(m)">📁 New Dir</button>
-            <button id="renBtn" onclick="renameSelectedFiles()" title="(r)" disabled>✏️ Rename</button>
+            <button id="renBtn" onclick="renameSelectedFiles()" title="(R)" disabled>✏️ Rename</button>
             <button id="delBtn" onclick="executeDeletes()" title="(Del)" disabled>🗑️ Delete</button>
           </div>
           <div>
             <h3>MANAGE</h3>
-            <button id="copyBtn" onclick="copySelectedFiles()" title="(c)" disabled>📋 Copy</button>
-            <button id="moveBtn" onclick="moveSelectedFiles()" title="(x)" disabled>✂️ Cut</button>
-            <button onclick="pasteFiles()" title="(v)">📋 Paste</button>
+            <button id="copyBtn" onclick="copySelectedFiles()" title="(C)" disabled>📋 Copy</button>
+            <button id="moveBtn" onclick="moveSelectedFiles()" title="(X)" disabled>✂️ Cut</button>
+            <button onclick="pasteFiles()" title="(V)">📋 Paste</button>
           </div>
         </div>
       </div>
