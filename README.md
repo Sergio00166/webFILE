@@ -82,14 +82,17 @@ Configure via environment variables:
 This server has no endpoints, everything is path‑based with optional query modifiers.  
 Exceptions:
 - `/path/?login` / `/path/?logout` → Session handling.  
-  - Enables login/logout from any path, returning to the same location without extra headers
-  - Simplifies GUI flows and supports API usage with status-only responses.
+  - Available from any path.
+  - No redirects, no referer headers required.
+  - Acts like a toggle: happens in place, without changing the path.
+  - Supports API usage with status‑only responses:
     - `200` → login successful / logout acknowledged.
     - `401` → invalid credentials or not logged in.
 
-- `/?static=path` → for frontend assets
-  - Serves files from the given path, used only for GUI.
-  - Keeps routing file-centric—no without subendpoints.
+- `/static` → for frontend assets
+  - It is the only dedicated endpoint.
+  - *RESERVED* exclusively for frontend assets.
+  - Cannot be used as a folder name in the root directory.
 
 ### Authentication
 - `GET /path?login` → Returns login page.
@@ -207,4 +210,4 @@ gunicorn -b 127.0.0.1:8000 app:app
 
 ## License
 
-Distributed under the GPL License. See `LICENSE` for details.
+Distributed under the GPLv3 License. See `LICENSE` for details.

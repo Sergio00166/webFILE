@@ -1,6 +1,6 @@
 {
     "source": [
-        ".js", ".py", ".java", ".cpp", ".c", ".html", ".htm", ".css",
+        ".js", ".py", ".pyw", ".java", ".cpp", ".c", ".html", ".htm", ".css",
         ".php", ".ts", ".swift", ".go", ".kt", ".lua", ".pl", ".rb",
         ".vb", ".c#", ".rs", ".asm", ".perl", ".bat", ".ps1", ".zig",
         ".jsx", ".tsx", ".julia", ".ocaml", ".java", ".cmd", ".fish",
@@ -11,8 +11,7 @@
         ".tiff",  ".ico", ".webp", ".raw", ".heic", ".psd"
     ],
     "audio": [
-        ".mp3", ".wav", ".ogg", ".flac", ".aac",
-        ".m4a", ".opus", "mka"
+        ".mp3", ".wav", ".flac", ".aac", ".m4a", ".opus"
     ],
     "document": [
         ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
@@ -24,20 +23,18 @@
         ".ppt", ".pptx", ".odp", ".pps", ".ppsx"
     ],
     "video": [
-        ".mp4", ".avi", ".mkv", ".mov", ".webm", ".mpeg", ".mpg"
+        ".mp4", ".mkv", ".webm"
     ],
     "virtualdisk": [
         ".iso", ".img", ".vdi", ".vmdk", ".vhd",
         ".vhdx", ".dmg", ".raw", ".qcow2", ".pkg"
     ],
     "compressed": [
-        ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz",
-        ".xz", ".lz", ".tar.gz", ".tar.xz", ".tgz",
-        ".zst", ".spzip"
+        ".zip", ".7z", ".rar", ".tar", ".bz2", ".gz", ".xz", ".zst"
     ],
     "binary": [
-        ".exe", ".dll", ".bin", ".sys", ".so", ".apk",
-        ".jar", ".app", ".deb", ".rpm", ".wasm"
+        ".exe", ".sys", ".wasm", ".pyd", ".lib", ".so", ".dll", ".elf",
+        ".com", ".msi", ".kext", ".ko", ".deb", ".rpm", ".efi", ".bin"
     ],
     "pdf": [ ".pdf" ], "webpage": [ ".web" ]
 }

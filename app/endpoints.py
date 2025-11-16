@@ -14,7 +14,8 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
     if not request.method in ["GET", "HEAD"]:
         return "Method not allowed", 405
 
-    validate_acl(path, ACL)
+    # Allow root listing
+    if path: validate_acl(path, ACL)
     path = safe_path(path, root)
     file_type = get_file_type(path)
     encache = "cache" in request.args
@@ -30,7 +31,7 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
         if file_type == "video":
             if out := video_info(path): return out
 
-        # For main pages redirect without /$
+        # For main pages redirect without /
         if request.path.endswith("/") and not useApi:
             return redirect(request.path[:-1])
 
@@ -65,18 +66,6 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
         sort = request.args["sort"] if "sort" in request.args else ""
         return directory(path, root, folder_size, sort, ACL, useApi)
 
-
-def serveRoot_page(ACL, root, folder_size, useApi):
-    if not request.method in ["GET", "HEAD"]:
-        return "Method not allowed", 405
-
-    path = safe_path("", root)
-    sort = request.args["sort"] if "sort" in request.args else ""
-
-    if "tar" in request.args:
-        return send_dir(path, root, ACL, "index")
-
-    return directory(path, root, folder_size, sort, ACL, useApi)
 
 
 def login(USERS, useApi):

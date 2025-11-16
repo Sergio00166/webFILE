@@ -46,9 +46,11 @@ def load_userACL(USERS, ACL, users_file, acl_file):
 def validate_acl(path, ACL, write=False):
     askd_perm = 2 if write else 1
     user = session.get("user", "DEFAULT")
-    path = normpath(path)
-    path = path.replace(sep, "/")
     prop = False
+
+    path = normpath(path)
+    if path == ".": path = ""
+    path = path.replace(sep, "/")
 
     if path.startswith("//"):
         path = path[2:]

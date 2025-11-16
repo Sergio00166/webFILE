@@ -6,7 +6,14 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
     <title>LOGIN</title>
-    <link rel="stylesheet" href="/?static=css/login.css">
+    <link rel="stylesheet" href="/static/css/login.css">
+    <script>
+      function removeKey() {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('login');
+          window.location.href = url.toString().replace(/=&/g, "&").replace(/=$/, "");
+      }
+    </script>
   </head>
   <body>
     <div class="container">
@@ -16,7 +23,8 @@
         <input required class="password" type="password" name="password" placeholder="Password" autocomplete="current-password">
         <button class="button-upload">Login</button>
       </form>
-      <button onclick="window.history.go(-1);" class="button-danger">Cancel</button>
+      <button onclick="removeKey()" class="button-danger">Cancel</button>
     </div>
   </body>
 </html>
+

@@ -27,6 +27,7 @@ const mainContainer = document.getElementById('main-container');
 const listGroup = document.getElementById('list-group');
 const backButton = document.getElementById('backdir');
 const loginButton = document.getElementById('login');
+const logoutButton = document.getElementById('logout');
 
 // ============================================================================
 // DOM ELEMENTS - SORTING

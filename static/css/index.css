@@ -5,7 +5,9 @@ body {
     height: 100vh;
     height: 100dvh;
     color: #eee;
+    display: flex;
     background: #1a1a1a;
+    flex-direction: column;
     font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
@@ -17,19 +19,27 @@ body {
  *  SCROLL-BARS
  *  ------------------------- */
 
-::-webkit-scrollbar {
-    width: 9px;
-    height: 9px;
-}
 ::-webkit-scrollbar-thumb {
     background-color: #555;
     border-radius: 4px;
 }
-::-webkit-scrollbar-track {
+#list-group::-webkit-scrollbar {
+    width: 9px; height: 9px;
+}
+.sidebar-content::-webkit-scrollbar {
+    width: 5px; height: 5px;
+}
+#list-group::-webkit-scrollbar-track {
     background: #1e1e1e;
 }
-body {
+.sidebar-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-content {
     scrollbar-width: thin;
+    scrollbar-color: #fff3 transparent;
+}
+#list-group {
     scrollbar-color: #fff3 #1e1e1e;
 }
 
@@ -76,7 +86,7 @@ button {
     transition: transform .3s;
 }
 .sidebar-toggle {
-    top: 50%;
+    top: 47%;
     right: 0;
     height: 45px;
     width: 20px;
@@ -108,11 +118,11 @@ button {
     gap: 2px;
 }
 .sidebar-content > div > h3 {
+    color: #aaa;
     margin: 0 0 4px;
     padding: 3px 6px;
     font-size: 11px;
     font-weight: 600;
-    color: #aaa;
     text-align: center;
     letter-spacing: .5px;
     background: #3a3a3a;
@@ -142,15 +152,10 @@ button {
  * ------------------------- */
 
 #main-container {
+    flex: 1;
+    min-height: 0;
     display: flex;
-    height: 100vh;
-    height: 100dvh;
-}
-.content-area {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
+    position: relative;
 }
 #list-group {
     gap: 6px;
@@ -233,6 +238,7 @@ button {
     font-size: 15px;
     margin-left: 10px;
     font-family: monospace;
+    letter-spacing: -0.5px;
     color: #9fc5dc;
 }
 
@@ -240,25 +246,22 @@ button {
  *   Loading/Uploading screen
  * ------------------------- */
 
-.load_container {
-    height: 100vh;
-    height: 100dvh;
+#loader {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background: #1a1a1a;
     animation: fadeIn .5s ease-out;
-    max-width: 100vw;
 }
-.load_container h1 {
+#loader > h1 {
     margin: 0;
     text-align: center;
     letter-spacing: 1px;
     animation: textFade 1.5s ease-in-out infinite alternate;
 }
-.load_container .progress-bar {
-    width: min(350px, 90%);
+#loader > .progress-bar {
     height: 16px;
     background: #333;
     border-radius: 8px;
@@ -266,8 +269,9 @@ button {
     position: relative;
     margin: 24px 0;
     border: 1px solid #555;
+    width: min(350px, 90%);
 }
-.load_container .progress-bar::before {
+#loader > .progress-bar::before {
     content: '';
     position: absolute;
     height: 100%;
@@ -312,7 +316,7 @@ button {
 @media (max-width:700px) {
     #sidebar {
         height: 100%;
-        position: fixed;
+        position: absolute;
         transform: translateX(-100%);
     }
     @supports (backdrop-filter: blur(4px)) {

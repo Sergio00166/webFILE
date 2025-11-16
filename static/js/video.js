@@ -44,6 +44,20 @@ const menuSpeedText = document.getElementById('menuSpeedText');
 const menuAudioText = document.getElementById('menuAudioText');
 
 // ============================================================================
+// DOM ELEMENTS - NAVIGATION & MEDIA
+// ============================================================================
+
+const previousLink = document.getElementById('prev');
+const nextLink = document.getElementById('next');
+const subtitleCanvas = document.querySelector('canvas');
+const video = document.querySelector('video');
+const videoContainer = document.getElementById('video-container');
+const loopButton = document.getElementById('loop-btn');
+const downloadVideoLink = document.getElementById("download_video");
+const downloadSubtitlesLink = document.getElementById("download_subs");
+const chapterContainer = document.getElementById('chapter-container');
+
+// ============================================================================
 // DOM ELEMENTS - ICONS & STATES
 // ============================================================================
 
@@ -56,24 +70,13 @@ const fullscreenIcons = Array.from(
 const mainStateIcons = Array.from(
     mainState.querySelectorAll('img')
 );
+const loopIcons = Array.from(
+    loopButton.querySelectorAll('img')
+);
 const volumeIcons = Array.from(
     volume.querySelectorAll('img')
 );
 const mainStateVolume = document.querySelector('#state_volume');
-
-// ============================================================================
-// DOM ELEMENTS - NAVIGATION & MEDIA
-// ============================================================================
-
-const previousLink = document.getElementById('prev');
-const nextLink = document.getElementById('next');
-const subtitleCanvas = document.querySelector('canvas');
-const video = document.querySelector('video');
-const videoContainer = document.getElementById('video-container');
-const modeBtn = document.getElementById('mode');
-const downloadVideoLink = document.getElementById("download_video");
-const downloadSubtitlesLink = document.getElementById("download_subs");
-const chapterContainer = document.getElementById('chapter-container');
 
 // ============================================================================
 // STATE VARIABLES
@@ -113,12 +116,12 @@ function initializeVideoPlayer() {
     video.playbackRate = parseFloat(savedSpeed || '1');
     loopMode = parseInt(savedLoopMode || '0');
     legacySubtitles = savedLegacySubs === 'true';
-    modeBtn.innerHTML = ['1', '»', '&orarr;'][loopMode] || '1';
 
     updateVolumeSlider();
     updateVolumeIcon();
     updateSpeedDisplay();
     updateLegacyDisplay();
+	updateLoopButton();
 
     const isGecko = navigator.userAgent.includes('Gecko') &&
                    !navigator.userAgent.includes('like Gecko');
@@ -160,12 +163,12 @@ async function createAssSubtitleWorker(subtitleUrl) {
         video: video,
         canvas: subtitleCanvas,
         subContent: await response.text(),
-        workerUrl: '/?static=jassub/worker.js',
-        wasmUrl: '/?static=jassub/worker.wasm',
+        workerUrl: '/static/jassub/worker.js',
+        wasmUrl: '/static/jassub/worker.wasm',
         useLocalFonts: true,
         fallbackFont: 'liberation sans',
         availableFonts: {
-            'liberation sans': '/?static=jassub/default.woff2'
+            'liberation sans': '/static/jassub/default.woff2'
         }
     });
 }
@@ -264,7 +267,7 @@ function scaleVideoToFit() {
     if (window.innerWidth <= 500) {
         const buttonRect = settingsButton.getBoundingClientRect();
         const buttonTop = buttonRect.top + window.scrollY;
-        settingsMenu.style.top = (buttonTop + buttonRect.height + 8) + 'px';
+        settingsMenu.style.top = (buttonTop + buttonRect.height + 12) + 'px';
     } else {
         settingsMenu.style.top = '';
     }
@@ -279,13 +282,6 @@ function navigateToNext() {
 }
 function navigateToPrevious() {
     previousLink.click();
-}
-
-function changePlaybackMode() {
-    const playbackModes = ['1', '»', '&orarr;'];
-    loopMode = (loopMode + 1) % 3;
-    modeBtn.innerHTML = playbackModes[loopMode];
-    localStorage.setItem('videoLoop', loopMode);
 }
 
 function togglePlayPauseState() {
@@ -323,6 +319,31 @@ function handleVideoEnded() {
             pauseVideo();
             break;
     }
+}
+
+// ============================================================================
+// LOOP MODE MANAGEMENT
+// ============================================================================
+
+function updateLoopButton() {
+    if (loopMode === 0) {
+        loopIcons[0].style.opacity = 0.4;
+        loopIcons[0].style.display = 'block';
+        loopIcons[1].style.display = 'none';
+    } else if (loopMode === 1) {
+        loopIcons[0].style.opacity = 1;
+        loopIcons[0].style.display = 'block';
+        loopIcons[1].style.display = 'none';
+    } else {
+        loopIcons[0].style.display = 'none';
+        loopIcons[1].style.display = 'block';
+    }
+    localStorage.setItem('videoLoop', loopMode);
+}
+
+function cycleLoopMode() {
+    loopMode = (loopMode + 1) % 3;
+    updateLoopButton();
 }
 
 // ============================================================================
@@ -990,7 +1011,7 @@ document.addEventListener('keydown', event => {
             navigateToNext();
             break;
         case 'l':
-            changePlaybackMode();
+            cycleLoopMode();
             break;
         case 'm':
             toggleMuteState();

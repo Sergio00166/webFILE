@@ -6,24 +6,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webFILE server</title>
-    <link rel="icon" type="image/x-icon" href="/?static=ico/favicon.ico">
-    <link rel="stylesheet" href="/?static=css/index.css">
-    <script defer src="/?static=js/index.js"></script>
+    <link rel="icon" type="image/x-icon" href="/static/ico/favicon.ico">
+    <link rel="stylesheet" href="/static/css/index.css">
+    <script defer src="/static/js/index.js"></script>
   </head>
   <body>
-    <div id="loader" style="display: none;">
-      <div class="load_container">
-        <h1>PROCESSING</h1>
-        <div class="progress-bar"></div>
-        <h1 id="progress"></h1>
-      </div>
+    <div class="path-bar">
+      <button onclick="window.location.href='..'" title="Parent">
+        <img src="/static/svg/index/arrow-left-solid.svg">
+      </button>
+      <button onclick="window.location.href='/'" title="Home (H)">
+        <img src="/static/svg/index/house-chimney-solid.svg">
+      </button>
+      <pre class="path-title">{{ folder_path }}</pre>
     </div>
+    
+    <div id="loader" style="display: none;">
+      <h1>PROCESSING</h1>
+      <div class="progress-bar"></div>
+      <h1 id="progress"></h1>
+    </div>
+
     <div id="main-container">
       <div id="sidebar">
         <div class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
-          <img src="/?static=svg/index/three-dots-vertical.svg">
+          <img src="/static/svg/index/three-dots-vertical.svg">
         </div>
         <div class="sidebar-content">
+          <div>
+            <h3>ACCOUNT</h3>
+            {%- set username = session['user'] if 'user' in session else 'Not logged in' -%}
+            <button onclick="alert('{{ username }}')" title="Show username">👤 User</button>
+          {% if 'user' in session %}
+            <button id="login" onclick="setUrlKey('logout')" title="(L)">🚪 Logout</button>
+          {% else %}
+            <button id="login" onclick="setUrlKey('login')" title="(L)">🔑 Login</button>
+          {% endif %}
+          </div>
           <div>
             <h3>SORT</h3>
             {%- set sort_name = ('nd', '⬆️') if sort == 'np' else ('np', '⬇️') if sort == 'nd' else ('np', '◻️') -%}
@@ -35,53 +54,34 @@
           </div>
           <div>
             <h3>SELECTION</h3>
-            <button id="selectBtn" onclick="toggleSelectMode()" title="(s)">✅ Enable</button>
-            <button id="invertBtn" onclick="invertSelection()" title="(a)" disabled>🔄 Invert</button>
-            <button onclick="executeDownloads()" title="(d)">📥 Download</button>
+            <button id="selectBtn" onclick="toggleSelectMode()" title="(S)">✅ Enable</button>
+            <button id="invertBtn" onclick="invertSelection()" title="(A)" disabled>🔄 Invert</button>
+            <button onclick="executeDownloads()" title="(D)">📥 Download</button>
           </div>
           <div>
             <h3>UPLOAD</h3>
-            <button onclick="openFileUploadMenu()" title="(u)">📤 Files</button>
-            <button onclick="openFileUploadMenu(true)" title="(⇧u)">📤 Folder</button>
+            <button onclick="openFileUploadMenu()" title="(U)">📤 Files</button>
+            <button onclick="openFileUploadMenu(true)" title="(⇧U)">📤 Folder</button>
           </div>
           <div>
             <h3>ACTIONS</h3>
-            <button onclick="createDirectory()" title="(m)">📁 New Dir</button>
-            <button id="renBtn" onclick="renameSelectedFiles()" title="(r)" disabled>✏️ Rename</button>
+            <button onclick="createDirectory()" title="(M)">📁 New Dir</button>
+            <button id="renBtn" onclick="renameSelectedFiles()" title="(R)" disabled>✏️ Rename</button>
             <button id="delBtn" onclick="executeDeletes()" title="(Del)" disabled>🗑️ Delete</button>
           </div>
           <div>
             <h3>MANAGE</h3>
-            <button id="copyBtn" onclick="copySelectedFiles()" title="(c)" disabled>📋 Copy</button>
-            <button id="moveBtn" onclick="moveSelectedFiles()" title="(x)" disabled>✂️ Cut</button>
-            <button onclick="pasteFiles()" title="(v)">📋 Paste</button>
-          </div>
-          <div>
-            <h3>ACCOUNT</h3>
-          {%- if 'user' in session %}
-            <button id="login" onclick="setUrlKey('logout')" title="(l)">🚪 Logout</button>
-          {%- else %}
-            <button id="login" onclick="setUrlKey('login')" title="(l)">🔑 Login</button>
-          {%- endif %}
+            <button id="copyBtn" onclick="copySelectedFiles()" title="(C)" disabled>📋 Copy</button>
+            <button id="moveBtn" onclick="moveSelectedFiles()" title="(X)" disabled>✂️ Cut</button>
+            <button onclick="pasteFiles()" title="(V)">📋 Paste</button>
           </div>
         </div>
       </div>
-      <div class="content-area">
-        <div class="path-bar">
-          <button onclick="window.location.href='..'" title="Parent">
-            <img src="/?static=svg/index/arrow-left-solid.svg">
-          </button>
-          <button onclick="window.location.href='/'" title="Home (h)">
-            <img src="/?static=svg/index/house-chimney-solid.svg">
-          </button>
-          <pre class="path-title">{{ folder_path }}</pre>
-        </div>
-        <div id="list-group">
-          {%- from "macros.j2" import render_item %}
-          {%- for item in folder_content %}
-            {{ render_item(item) }}
-          {%- endfor %}
-        </div>
+      <div id="list-group">
+        {%- from "macros.j2" import render_item %}
+        {%- for item in folder_content %}
+          {{ render_item(item) }}
+        {%- endfor %}
       </div>
     </div>
   </body>
