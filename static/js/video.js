@@ -520,7 +520,7 @@ function showTimelineHover(clientX) {
         hoverInfo.innerHTML = timeString;
 
     hoverInfo.style.display = 'block';
-    hoverInfo.style.bottom = `${height + 8}px`;
+    hoverInfo.style.bottom = `${height + 10}px`;
 
     const barRect = seekBar.getBoundingClientRect();
     const tooltipWidth = hoverInfo.offsetWidth;

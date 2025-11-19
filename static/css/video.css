@@ -94,7 +94,7 @@ video::-moz-media-controls { display: none !important; }
     padding: 4px 6px;
     border-radius: 6px;
     line-height: 1;
-    font-size: 12px;
+    font-size: 13px;
     box-shadow: none;
 }
 .btn-controls {
@@ -149,6 +149,7 @@ button img {
     justify-content: center;
     transition: all 0.3s;
     box-shadow: none;
+    line-height: 1;
 }
 #main-state.show {
     opacity: 0.9;
@@ -243,7 +244,7 @@ button img {
     max-width: min(150px, 40vw);
     padding: 6px 8px;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
     z-index: 1;
@@ -345,6 +346,7 @@ button img {
     border-radius: 12px;
     white-space: nowrap;
     display: flex;
+    font-size: 14px;
     justify-content: flex-start;
 }
 .menu-content {
@@ -366,10 +368,10 @@ button img {
 #main-menu > button > span:last-of-type {
     flex: 1;
     padding-right: 1px;
-    font-size: 12px;
     color: #bfd;
     font-style: italic;
     margin-left: 24px;
+    font-size: 12px;
     text-align: right;
     overflow: hidden;
     white-space: nowrap;
@@ -401,7 +403,7 @@ button img {
  * ------------------------- */
 
 #seek-bar::before, .glass {
-    background-color: #222A;
+    background-color: #222B;
     box-shadow: 0 0 2px #FFFA;
 }
 @supports (backdrop-filter: blur(4px)) {
