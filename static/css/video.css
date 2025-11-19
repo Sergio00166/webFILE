@@ -84,18 +84,16 @@ video::-moz-media-controls { display: none !important; }
  * ------------------------- */
 
 .time-container {
-    gap: 2px;
+    gap: 6px;
     left: 50%;
     display: flex;
-    position: absolute;
-    transform: translateX(-50%);
-}
-.time-container > span {
-    padding: 4px 6px;
-    border-radius: 6px;
     line-height: 1;
     font-size: 13px;
-    box-shadow: none;
+    padding: 4px 6px;
+    border-radius: 6px;
+    position: absolute;
+    transform: translateX(-50%);
+    box-shadow: none !important;
 }
 .btn-controls {
     margin-top: 4px;
@@ -420,14 +418,14 @@ button img {
  *   filter and layers.
  * ------------------------- */
 
- #controls .time-container > span,
+ #controls .time-container,
  #controls #seek-bar::before,
  #controls #seek-bar > *,
  #controls button.glass {
      opacity: 0;
      transition: opacity 0.3s;
 }
- #controls.show .time-container > span,
+ #controls.show .time-container,
  #controls.show #seek-bar::before,
  #controls.show #seek-bar > *,
  #controls.show button.glass {
