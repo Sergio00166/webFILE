@@ -1,4 +1,5 @@
 # Code by Sergio00166
+TTL = 1 * 60 * 60
 
 from json import dumps as jsdumps, loads as jsloads
 from redis import Redis, ConnectionPool
@@ -57,8 +58,8 @@ class SelectiveRedisCache:
                     return loads(cached_blob)
 
                 result = func(*args, **kwargs)
-                redis.set(cache_key, dumps(result))
-                redis.set(inv_key, jsdumps(inv_values))
+                redis.set(cache_key, dumps(result), ex=TTL)
+                redis.set(inv_key, jsdumps(inv_values), ex=TTL)
                 return result
 
             return wrapper
