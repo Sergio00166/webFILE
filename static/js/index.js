@@ -26,7 +26,7 @@ const loader = document.getElementById('loader');
 const mainContainer = document.getElementById('main-container');
 const listGroup = document.getElementById('list-group');
 const loginButton = document.getElementById('login');
-const pathBar = document.querySelector('.path-bar');
+const pathBar = document.getElementById('path-bar');
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
