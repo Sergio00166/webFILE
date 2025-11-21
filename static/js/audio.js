@@ -517,7 +517,7 @@ seekBar.addEventListener('touchstart', event => {
     setupTouchDrag(moveEvent => updateAudioTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
-},{ passive: true }));
+},{ passive: true });
 
 document.addEventListener('touchstart', ()=>{
     isTouchHoverActive = true;
