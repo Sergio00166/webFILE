@@ -1,6 +1,6 @@
 # Code by Sergio00166
 
-from os.path import exists, isfile, basename, stat
+from os.path import exists, isfile, basename
 from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
 from shutil import which as find_proc
@@ -8,6 +8,7 @@ from json import loads as jsload
 from json import dumps as jsdump
 from cache import setup_cache
 from flask import Response
+from os import stat
 
 cache = setup_cache()
 is_ffmpeg_available = False
