@@ -1,7 +1,5 @@
 /* Code by Sergio00166 */
 
-const minmax = (val, low, top) => Math.min(Math.max(val, low), top);
-
 // ============================================================================
 // CONSTANTS & CONFIGURATION
 // ============================================================================
@@ -397,13 +395,6 @@ function saveVolumeToStorage() {
 function updateVolumeSlider() {
     const volumePercent = volumeSlider.value * 100;
     volumeSlider.style.background = `linear-gradient(to right, #007aff ${volumePercent}%, #e1e1e1 ${volumePercent}%)`;
-}
-
-function handleVolumeChange(event) {
-    video.volume = event.target.value;
-    updateVolumeSlider();
-    saveVolumeToStorage();
-    updateVolumeIcon();
 }
 
 // ============================================================================
@@ -823,6 +814,7 @@ window.addEventListener('fullscreenchange', scaleVideoToFit);
 
 video.addEventListener('play', playVideo);
 video.addEventListener('pause', pauseVideo);
+
 video.addEventListener('waiting', ()=>{
     loadingSpinner.style.display = 'block';
 });
@@ -889,7 +881,13 @@ volumeControl.addEventListener('mouseleave', ()=>{
     volumeSlider.classList.remove('show');
 });
 
-volumeSlider.addEventListener('input', handleVolumeChange);
+volumeSlider.addEventListener('input', event => {
+    video.volume = event.target.value;
+    updateVolumeSlider();
+    saveVolumeToStorage();
+    updateVolumeIcon();
+});
+
 volumeSlider.addEventListener('keydown', e => e.preventDefault());
 
 // ============================================================================
@@ -920,7 +918,9 @@ document.querySelectorAll('.back-button').forEach(button => {
 // ============================================================================
 
 seekBar.addEventListener('mousedown', event => {
-    setupMouseDrag(moveEvent => updateVideoTime(getTimelinePosition(moveEvent.clientX).percentage));
+    setupMouseDrag(moveEvent => updateVideoTime(
+        getTimelinePosition(moveEvent.clientX).percentage)
+    );
 });
 
 seekBar.addEventListener('touchstart', event => {
@@ -934,6 +934,10 @@ document.addEventListener('touchstart', ()=>{
     clearTimelineHover();
 },{ passive: true });
 
+seekBar.addEventListener('click', event => {
+    updateVideoTime(getTimelinePosition(event.clientX).percentage);
+});
+
 seekBar.addEventListener('mousemove', event => {
     if (!touchHoverActive) showTimelineHover(event.clientX);
 });
@@ -941,10 +945,6 @@ seekBar.addEventListener('mousemove', event => {
 seekBar.addEventListener('mouseleave', ()=>{
     touchHoverActive = false;
     clearTimelineHover();
-});
-
-seekBar.addEventListener('click', event => {
-    updateVideoTime(getTimelinePosition(event.clientX).percentage);
 });
 
 // ============================================================================
@@ -995,9 +995,8 @@ document.addEventListener('keydown', event => {
 
         case 'arrowdown': delta -= 2;
         case 'arrowup':
-            video.volume = minmax(
-                video.volume + (delta * 0.02), 0, 1
-            );
+            const tmp = video.volume + (delta * 0.02);
+            video.volume = Math.min(Math.max(tmp, 0), 1);
             handleVolumeKeyboardChange();
             break;
 

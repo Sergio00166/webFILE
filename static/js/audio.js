@@ -1,7 +1,5 @@
 /* Code by Sergio00166 */
 
-const minmax = (val, low, top) => Math.min(Math.max(val, low), top);
-
 // ============================================================================
 // DOM ELEMENTS - AUDIO PLAYER
 // ============================================================================
@@ -91,6 +89,10 @@ function waitForAudioReady() {
     audio.addEventListener('timeupdate', updateSeekBar);
 }
 
+function updateSpeed() {
+    speedButton.textContent = speedValues[speedIndex] + 'x';
+}
+
 // ============================================================================
 // LOOP MODE MANAGEMENT
 // ============================================================================
@@ -132,55 +134,6 @@ function toggleShuffleMode() {
     isShuffled = !isShuffled;
     localStorage.setItem('audioShuffle', JSON.stringify(isShuffled));
     updateShuffleButton();
-}
-
-// ============================================================================
-// PLAYBACK SPEED MANAGEMENT
-// ============================================================================
-
-function updateSpeed() {
-    speedButton.textContent = speedValues[speedIndex] + 'x';
-}
-
-function changePlaybackSpeed() {
-    speedIndex = (speedIndex + 1) % speedValues.length;
-    audio.playbackRate = speedValues[speedIndex];
-    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
-    updateSpeed();
-}
-
-function handleSpeedWheel(event) {
-    event.preventDefault();
-    
-    if (event.deltaY < 0 && speedIndex < speedValues.length - 1)
-        speedIndex++;
-    else if (event.deltaY > 0 && speedIndex > 0)
-        speedIndex--;
-
-    audio.playbackRate = speedValues[speedIndex];
-    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
-    updateSpeed();
-}
-
-function handleSpeedTouchStart(event) {
-    event.preventDefault();
-    speedButtonStartY = event.touches[0].clientY;
-}
-
-function handleSpeedTouchEnd(event) {
-    const speedButtonEndY = event.changedTouches[0].clientY;
-    const speedButtonDeltaY = speedButtonEndY - speedButtonStartY;
-
-    if (speedButtonDeltaY > 10 && speedIndex < speedValues.length - 1)
-        speedIndex++;
-    else if (speedButtonDeltaY < -10 && speedIndex > 0)
-        speedIndex--;
-    else if (Math.abs(speedButtonDeltaY) < 10)
-        speedButton.click();
-
-    audio.playbackRate = speedValues[speedIndex];
-    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
-    updateSpeed();
 }
 
 // ============================================================================
@@ -446,9 +399,8 @@ document.addEventListener('keydown', event => {
 
         case 'arrowdown': delta -= 2;
         case 'arrowup':
-            audio.volume = minmax(
-                audio.volume + (delta * 0.02), 0, 1
-            );
+            const tmp = audio.volume + (delta * 0.02);
+            audio.volume = Math.min(Math.max(tmp, 0), 1);
             handleVolumeKeyboardChange();
             break;
 
@@ -484,24 +436,61 @@ function setupMediaSession() {
 }
 
 // ============================================================================
-// EVENT LISTENERS - AUDIO ELEMENT
+// EVENT LISTENERS - BASE
 // ============================================================================
 
 audio.addEventListener('ended', handleAudioEnded);
 audio.addEventListener('play', playAudio);
 audio.addEventListener('pause', pauseAudio);
 
-// ============================================================================
-// EVENT LISTENERS - CONTROLS
-// ============================================================================
-
 volumeSlider.addEventListener('input', handleVolumeChange);
 volumeSlider.addEventListener('keydown', e => e.preventDefault());
 
-speedButton.addEventListener('click', changePlaybackSpeed);
-speedButton.addEventListener('wheel', handleSpeedWheel, { passive: false });
-speedButton.addEventListener('touchstart', handleSpeedTouchStart, { passive: false });
-speedButton.addEventListener('touchend', handleSpeedTouchEnd);
+// ============================================================================
+// EVENT LISTENERS - SPEED
+// ============================================================================
+
+speedButton.addEventListener('click', ()=>{
+    speedIndex = (speedIndex + 1) % speedValues.length;
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
+    updateSpeed();
+});
+
+speedButton.addEventListener('touchstart', event => {
+    event.preventDefault();
+    speedButtonStartY = event.touches[0].clientY;
+}, { passive: false });
+
+speedButton.addEventListener('touchend', event => {
+    const speedButtonEndY = event.changedTouches[0].clientY;
+    const speedButtonDeltaY = speedButtonEndY - speedButtonStartY;
+
+    if (speedButtonDeltaY > 10 && speedIndex < speedValues.length - 1)
+        speedIndex++;
+    else if (speedButtonDeltaY < -10 && speedIndex > 0)
+        speedIndex--;
+    else if (Math.abs(speedButtonDeltaY) < 10)
+        speedButton.click();
+
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
+    updateSpeed();
+});
+
+speedButton.addEventListener('wheel', event => {
+    event.preventDefault();
+    
+    if (event.deltaY < 0 && speedIndex < speedValues.length - 1)
+        speedIndex++;
+    else if (event.deltaY > 0 && speedIndex > 0)
+        speedIndex--;
+
+    audio.playbackRate = speedValues[speedIndex];
+    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
+    updateSpeed();
+
+}, { passive: false });
 
 // ============================================================================
 // EVENT LISTENERS - TIMELINE
