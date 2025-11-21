@@ -42,9 +42,7 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
 
         else:
             encache = "cache" in request.args
-            if file_type in ("text", "source"):
-                mime = None if encache else "text/plain"
-
+            mime = None if encache or file_type in ("text", "source") else "text/plain"
             return send_file(path, mimetype=mime, cache=encache)
 
     else:
