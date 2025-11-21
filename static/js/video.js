@@ -927,7 +927,7 @@ seekBar.addEventListener('touchstart', event => {
     setupTouchDrag(moveEvent => updateVideoTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
-});
+},{ passive: true });
 
 document.addEventListener('touchstart', ()=>{
     touchHoverActive = true;

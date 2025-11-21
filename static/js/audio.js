@@ -499,7 +499,7 @@ volumeSlider.addEventListener('input', handleVolumeChange);
 volumeSlider.addEventListener('keydown', e => e.preventDefault());
 
 speedButton.addEventListener('click', changePlaybackSpeed);
-speedButton.addEventListener('wheel', handleSpeedWheel);
+speedButton.addEventListener('wheel', handleSpeedWheel, { passive: false });
 speedButton.addEventListener('touchstart', handleSpeedTouchStart, { passive: false });
 speedButton.addEventListener('touchend', handleSpeedTouchEnd);
 
@@ -517,7 +517,7 @@ seekBar.addEventListener('touchstart', event => {
     setupTouchDrag(moveEvent => updateAudioTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
-});
+},{ passive: true }));
 
 document.addEventListener('touchstart', ()=>{
     isTouchHoverActive = true;
