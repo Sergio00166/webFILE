@@ -1,8 +1,8 @@
 # Code by Sergio00166
 
+from os.path import exists, isdir, relpath, dirname, join
 from functions import validate_acl, safe_path, printerr
 from shutil import move as sh_move, copy as sh_copy
-from os.path import exists, isdir, relpath, dirname
 from os import sep, remove, walk, mkdir as os_mkdir
 from shutil import rmtree, copytree, copyfileobj
 from os import access, R_OK, W_OK
@@ -18,7 +18,7 @@ def check_recursive(path, ACL, root, write=False):
     mode = W_OK if write else R_OK
     for fulldir, _, files in walk(path):
         for item in files:
-            item_path = fulldir+sep+item
+            item_path = join(fulldir, item)
 
             if access(item_path, mode):
                 item_path = relpath(item_path, start=root)
@@ -33,7 +33,7 @@ def check_rec_chg_parent(path, ACL, root, new_parent):
     new_parent = new_parent.split("/")
     for fulldir, _, files in walk(path):
         for item in files:
-            item_path = relpath(fulldir+sep+item, start=root).replace(sep, "/")
+            item_path = relpath(join(fulldir, item), start=root).replace(sep, "/")
             item_path = "/".join(new_parent + item_path.split("/")[parent:])
             validate_acl(item_path, ACL, True)
 
