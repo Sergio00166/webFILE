@@ -1,5 +1,4 @@
 # Code by Sergio00166
-TTL = 1 * 60 * 60
 
 from json import dumps as jsdumps, loads as jsloads
 from redis import Redis, ConnectionPool
@@ -9,8 +8,7 @@ from functools import wraps
 from hashlib import sha256
 from redis import Redis
 
-# Connect to Redis server. DB0 is used for sessions
-def setup_cache(host="127.0.0.1", port=6379, db=1):
+def setup_cache(db, ttl, host="127.0.0.1", port=6379):
     pool = ConnectionPool(host=host, port=port, db=db)
     redis_client = Redis(connection_pool=pool)
     return SelectiveRedisCache(redis_client)
@@ -25,7 +23,7 @@ class SelectiveRedisCache:
             cls._instance.redis = redis_client
         return cls._instance
 
-    def cached(self, *invalidators):
+    def cached(self, *invalidators, TTL):
         invalidators = set(invalidators)
 
         def decorator(func):

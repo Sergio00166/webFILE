@@ -10,8 +10,10 @@ from cache import setup_cache
 from flask import Response
 from os import stat
 
-cache = setup_cache()
+cache = setup_cache(1)
+cache_TTL = 1*60*60 # 1h
 is_ffmpeg_available = False
+
 
 def check_ffmpeg_installed():
     global is_ffmpeg_available
@@ -25,7 +27,7 @@ def external_subs(file):
     return sname if cond else file
 
 
-@cache.cached("inode","size","mtime")
+@cache.cached("inode","size","mtime",TTL=cache_TTL)
 def ffmpeg_get_chapters(file_path, inode, size, mtime):
     ffprobe_output = jsload( run([
         "ffprobe", "-v", "quiet", "-show_entries",
@@ -40,7 +42,7 @@ def ffmpeg_get_chapters(file_path, inode, size, mtime):
     except: return ""
 
 
-@cache.cached("inode","size","mtime")
+@cache.cached("inode","size","mtime",TTL=cache_TTL)
 def ffmpeg_get_tracks(file_path, inode, size, mtime):
     # This is to get all the subtitles name or language
     ffprobe_output = jsload( run([
@@ -64,7 +66,7 @@ def ffmpeg_get_tracks(file_path, inode, size, mtime):
     return jsdump(subtitles_list)
 
 
-@cache.cached("inode","size","mtime")
+@cache.cached("inode","size","mtime",TTL=cache_TTL)
 def ffmpeg_get_subs(file, index, legacy, inode, size, mtime):
     if legacy:
         ass2vtt = get_codec(file,index)=="ass"

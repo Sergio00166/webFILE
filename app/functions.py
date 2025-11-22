@@ -5,6 +5,7 @@ from os.path import commonpath, abspath
 from os import sep, access, R_OK, scandir, stat
 from datetime import datetime as dt
 from json import load as jsload
+from cache import setup_cache
 from flask import session
 from pathlib import Path
 from sys import stderr
@@ -13,6 +14,9 @@ if sep == chr(92): import ctypes
 else: from os import statvfs
 
 is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
+
+cache = setup_cache(2)
+cache_TTL = 1*60*60 # 1h
 
 
 """ Global functions """
@@ -111,7 +115,7 @@ def printerr(e, log_path, override_msg=None):
 
 def get_disk_stat(path):
     if sep == chr(92):
-        size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
+        total, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
         ctypes.windll.kernel32.GetDiskFreeSpaceExW(
             path, None, ctypes.byref(total), ctypes.byref(free)
         )
@@ -124,7 +128,8 @@ def get_disk_stat(path):
     return {"size": size, "free": free, "used": size-free}  
 
 
-def get_dir_size(root):
+@cache.cached("disk_free",TTL=cache_TTL)
+def size_traversal(root, disk_free):
     try: root_dev = stat(root).st_dev
     except: return 0
 
@@ -140,5 +145,10 @@ def get_dir_size(root):
                     stack.append(e.path)
             except: pass
     return total
+
+# Just to cache the function
+def get_dir_size(path):
+    disk_free = get_disk_stat(path)["free"]
+    return size_traversal(path, disk_free)
 
  

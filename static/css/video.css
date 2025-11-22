@@ -245,6 +245,7 @@ button img {
     font-size: 14px;
     font-weight: bold;
     text-align: center;
+    line-height: 1.2;
     z-index: 1;
 }
 
