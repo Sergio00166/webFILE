@@ -115,11 +115,11 @@ def printerr(e, log_path, override_msg=None):
 
 def get_disk_stat(path):
     if sep == chr(92):
-        total, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
+        size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
         ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-            path, None, ctypes.byref(total), ctypes.byref(free)
+            path, None, ctypes.byref(size), ctypes.byref(free)
         )
-        total, free = total.value, free.value
+        size, free = size.value, free.value
     else:
         st = statvfs(path)
         size = st.f_frsize * st.f_blocks
@@ -128,27 +128,37 @@ def get_disk_stat(path):
     return {"size": size, "free": free, "used": size-free}  
 
 
-@cache.cached("disk_free",TTL=cache_TTL)
-def size_traversal(root, disk_free):
-    try: root_dev = stat(root).st_dev
-    except: return 0
-
+@cache.cached("dskSize", "dskFree", TTL=cache_TTL)
+def size_traversal(root, dskSize, dskFree):
+    root_dev = stat(root).st_dev
     total, stack = 0, [root]
+
     while stack:
         path = stack.pop()
-        for e in scandir(path):
+        try: dir_ls = scandir(path)
+        except: continue
+
+        for e in dir_ls:
             try:
                 st = e.stat()
-                if e.is_file():
-                    total += st.st_size
-                elif e.is_dir() and st.st_dev == root_dev:
-                    stack.append(e.path)
-            except: pass
+                if st.st_dev == 0:
+                    st = stat(e.path)
+            except: continue
+
+            if e.is_file(): total += st.st_size
+            elif e.is_dir() and st.st_dev == root_dev:
+                stack.append(e.path)
+
     return total
+
 
 # Just to cache the function
 def get_dir_size(path):
-    disk_free = get_disk_stat(path)["free"]
-    return size_traversal(path, disk_free)
+    diskInfo = get_disk_stat(path)
+    return size_traversal(
+        path,
+        diskInfo["size"],
+        diskInfo["free"]
+    )
 
  

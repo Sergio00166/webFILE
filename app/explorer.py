@@ -1,11 +1,11 @@
 # Code by Sergio00166
 
 from functions import validate_acl, get_disk_stat, get_dir_size
-from os.path import join, isdir, relpath, getsize, getmtime
+from os.path import join, relpath, getsize, getmtime
 from datetime import datetime as dt
 from json import load as jsload
 from sys import path as pypath
-from os import sep, listdir
+from os import sep, scandir
 from pathlib import Path
 
 # Load database of file type and extensions
@@ -21,8 +21,8 @@ boms = ( b"\xef\xbb\xbf", b"\xff\xfe", b"\xfe\xff", b"\xff\xfe\x00\x00", b"\x00\
 def get_folder_content(folder_path, root, folder_size, ACL):
     dirs, files, content = [], [], []
 
-    for x in sorted(listdir(folder_path)):
-        (dirs if isdir(join(folder_path, x)) else files).append(x)
+    for entry in sorted(scandir(folder_path), key=lambda e: e.name):
+        (dirs if entry.is_dir() else files).append(entry.name)
 
     for item in dirs + files:
         data = {}
@@ -56,9 +56,7 @@ def sort_contents(folder_content, sort, root):
     dirs, files = [], []
 
     for x in folder_content:
-        path = join(root, x["path"].replace("/", sep))
-        if isdir(path): dirs.append(x)
-        else:          files.append(x)
+        (dirs if x["type"] in {"disk", "directory"} else files).append(x)
 
     if sort[0] in ["s", "d"]:
         if sort[0] == "d":
@@ -75,12 +73,11 @@ def sort_contents(folder_content, sort, root):
 def get_file_type(path):
     item = Path(path)
     if item.is_mount(): return "disk"
-    if isdir(path):     return "directory"
+    if item.is_dir():   return "directory"
 
     file_type = file_type_map.get(item.suffix)
     if file_type:       return file_type
     return "file" if is_binary(path) else "text"
-
 
 
 def humanize_all(data):
