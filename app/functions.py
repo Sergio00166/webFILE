@@ -1,7 +1,7 @@
 # Code by Sergio00166
 
 from os.path import exists, normpath, dirname
-from os.path import commonpath, abspath, join
+from os.path import commonpath, abspath
 from os import sep, access, R_OK, scandir, stat
 from datetime import datetime as dt
 from json import load as jsload
@@ -25,7 +25,7 @@ cache_TTL = 1*60*60 # 1h
 # else raise an exception depending on the case
 def safe_path(path, root, igntf=False):
     path = path.replace("/", sep)
-    path = abspath(join(root,path))
+    path = abspath(root + sep + path)
 
     if is_subdirectory(root, path):
         if igntf:
