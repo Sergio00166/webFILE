@@ -8,7 +8,7 @@ from functools import wraps
 from hashlib import sha256
 from redis import Redis
 
-def setup_cache(db, ttl, host="127.0.0.1", port=6379):
+def setup_cache(db, host="127.0.0.1", port=6379):
     pool = ConnectionPool(host=host, port=port, db=db)
     redis_client = Redis(connection_pool=pool)
     return SelectiveRedisCache(redis_client)
