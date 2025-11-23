@@ -1,6 +1,6 @@
 # Code by Sergio00166
 
-from os.path import getsize,getmtime,exists,isfile,basename
+from os.path import exists, isfile, basename
 from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
 from shutil import which as find_proc
@@ -8,9 +8,12 @@ from json import loads as jsload
 from json import dumps as jsdump
 from cache import setup_cache
 from flask import Response
+from os import stat
 
-cache = setup_cache()
+cache = setup_cache(1)
+cache_TTL = 60*60 # 1h
 is_ffmpeg_available = False
+
 
 def check_ffmpeg_installed():
     global is_ffmpeg_available
@@ -24,8 +27,8 @@ def external_subs(file):
     return sname if cond else file
 
 
-@cache.cached("sz","mt")
-def ffmpeg_get_chapters(file_path,sz,mt):
+@cache.cached("inode","size","mtime",TTL=cache_TTL)
+def ffmpeg_get_chapters(file_path, inode, size, mtime):
     ffprobe_output = jsload( run([
         "ffprobe", "-v", "quiet", "-show_entries",
         "chapters",  "-of", "json", file_path
@@ -39,8 +42,8 @@ def ffmpeg_get_chapters(file_path,sz,mt):
     except: return ""
 
 
-@cache.cached("sz","mt")
-def ffmpeg_get_tracks(file_path,sz,mt):
+@cache.cached("inode","size","mtime",TTL=cache_TTL)
+def ffmpeg_get_tracks(file_path, inode, size, mtime):
     # This is to get all the subtitles name or language
     ffprobe_output = jsload( run([
         "ffprobe", "-v", "quiet", "-select_streams",
@@ -63,8 +66,8 @@ def ffmpeg_get_tracks(file_path,sz,mt):
     return jsdump(subtitles_list)
 
 
-@cache.cached("sz","mt")
-def ffmpeg_get_subs(file,index,legacy,sz,mt):
+@cache.cached("inode","size","mtime",TTL=cache_TTL)
+def ffmpeg_get_subs(file, index, legacy, inode, size, mtime):
     if legacy:
         ass2vtt = get_codec(file,index)=="ass"
         codec = "ass" if ass2vtt else "webvtt"
@@ -86,12 +89,14 @@ def ffmpeg_get_subs(file,index,legacy,sz,mt):
 
 def get_tracks(file):
     file = external_subs(file)
-    sz,mt = getsize(file), getmtime(file)
-    return ffmpeg_get_tracks(file,sz,mt)
+    st = stat(file)
+    inode = getattr(st, "st_ino", None) or 0
+    return ffmpeg_get_tracks(file, inode, st.st_size, st.st_mtime)
 
 def get_chapters(file):
-    sz,mt = getsize(file), getmtime(file)
-    return ffmpeg_get_chapters(file,sz,mt)
+    st = stat(file)
+    inode = getattr(st, "st_ino", None) or 0
+    return ffmpeg_get_chapters(file, inode, st.st_size, st.st_mtime)
 
 
 def get_codec(source,index):
@@ -107,15 +112,19 @@ def get_codec(source,index):
 def get_subtitles(index,file,legacy):
     # Set invalidator and call it
     file = external_subs(file)
-    sz,mt = getsize(file),getmtime(file)
-    args = (file,index,legacy,sz,mt)
-    out = ffmpeg_get_subs(*args)
-    # Get filename and for downloading the subtitles
+    st = stat(file)
+    inode = getattr(st, "st_ino", None) or 0
+
+    out = ffmpeg_get_subs(
+        file, index, legacy,
+        inode, st.st_size, st.st_mtime
+    )
     subsname = basename(file)+f".track{str(index)}."
     subsname += "vtt" if legacy else "ssa"
+
     mime = "text/vtt" if legacy else "application/x-substation-alpha"
     headers = {"Content-Disposition": "attachment;filename="+subsname}
-    # Return the subtittle track with the right mime
+
     return Response(out, mimetype=mime, headers=headers)
 
  

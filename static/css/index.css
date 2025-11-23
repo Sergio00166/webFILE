@@ -172,7 +172,7 @@ button {
  *   Path bar
  * ------------------------- */
 
-.path-bar {
+#path-bar {
     display: flex;
     align-items: center;
     background: #222;
@@ -180,15 +180,15 @@ button {
     padding: 6px 16px 6px 12px;
     gap: 10px;
 }
-.path-bar button {
+#path-bar button {
     height: 20px;
     width: 20px;
 }
-.path-bar button img {
+#path-bar button img {
     width: auto;
     height: 100%;
 }
-.path-title {
+#path-bar pre {
     flex: 1;
     font-weight: 600;
     font-family: monospace;

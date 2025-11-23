@@ -16,7 +16,7 @@ def redirect_no_query(query):
 
     new_url = urlunparse((
         "", "",
-        parsed_url.path, 
+        parsed_url.path,
         parsed_url.params,
         urlencode(filtered_params).replace("=&","&").removesuffix("="),
         parsed_url.fragment
@@ -29,8 +29,8 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
     folder, name = dirname(file_path), basename(path)
 
     content = get_folder_content(folder, root, False, ACL)
+    content = sort_contents(content, "np", root) #Alphanumerical
     files = [x["path"] for x in content if x["type"] == filetype]
-
     try:
         next = files[files.index(path) + 1]
     except:
@@ -102,7 +102,7 @@ def video_info(path):
         if (legacy := mode.endswith("legacy")):
             mode = mode[: mode.find("legacy")]
 
-        if not mode.isnumeric(): raise FileNotFoundError 
+        if not mode.isnumeric(): raise FileNotFoundError
         return get_subtitles(int(mode), path, legacy)
 
     if "chapters" in request.args: return get_chapters(path);

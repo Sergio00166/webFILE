@@ -1,7 +1,5 @@
 /* Code by Sergio00166 */
 
-const minmax = (val, low, top) => Math.min(Math.max(val, low), top);
-
 // ============================================================================
 // CONSTANTS & CONFIGURATION
 // ============================================================================
@@ -399,13 +397,6 @@ function updateVolumeSlider() {
     volumeSlider.style.background = `linear-gradient(to right, #007aff ${volumePercent}%, #e1e1e1 ${volumePercent}%)`;
 }
 
-function handleVolumeChange(event) {
-    video.volume = event.target.value;
-    updateVolumeSlider();
-    saveVolumeToStorage();
-    updateVolumeIcon();
-}
-
 // ============================================================================
 // CONTROLS VISIBILITY
 // ============================================================================
@@ -625,7 +616,7 @@ function loadAudioTracks() {
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
         const button = document.createElement('button');
-        
+
         const trackName = (track.label || track.language || 'Track ' + (i + 1));
         button.textContent = trackName;
         audioContent.appendChild(button);
@@ -747,17 +738,17 @@ function showSubmenu(submenuId) {
     subsSubmenu.style.display = 'none';
     audioSubmenu.style.display = 'none';
     speedSubmenu.style.display = 'none';
-    
+
     document.getElementById(submenuId).style.display = 'block';
 }
 
 function handleMenuSelection(element) {
     const submenu = element.closest('[id$="-submenu"]');
-    
+
     if (submenu) {
         const buttons = Array.from(submenu.querySelectorAll('.menu-content button'));
         const index = buttons.indexOf(element);
-        
+
         if (submenu.id === 'subs-submenu') {
             subtitleIndex = index-1;
             updateSubtitleDisplay();
@@ -823,6 +814,7 @@ window.addEventListener('fullscreenchange', scaleVideoToFit);
 
 video.addEventListener('play', playVideo);
 video.addEventListener('pause', pauseVideo);
+
 video.addEventListener('waiting', ()=>{
     loadingSpinner.style.display = 'block';
 });
@@ -889,7 +881,13 @@ volumeControl.addEventListener('mouseleave', ()=>{
     volumeSlider.classList.remove('show');
 });
 
-volumeSlider.addEventListener('input', handleVolumeChange);
+volumeSlider.addEventListener('input', event => {
+    video.volume = event.target.value;
+    updateVolumeSlider();
+    saveVolumeToStorage();
+    updateVolumeIcon();
+});
+
 volumeSlider.addEventListener('keydown', e => e.preventDefault());
 
 // ============================================================================
@@ -920,19 +918,25 @@ document.querySelectorAll('.back-button').forEach(button => {
 // ============================================================================
 
 seekBar.addEventListener('mousedown', event => {
-    setupMouseDrag(moveEvent => updateVideoTime(getTimelinePosition(moveEvent.clientX).percentage));
+    setupMouseDrag(moveEvent => updateVideoTime(
+        getTimelinePosition(moveEvent.clientX).percentage)
+    );
 });
 
 seekBar.addEventListener('touchstart', event => {
     setupTouchDrag(moveEvent => updateVideoTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
-});
+},{ passive: true });
 
 document.addEventListener('touchstart', ()=>{
     touchHoverActive = true;
     clearTimelineHover();
 },{ passive: true });
+
+seekBar.addEventListener('click', event => {
+    updateVideoTime(getTimelinePosition(event.clientX).percentage);
+});
 
 seekBar.addEventListener('mousemove', event => {
     if (!touchHoverActive) showTimelineHover(event.clientX);
@@ -941,10 +945,6 @@ seekBar.addEventListener('mousemove', event => {
 seekBar.addEventListener('mouseleave', ()=>{
     touchHoverActive = false;
     clearTimelineHover();
-});
-
-seekBar.addEventListener('click', event => {
-    updateVideoTime(getTimelinePosition(event.clientX).percentage);
 });
 
 // ============================================================================
@@ -995,9 +995,8 @@ document.addEventListener('keydown', event => {
 
         case 'arrowdown': delta -= 2;
         case 'arrowup':
-            video.volume = minmax(
-                video.volume + (delta * 0.02), 0, 1
-            );
+            const tmp = video.volume + (delta * 0.02);
+            video.volume = Math.min(Math.max(tmp, 0), 1);
             handleVolumeKeyboardChange();
             break;
 

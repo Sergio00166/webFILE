@@ -5,6 +5,7 @@ from os.path import commonpath, abspath
 from os import sep, access, R_OK, scandir, stat
 from datetime import datetime as dt
 from json import load as jsload
+from cache import setup_cache
 from flask import session
 from pathlib import Path
 from sys import stderr
@@ -14,6 +15,9 @@ else: from os import statvfs
 
 is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
 
+cache = setup_cache(2)
+cache_TTL = 60*60 # 1h
+
 
 """ Global functions """
 
@@ -21,7 +25,7 @@ is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
 # else raise an exception depending on the case
 def safe_path(path, root, igntf=False):
     path = path.replace("/", sep)
-    path = abspath(sep.join([root,path]))
+    path = abspath(root + sep + path)
 
     if is_subdirectory(root, path):
         if igntf:
@@ -30,7 +34,7 @@ def safe_path(path, root, igntf=False):
             raise FileNotFoundError
         if not access(path, R_OK):
             raise PermissionError
-    else: 
+    else:
         raise PermissionError
     return path
 
@@ -65,7 +69,7 @@ def validate_acl(path, ACL, write=False):
             perm = values["access"]
             if perm == 0: break
             if perm >= askd_perm: return
-                
+
         # Check if on top and break loop
         if path == "/": break
         # Goto parent directory
@@ -113,32 +117,48 @@ def get_disk_stat(path):
     if sep == chr(92):
         size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
         ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-            path, None, ctypes.byref(total), ctypes.byref(free)
+            path, None, ctypes.byref(size), ctypes.byref(free)
         )
-        total, free = total.value, free.value
+        size, free = size.value, free.value
     else:
         st = statvfs(path)
         size = st.f_frsize * st.f_blocks
         free = st.f_frsize * st.f_bfree
 
-    return {"size": size, "free": free, "used": size-free}  
+    return {"size": size, "free": free, "used": size-free}
 
 
-def get_dir_size(root):
-    try: root_dev = stat(root).st_dev
-    except: return 0
-
+@cache.cached("dskSize", "dskFree", TTL=cache_TTL)
+def size_traversal(root, dskSize, dskFree):
+    root_dev = stat(root).st_dev
     total, stack = 0, [root]
+
     while stack:
         path = stack.pop()
-        for e in scandir(path):
+        try: dir_ls = scandir(path)
+        except: continue
+
+        for e in dir_ls:
             try:
                 st = e.stat()
-                if e.is_file():
-                    total += st.st_size
-                elif e.is_dir() and st.st_dev == root_dev:
-                    stack.append(e.path)
-            except: pass
+                if st.st_dev == 0:
+                    st = stat(e.path)
+            except: continue
+
+            if e.is_file(): total += st.st_size
+            elif e.is_dir() and st.st_dev == root_dev:
+                stack.append(e.path)
+
     return total
+
+
+# Just to cache the function
+def get_dir_size(path):
+    diskInfo = get_disk_stat(path)
+    return size_traversal(
+        path,
+        diskInfo["size"],
+        diskInfo["free"]
+    )
 
  

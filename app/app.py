@@ -41,7 +41,7 @@ def static_files(path):
     try:
         if request.method not in ["HEAD", "GET"] or not path:
             raise PermissionError
-    
+
         path = safe_path(path,sroot)
         if not isfile(path): raise PermissionError
         return send_file( path, cache=True )

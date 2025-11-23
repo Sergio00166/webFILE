@@ -25,7 +25,6 @@ error_file  = getenv("ERRLOG_FILE" ,None)
 users_file  = getenv("USERS_FILE"  ,None)
 acl_file    = getenv("ACL_FILE"    ,None)
 folder_size = getenv("SHOW_DIRSIZE","FALSE").upper()=="TRUE"
-# MAX_CACHE is inside video.py
 
 
 if root: root = abspath(root)

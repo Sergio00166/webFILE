@@ -30,11 +30,12 @@ This service exposes a filesystem directory over HTTP, enabling:
 * **Streaming**: streaming via browser-supported formats using HTTP 206. No transcoding, no overhead.
 * **Access control** via On-memory hashmap-based ACLs (read/write/deny per resource and user).
 * Also it detects if a directory is a mount point and changes its type (and icon).
+* Fast recursive directory size calculation with custom caching system. (disabled by default)
 
 ## Multimedia Streaming
 
 * Leverages browser-native codecs only.
-* Caches metadata and subtitles to minimize `ffmpeg` calls.
+* Custom cache system for metadata and subtitles to minimize `ffmpeg` calls.
 * Switch audio tracks in-browser (requires experimental Web Platform Features).
 * SSA/ASS subtitle support via `JASSUB` on the client.
 * On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    

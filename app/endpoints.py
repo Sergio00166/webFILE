@@ -18,7 +18,6 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
     if path: validate_acl(path, ACL)
     path = safe_path(path, root)
     file_type = get_file_type(path)
-    encache = "cache" in request.args
 
     if not file_type in ["directory", "disk"]:
 
@@ -42,8 +41,8 @@ def serveFiles_page(path, ACL, root, folder_size, useApi):
             return audio(path, root, file_type, ACL)
 
         else:
-            mime = None if file_type not in ["text","source"] else\
-            "text/css" if path.endswith(".css") else "text/plain"
+            encache = "cache" in request.args
+            mime = None if encache or file_type not in ["text", "source"] else "text/plain"
             return send_file(path, mimetype=mime, cache=encache)
 
     else:

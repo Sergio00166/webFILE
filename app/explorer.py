@@ -1,11 +1,11 @@
 # Code by Sergio00166
 
 from functions import validate_acl, get_disk_stat, get_dir_size
-from os.path import join, isdir, relpath, getsize, getmtime
+from os.path import join, relpath, basename, isdir, ismount
 from datetime import datetime as dt
 from json import load as jsload
 from sys import path as pypath
-from os import sep, listdir
+from os import sep, scandir
 from pathlib import Path
 
 # Load database of file type and extensions
@@ -19,68 +19,63 @@ boms = ( b"\xef\xbb\xbf", b"\xff\xfe", b"\xfe\xff", b"\xff\xfe\x00\x00", b"\x00\
 
 
 def get_folder_content(folder_path, root, folder_size, ACL):
-    dirs, files, content = [], [], []
+    contents = []
 
-    for x in sorted(listdir(folder_path)):
-        (dirs if isdir(join(folder_path, x)) else files).append(x)
-
-    for item in dirs + files:
+    for item in scandir(folder_path):
         data = {}
         try:
-            item_path = join(folder_path, item)
-            rel_path = relpath(item_path, start=root).replace(sep, "/")
-            validate_acl(rel_path,ACL)
+            rel_path = relpath(item.path, start=root).replace(sep, "/")
+            validate_acl(rel_path, ACL)
+            st = item.stat()
 
-            data["name"] = item
-            data["path"] = rel_path
-            data["type"] = get_file_type(item_path)
-
+            data = {
+                "name":  item.name,
+                "path":  rel_path,
+                "type":  get_file_type(item.path),
+                "mtime": st.st_mtime,
+            }
             if data["type"] == "disk":
-                disk = get_disk_stat(item_path)
+                disk = get_disk_stat(item.path)
                 data["capacity"] = disk["size"]
-                data["size"] = disk["used"]
+                data["size"]     = disk["used"]
             else:
                 data["size"] = (
-                    (get_dir_size(item_path) if folder_size else 0)
-                    if data["type"] == "directory" else getsize(item_path)
+                    (get_dir_size(item.path) if folder_size else 0)
+                    if data["type"] == "directory" else st.st_size
                 )
-            try:    data["mtime"] = getmtime(item_path)
-            except: data["mtime"] = None
-                            
-            content.append(data)
+            contents.append(data)
         except: pass
-    return content
+    return contents
 
 
 def sort_contents(folder_content, sort, root):
     dirs, files = [], []
 
     for x in folder_content:
-        path = join(root, x["path"].replace("/", sep))
-        if isdir(path): dirs.append(x)
-        else:          files.append(x)
+        (dirs if x["type"] in ["disk", "directory"] else files).append(x)
 
-    if sort[0] in ["s", "d"]:
-        if sort[0] == "d":
-            key = lambda x: x["mtime"] or 0
-        if sort[0] == "s":
-            key = lambda x: x["size"]
+    key_map = {
+        "d": lambda x: x["mtime"] or 0,
+        "s": lambda x: x["size"],
+        "n": lambda x: x["name"],
+    }
+    if sort[0] in key_map:
+        key = key_map[sort[0]]
+        reverse = (sort[1] == "d")
+        dirs  = sorted(dirs,  key=key, reverse=reverse)
+        files = sorted(files, key=key, reverse=reverse)
 
-        dirs  = sorted(dirs,  key=key, reverse=True)
-        files = sorted(files, key=key, reverse=True)
-
-    return dirs[::-1]+files[::-1] if sort[1] == "d" else dirs+files
+    return dirs + files
 
 
 def get_file_type(path):
     item = Path(path)
     if item.is_mount(): return "disk"
-    if isdir(path):     return "directory"
+    if item.is_dir():   return "directory"
 
     file_type = file_type_map.get(item.suffix)
     if file_type:       return file_type
     return "file" if is_binary(path) else "text"
-
 
 
 def humanize_all(data):
@@ -94,8 +89,8 @@ def humanize_all(data):
 
 
 def readable_size(num, suffix="B"):
-    for unit in ("", "Ki", "Mi", "Gi", "Ti"):
-        if num < 1024: 
+    for unit in ["", "Ki", "Mi", "Gi", "Ti"]:
+        if num < 1024:
             return f"{num:.1f} {unit}{suffix}"
         num /= 1024
     return f"{num:.1f} Yi{suffix}"

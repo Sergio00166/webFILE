@@ -11,16 +11,16 @@
     <script defer src="/static/js/index.js"></script>
   </head>
   <body>
-    <div class="path-bar">
+    <div id="path-bar">
       <button onclick="window.location.href='..'" title="Parent">
         <img src="/static/svg/index/arrow-left-solid.svg">
       </button>
       <button onclick="window.location.href='/'" title="Home (H)">
         <img src="/static/svg/index/house-chimney-solid.svg">
       </button>
-      <pre class="path-title">{{ folder_path }}</pre>
+      <pre>{{ folder_path }}</pre>
     </div>
-    
+
     <div id="loader" style="display: none;">
       <h1>PROCESSING</h1>
       <div class="progress-bar"></div>

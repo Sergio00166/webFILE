@@ -25,9 +25,8 @@ const sidebar = document.getElementById('sidebar');
 const loader = document.getElementById('loader');
 const mainContainer = document.getElementById('main-container');
 const listGroup = document.getElementById('list-group');
-const backButton = document.getElementById('backdir');
 const loginButton = document.getElementById('login');
-const logoutButton = document.getElementById('logout');
+const pathBar = document.getElementById('path-bar');
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
@@ -63,6 +62,7 @@ function toggleSidebar() {
 
 function showLoader() {
     loader.style.display = '';
+    pathBar.style.display = 'none';
     mainContainer.style.display = 'none';
 }
 

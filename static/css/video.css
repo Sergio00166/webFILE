@@ -84,18 +84,16 @@ video::-moz-media-controls { display: none !important; }
  * ------------------------- */
 
 .time-container {
-    gap: 2px;
+    gap: 6px;
     left: 50%;
     display: flex;
-    position: absolute;
-    transform: translateX(-50%);
-}
-.time-container > span {
+    line-height: 1;
+    font-size: 13px;
     padding: 4px 6px;
     border-radius: 6px;
-    line-height: 1;
-    font-size: 12px;
-    box-shadow: none;
+    position: absolute;
+    transform: translateX(-50%);
+    box-shadow: none !important;
 }
 .btn-controls {
     margin-top: 4px;
@@ -149,6 +147,7 @@ button img {
     justify-content: center;
     transition: all 0.3s;
     box-shadow: none;
+    line-height: 1;
 }
 #main-state.show {
     opacity: 0.9;
@@ -243,9 +242,10 @@ button img {
     max-width: min(150px, 40vw);
     padding: 6px 8px;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
+    line-height: 1.2;
     z-index: 1;
 }
 
@@ -325,6 +325,7 @@ button img {
     opacity: 0;
     z-index: 1;
     right: -10px;
+    min-width: 120px;
     max-width: 240px;
     transition: opacity 0.2s;
     border-radius: 12px;
@@ -345,6 +346,7 @@ button img {
     border-radius: 12px;
     white-space: nowrap;
     display: flex;
+    font-size: 14px;
     justify-content: flex-start;
 }
 .menu-content {
@@ -353,7 +355,7 @@ button img {
 }
 #main-menu {
     max-height: min(50vh, 360px);
-    max-height: min(50dvh, 360px); 
+    max-height: min(50dvh, 360px);
 }
 #main-menu, .menu-content {
     padding: 2px;
@@ -366,10 +368,10 @@ button img {
 #main-menu > button > span:last-of-type {
     flex: 1;
     padding-right: 1px;
-    font-size: 12px;
     color: #bfd;
     font-style: italic;
     margin-left: 24px;
+    font-size: 12px;
     text-align: right;
     overflow: hidden;
     white-space: nowrap;
@@ -401,7 +403,7 @@ button img {
  * ------------------------- */
 
 #seek-bar::before, .glass {
-    background-color: #222A;
+    background-color: #222B;
     box-shadow: 0 0 2px #FFFA;
 }
 @supports (backdrop-filter: blur(4px)) {
@@ -418,14 +420,14 @@ button img {
  *   filter and layers.
  * ------------------------- */
 
- #controls .time-container > span,
+ #controls .time-container,
  #controls #seek-bar::before,
  #controls #seek-bar > *,
  #controls button.glass {
      opacity: 0;
      transition: opacity 0.3s;
 }
- #controls.show .time-container > span,
+ #controls.show .time-container,
  #controls.show #seek-bar::before,
  #controls.show #seek-bar > *,
  #controls.show button.glass {

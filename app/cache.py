@@ -8,8 +8,7 @@ from functools import wraps
 from hashlib import sha256
 from redis import Redis
 
-# Connect to Redis server. DB0 is used for sessions
-def setup_cache(host="127.0.0.1", port=6379, db=1):
+def setup_cache(db, host="127.0.0.1", port=6379):
     pool = ConnectionPool(host=host, port=port, db=db)
     redis_client = Redis(connection_pool=pool)
     return SelectiveRedisCache(redis_client)
@@ -24,7 +23,7 @@ class SelectiveRedisCache:
             cls._instance.redis = redis_client
         return cls._instance
 
-    def cached(self, *invalidators):
+    def cached(self, *invalidators, TTL):
         invalidators = set(invalidators)
 
         def decorator(func):
@@ -57,8 +56,8 @@ class SelectiveRedisCache:
                     return loads(cached_blob)
 
                 result = func(*args, **kwargs)
-                redis.set(cache_key, dumps(result))
-                redis.set(inv_key, jsdumps(inv_values))
+                redis.set(cache_key, dumps(result), ex=TTL)
+                redis.set(inv_key, jsdumps(inv_values), ex=TTL)
                 return result
 
             return wrapper
