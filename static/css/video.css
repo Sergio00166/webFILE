@@ -282,38 +282,37 @@ button img {
     cursor: pointer;
 }
 #volume-bar {
+    width: 48px;
     height: 4px;
-    outline: none;
     cursor: pointer;
     border-radius: 3px;
-    width: 0 !important;
-    visibility: hidden;
     background: #eee;
-    transition: all 0.1s;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.1s;
+    box-shadow: 0 0 3px black;
     -webkit-appearance: none;
     appearance: none;
-    box-shadow: 0 0 3px black;
+}
+#volume-bar.show {
+    transform: scaleX(1);
 }
 #volume-bar::-webkit-slider-thumb {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background: #007aff;
+    box-shadow: 0 0 3px black;
     -webkit-appearance: none;
     appearance: none;
-    box-shadow: 0 0 3px black;
 }
 #volume-bar::-moz-range-thumb {
     width: 10px;
     height: 10px;
+    border: none;
     border-radius: 50%;
     background: #007aff;
-    box-shadow: 0 0 3px black;
-}
-#volume-bar.show {
-    width: 48px !important;
-    visibility: visible;
-    transform: scaleX(1);
+    box-shadow: 0 0 3px 1px black;
 }
 
 /* -------------------------
@@ -325,7 +324,6 @@ button img {
     opacity: 0;
     z-index: 1;
     right: -10px;
-    min-width: 120px;
     max-width: 240px;
     transition: opacity 0.2s;
     border-radius: 12px;
@@ -335,6 +333,11 @@ button img {
 #setting-menu.show {
     opacity: 1;
     pointer-events: auto;
+}
+#setting-menu .back-button {
+    padding: 4px 24px 5px 8px;
+    background: #2345 !important;
+    border-radius: 12px 12px 0 0 !important;
 }
 #setting-menu button {
     background: none;
@@ -349,21 +352,17 @@ button img {
     font-size: 14px;
     justify-content: flex-start;
 }
-.menu-content {
-    max-height: calc(min(50vh, 360px) - 30px);
-    max-height: calc(min(50dvh, 360px) - 30px);
-}
-#main-menu {
-    max-height: min(50vh, 360px);
-    max-height: min(50dvh, 360px);
-}
 #main-menu, .menu-content {
     padding: 2px;
     overflow: auto;
 }
-.back-button {
-    background: #2345 !important;
-    border-radius: 12px 12px 0 0 !important;
+.menu-content {
+    max-height: calc(min(40vh, 360px) - 30px);
+    max-height: calc(min(40dvh, 360px) - 30px);
+}
+#main-menu {
+    max-height: min(40vh, 360px);
+    max-height: min(40dvh, 360px);
 }
 #main-menu > button > span:last-of-type {
     flex: 1;
@@ -455,7 +454,7 @@ button img {
         bottom: 10px;
     }
     .time-container {
-        bottom: 30px;
+        bottom: 25px;
     }
 }
 @media (max-width: 500px) {
@@ -479,34 +478,21 @@ button img {
         width: 90%;
     }
 }
-@media (max-width: 250px) {
-    #loop-btn {
-        display: none;
-    }
-}
-@media (max-width: 200px) {
-    #setting-menu,
-    #settings {
-        display: none;
-    }
-}
 
 /* -------------------------
- *   Responsive (hide)
+ *   Hide if screen too small
  * ------------------------- */
 
-@media (max-height: 200px) or (max-width: 150px) {
-    .btn-controls {
-        display: none;
+@media (max-width: 250px), (max-height:250px) {
+    body > * {
+        display: none !important;
     }
-    #seek-bar {
-        bottom: 4px;
-        height: 5px;
-    }
-}
-@media (max-height: 120px) or (max-width: 120px) {
-    #video-container {
-        display: none;
+    body::before {
+        content: "display too small";
+        margin: auto;
+        padding: 8px;
+        color: #eea;
+        text-align: center;
     }
 }
 
@@ -514,7 +500,7 @@ button img {
  *   Disable hover when touch
  * ------------------------- */
 
-@media (hover: hover) {
+@media (hover:hover) {
     #setting-menu button:hover,
     button.glass:hover {
         outline: 2px solid #fffa !important;

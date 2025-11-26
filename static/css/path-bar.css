@@ -1,0 +1,62 @@
+/* Code by Sergio00166 */
+
+#path-bar {
+    gap: 8px;
+    display: flex;
+    background: #222;
+    padding: 6px 10px;
+    border-bottom: 1px solid #333;
+    box-shadow: 0 2px 4px #0006;
+}
+#path-bar button {
+    height: 26px;
+    width: 26px;
+    background: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+}
+#path-bar button img {
+    width: 18px;
+    height: 18px;
+}
+#path-bar .path-box {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    background: #444c;
+    border-radius: 10px;
+}
+#path-text {
+    line-height: 1;
+    margin: 0 10px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: monospace;
+    text-align: left;
+    direction: rtl;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+ @media (hover:hover) {
+    #list-group > button:hover {
+        background: #2a2a2a;
+        border-color: #555;
+    }
+    .sidebar-content
+    button:not(:disabled):hover {
+        background: #444a;
+    }
+    #path-bar button:hover {
+        background: #444;
+    }
+}
+
+
+ 

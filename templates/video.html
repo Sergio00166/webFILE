@@ -16,41 +16,41 @@
         <video src="{{ request.path }}?raw" disablePictureInPicture></video>
         <canvas></canvas>
       </div>
-      <span id="custom-loader" style="display: none;"></span>
+      <span id="custom-loader" style="display: none"></span>
       <span id="main-state" class="glass">
-        <img src="/static/svg/videoplayer/play-outline.svg" style="display: none;">
-        <img src="/static/svg/videoplayer/pause-outline.svg" style="display: none;">
-        <img src="/static/svg/videoplayer/volume-mute-outline.svg" style="display: none;">
-        <img src="/static/svg/videoplayer/volume-high-outline.svg" style="display: none;">
-        <img src="/static/svg/videoplayer/chevron-back-outline.svg" style="display: none;">
-        <img src="/static/svg/videoplayer/chevron-forward-outline.svg" style="display: none;">
-        <div id="state_volume" style="display: none;"></div>
+        <img src="/static/svg/videoplayer/play-outline.svg" style="display: none">
+        <img src="/static/svg/videoplayer/pause-outline.svg" style="display: none">
+        <img src="/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
+        <img src="/static/svg/videoplayer/volume-high-outline.svg" style="display: none">
+        <img src="/static/svg/videoplayer/chevron-back-outline.svg" style="display: none">
+        <img src="/static/svg/videoplayer/chevron-forward-outline.svg" style="display: none">
+        <div id="state_volume" style="display: none"></div>
       </span>
       <div id="controls">
         <div id="seek-bar">
           <div id="progress"></div>
           <div id="hover-time">
-            <span id="hover-info" class="glass" style="display: none;"></span>
+            <span id="hover-info" class="glass" style="display: none"></span>
           </div>
           <div id="chapter-container"></div>
         </div>
         <div class="btn-controls">
           <div class="side-controls">
             <button id="play-pause" onclick="togglePlayPauseState()" class="glass" title="Play">
-              <img src="/static/svg/videoplayer/play-outline.svg" style="display: block;">
-              <img src="/static/svg/videoplayer/pause-outline.svg" style="display: none;">
+              <img src="/static/svg/videoplayer/play-outline.svg" style="display: block">
+              <img src="/static/svg/videoplayer/pause-outline.svg" style="display: none">
             </button>
             <button id="loop-btn" onclick="cycleLoopMode()" class="glass" title="Loop (L)">
-			        <img src="/static/svg/videoplayer/repeat-button.svg" style="display: block;">
-              <img src="/static/svg/videoplayer/repeat-single-button.svg" style="display: none;">
+			        <img src="/static/svg/videoplayer/repeat-button.svg" style="display: block">
+              <img src="/static/svg/videoplayer/repeat-single-button.svg" style="display: none">
 			      </button>
             <span id="volume">
               <button onclick="toggleMuteState()" class="glass" title="Mute (M)">
-                <img src="/static/svg/videoplayer/volume-mute-outline.svg" style="display: none;">
-                <img src="/static/svg/videoplayer/volume-high-outline.svg" style="display: block;">
-                <img src="/static/svg/videoplayer/volume-medium-outline.svg" style="display: none;">
-                <img src="/static/svg/videoplayer/volume-low-outline.svg" style="display: none;">
-                <img src="/static/svg/videoplayer/volume-off-outline.svg" style="display: none;">
+                <img src="/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
+                <img src="/static/svg/videoplayer/volume-high-outline.svg" style="display: block">
+                <img src="/static/svg/videoplayer/volume-medium-outline.svg" style="display: none">
+                <img src="/static/svg/videoplayer/volume-low-outline.svg" style="display: none">
+                <img src="/static/svg/videoplayer/volume-off-outline.svg" style="display: none">
               </button>
               <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
             </span>
@@ -75,38 +75,38 @@
                 <div id="main-menu">
                   <button data-submenu="subs">
                     <span>Subtitles</span>
-                    <span id="menuSubsText">None</span>
+                    <span id="menuSubsText"></span>
                   </button>
                   <button data-submenu="audio">
                     <span>Audio Track</span>
-                    <span id="menuAudioText">Default</span>
+                    <span id="menuAudioText"></span>
                   </button>
                   <button data-submenu="speed">
                     <span>Playback Speed</span>
-                    <span id="menuSpeedText">1x</span>
+                    <span id="menuSpeedText"></span>
                   </button>
                   <button onClick="toggleLegacySubtitles()">
                     <span>Legacy Subtitles</span>
-                    <span id="menuLegacyText">OFF</span>
+                    <span id="menuLegacyText"></span>
                   </button>
                   <button onClick="download()">
                     <span>Download</span>
                     <span>↓</span>
                   </button>
                 </div>
-                <div id="subs-submenu" style="display: none;">
-                  <button class="back-button">‹ Subtitles</button>
+                <div id="subs-submenu" style="display: none">
+                  <button class="back-button">🢠 Subtitles</button>
                   <div class="menu-content">
                     <button>None</button>
                   </div>
                 </div>
-                <div id="audio-submenu" style="display: none;">
-                  <button class="back-button">‹ Audio Track</button>
+                <div id="audio-submenu" style="display: none">
+                  <button class="back-button">🢠 Audio Track</button>
                   <div class="menu-content">
                   </div>
                 </div>
-                <div id="speed-submenu" style="display: none;">
-                  <button class="back-button">‹ Playback Speed</button>
+                <div id="speed-submenu" style="display: none">
+                  <button class="back-button">🢠 Playback Speed</button>
                   <div class="menu-content">
                     <button>0.25x</button>
                     <button>0.5x</button>
@@ -121,8 +121,8 @@
               </div>
             </span>
             <button id="screenToggle" onclick="toggleFullscreenMode()" class="glass" title="Fullscren (F)">
-              <img src="/static/svg/videoplayer/scan-outline.svg" style="display: block;">
-              <img src="/static/svg/videoplayer/contract-outline.svg" style="display: none;">
+              <img src="/static/svg/videoplayer/scan-outline.svg" style="display: block">
+              <img src="/static/svg/videoplayer/contract-outline.svg" style="display: none">
             </button>
           </div>
         </div>

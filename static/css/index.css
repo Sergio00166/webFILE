@@ -163,45 +163,9 @@ button {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 6px 9px 12px;
+    padding: 6px 8px 12px;
     box-sizing: border-box;
     overflow: auto;
-}
-
-/* -------------------------
- *   Path bar
- * ------------------------- */
-
-#path-bar {
-    display: flex;
-    align-items: center;
-    background: #222;
-    border-bottom: 1px solid #444;
-    padding: 6px 16px 6px 12px;
-    gap: 10px;
-}
-#path-bar button {
-    height: 20px;
-    width: 20px;
-}
-#path-bar button img {
-    width: auto;
-    height: 100%;
-}
-#path-bar pre {
-    flex: 1;
-    font-weight: 600;
-    font-family: monospace;
-    font-size: 14px;
-    background: #444;
-    border-radius: 9px;
-    padding: 4px 8px 4px 8px;
-    /* Hide start */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    direction: rtl;
-    text-align: left;
 }
 
 /* -------------------------
@@ -303,17 +267,17 @@ button {
  *   Responsive
  * ------------------------- */
 
-@media (max-width:1200px) {
+@media (max-width: 1200px) {
     #list-group > button {
         min-width: calc(100% + 256px);
     }
 }
-@media (max-width:400px) {
+@media (max-width: 400px) {
     #list-group > button {
         min-width: calc(100% + 384px);
     }
 }
-@media (max-width:700px) {
+@media (max-width: 700px) {
     #sidebar {
         height: 100%;
         position: absolute;
@@ -332,7 +296,7 @@ button {
         transform: translateX(0);
     }
 }
-@media (max-width:400px) {
+@media (max-width: 400px) {
     .load_container h1 {
         font-size: x-large;
     }
@@ -342,10 +306,16 @@ button {
  *   Hide if screen too small
  * ------------------------- */
 
-@media (max-width:200px) or (max-height: 120px) {
-    #main-container,
-    .load_container {
-        display: none;
+@media (max-width: 200px), (max-height: 200px) {
+    body > * {
+        display: none !important;
+    }
+    body::before {
+        content: "display too small";
+        margin: auto;
+        padding: 8px;
+        color: #eea;
+        text-align: center;
     }
 }
 

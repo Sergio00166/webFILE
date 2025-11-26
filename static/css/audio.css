@@ -257,30 +257,6 @@ button {
  *   Responsive rules
  * ------------------------- */
 
-@media (max-width: 260px) {
-    #total-time,
-    #current-time,
-    .volume-control,
-    #speed-btn {
-        display: none;
-    }
-    .extra-controls {
-        margin-top: 0;
-    }
-    #seek-bar {
-        width: calc(100% - 16px);
-    }
-}
-@media (max-width: 180px) {
-    .nav-btn,
-    .extra-controls {
-        display: none;
-    }
-    .playback-controls {
-        align-items: center;
-        justify-content: center;
-    }
-}
 @media (max-height: 400px) or (max-width: 400px) {
     .header {
         font-size: 20px;
@@ -289,21 +265,35 @@ button {
         text-overflow: ellipsis;
     }
 }
-@media (max-height: 280px) {
-    .volume-control,
+@media (max-height: 300px) {
+    .playback-controls {
+        margin-top: 16px;
+        margin-bottom: 12px;
+    }
     .extra-controls {
-        display: none;
+        margin-top: 12px;
+        margin-bottom: 4px;
     }
-}
-@media (max-height: 190px) {
-    .time-row,
     .header {
-        display: none;
+        margin-top: 2px;
+        margin-bottom: 20px;
     }
 }
-@media (max-height: 120px) or (max-width: 120px) {
-    .audio-player {
-        display: none;
+
+/* -------------------------
+ *   Hide if screen too small
+ * ------------------------- */
+
+@media (max-width: 250px), (max-height: 250px) {
+    body > * {
+        display: none !important;
+    }
+    body::before {
+        content: "display too small";
+        margin: auto;
+        padding: 8px;
+        color: #eea;
+        text-align: center;
     }
 }
 

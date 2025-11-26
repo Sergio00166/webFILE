@@ -78,11 +78,6 @@ button {
  *   Responsive rules
  * ------------------------- */
 
-@media (max-height: 600px) {
-    .container {
-        margin-bottom: 0;
-    }
-}
 @media (max-width: 300px) {
     .container {
         padding: 10px;
@@ -93,9 +88,21 @@ button {
         word-break: break-all;
     }
 }
-@media (max-width: 120px) {
-    .container {
-        display: none;
+
+/* -------------------------
+ *   Hide if screen too small
+ * ------------------------- */
+
+@media (max-width: 200px), (max-height: 200px) {
+    body > * {
+        display: none !important;
+    }
+    body::before {
+        content: "display too small";
+        margin: auto;
+        padding: 8px;
+        color: #eea;
+        text-align: center;
     }
 }
 

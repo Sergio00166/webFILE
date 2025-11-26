@@ -217,8 +217,8 @@ async function toggleLegacySubtitles() {
 
 async function loadSubtitleTracks() {
     const subsContent = subsSubmenu.querySelector('.menu-content');
-    const subtitleList = await fetch('?tracks').then(res => res.json());
     const savedSubtitle = localStorage.getItem('videoSubs');
+    const subtitleList = await fetch('?tracks').then(res => res.json());
 
     for (let i = 0; i < subtitleList.length; i++) {
         const trackName = subtitleList[i];
@@ -511,7 +511,7 @@ function showTimelineHover(clientX) {
         hoverInfo.innerHTML = timeString;
 
     hoverInfo.style.display = 'block';
-    hoverInfo.style.bottom = `${height + 8}px`;
+    hoverInfo.style.bottom = `${height + 9}px`;
 
     const barRect = seekBar.getBoundingClientRect();
     const tooltipWidth = hoverInfo.offsetWidth;
@@ -611,8 +611,15 @@ function loadAudioTracks() {
     const savedAudioTrack = localStorage.getItem('videoAudio');
     const audioContent = audioSubmenu.querySelector('.menu-content');
     const audioTracks = video.audioTracks;
-    if (!audioTracks) return;
 
+    if (!audioTracks) {
+        const button = document.createElement('button');
+        button.disabled = true;
+        button.textContent = "Default";
+        audioContent.appendChild(button);
+        menuAudioText.textContent = "Default";
+        return;
+    }
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
         const button = document.createElement('button');

@@ -10,13 +10,10 @@ from flask import session
 from pathlib import Path
 from sys import stderr
 
+cache = setup_cache(2)
+
 if sep == chr(92): import ctypes
 else: from os import statvfs
-
-is_subdirectory = lambda parent, child: commonpath([parent, child]) == parent
-
-cache = setup_cache(2)
-cache_TTL = 60*60 # 1h
 
 
 """ Global functions """
@@ -27,7 +24,8 @@ def safe_path(path, root, igntf=False):
     path = path.replace("/", sep)
     path = abspath(root + sep + path)
 
-    if is_subdirectory(root, path):
+    # Check if is subdirectory from root
+    if commonpath([root, path]) == root:
         if igntf:
             return path
         if not exists(path):
@@ -128,8 +126,14 @@ def get_disk_stat(path):
     return {"size": size, "free": free, "used": size-free}
 
 
-@cache.cached("dskSize", "dskFree", TTL=cache_TTL)
-def size_traversal(root, dskSize, dskFree):
+def get_dir_size(path):
+    disk_free = get_disk_stat(path)["free"]
+    disk_free = disk_free // (1024*1024)
+    return size_traversal(path, disk_free)
+
+
+@cache.cached("disk_size", TTL=5*60)
+def size_traversal(root, disk_size):
     root_dev = stat(root).st_dev
     total, stack = 0, [root]
 
@@ -150,15 +154,5 @@ def size_traversal(root, dskSize, dskFree):
                 stack.append(e.path)
 
     return total
-
-
-# Just to cache the function
-def get_dir_size(path):
-    diskInfo = get_disk_stat(path)
-    return size_traversal(
-        path,
-        diskInfo["size"],
-        diskInfo["free"]
-    )
 
  

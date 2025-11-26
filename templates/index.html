@@ -8,6 +8,7 @@
     <title>webFILE server</title>
     <link rel="icon" type="image/x-icon" href="/static/ico/favicon.ico">
     <link rel="stylesheet" href="/static/css/index.css">
+    <link rel="stylesheet" href="/static/css/path-bar.css">
     <script defer src="/static/js/index.js"></script>
   </head>
   <body>
@@ -18,10 +19,12 @@
       <button onclick="window.location.href='/'" title="Home (H)">
         <img src="/static/svg/index/house-chimney-solid.svg">
       </button>
-      <pre>{{ folder_path }}</pre>
+      <span class="path-box">
+        <pre id="path-text">{{ folder_path }}</pre>
+      </span>
     </div>
 
-    <div id="loader" style="display: none;">
+    <div id="loader" style="display: none">
       <h1>PROCESSING</h1>
       <div class="progress-bar"></div>
       <h1 id="progress"></h1>
@@ -46,8 +49,8 @@
           <div>
             <h3>SORT</h3>
             {%- set sort_name = ('nd', '⬆️') if sort == 'np' else ('np', '⬇️') if sort == 'nd' else ('np', '◻️') -%}
-            {%- set sort_size = ('sd', '⬆️') if sort == 'sp' else ('sp', '⬇️') if sort == 'sd' else ('sp', '◻️') -%}
-            {%- set sort_date = ('dd', '⬆️') if sort == 'dp' else ('dp', '⬇️') if sort == 'dd' else ('dp', '◻️') -%}
+            {%- set sort_size = ('sd', '⬆️') if sort == 'sp' else ('sp', '⬇️') if sort == 'sd' else ('sd', '◻️') -%}
+            {%- set sort_date = ('dd', '⬆️') if sort == 'dp' else ('dp', '⬇️') if sort == 'dd' else ('dd', '◻️') -%}
             <button id="sortName" onclick="setUrlKey('sort','{{ sort_name[0] }}')" title="(1)">{{ sort_name[1] }} Name</button>
             <button id="sortSize" onclick="setUrlKey('sort','{{ sort_size[0] }}')" title="(2)">{{ sort_size[1] }} Size</button>
             <button id="sortDate" onclick="setUrlKey('sort','{{ sort_date[0] }}')" title="(3)">{{ sort_date[1] }} Date</button>
