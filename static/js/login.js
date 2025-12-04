@@ -8,11 +8,12 @@ loginForm.addEventListener("submit", async (event) => {
         method: "POST",
         body: new FormData(event.target)
     });
-    if (response.ok) redirectBack()
+    if (response.ok) redirectBack();
     else {
         const errorEl = document.getElementById("error");
         errorEl.textContent = "Invalid User or Password";
         errorEl.style.display = "block";
+        document.getElementById("password").value = "";
     }
 });
 

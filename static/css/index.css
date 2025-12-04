@@ -8,7 +8,7 @@ body {
     display: flex;
     background: #1a1a1a;
     flex-direction: column;
-    font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+    font-family: system-ui, "Segoe UI", Roboto, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -236,7 +236,7 @@ button {
     width: min(350px, 90%);
 }
 #loader > .progress-bar::before {
-    content: '';
+    content: "";
     position: absolute;
     height: 100%;
     width: 30%;

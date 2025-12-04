@@ -2,45 +2,45 @@
 /*
 All paths are (and must be) encoded by default, also the items dataset
 Except the Destination Header THAT MUST BE NOT ENCODED.
-Base path variable (base) ends with '/' always.
+Base path variable (base) ends with "/" always.
 */
 
 // ============================================================================
 // DOM ELEMENTS - BUTTONS
 // ============================================================================
 
-const selectButton = document.getElementById('selectBtn');
-const deleteButton = document.getElementById('delBtn');
-const copyButton = document.getElementById('copyBtn');
-const moveButton = document.getElementById('moveBtn');
-const renameButton = document.getElementById('renBtn');
-const invertButton = document.getElementById('invertBtn');
+const selectButton = document.getElementById("selectBtn");
+const deleteButton = document.getElementById("delBtn");
+const copyButton = document.getElementById("copyBtn");
+const moveButton = document.getElementById("moveBtn");
+const renameButton = document.getElementById("renBtn");
+const invertButton = document.getElementById("invertBtn");
 
 // ============================================================================
 // DOM ELEMENTS - UI COMPONENTS
 // ============================================================================
 
-const progressBar = document.getElementById('progress');
-const sidebar = document.getElementById('sidebar');
-const loader = document.getElementById('loader');
-const mainContainer = document.getElementById('main-container');
-const listGroup = document.getElementById('list-group');
-const loginButton = document.getElementById('login');
-const pathBar = document.getElementById('path-bar');
+const progressBar = document.getElementById("progress");
+const sidebar = document.getElementById("sidebar");
+const loader = document.getElementById("loader");
+const mainContainer = document.getElementById("main-container");
+const listGroup = document.getElementById("list-group");
+const loginButton = document.getElementById("login");
+const pathBar = document.getElementById("path-bar");
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
 // ============================================================================
 
-const sortByName = document.getElementById('sortName');
-const sortBySize = document.getElementById('sortSize');
-const sortByDate = document.getElementById('sortDate');
+const sortByName = document.getElementById("sortName");
+const sortBySize = document.getElementById("sortSize");
+const sortByDate = document.getElementById("sortDate");
 
 // ============================================================================
 // GLOBAL VARIABLES
 // ============================================================================
 
-const basePath = (location.pathname.replace(/\/$/, '') || '') + '/';
+const basePath = (location.pathname.replace(/\/$/, "") || "") + "/";
 const selectedItems = new Set();
 let isSelectModeActive = false;
 
@@ -57,13 +57,13 @@ function updateButtonStates() {
 }
 
 function toggleSidebar() {
-    sidebar.classList.toggle('open');
+    sidebar.classList.toggle("open");
 }
 
 function showLoader() {
-    loader.style.display = '';
-    pathBar.style.display = 'none';
-    mainContainer.style.display = 'none';
+    loader.style.display = "";
+    pathBar.style.display = "none";
+    mainContainer.style.display = "none";
 }
 
 // ============================================================================
@@ -78,7 +78,7 @@ function setUrlKey(name, value = "") {
 }
 
 function encodePath(path) {
-    return path.split('/').map(encodeURIComponent).join('/');
+    return path.split("/").map(encodeURIComponent).join("/");
 }
 
 function delay(milliseconds) {
@@ -90,15 +90,15 @@ function delay(milliseconds) {
 // ============================================================================
 
 function copySelectedFiles() {
-    performStorageOperation('copy', getSelectedURLs());
+    performStorageOperation("copy", getSelectedURLs());
 }
 
 function moveSelectedFiles() {
-    performStorageOperation('move', getSelectedURLs());
+    performStorageOperation("move", getSelectedURLs());
 }
 
 function clearAllCopyMoveOperations() {
-    ['copy', 'move'].forEach(key => localStorage.removeItem(key));
+    ["copy", "move"].forEach(key => localStorage.removeItem(key));
 }
 
 function performStorageOperation(operationKey, fileList) {
@@ -108,12 +108,12 @@ function performStorageOperation(operationKey, fileList) {
 }
 
 function getItemURL(fileItem) {
-    const nameElement = fileItem.querySelector('pre');
+    const nameElement = fileItem.querySelector("pre");
     const rawName = nameElement.textContent.trim();
     const encodedName = encodeURIComponent(rawName);
 
     let url = basePath + encodedName;
-    if (fileItem.hasAttribute('isdir')) url += '/';
+    if (fileItem.hasAttribute("isdir")) url += "/";
     return url;
 }
 
@@ -153,24 +153,24 @@ function toggleSelectMode() {
 
     if (selectButton) {
         if (isSelectModeActive)
-            selectButton.textContent = '❌ Cancel';
+            selectButton.textContent = "❌ Cancel";
         else
-            selectButton.textContent = '✅ Enable';
+            selectButton.textContent = "✅ Enable";
     }
     updateButtonStates();
 }
 
 function deselectAllItems() {
-    selectedItems.forEach(fileItem => fileItem.classList.remove('selected'));
+    selectedItems.forEach(fileItem => fileItem.classList.remove("selected"));
     selectedItems.clear();
 }
 
 function selectItem(fileItem) {
     if (selectedItems.has(fileItem)) {
-        fileItem.classList.remove('selected');
+        fileItem.classList.remove("selected");
         selectedItems.delete(fileItem);
     } else {
-        fileItem.classList.add('selected');
+        fileItem.classList.add("selected");
         selectedItems.add(fileItem);
     }
 }
@@ -192,8 +192,8 @@ function handleItemClick(fileItem) {
         selectItem(fileItem);
     } else {
         const itemURL = getItemURL(fileItem);
-        if (fileItem.hasAttribute('isdir')) location.href = itemURL;
-        else window.open(itemURL, '_blank');
+        if (fileItem.hasAttribute("isdir")) location.href = itemURL;
+        else window.open(itemURL, "_blank");
     }
 }
 
@@ -202,9 +202,9 @@ function handleItemClick(fileItem) {
 // ============================================================================
 
 function downloadURL(url) {
-    const downloadLink = document.createElement('a');
+    const downloadLink = document.createElement("a");
     downloadLink.href = url;
-    downloadLink.download = '';
+    downloadLink.download = "";
     document.body.appendChild(downloadLink);
     downloadLink.click();
     downloadLink.remove();
@@ -216,11 +216,11 @@ async function executeDownloads() {
             const itemURL = getItemURL(fileItem);
             if (!itemURL) continue;
 
-            downloadURL(itemURL + '?get=file');
+            downloadURL(itemURL + "?get=file");
             await delay(100);
         }
     } else {
-        downloadURL(basePath + '?get=file');
+        downloadURL(basePath + "?get=file");
     }
 }
 
@@ -230,13 +230,13 @@ async function executeDownloads() {
 
 async function executeDeletes() {
     if (!isSelectModeActive || !selectedItems.size) return;
-    if (!confirm('Are you sure to delete?')) return;
+    if (!confirm("Are you sure to delete?")) return;
 
     let errorMessage = null;
 
     for (const fileItem of selectedItems) {
         const itemURL = getItemURL(fileItem);
-        const response = await fetch(itemURL, { method: 'DELETE' });
+        const response = await fetch(itemURL, { method: "DELETE" });
 
         if (response.ok) {
             await delay(100);
@@ -244,13 +244,13 @@ async function executeDeletes() {
         }
         switch (response.status) {
             case 403:
-                errorMessage = 'You dont have permission to do that';
+                errorMessage = "You dont have permission to do that";
                 break;
             case 404:
-                errorMessage = 'That file/folder does not exist';
+                errorMessage = "That file/folder does not exist";
                 break;
             default:
-                errorMessage = 'Something went wrong on the server';
+                errorMessage = "Something went wrong on the server";
                 break;
         }
         await delay(100);
@@ -276,12 +276,12 @@ async function sendHTTPRequest(path, destination, method) {
 
     } catch (statusCode) {
         const errorMessages = {
-            403: 'You don\'t have permission to do that',
-            404: 'That file/folder does not exist',
-            409: 'It already exists',
-            507: 'Not enough free space'
+            403: "You don't have permission to do that",
+            404: "That file/folder does not exist",
+            409: "It already exists",
+            507: "Not enough free space"
         };
-        alert(errorMessages[statusCode] || 'Something went wrong');
+        alert(errorMessages[statusCode] || "Something went wrong");
         return false;
     }
 }
@@ -294,14 +294,14 @@ async function renameSelectedFiles() {
     if (!isSelectModeActive || !selectedItems.size) return;
 
     for (const itemURL of getSelectedURLs()) {
-        const cleanURL = itemURL.replace(/\/$/, '');
-        const fileName = decodeURIComponent(cleanURL.split('/').pop());
-        const newFileName = prompt('New Name for ' + fileName);
+        const cleanURL = itemURL.replace(/\/$/, "");
+        const fileName = decodeURIComponent(cleanURL.split("/").pop());
+        const newFileName = prompt("New Name for " + fileName);
 
         if (!newFileName) break;
         const encodedNewName = encodeURIComponent(newFileName);
-        const destinationPath = cleanURL.substring(0, cleanURL.lastIndexOf('/')) + '/' + encodedNewName;
-        if (!await sendHTTPRequest(cleanURL, destinationPath, 'MOVE')) break;
+        const destinationPath = cleanURL.substring(0, cleanURL.lastIndexOf("/")) + "/" + encodedNewName;
+        if (!await sendHTTPRequest(cleanURL, destinationPath, "MOVE")) break;
     }
     clearAllCopyMoveOperations();
     location.reload();
@@ -312,22 +312,22 @@ async function renameSelectedFiles() {
 // ============================================================================
 
 async function pasteFiles() {
-    const copyList = JSON.parse(localStorage.getItem('copy') || '[]');
-    const moveList = JSON.parse(localStorage.getItem('move') || '[]');
+    const copyList = JSON.parse(localStorage.getItem("copy") || "[]");
+    const moveList = JSON.parse(localStorage.getItem("move") || "[]");
     let pasteOperation = {};
 
     if (copyList.length)
-        pasteOperation = { list: copyList, mode: 'COPY' };
+        pasteOperation = { list: copyList, mode: "COPY" };
     else if (moveList.length)
-        pasteOperation = { list: moveList, mode: 'MOVE' };
+        pasteOperation = { list: moveList, mode: "MOVE" };
 
     if (!pasteOperation.list) return;
     showLoader();
     await delay(250);
 
     for (let i = 0; i < pasteOperation.list.length; i++) {
-        const sourcePath = pasteOperation.list[i].replace(/\/$/, '');
-        const destinationPath = basePath + sourcePath.split('/').pop();
+        const sourcePath = pasteOperation.list[i].replace(/\/$/, "");
+        const destinationPath = basePath + sourcePath.split("/").pop();
         if (!await sendHTTPRequest(sourcePath, destinationPath, pasteOperation.mode)) break;
     }
     clearAllCopyMoveOperations();
@@ -339,10 +339,10 @@ async function pasteFiles() {
 // ============================================================================
 
 async function createDirectory() {
-    const directoryName = prompt('Create dir');
+    const directoryName = prompt("Create dir");
     if (!directoryName) return;
     const encodedName = encodeURIComponent(directoryName);
-    const success = await sendHTTPRequest(basePath + encodedName, null, 'MKCOL');
+    const success = await sendHTTPRequest(basePath + encodedName, null, "MKCOL");
     if (success) location.reload();
 }
 
@@ -354,15 +354,15 @@ async function createDirectoryStructure(files) {
     const directories = new Set();
 
     for (const file of files) {
-        const pathParts = file.webkitRelativePath.split('/');
+        const pathParts = file.webkitRelativePath.split("/");
         for (let i = 1; i < pathParts.length; i++) {
-            const directoryPath = pathParts.slice(0, i).join('/');
+            const directoryPath = pathParts.slice(0, i).join("/");
             directories.add(directoryPath);
         }
     }
     for (const directory of directories) {
         const directoryURL = basePath + encodePath(directory);
-        const response = await fetch(directoryURL, { method: 'MKCOL' });
+        const response = await fetch(directoryURL, { method: "MKCOL" });
         if (!response.ok) throw response.status;
     }
 }
@@ -370,7 +370,7 @@ async function createDirectoryStructure(files) {
 function uploadFileWithProgress(file, uploadURL, progressCallback) {
     return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        xhr.open('PUT', uploadURL);
+        xhr.open("PUT", uploadURL);
 
         xhr.upload.onprogress = event => {
             if (event.lengthComputable && progressCallback)
@@ -382,7 +382,7 @@ function uploadFileWithProgress(file, uploadURL, progressCallback) {
             else
                 reject(xhr.status);
         };
-        xhr.onerror = () => reject('Connection Error');
+        xhr.onerror = () => reject("Connection Error");
         xhr.send(file);
     });
 }
@@ -409,19 +409,19 @@ async function uploadFiles(files, isDirectory) {
             await uploadFileWithProgress(file, filePath, (loaded, total) => {
                 let totalUploaded = uploadedBytes + loaded;
                 let percent = (totalUploaded / totalBytes) * 100;
-                progressBar.textContent = percent.toFixed(2) + '%';
+                progressBar.textContent = percent.toFixed(2) + "%";
             });
             uploadedBytes += file.size;
 
         } catch (statusCode) {
             const errorMessages = {
-                400: 'Invalid upload data',
-                403: 'You don\'t have permission to do that',
-                409: 'It already exists',
-                507: 'Not enough free space',
-                500: 'Server Error'
+                400: "Invalid upload data",
+                403: "You don't have permission to do that",
+                409: "It already exists",
+                507: "Not enough free space",
+                500: "Server Error"
             };
-            alert(errorMessages[statusCode] || 'Upload Error');
+            alert(errorMessages[statusCode] || "Upload Error");
             break;  // stop uploading more files on error
         }
     }
@@ -433,15 +433,15 @@ async function uploadFiles(files, isDirectory) {
 // ============================================================================
 
 function openFileUploadMenu(selectDirectory = false) {
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
     fileInput.multiple = !selectDirectory;
 
     if (selectDirectory)
-        fileInput.setAttribute('webkitdirectory', true);
+        fileInput.setAttribute("webkitdirectory", true);
 
     fileInput.onchange = ()=>{
-        const msg = 'Upload ' + fileInput.files.length + ' item(s)?';
+        const msg = "Upload " + fileInput.files.length + " item(s)?";
         if (fileInput.files.length && (selectDirectory || confirm(msg)))
             uploadFiles(fileInput.files, selectDirectory);
     };
@@ -449,14 +449,14 @@ function openFileUploadMenu(selectDirectory = false) {
 }
 
 function enableDragAndDropUpload(dropArea) {
-    dropArea.addEventListener('dragover', event => {
+    dropArea.addEventListener("dragover", event => {
         event.preventDefault();
     });
-    dropArea.addEventListener('drop', event => {
+    dropArea.addEventListener("drop", event => {
         event.preventDefault();
         const files = Array.prototype.slice.call(event.dataTransfer.files);
 
-        const msg = '¿Upload ' + files.length + ' item(s)?';
+        const msg = "¿Upload " + files.length + " item(s)?";
         if (files.length && confirm(msg)) uploadFiles(files);
     });
 }
@@ -484,35 +484,35 @@ function moveFocus(direction) {
 // EVENT LISTENERS - NAVIGATION & ACTIONS
 // ============================================================================
 
-listGroup.addEventListener('click', event => {
-    const clickedItem = event.target.closest('#list-group > button');
+listGroup.addEventListener("click", event => {
+    const clickedItem = event.target.closest("#list-group > button");
     if (!clickedItem) return;
     handleItemClick(clickedItem);
 });
 
-listGroup.addEventListener('keydown', event => {
-    if (event.key === ' ') event.preventDefault();
+listGroup.addEventListener("keydown", event => {
+    if (event.key === " ") event.preventDefault();
 });
 
-document.addEventListener('keydown', event => {
+document.addEventListener("keydown", event => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     let delta = 1;
 
     switch (event.key.toLowerCase()) {
-        case 'arrowup': delta -= 2;
-        case 'arrowdown':
+        case "arrowup": delta -= 2;
+        case "arrowdown":
             event.preventDefault();
             moveFocus(delta);
             break;
 
-        case 'home': delta -= 2;
-        case 'end':
+        case "home": delta -= 2;
+        case "end":
             event.preventDefault();
             moveFocus(delta * Infinity);
             break;
 
-        case 'arrowleft': delta -= 2;
-        case 'arrowright':
+        case "arrowleft": delta -= 2;
+        case "arrowright":
             event.preventDefault();
             if (event.shiftKey) {
                 listGroup.scrollLeft += delta * 24;
@@ -521,55 +521,55 @@ document.addEventListener('keydown', event => {
             if (delta > 0 || isSelectModeActive)
                 document.activeElement.click();
             else
-                window.location.href = '..';
+                window.location.href = "..";
             break;
 
-        case 'backspace':
-            window.location.href = '..';
+        case "backspace":
+            window.location.href = "..";
             break;
-        case 'a':
+        case "a":
             invertSelection();
             break;
-        case 'd':
+        case "d":
             executeDownloads();
             break;
-        case 'c':
+        case "c":
             copySelectedFiles();
             break;
-        case 'x':
+        case "x":
             moveSelectedFiles();
             break;
-        case 'v':
+        case "v":
             pasteFiles();
             break;
-        case 'u':
+        case "u":
             openFileUploadMenu(event.shiftKey && true);
             break;
-        case 's':
+        case "s":
             toggleSelectMode();
             break;
-        case 'r':
+        case "r":
             renameSelectedFiles();
             break;
-        case 'delete':
+        case "delete":
             executeDeletes();
             break;
-        case 'm':
+        case "m":
             createDirectory();
             break;
-        case 'l':
+        case "l":
             loginButton.click();
             break;
-        case 'h':
-            window.location.href = '/';
+        case "h":
+            window.location.href = "/";
             break;
-        case '1':
+        case "1":
             sortByName.click();
             break;
-        case '2':
+        case "2":
             sortBySize.click();
             break;
-        case '3':
+        case "3":
             sortByDate.click();
             break;
     }

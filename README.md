@@ -190,7 +190,7 @@ The server internally uses some WebDAV methods for file/folder operations.
 - `.html` files are treated as plain text.  
 - `.web` files are recognized as HTML pages.  
 - Placing `index.web` in any folder auto-loads that page instead of default listing.  
-- Disable with `?get=explorer` to get file listing page.  
+- Disable with `?get=default` to get file listing page.  
 
 ### Official Plugins
 Plugins allow creation of new pages and customization of the frontend GUI by dropping `.web` extensions into served directories.  

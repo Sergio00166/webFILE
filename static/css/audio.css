@@ -11,7 +11,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: black;
-    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -164,7 +164,7 @@ button {
 }
 #progress::before {
     opacity: 0;
-    content: '';
+    content: "";
     width: 12px;
     height: 12px;
     right: -6px;

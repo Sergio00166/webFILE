@@ -1,12 +1,12 @@
 /* Code by Sergio00166 */
 
-.username { margin-bottom: 13px; }
-.password { margin-bottom: 18px; }
+#username { margin-bottom: 13px; }
+#password { margin-bottom: 18px; }
 
 body {
     margin: 0;
     background-color: #111;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: "Segoe UI", sans-serif;
     height: 100vh;
     height: 100dvh;
     color: white;
