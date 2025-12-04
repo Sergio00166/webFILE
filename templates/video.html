@@ -5,25 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ name }}</title>
-    <link rel="icon" type="image/x-icon" href="/static/ico/video.ico">
-    <link rel="stylesheet" href="/static/css/video.css">
-    <script defer src="/static/js/video.js"></script>
-    <script src="/static/jassub/jassub.js"></script>
+    <link rel="icon" type="image/x-icon" href="/srv/static/ico/video.ico">
+    <link rel="stylesheet" href="/srv/static/css/video.css">
+    <script defer src="/srv/static/js/video.js"></script>
+    <script src="/srv/static/jassub/jassub.js"></script>
   </head>
   <body>
     <div id="video-container">
       <div class="video-box">
-        <video src="{{ request.path }}?raw" disablePictureInPicture></video>
+        <video src="{{ request.path }}?get=file" disablePictureInPicture></video>
         <canvas></canvas>
       </div>
       <span id="custom-loader" style="display: none"></span>
       <span id="main-state" class="glass">
-        <img src="/static/svg/videoplayer/play-outline.svg" style="display: none">
-        <img src="/static/svg/videoplayer/pause-outline.svg" style="display: none">
-        <img src="/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
-        <img src="/static/svg/videoplayer/volume-high-outline.svg" style="display: none">
-        <img src="/static/svg/videoplayer/chevron-back-outline.svg" style="display: none">
-        <img src="/static/svg/videoplayer/chevron-forward-outline.svg" style="display: none">
+        <img src="/srv/static/svg/videoplayer/play-outline.svg" style="display: none">
+        <img src="/srv/static/svg/videoplayer/pause-outline.svg" style="display: none">
+        <img src="/srv/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
+        <img src="/srv/static/svg/videoplayer/volume-high-outline.svg" style="display: none">
+        <img src="/srv/static/svg/videoplayer/chevron-back-outline.svg" style="display: none">
+        <img src="/srv/static/svg/videoplayer/chevron-forward-outline.svg" style="display: none">
         <div id="state_volume" style="display: none"></div>
       </span>
       <div id="controls">
@@ -37,20 +37,20 @@
         <div class="btn-controls">
           <div class="side-controls">
             <button id="play-pause" onclick="togglePlayPauseState()" class="glass" title="Play">
-              <img src="/static/svg/videoplayer/play-outline.svg" style="display: block">
-              <img src="/static/svg/videoplayer/pause-outline.svg" style="display: none">
+              <img src="/srv/static/svg/videoplayer/play-outline.svg" style="display: block">
+              <img src="/srv/static/svg/videoplayer/pause-outline.svg" style="display: none">
             </button>
             <button id="loop-btn" onclick="cycleLoopMode()" class="glass" title="Loop (L)">
-			        <img src="/static/svg/videoplayer/repeat-button.svg" style="display: block">
-              <img src="/static/svg/videoplayer/repeat-single-button.svg" style="display: none">
+			        <img src="/srv/static/svg/videoplayer/repeat-button.svg" style="display: block">
+              <img src="/srv/static/svg/videoplayer/repeat-single-button.svg" style="display: none">
 			      </button>
             <span id="volume">
               <button onclick="toggleMuteState()" class="glass" title="Mute (M)">
-                <img src="/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
-                <img src="/static/svg/videoplayer/volume-high-outline.svg" style="display: block">
-                <img src="/static/svg/videoplayer/volume-medium-outline.svg" style="display: none">
-                <img src="/static/svg/videoplayer/volume-low-outline.svg" style="display: none">
-                <img src="/static/svg/videoplayer/volume-off-outline.svg" style="display: none">
+                <img src="/srv/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
+                <img src="/srv/static/svg/videoplayer/volume-high-outline.svg" style="display: block">
+                <img src="/srv/static/svg/videoplayer/volume-medium-outline.svg" style="display: none">
+                <img src="/srv/static/svg/videoplayer/volume-low-outline.svg" style="display: none">
+                <img src="/srv/static/svg/videoplayer/volume-off-outline.svg" style="display: none">
               </button>
               <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
             </span>
@@ -62,14 +62,14 @@
           </span>
           <div class="side-controls">
             <button onclick="navigateToPrevious()" class="glass" title="Prev (P)">
-              <img src="/static/svg/videoplayer/play-skip-back-outline.svg">
+              <img src="/srv/static/svg/videoplayer/play-skip-back-outline.svg">
             </button>
             <button onclick="navigateToNext()" class="glass" title="Next (N)">
-              <img src="/static/svg/videoplayer/play-skip-forward-outline.svg">
+              <img src="/srv/static/svg/videoplayer/play-skip-forward-outline.svg">
             </button>
             <span id="settings">
               <button class="glass" onclick="toggleSettingsMenu()" title="Menu">
-                <img src="/static/svg/videoplayer/settings-outline.svg">
+                <img src="/srv/static/svg/videoplayer/settings-outline.svg">
               </button>
               <div id="setting-menu" class="glass">
                 <div id="main-menu">
@@ -95,18 +95,18 @@
                   </button>
                 </div>
                 <div id="subs-submenu" style="display: none">
-                  <button class="back-button">🢠 Subtitles</button>
+                  <button class="back-button">‹&nbsp; Subtitles</button>
                   <div class="menu-content">
                     <button>None</button>
                   </div>
                 </div>
                 <div id="audio-submenu" style="display: none">
-                  <button class="back-button">🢠 Audio Track</button>
+                  <button class="back-button">‹&nbsp; Audio Track</button>
                   <div class="menu-content">
                   </div>
                 </div>
                 <div id="speed-submenu" style="display: none">
-                  <button class="back-button">🢠 Playback Speed</button>
+                  <button class="back-button">‹&nbsp; Playback Speed</button>
                   <div class="menu-content">
                     <button>0.25x</button>
                     <button>0.5x</button>
@@ -121,14 +121,14 @@
               </div>
             </span>
             <button id="screenToggle" onclick="toggleFullscreenMode()" class="glass" title="Fullscren (F)">
-              <img src="/static/svg/videoplayer/scan-outline.svg" style="display: block">
-              <img src="/static/svg/videoplayer/contract-outline.svg" style="display: none">
+              <img src="/srv/static/svg/videoplayer/scan-outline.svg" style="display: block">
+              <img src="/srv/static/svg/videoplayer/contract-outline.svg" style="display: none">
             </button>
           </div>
         </div>
       </div>
     </div>
-    <a href="?raw" download id="download_video" tabindex="-1"></a>
+    <a href="?get=file" download id="download_video" tabindex="-1"></a>
     <a href="{{ subs_file }}" id="download_subs" tabindex="-1"></a>
     <a href='{{ nxt }}' id="next" tabindex="-1"></a>
     <a href='{{ prev }}' id="prev" tabindex="-1"></a>

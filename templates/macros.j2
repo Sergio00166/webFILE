@@ -22,7 +22,7 @@
   {%- set is_dir  = item.type in ['directory', 'disk'] %}
   {%- set is_disk = item.type == 'disk' %}
   <button {%- if is_dir %} isdir {%- endif %}>
-    <img src="/static/svg/index/{{ icon_map.get(item.type, 'file-solid.svg') }}">
+    <img src="/srv/static/svg/index/{{ icon_map.get(item.type, 'file-solid.svg') }}">
     <pre>{{ item.name }}</pre>
     {%- if is_disk %}
       <span>{{ item.size }} / {{ item.capacity }}</span>

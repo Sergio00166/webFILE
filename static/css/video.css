@@ -335,9 +335,9 @@ button img {
     pointer-events: auto;
 }
 #setting-menu .back-button {
-    padding: 4px 24px 5px 8px;
-    background: #2345 !important;
-    border-radius: 12px 12px 0 0 !important;
+    padding: 6px 24px 6px 10px;
+    background: #2345;
+    border-radius: 12px 12px 0 0;
 }
 #setting-menu button {
     background: none;

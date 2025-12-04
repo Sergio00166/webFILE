@@ -6,18 +6,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>webFILE server</title>
-    <link rel="icon" type="image/x-icon" href="/static/ico/favicon.ico">
-    <link rel="stylesheet" href="/static/css/index.css">
-    <link rel="stylesheet" href="/static/css/path-bar.css">
-    <script defer src="/static/js/index.js"></script>
+    <link rel="icon" type="image/x-icon" href="/srv/static/ico/favicon.ico">
+    <link rel="stylesheet" href="/srv/static/css/index.css">
+    <link rel="stylesheet" href="/srv/static/css/path-bar.css">
+    <script defer src="/srv/static/js/index.js"></script>
   </head>
   <body>
     <div id="path-bar">
       <button onclick="window.location.href='..'" title="Parent">
-        <img src="/static/svg/index/arrow-left-solid.svg">
+        <img src="/srv/static/svg/index/arrow-left-solid.svg">
       </button>
       <button onclick="window.location.href='/'" title="Home (H)">
-        <img src="/static/svg/index/house-chimney-solid.svg">
+        <img src="/srv/static/svg/index/house-chimney-solid.svg">
       </button>
       <span class="path-box">
         <pre id="path-text">{{ folder_path }}</pre>
@@ -33,7 +33,7 @@
     <div id="main-container">
       <div id="sidebar">
         <div class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
-          <img src="/static/svg/index/three-dots-vertical.svg">
+          <img src="/srv/static/svg/index/three-dots-vertical.svg">
         </div>
         <div class="sidebar-content">
           <div>
@@ -41,9 +41,9 @@
             {%- set username = session['user'] if 'user' in session else 'Not logged in' -%}
             <button onclick="alert('{{ username }}')" title="Show username">👤 User</button>
           {% if 'user' in session %}
-            <button id="login" onclick="setUrlKey('logout')" title="(L)">🚪 Logout</button>
+            <button id="login" onclick="logout()" title="(L)">🚪 Logout</button>
           {% else %}
-            <button id="login" onclick="setUrlKey('login')" title="(L)">🔑 Login</button>
+            <button id="login" onclick="login()" title="(L)">🔑 Login</button>
           {% endif %}
           </div>
           <div>

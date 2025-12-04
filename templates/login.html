@@ -6,25 +6,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
     <title>LOGIN</title>
-    <link rel="stylesheet" href="/static/css/login.css">
-    <script>
-      function removeKey() {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('login');
-          window.location.href = url.toString().replace(/=&/g, "&").replace(/=$/, "");
-      }
-    </script>
+    <link rel="stylesheet" href="/srv/static/css/login.css">
+    <script defer src="/srv/static/js/login.js"></script>
   </head>
   <body>
     <div class="container">
-      {% if error %}<h2 id="error">{{ error }}</h2>{% endif %}
-      <form method="POST" autocomplete="on">
+      <h2 id="error" style="display:none"></h2>
+
+      <form id="loginForm" autocomplete="on">
         <input required class="username" type="text" name="username" placeholder="User" autofocus autocomplete="username">
         <input required class="password" type="password" name="password" placeholder="Password" autocomplete="current-password">
-        <button class="button-upload">Login</button>
+        <button type="submit" class="button-upload">Login</button>
       </form>
-      <button onclick="removeKey()" class="button-danger">Cancel</button>
+
+      <button onclick="redirectBack()" class="button-danger">Cancel</button>
     </div>
   </body>
 </html>
 
+ 

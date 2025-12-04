@@ -1,147 +1,152 @@
+
 # Web Server with Custom Video & Audio Player
 
-A lightweight Python -based HTTP file server with built-in streaming for video and audio.    
+A lightweight Python-based HTTP file server with built-in streaming for video and audio.  
 Supports ACL-based access control, uploads, and file operations.
 
 ---
 
 ## Table of Contents
-
-* [🔍 Overview](#overview)
-* [🎧 Multimedia Streaming](#multimedia-streaming)
-* [🔐 ACL & User Management](#acl--user-management)
-* [📂 Requirements](#requirements)
-* [⚙️ Configuration](#configuration)
-* [🔍 Endpoints](#endpoints)
-* [🔢 API Mode](#api-mode)
-* [💡 Other HTTP Methods](#other-http-methods)
-* [📄 HTML vs .web Extensions](#html-vs-web-extensions)
-* [🔹 Official Plugins](#official-plugins)
-* [🚀 Running the Server](#running-the-server)
-* [🔒 License](#license)
+- [Features](#features)
+  - [Overview](#overview)
+  - [Multimedia Streaming](#multimedia-streaming)
+  - [ACL & User Management](#acl--user-management)
+- [Setup](#setup)
+  - [Requirements](#requirements)
+  - [Configuration](#configuration)
+  - [Running the Server](#running-the-server)
+- [Usage](#usage)
+  - [Endpoints](#endpoints)
+    - [Authentication](#authentication)
+    - [File Access](#file-access)
+    - [Video Access](#video-access)
+    - [Directory Listing](#directory-listing)
+    - [Directory Listings as JSON](#directory-listings-as-json)
+  - [Other HTTP Methods](#other-http-methods)
+  - [HTML vs .web Extensions](#html-vs-web-extensions)
+  - [Official Plugins](#official-plugins)
+- [License](#license)
 
 ---
 
-## Overview
+## Features
 
+### Overview
 This service exposes a filesystem directory over HTTP, enabling:
+- **File operations**: upload, create, delete.
+- **Streaming**: streaming via browser-supported formats using HTTP 206. No transcoding, no overhead.
+- **Access control** via on-memory hashmap-based ACLs (read/write/deny per resource and user).
+- Detects if a directory is a mount point and changes its type (and icon).
+- Fast recursive directory size calculation with custom caching system (disabled by default).
 
-* **File operations**: upload, create, delete.
-* **Streaming**: streaming via browser-supported formats using HTTP 206. No transcoding, no overhead.
-* **Access control** via On-memory hashmap-based ACLs (read/write/deny per resource and user).
-* Also it detects if a directory is a mount point and changes its type (and icon).
-* Fast recursive directory size calculation with custom caching system. (disabled by default)
+### Multimedia Streaming
+- Leverages browser-native codecs only.
+- Custom cache system for metadata and subtitles to minimize `ffmpeg` calls.
+- Switch audio tracks in-browser (requires experimental Web Platform Features).
+- SSA/ASS subtitle support via `JASSUB` on the client.
+- On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.
+- Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.
+- Auto-loads external `.mks` subtitles matching video basename.
 
-## Multimedia Streaming
+### ACL & User Management
+- Managed by `aclmgr.py` in the `app/` directory.
+- ACLs define per-path permissions: read-only, write, or denied.
+- User accounts stored in JSON (`data/users.json`).
+- ACL rules stored in JSON (`data/acl.json`).
+- Both files loaded into RAM as a dictionary.
+- See [aclmgr documentation](scripts/aclmgr.md).
 
-* Leverages browser-native codecs only.
-* Custom cache system for metadata and subtitles to minimize `ffmpeg` calls.
-* Switch audio tracks in-browser (requires experimental Web Platform Features).
-* SSA/ASS subtitle support via `JASSUB` on the client.
-* On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.    
-* Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.
-* Auto-loads external `.mks` subtitles matching video basename.
+---
 
-## ACL & User Management
+## Setup
 
-* Managed by `aclmgr.py` in the `app/` directory.
-* ACLs define per-path permissions: read-only, write, or denied.
-* User accounts stored in JSON (`data/users.json`).
-* ACL rules stored in JSON (`data/acl.json`).
-* Both files will be loaded onto RAM as an dict.
-* See [aclmgr documentation](scripts/aclmgr.md).
+### Requirements
 
-## Requirements
-### Server-side
+#### Server-side
 ```bash
 pip install -r requirements.txt
 ```
+- Install `ffmpeg` at the system level for media playback.  
+- A `Redis` server for session storage and other cache.  
 
-Install `ffmpeg` at the system level for media playback.   
-A `Redis` sever for session storage and other cache.   
+#### Client-side
+- The web interface requires a modern browser (2021 or newer).  
+- If you're using something ancient, like a 2018-era fossil that hasn't seen an update in half a decade, expect broken styles and layout quirks.      
 
-### Client-side
-
-The WEB interface requires a modern browser (2021 or newer).   
-If you're using something ancient—like a 2018-era fossil that hasn't seen an update in half a decade—expect broken styles, layout quirks, and a generally degraded experience. 
-
-## Configuration
-
+### Configuration
 Configure via environment variables:
 
-| Variable        | Required | Default          | Description                                     |
-| --------------- | -------- | ---------------- | ----------------------------------------------- |
-| SERVE\_PATH     | Yes      | —                | Directory to serve.                             |
-| ERRLOG\_FILE    | No       | data/error.log   | Server error log.                               |
-| ACL\_FILE       | No       | data/acl.json    | ACL rules file.                                 |
-| USERS\_FILE     | No       | data/users.json  | User accounts file.                             |
-| SECRET\_KEY     | No       | Auto-generated   | Secret key for multi-worker setups.             |
-| SHOW\_DIRSIZE   | No       | False            | Display directory sizes.                        |
+| Variable      | Required | Default        | Description                          |
+|---------------|----------|----------------|--------------------------------------|
+| SERVE_PATH    | Yes      | —              | Directory to serve.                  |
+| ERRLOG_FILE   | No       | data/error.log | Server error log.                    |
+| ACL_FILE      | No       | data/acl.json  | ACL rules file.                      |
+| USERS_FILE    | No       | data/users.json| User accounts file.                  |
+| SECRET_KEY    | No       | Auto-generated | Secret key for multi-worker setups.  |
+| SHOW_DIRSIZE  | No       | False          | Display directory sizes.             |
 
-## Endpoints
+### Running the Server
+**Development** (Flask builtin, `127.0.0.1:8000`):
+```bash
+python3 app.py
+```
 
-This server has no endpoints, everything is path‑based with optional query modifiers.  
-Exceptions:
-- `/path/?login` / `/path/?logout` → Session handling.  
-  - Available from any path.
-  - No redirects, no referer headers required.
-  - Acts like a toggle: happens in place, without changing the path.
-  - Supports API usage with status‑only responses:
-    - `200` → login successful / logout acknowledged.
-    - `401` → invalid credentials or not logged in.
+**Production** (WSGI, e.g., Gunicorn):
+```bash
+gunicorn -b 127.0.0.1:8000 app:app
+```
 
-- `/static` → for frontend assets
-  - It is the only dedicated endpoint.
-  - *RESERVED* exclusively for frontend assets.
-  - Cannot be used as a folder name in the root directory.
+---
 
-### Authentication
-- `GET /path?login` → Returns login page.
-- `POST /path?login` → Authenticates with `username`, `password`.
-- `GET /path?logout` → Logs out and redirects back.
+## Usage
 
-### Media Access
-- `GET /path?raw` → Return always the file.
-  - Applies only for video and audio files.
-  - Send file instead of the player page.
-  - Used internally to access media directly from the browser.  
-  - Ignored in API mode, files are returned directly.
+### Endpoints
+This server has no general-purpose endpoints; everything is path-based with optional query modifiers.  
+The entire `/srv/` namespace is reserved for server functionality.  
+No part of `/srv/` can be used as a folder name in the root directory.
 
-- `GET /videopath?subs=index` → Get subtitle by index.
-  - Applies only for video files.
-  - Used internally on video player GUI.
-  - Returns subtitle track by its index in SSA format.
-  - To use VTT instead of SSA, append the `legacy` suffix to the subtitle index.
+#### Authentication
+- `GET /srv/login?redirect=encoded_url` → Returns login page, redirecting after successful login or exit.  
+- `POST /srv/login` → Authenticates with `username`, `password`.  
+- `GET /srv/logout` → Logs out and ends session.  
 
-- `GET /videopath?tracks` → Get subtitle tracks
-  - Applies only for video files.
-  - Used internally on video player GUI.
-  - Return all subtitle tracks as an JSON list with its names.
-  
-- `GET /videopath?chapters` → Get chapters
-  - Applies only for video files.
-  - Used internally on video player GUI.
-  - Return all chapters with names and start times as JSON.
+Responses:
+- `200` → login successful / logout acknowledged.  
+- `401` → invalid credentials or not logged in.  
 
-### Directory Listing
-- `GET /path?sort=XY` → Sorts directory listing by field and order.
-  - `X` specifies the sort field: `n` = name, `s` = size, `d` = date.
-  - `Y` specifies the sort order: `p` = ascending, `d` = descending.
+#### File Access
+- `GET /path?get=file` → Always return the file or its representation.  
+  - Regular files: returns the file directly.  
+  - Directories: returns a TAR archive of contents.  
+  - Useful to avoid player page for audio/video.  
 
-## API Mode
+- `GET /path?get=cached` → Return the file with cache headers.  
+  - Applies **only to files**.  
+  - Uses same cache headers as `/srv/static/`.  
+  - Intended for plugin usage.  
 
-Set the header `Accept: application/json` to enable API mode.  
-In this mode, directory listings are returned as JSON.
+#### Video Access
+- `GET /videopath?get=chapters` → Get chapters (JSON).  
+- `GET /videopath?get=tracks` → Get subtitle tracks (JSON list).  
+- `GET /videopath?get=subs_ssa&id=x` → Get subtitle track by ID in SSA format.  
+- `GET /videopath?get=subs_vtt&id=x` → Get subtitle track by ID in VTT format (legacy).  
+
+#### Directory Listing
+- `GET /path?sort=XY` → Sorts directory listing by field and order.  
+  - `X`: sort field → `n` = name, `s` = size, `d` = date.  
+  - `Y`: sort order → `p` = ascending, `d` = descending.  
+
+#### Directory Listings as JSON
+- `GET /dir_path?get=json` → Retrieve directory listings in JSON format.  
+- Works **only for directories**.  
+- Sorting parameter ignored.  
 
 **Behavior:**
-- `?sort` is ignored — results follow the server’s default order.  
-  (Sorting is only used for frontend rendering.)
-
-- Valid `type` values include `disk`, `directory`, `text`, and `file`.  
-  Additional types are defined in `app/file_types.json`.
+- Results follow server’s default order.  
+- Valid `type` values: `disk`, `directory`, `text`, `file`.  
+- Additional types defined in `app/file_types.json`.  
 
 **Example response for `/`:**
-
 ```json
 [
   {
@@ -169,46 +174,29 @@ In this mode, directory listings are returned as JSON.
 ]
 ```
 
-## Other HTTP Methods
-
-The server internally uses some WebDAV methods to handle file and folder operations.  
-**Note:** This is not full WebDAV support—these methods are adopted for internal use only.    
+### Other HTTP Methods
+The server internally uses some WebDAV methods for file/folder operations.  
+**Note:** This is not full WebDAV support—methods are adopted for internal use only.  
 
 | Method | Action performed           |
-| ------ | -------------------------- |
+|--------|----------------------------|
 | DELETE | Delete a file or folder    |
 | MKCOL  | Create a new folder        |
 | MOVE   | Rename or move an item     |
 | COPY   | Duplicate a file or folder |
 | PUT    | Upload a file              |
 
-## HTML vs .web Extensions
+### HTML vs .web Extensions
+- `.html` files are treated as plain text.  
+- `.web` files are recognized as HTML pages.  
+- Placing `index.web` in any folder auto-loads that page instead of default listing.  
+- Disable with `?get=explorer` to get file listing page.  
 
-Since `.html` files are treated as plain text, the server recognizes `.web` files as HTML pages.
+### Official Plugins
+Plugins allow creation of new pages and customization of the frontend GUI by dropping `.web` extensions into served directories.  
+Available at: [webFILE-plugins](https://github.com/Sergio00166/webFILE-plugins)
 
-* Placing `index.web` in any folder auto-loads that page instead of the default listing.
-
-**NOTE**: Browser based only (disable with `?noauto`), it does not affect the API.
-
-## Official Plugins
-
-Plugins allow you to create new pages and customize the frontend GUI by dropping `.web` extensions into served directories.    
-All the currently available at: [webFILE-plugins](https://github.com/Sergio00166/webFILE-plugins)
-
-## Running the Server
-
-**Development** (Flask builtin, `127.0.0.1:8000`):
-
-```bash
-python3 app.py
-```
-
-**Production** (WSGI, e.g., Gunicorn):
-
-```bash
-gunicorn -b 127.0.0.1:8000 app:app
-```
+---
 
 ## License
-
 Distributed under the GPLv3 License. See `LICENSE` for details.

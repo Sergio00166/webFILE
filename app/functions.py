@@ -1,25 +1,13 @@
 # Code by Sergio00166
 
-from os.path import exists, normpath, dirname
-from os.path import commonpath, abspath
-from os import sep, access, R_OK, scandir, stat
+from os.path import abspath, commonpath, dirname, exists, normpath
 from datetime import datetime as dt
 from json import load as jsload
-from cache import setup_cache
+from os import R_OK, access, sep
 from flask import session
-from pathlib import Path
 from sys import stderr
 
-cache = setup_cache(2)
 
-if sep == chr(92): import ctypes
-else: from os import statvfs
-
-
-""" Global functions """
-
-# Checks if the path is inside the root dir
-# else raise an exception depending on the case
 def safe_path(path, root, igntf=False):
     path = path.replace("/", sep)
     path = abspath(root + sep + path)
@@ -43,8 +31,6 @@ def load_userACL(USERS, ACL, users_file, acl_file):
     ACL.update(jsload(open(acl_file)))
 
 
-# Checks if the given path has permissions
-# in the ACL file (uses inheritance)
 def validate_acl(path, ACL, write=False):
     askd_perm = 2 if write else 1
     user = session.get("user", "DEFAULT")
@@ -72,23 +58,18 @@ def validate_acl(path, ACL, write=False):
         if path == "/": break
         # Goto parent directory
         path = dirname(path)
-        prop = True # Flag
+        prop = True  # Flag
 
     raise PermissionError
 
 
 def printerr(e, log_path, override_msg=None):
     tb = e.__traceback__
-    while tb.tb_next:
-        tb = tb.tb_next
+    while tb.tb_next: tb = tb.tb_next
     e_type = type(e).__name__
     e_file = tb.tb_frame.f_code.co_filename
     e_line = tb.tb_lineno
-
-    if override_msg:
-        e_message = override_msg
-    else:
-        e_message = e_message = str(e)
+    e_message = override_msg if override_msg else str(e)
 
     if e_message.startswith("["):
         idx = e_message.find("] ")
@@ -98,61 +79,14 @@ def printerr(e, log_path, override_msg=None):
 
     time_str = dt.now().strftime("%Y-%m-%d %H:%M:%S")
     msg = (
-        "[ERROR]\n" + f"   [Time] {time_str} \n"
-        f"   [File] '{e_file}':{e_line}\n"
+        "[ERROR]\n"
+        + f"   [Time] {time_str} \n"
+        + f"   [File] '{e_file}':{e_line}\n"
         + f"   [Type] {e_type}\n"
         + f"   [eMsg] {e_message}\n"
         + "[END]\n"
     )
     open(log_path, "a").write(msg)
     print(msg, file=stderr, end="")
-
-
-
-""" Extra functions """
-
-def get_disk_stat(path):
-    if sep == chr(92):
-        size, free = ctypes.c_ulonglong(), ctypes.c_ulonglong()
-        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
-            path, None, ctypes.byref(size), ctypes.byref(free)
-        )
-        size, free = size.value, free.value
-    else:
-        st = statvfs(path)
-        size = st.f_frsize * st.f_blocks
-        free = st.f_frsize * st.f_bfree
-
-    return {"size": size, "free": free, "used": size-free}
-
-
-def get_dir_size(path):
-    disk_free = get_disk_stat(path)["free"]
-    disk_free = disk_free // (1024*1024)
-    return size_traversal(path, disk_free)
-
-
-@cache.cached("disk_size", TTL=5*60)
-def size_traversal(root, disk_size):
-    root_dev = stat(root).st_dev
-    total, stack = 0, [root]
-
-    while stack:
-        path = stack.pop()
-        try: dir_ls = scandir(path)
-        except: continue
-
-        for e in dir_ls:
-            try:
-                st = e.stat()
-                if st.st_dev == 0:
-                    st = stat(e.path)
-            except: continue
-
-            if e.is_file(): total += st.st_size
-            elif e.is_dir() and st.st_dev == root_dev:
-                stack.append(e.path)
-
-    return total
 
  

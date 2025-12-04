@@ -2,24 +2,26 @@
 
 if __name__=="__main__": exit(0)
 
-from endpoints import serveFiles_page, login, logout, error
-from functions import printerr, load_userACL, safe_path, validate_acl
-from files_mgr import handle_upload, mkdir, delfile, move, copy
+from os import getenv, makedirs, urandom
 from os.path import abspath, isfile, join
-from os import getenv, urandom, makedirs
-from redis import Redis, ConnectionPool
-from flask_session import Session
-from flask import Flask, request
-from send_file import send_file
-from sys import path as pypath
 from secrets import token_hex
+from sys import path as pypath
+
+from flask import Flask, request
+from flask_session import Session
+from redis import ConnectionPool, Redis
+
+from files_mgr import copy, delfile, handle_upload, mkdir, move
+from functions import load_userACL, printerr, safe_path, validate_acl
+from send_file import send_file
+from endpoints import *
 
 
-# Set the paths of templates and static
+# Base paths for templates/static content
 parent_path = abspath(join(pypath[0],".."))
 sroot = join(parent_path,"static")
 
-# Get all the args from the Enviorment
+# Load environment configuration
 root        = getenv("SERVE_PATH"  ,None)
 error_file  = getenv("ERRLOG_FILE" ,None)
 users_file  = getenv("USERS_FILE"  ,None)

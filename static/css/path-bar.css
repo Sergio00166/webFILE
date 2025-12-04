@@ -3,12 +3,14 @@
 #path-bar {
     gap: 8px;
     display: flex;
+    color: white;
     background: #222;
     padding: 6px 10px;
     border-bottom: 1px solid #333;
     box-shadow: 0 2px 4px #0006;
 }
 #path-bar button {
+    border: none;
     height: 26px;
     width: 26px;
     background: #333;
@@ -29,11 +31,10 @@
     display: flex;
     align-items: center;
     background: #444c;
-    border-radius: 10px;
+    border-radius: 12px;
 }
 #path-text {
-    line-height: 1;
-    margin: 0 10px;
+    margin: 0 9px;
     font-size: 14px;
     font-weight: 600;
     font-family: monospace;

@@ -196,9 +196,10 @@ async function changeSubtitles(subtitleIndex) {
         existingTrack.remove();
     }
     if (subtitleIndex > -1) {
-        const subtitleUrl = window.location.pathname + '?subs=' + subtitleIndex;
+        const mode = legacySubtitles ? 'subs_vtt' : 'subs_ssa';
+        const subtitleUrl = `${window.location.pathname}?get=${mode}&id=${subtitleIndex}`;
         if (legacySubtitles)
-            loadWebVttSubtitles(subtitleUrl + 'legacy');
+            loadWebVttSubtitles(subtitleUrl);
         else
             assSubtitleWorker = await createAssSubtitleWorker(subtitleUrl);
     }
@@ -218,7 +219,7 @@ async function toggleLegacySubtitles() {
 async function loadSubtitleTracks() {
     const subsContent = subsSubmenu.querySelector('.menu-content');
     const savedSubtitle = localStorage.getItem('videoSubs');
-    const subtitleList = await fetch('?tracks').then(res => res.json());
+    const subtitleList = await fetch('?get=tracks').then(res => res.json());
 
     for (let i = 0; i < subtitleList.length; i++) {
         const trackName = subtitleList[i];
@@ -480,7 +481,7 @@ function updateVideoTime(percentage) {
 }
 
 async function setupTimelineChapters() {
-    chapters = await fetch('?chapters').then(res => res.json());
+    chapters = await fetch('?get=chapters').then(res => res.json());
     const videoDuration = video.duration;
     const chapterData = [...chapters.map(item => item.start_time), videoDuration];
 

@@ -2,11 +2,9 @@
 
 from init import *
 
-# Define data
 http_methods = [
-    "GET","PUT","POST",
-    "DELETE","MKCOL",
-    "COPY","MOVE"
+    "GET", "PUT", "POST", "MKCOL",
+    "DELETE", "COPY", "MOVE"
 ]
 method_map = {
     "DELETE": delfile,
@@ -20,34 +18,38 @@ method_map = {
 @app.route('/', methods=["GET","POST"], defaults={'path': ''})
 @app.route("/<path:path>", methods=http_methods)
 def explorer(path):
-    useApi = "application/json" in request.headers.get("Accept", "").lower()
     try:
-        if "logout" in request.args: return logout(useApi)
-        if "login"  in request.args: return login(USERS, useApi)
-
         if request.method in method_map:
-            return method_map[request.method](path,ACL,root,error_file)
+            return method_map[request.method](path, ACL, root, error_file)
 
-        return serveFiles_page(path,ACL,root,folder_size,useApi)
+        return path_handler(path, ACL, root, folder_size)
 
     except Exception as e:
-        return error(e,error_file,useApi)
+        return error(e, error_file)
 
 
-# Using all methods avoiding explorer intercept them
-@app.route("/static", defaults={'path': ''}, methods=http_methods)
-@app.route("/static/<path:path>", methods=http_methods)
-def static_files(path):
+@app.route("/srv", defaults={'path': ''}, methods=http_methods)
+@app.route("/srv/<path:path>", methods=http_methods)
+def internal(path):
+
+    path = path.removesuffix("/")
+    if path == "login":  return login(USERS)
+    if path == "logout": return logout()
+
     try:
-        if request.method not in ["HEAD", "GET"] or not path:
-            raise PermissionError
+        if path.startswith("static/"):
+            path = path.removeprefix("static/")
+            if request.method not in ["HEAD", "GET"]:
+                raise PermissionError
 
-        path = safe_path(path,sroot)
-        if not isfile(path): raise PermissionError
-        return send_file( path, cache=True )
+            path = safe_path(path,sroot)
+            if not isfile(path): raise PermissionError
+            return send_file( path, cache=True)
+
+        raise PermissionError
 
     except Exception as e:
-        return error(e,error_file,False)
+        return error(e, error_file)
 
 
 
@@ -55,4 +57,4 @@ def static_files(path):
 if __name__=="__main__":
     app.run(host="127.0.0.1", port=8000, debug=False)
 
-
+ 

@@ -124,6 +124,26 @@ function getSelectedURLs() {
 }
 
 // ============================================================================
+// SESSION REDIRECTERS AND FUNCTIONS
+// ============================================================================
+
+function login() {
+    const currentPath = basePath + window.location.search;
+
+    if (currentPath !== "/") {
+        const encodedPath = encodeURIComponent(currentPath);
+        window.location.href = `/srv/login/?redirect=${encodedPath}`;
+    } else {
+        window.location.href = "/srv/login";
+    }
+}
+
+function logout() {
+    fetch("/srv/logout", {method: "GET"})
+    .then(() => window.location.reload())
+}
+
+// ============================================================================
 // SELECTION MODE MANAGEMENT
 // ============================================================================
 
@@ -196,17 +216,11 @@ async function executeDownloads() {
             const itemURL = getItemURL(fileItem);
             if (!itemURL) continue;
 
-            let suffix;
-            if (fileItem.hasAttribute('isdir'))
-                suffix = '?tar';
-            else
-                suffix = '?raw';
-
-            downloadURL(itemURL + suffix);
+            downloadURL(itemURL + '?get=file');
             await delay(100);
         }
     } else {
-        downloadURL(basePath + '?tar');
+        downloadURL(basePath + '?get=file');
     }
 }
 
