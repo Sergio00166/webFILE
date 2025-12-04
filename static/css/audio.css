@@ -2,32 +2,34 @@
 
 body {
     margin: 0;
-    padding: 0;
-    width: 100vw;
     height: 100vh;
     height: 100dvh;
-    display: flex;
     color: #eee;
+    display: flex;
     align-items: center;
     justify-content: center;
+    font-family: system-ui;
     background-color: black;
-    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* -------------------------
+ *   Base
+ * ------------------------- */
+
 .audio-player {
-    max-width: 500px;
     width: 90vw;
+    padding: 12px;
+    max-width: 500px;
     background: #aaa2;
     border-radius: 20px;
     border: 1px solid #eee4;
     display: flex;
-    padding: 12px;
-    box-sizing: border-box;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
+    box-sizing: border-box;
 }
 img {
     height: 100%;
@@ -105,15 +107,15 @@ button {
     margin-right: 12px;
 }
 .time-row {
-    display: flex;
     width: 100%;
+    display: flex;
     align-items: center;
 }
 #seek-bar {
-    position: relative;
     margin: auto;
-    width: calc(100% - 64px);
     height: 6px;
+    width: calc(100% - 64px);
+    position: relative;
     background: #555;
     cursor: pointer;
     border-radius: 4px;
@@ -125,8 +127,8 @@ button {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: calc(100% + 32px);
     height: 200%;
+    width: calc(100% + 32px);
     transform: translate(-50%, -50%);
 }
 
@@ -164,7 +166,7 @@ button {
 }
 #progress::before {
     opacity: 0;
-    content: '';
+    content: "";
     width: 12px;
     height: 12px;
     right: -6px;
@@ -215,10 +217,10 @@ button {
  * ------------------------- */
 
 .volume-control {
+    gap: 8px;
     width: 90%;
     display: flex;
     align-items: center;
-    gap: 8px;
     padding-right: 12px;
 }
 #vol-icons {

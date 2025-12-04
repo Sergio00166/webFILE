@@ -4,39 +4,39 @@
 // DOM ELEMENTS - AUDIO PLAYER
 // ============================================================================
 
-const audio = document.querySelector('audio');
-const seekBar = document.getElementById('seek-bar');
-const progress = document.getElementById('progress');
-const hoverTime = document.getElementById('hover-time');
-const hoverInfo = document.getElementById('hover-info');
-const currentTime = document.getElementById('current-time');
-const totalTime = document.getElementById('total-time');
-const volumeSlider = document.getElementById('volume-bar');
+const audio = document.querySelector("audio");
+const seekBar = document.getElementById("seek-bar");
+const progress = document.getElementById("progress");
+const hoverTime = document.getElementById("hover-time");
+const hoverInfo = document.getElementById("hover-info");
+const currentTime = document.getElementById("current-time");
+const totalTime = document.getElementById("total-time");
+const volumeSlider = document.getElementById("volume-bar");
 
 // ============================================================================
 // DOM ELEMENTS - CONTROLS
 // ============================================================================
 
-const shuffleButton = document.getElementById('shuffle-btn');
-const loopButton = document.getElementById('loop-btn');
-const previousLink = document.getElementById('prev');
-const nextLink = document.getElementById('next');
-const randomLink = document.getElementById('random');
-const downloadLink = document.getElementById('download-link');
-const speedButton = document.getElementById('speed-btn');
+const shuffleButton = document.getElementById("shuffle-btn");
+const loopButton = document.getElementById("loop-btn");
+const previousLink = document.getElementById("prev");
+const nextLink = document.getElementById("next");
+const randomLink = document.getElementById("random");
+const downloadLink = document.getElementById("download-link");
+const speedButton = document.getElementById("speed-btn");
 
 // ============================================================================
 // DOM ELEMENTS - ICONS
 // ============================================================================
 
 const volumeIcons = Array.from(
-    document.querySelectorAll('#vol-icons img')
+    document.querySelectorAll("#vol-icons img")
 );
 const loopIcons = Array.from(
-    loopButton.querySelectorAll('img')
+    loopButton.querySelectorAll("img")
 );
 const playIcons = Array.from(
-    document.querySelectorAll('#play-pause img')
+    document.querySelectorAll("#play-pause img")
 );
 
 // ============================================================================
@@ -55,16 +55,16 @@ const speedValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 // ============================================================================
 
 function initializeAudioPlayer() {
-    const savedShuffled = localStorage.getItem('audioShuffle');
-    const savedLoopMode = localStorage.getItem('audioLoop');
-    const savedVolume   = localStorage.getItem('audioVolume');
-    const savedMuted    = localStorage.getItem('audioMuted');
-    const savedSpeed    = localStorage.getItem('audioSpeed');
+    const savedShuffled = localStorage.getItem("audioShuffle");
+    const savedLoopMode = localStorage.getItem("audioLoop");
+    const savedVolume   = localStorage.getItem("audioVolume");
+    const savedMuted    = localStorage.getItem("audioMuted");
+    const savedSpeed    = localStorage.getItem("audioSpeed");
 
-    loopMode = parseInt(savedLoopMode || '0');
-    isShuffled = savedShuffled === 'true';
+    loopMode = parseInt(savedLoopMode || "0");
+    isShuffled = savedShuffled === "true";
     audio.volume = parseFloat(savedVolume || 1);
-    audio.muted = savedMuted === 'true';
+    audio.muted = savedMuted === "true";
     speedIndex = Math.max(speedValues.indexOf(savedSpeed), speedValues.indexOf(1));
     audio.playbackRate = speedValues[speedIndex];
     volumeSlider.value = audio.volume;
@@ -86,11 +86,11 @@ function waitForAudioReady() {
     if (audio.paused) pauseAudio();
 
     totalTime.textContent = formatTime(audio.duration);
-    audio.addEventListener('timeupdate', updateSeekBar);
+    audio.addEventListener("timeupdate", updateSeekBar);
 }
 
 function updateSpeed() {
-    speedButton.textContent = speedValues[speedIndex] + 'x';
+    speedButton.textContent = speedValues[speedIndex] + "x";
 }
 
 // ============================================================================
@@ -100,18 +100,18 @@ function updateSpeed() {
 function updateLoopButton() {
     if (loopMode === 0) {
         loopButton.style.opacity = 0.4;
-        loopIcons[0].style.display = 'block';
-        loopIcons[1].style.display = 'none';
+        loopIcons[0].style.display = "block";
+        loopIcons[1].style.display = "none";
     } else if (loopMode === 1) {
         loopButton.style.opacity = 1;
-        loopIcons[0].style.display = 'block';
-        loopIcons[1].style.display = 'none';
+        loopIcons[0].style.display = "block";
+        loopIcons[1].style.display = "none";
     } else {
         loopButton.style.opacity = 1;
-        loopIcons[0].style.display = 'none';
-        loopIcons[1].style.display = 'block';
+        loopIcons[0].style.display = "none";
+        loopIcons[1].style.display = "block";
     }
-    localStorage.setItem('audioLoop', loopMode);
+    localStorage.setItem("audioLoop", loopMode);
 }
 
 function cycleLoopMode() {
@@ -132,7 +132,7 @@ function updateShuffleButton() {
 
 function toggleShuffleMode() {
     isShuffled = !isShuffled;
-    localStorage.setItem('audioShuffle', JSON.stringify(isShuffled));
+    localStorage.setItem("audioShuffle", JSON.stringify(isShuffled));
     updateShuffleButton();
 }
 
@@ -141,8 +141,8 @@ function toggleShuffleMode() {
 // ============================================================================
 
 function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60).toString().padStart(2, '0');
-    const remainingSeconds = Math.floor(seconds % 60).toString().padStart(2, '0');
+    const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const remainingSeconds = Math.floor(seconds % 60).toString().padStart(2, "0");
     return `${minutes}:${remainingSeconds}`;
 }
 
@@ -168,7 +168,7 @@ function formatNumber(number) {
 // ============================================================================
 
 function updateSeekBar() {
-    progress.style.width = (audio.currentTime / audio.duration) * 100 + '%';
+    progress.style.width = (audio.currentTime / audio.duration) * 100 + "%";
     currentTime.textContent = formatTime(audio.currentTime);
 }
 
@@ -198,8 +198,8 @@ function showTimelineHover(clientX) {
     hoverTime.style.width = `${percentage * 100}%`;
 
     hoverInfo.textContent = formatDuration(percentage * audio.duration);
-    hoverInfo.style.display = 'block';
-    hoverInfo.style.bottom = `${height + 6}px`;
+    hoverInfo.style.display = "block";
+    hoverInfo.style.bottom = `${height + 4}px`;
 
     const barRect = seekBar.getBoundingClientRect();
     const tooltipWidth = hoverInfo.offsetWidth;
@@ -212,26 +212,26 @@ function showTimelineHover(clientX) {
     hoverInfo.style.left = `${leftPosition}px`;
 
     if (tooltipWidth)
-        hoverInfo.style.visibility = 'visible';
+        hoverInfo.style.visibility = "visible";
     else
-        hoverInfo.style.visibility = 'hidden';
+        hoverInfo.style.visibility = "hidden";
 }
 
 function clearTimelineHover() {
-    hoverTime.style.width = '0';
-    hoverInfo.style.display = 'none';
+    hoverTime.style.width = "0";
+    hoverInfo.style.display = "none";
 }
 
 function setupMouseDrag(handlerMove) {
-    const endDrag = () => document.removeEventListener('mousemove', handlerMove);
-    document.addEventListener('mousemove', handlerMove);
-    document.addEventListener('mouseup', endDrag, { once: true });
+    const endDrag = () => document.removeEventListener("mousemove", handlerMove);
+    document.addEventListener("mousemove", handlerMove);
+    document.addEventListener("mouseup", endDrag, { once: true });
 }
 
 function setupTouchDrag(handlerMove) {
-    const endDrag = () => document.removeEventListener('touchmove', handlerMove);
-    document.addEventListener('touchmove', handlerMove, { passive: true });
-    document.addEventListener('touchend', endDrag, { once: true });
+    const endDrag = () => document.removeEventListener("touchmove", handlerMove);
+    document.addEventListener("touchmove", handlerMove, { passive: true });
+    document.addEventListener("touchend", endDrag, { once: true });
 }
 
 // ============================================================================
@@ -241,7 +241,7 @@ function setupTouchDrag(handlerMove) {
 function updateVolumeBar() {
     const volumePercent = volumeSlider.value * 100;
     if (audio.muted)
-        volumeSlider.style.background = '#e1e1e1';
+        volumeSlider.style.background = "#e1e1e1";
     else
         volumeSlider.style.background = `linear-gradient(to right, #007aff ${volumePercent}%, #e1e1e1 ${volumePercent}%)`;
 }
@@ -261,33 +261,33 @@ function updateVolumeIcon() {
 
     for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index)
-            volumeIcons[i].style.display = 'block';
+            volumeIcons[i].style.display = "block";
         else
-            volumeIcons[i].style.display = 'none';
+            volumeIcons[i].style.display = "none";
     }
 }
 
 function handleVolumeChange(event) {
     if (audio.muted) {
         audio.muted = false;
-        localStorage.setItem('audioMuted', 'false');
+        localStorage.setItem("audioMuted", "false");
     }
     audio.volume = event.target.value;
-    localStorage.setItem('audioVolume', audio.volume);
+    localStorage.setItem("audioVolume", audio.volume);
     updateVolumeIcon();
     updateVolumeBar();
 }
 
 function toggleMuteState() {
     audio.muted = !audio.muted;
-    localStorage.setItem('audioMuted', audio.muted);
+    localStorage.setItem("audioMuted", audio.muted);
     updateVolumeIcon();
     updateVolumeBar();
 }
 
 function handleVolumeKeyboardChange() {
     volumeSlider.value = audio.volume;
-    localStorage.setItem('audioVolume', audio.volume);
+    localStorage.setItem("audioVolume", audio.volume);
     updateVolumeIcon();
     updateVolumeBar();
 }
@@ -298,14 +298,14 @@ function handleVolumeKeyboardChange() {
 
 function pauseAudio() {
     audio.pause();
-    playIcons[1].style.display = 'none';
-    playIcons[0].style.display = 'block';
+    playIcons[1].style.display = "none";
+    playIcons[0].style.display = "block";
 }
 
 function playAudio() {
     audio.play().catch(()=>{});
-    playIcons[0].style.display = 'none';
-    playIcons[1].style.display = 'block';
+    playIcons[0].style.display = "none";
+    playIcons[1].style.display = "block";
 }
 
 function togglePlayPauseState() {
@@ -324,8 +324,8 @@ function handleAudioEnded() {
             playAudio();
             break;
         default:
-            playIcons[1].style.display = 'none';
-            playIcons[0].style.display = 'block';
+            playIcons[1].style.display = "none";
+            playIcons[0].style.display = "block";
             break;
 
     }
@@ -359,7 +359,7 @@ function download() {
 // KEYBOARD SHORTCUTS
 // ============================================================================
 
-document.addEventListener('mouseup', event => {
+document.addEventListener("mouseup", event => {
     switch (event.button) {
         case 3:
             event.preventDefault();
@@ -374,7 +374,7 @@ document.addEventListener('mouseup', event => {
     }
 });
 
-document.addEventListener('keydown', event => {
+document.addEventListener("keydown", event => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
@@ -384,7 +384,7 @@ document.addEventListener('keydown', event => {
     let delta = 1;
 
     switch (event.key.toLowerCase()) {
-        case ' ':
+        case " ":
             if (document.activeElement === document.body) {
                 event.preventDefault();
                 if (event.repeat) break;
@@ -392,31 +392,31 @@ document.addEventListener('keydown', event => {
             }
             break;
 
-        case 'arrowleft': delta -= 2;
-        case 'arrowright':
+        case "arrowleft": delta -= 2;
+        case "arrowright":
             audio.currentTime += delta * 2;
             break;
 
-        case 'arrowdown': delta -= 2;
-        case 'arrowup':
+        case "arrowdown": delta -= 2;
+        case "arrowup":
             const tmp = audio.volume + (delta * 0.02);
             audio.volume = Math.min(Math.max(tmp, 0), 1);
             handleVolumeKeyboardChange();
             break;
 
-        case 'm':
+        case "m":
             toggleMuteState();
             break;
-        case 's':
+        case "s":
             toggleShuffleMode();
             break;
-        case 'l':
+        case "l":
             cycleLoopMode();
             break;
-        case 'n':
+        case "n":
             navigateToNext();
             break;
-        case 'p':
+        case "p":
             navigateToPrevious();
             break;
         default:
@@ -429,9 +429,9 @@ document.addEventListener('keydown', event => {
 // ============================================================================
 
 function setupMediaSession() {
-    if ('mediaSession' in navigator) {
-        navigator.mediaSession.setActionHandler('previoustrack', navigateToPrevious);
-        navigator.mediaSession.setActionHandler('nexttrack', navigateToNext);
+    if ("mediaSession" in navigator) {
+        navigator.mediaSession.setActionHandler("previoustrack", navigateToPrevious);
+        navigator.mediaSession.setActionHandler("nexttrack", navigateToNext);
     }
 }
 
@@ -439,30 +439,30 @@ function setupMediaSession() {
 // EVENT LISTENERS - BASE
 // ============================================================================
 
-audio.addEventListener('ended', handleAudioEnded);
-audio.addEventListener('play', playAudio);
-audio.addEventListener('pause', pauseAudio);
+audio.addEventListener("ended", handleAudioEnded);
+audio.addEventListener("play", playAudio);
+audio.addEventListener("pause", pauseAudio);
 
-volumeSlider.addEventListener('input', handleVolumeChange);
-volumeSlider.addEventListener('keydown', e => e.preventDefault());
+volumeSlider.addEventListener("input", handleVolumeChange);
+volumeSlider.addEventListener("keydown", e => e.preventDefault());
 
 // ============================================================================
 // EVENT LISTENERS - SPEED
 // ============================================================================
 
-speedButton.addEventListener('click', ()=>{
+speedButton.addEventListener("click", ()=>{
     speedIndex = (speedIndex + 1) % speedValues.length;
     audio.playbackRate = speedValues[speedIndex];
-    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
+    localStorage.setItem("audioSpeed", speedValues[speedIndex]);
     updateSpeed();
 });
 
-speedButton.addEventListener('touchstart', event => {
+speedButton.addEventListener("touchstart", event => {
     event.preventDefault();
     speedButtonStartY = event.touches[0].clientY;
 }, { passive: false });
 
-speedButton.addEventListener('touchend', event => {
+speedButton.addEventListener("touchend", event => {
     const speedButtonEndY = event.changedTouches[0].clientY;
     const speedButtonDeltaY = speedButtonEndY - speedButtonStartY;
 
@@ -474,11 +474,11 @@ speedButton.addEventListener('touchend', event => {
         speedButton.click();
 
     audio.playbackRate = speedValues[speedIndex];
-    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
+    localStorage.setItem("audioSpeed", speedValues[speedIndex]);
     updateSpeed();
 });
 
-speedButton.addEventListener('wheel', event => {
+speedButton.addEventListener("wheel", event => {
     event.preventDefault();
 
     if (event.deltaY < 0 && speedIndex < speedValues.length - 1)
@@ -487,7 +487,7 @@ speedButton.addEventListener('wheel', event => {
         speedIndex--;
 
     audio.playbackRate = speedValues[speedIndex];
-    localStorage.setItem('audioSpeed', speedValues[speedIndex]);
+    localStorage.setItem("audioSpeed", speedValues[speedIndex]);
     updateSpeed();
 
 }, { passive: false });
@@ -496,32 +496,32 @@ speedButton.addEventListener('wheel', event => {
 // EVENT LISTENERS - TIMELINE
 // ============================================================================
 
-seekBar.addEventListener('mousedown', event => {
+seekBar.addEventListener("mousedown", event => {
     setupMouseDrag(moveEvent => updateAudioTime(
         getTimelinePosition(moveEvent.clientX).percentage)
     );
 });
 
-seekBar.addEventListener('touchstart', event => {
+seekBar.addEventListener("touchstart", event => {
     setupTouchDrag(moveEvent => updateAudioTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
 },{ passive: true });
 
-document.addEventListener('touchstart', ()=>{
+document.addEventListener("touchstart", ()=>{
     isTouchHoverActive = true;
     clearTimelineHover();
 },{ passive: true });
 
-seekBar.addEventListener('click', event => {
+seekBar.addEventListener("click", event => {
     updateAudioTime(getTimelinePosition(event.clientX).percentage);
 });
 
-seekBar.addEventListener('mousemove', event => {
+seekBar.addEventListener("mousemove", event => {
     if (!isTouchHoverActive) showTimelineHover(event.clientX);
 });
 
-seekBar.addEventListener('mouseleave', ()=>{
+seekBar.addEventListener("mouseleave", ()=>{
     isTouchHoverActive = false;
     clearTimelineHover();
 });
@@ -530,6 +530,6 @@ seekBar.addEventListener('mouseleave', ()=>{
 // INITIALIZATION CALL
 // ============================================================================
 
-window.addEventListener('pageshow', initializeAudioPlayer);
+window.addEventListener("pageshow", initializeAudioPlayer);
 
  

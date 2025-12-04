@@ -22,6 +22,7 @@ def explorer(path):
         if request.method in method_map:
             return method_map[request.method](path, ACL, root, error_file)
 
+        if not request.method in ["GET", "HEAD"]: return "", 405
         return path_handler(path, ACL, root, folder_size)
 
     except Exception as e:

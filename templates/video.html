@@ -75,19 +75,19 @@
                 <div id="main-menu">
                   <button data-submenu="subs">
                     <span>Subtitles</span>
-                    <span id="menuSubsText"></span>
+                    <span id="menuSubsText">None</span>
                   </button>
                   <button data-submenu="audio">
                     <span>Audio Track</span>
-                    <span id="menuAudioText"></span>
+                    <span id="menuAudioText">None</span>
                   </button>
                   <button data-submenu="speed">
                     <span>Playback Speed</span>
-                    <span id="menuSpeedText"></span>
+                    <span id="menuSpeedText">1x</span>
                   </button>
                   <button onClick="toggleLegacySubtitles()">
                     <span>Legacy Subtitles</span>
-                    <span id="menuLegacyText"></span>
+                    <span id="menuLegacyText">OFF</span>
                   </button>
                   <button onClick="download()">
                     <span>Download</span>
@@ -103,6 +103,7 @@
                 <div id="audio-submenu" style="display: none">
                   <button class="back-button">‹&nbsp; Audio Track</button>
                   <div class="menu-content">
+                    <button>None</button>
                   </div>
                 </div>
                 <div id="speed-submenu" style="display: none">
@@ -128,10 +129,10 @@
         </div>
       </div>
     </div>
-    <a href="?get=file" download id="download_video" tabindex="-1"></a>
-    <a href="{{ subs_file }}" id="download_subs" tabindex="-1"></a>
-    <a href='{{ nxt }}' id="next" tabindex="-1"></a>
-    <a href='{{ prev }}' id="prev" tabindex="-1"></a>
+    <a href="?get=file" id="download_video" download hidden></a>
+    <a href="{{ subs_file }}" id="download_subs" download hidden></a>
+    <a href='{{ nxt }}' id="next" hidden></a>
+    <a href='{{ prev }}' id="prev" hidden></a>
   </body>
 </html>
 

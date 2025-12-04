@@ -4,8 +4,45 @@ from os.path import abspath, commonpath, dirname, exists, normpath
 from datetime import datetime as dt
 from json import load as jsload
 from os import R_OK, access, sep
+from sys import path as pypath
 from flask import session
+from pathlib import Path
 from sys import stderr
+
+# Load file type metadata only once at import time
+file_types = jsload(open(pypath[0] + sep + "file_types.json"))
+file_type_map = {v: k for k, vals in file_types.items() for v in vals}
+autoload_webpage = "index" + file_types.get("webpage")[0]
+
+boms = (
+    b"\xef\xbb\xbf",
+    b"\xff\xfe",
+    b"\xfe\xff",
+    b"\xff\xfe\x00\x00",
+    b"\x00\x00\xfe\xff",
+)
+
+def get_file_type(path):
+    item = Path(path)
+    if item.is_mount(): return "disk"
+    if item.is_dir():   return "directory"
+
+    file_type = file_type_map.get(item.suffix)
+    if file_type:       return file_type
+    return "file" if is_binary(path) else "text"
+
+
+def is_binary(filepath):
+    with open(filepath, "rb") as f:
+        head = f.read(4)
+        if any(
+            head.startswith(bom)
+            for bom in boms
+        ):  return False
+
+        while chunk := f.read(1024):
+            if b"\x00" in chunk: return True
+    return False
 
 
 def safe_path(path, root, igntf=False):
@@ -40,10 +77,8 @@ def validate_acl(path, ACL, write=False):
     if path == ".": path = ""
     path = path.replace(sep, "/")
 
-    if path.startswith("//"):
-        path = path[2:]
-    if not path.startswith("/"):
-        path = "/" + path
+    if path.startswith("//"):    path = path[2:]
+    if not path.startswith("/"): path = "/" + path
 
     while True:
         # Check if there is a rule for it

@@ -14,67 +14,67 @@ const ANIMATION_START_DELAY = 400;
 // DOM ELEMENTS - CONTROLS
 // ============================================================================
 
-const volumeControl = document.getElementById('volume');
-const progress = document.getElementById('progress');
-const seekBar = document.getElementById('seek-bar');
-const totalTime = document.getElementById('total-time');
-const currentTime = document.getElementById('current-time');
-const controlsContainer = document.getElementById('controls');
-const volumeSlider = document.getElementById('volume-bar');
-const mainState = document.getElementById('main-state');
-const hoverTime = document.getElementById('hover-time');
-const hoverInfo = document.getElementById('hover-info');
-const settingsButton = document.getElementById('settings');
-const loadingSpinner = document.getElementById('custom-loader');
+const volumeControl = document.getElementById("volume");
+const progress = document.getElementById("progress");
+const seekBar = document.getElementById("seek-bar");
+const totalTime = document.getElementById("total-time");
+const currentTime = document.getElementById("current-time");
+const controlsContainer = document.getElementById("controls");
+const volumeSlider = document.getElementById("volume-bar");
+const mainState = document.getElementById("main-state");
+const hoverTime = document.getElementById("hover-time");
+const hoverInfo = document.getElementById("hover-info");
+const settingsButton = document.getElementById("settings");
+const loadingSpinner = document.getElementById("custom-loader");
 
 // ============================================================================
 // DOM ELEMENTS - MENU
 // ============================================================================
 
-const settingsMenu = document.getElementById('setting-menu');
-const mainMenu = document.getElementById('main-menu');
-const subsSubmenu = document.getElementById('subs-submenu');
-const audioSubmenu = document.getElementById('audio-submenu');
-const speedSubmenu = document.getElementById('speed-submenu');
-const menuLegacyText = document.getElementById('menuLegacyText');
-const menuSubsText = document.getElementById('menuSubsText');
-const menuSpeedText = document.getElementById('menuSpeedText');
-const menuAudioText = document.getElementById('menuAudioText');
+const settingsMenu = document.getElementById("setting-menu");
+const mainMenu = document.getElementById("main-menu");
+const subsSubmenu = document.getElementById("subs-submenu");
+const audioSubmenu = document.getElementById("audio-submenu");
+const speedSubmenu = document.getElementById("speed-submenu");
+const menuLegacyText = document.getElementById("menuLegacyText");
+const menuSubsText = document.getElementById("menuSubsText");
+const menuSpeedText = document.getElementById("menuSpeedText");
+const menuAudioText = document.getElementById("menuAudioText");
 
 // ============================================================================
 // DOM ELEMENTS - NAVIGATION & MEDIA
 // ============================================================================
 
-const previousLink = document.getElementById('prev');
-const nextLink = document.getElementById('next');
-const subtitleCanvas = document.querySelector('canvas');
-const video = document.querySelector('video');
-const videoContainer = document.getElementById('video-container');
-const loopButton = document.getElementById('loop-btn');
+const previousLink = document.getElementById("prev");
+const nextLink = document.getElementById("next");
+const subtitleCanvas = document.querySelector("canvas");
+const video = document.querySelector("video");
+const videoContainer = document.getElementById("video-container");
+const loopButton = document.getElementById("loop-btn");
 const downloadVideoLink = document.getElementById("download_video");
 const downloadSubtitlesLink = document.getElementById("download_subs");
-const chapterContainer = document.getElementById('chapter-container');
+const chapterContainer = document.getElementById("chapter-container");
 
 // ============================================================================
 // DOM ELEMENTS - ICONS & STATES
 // ============================================================================
 
 const playIcons = Array.from(
-    document.querySelectorAll('#play-pause img')
+    document.querySelectorAll("#play-pause img")
 );
 const fullscreenIcons = Array.from(
-    document.querySelectorAll('#screenToggle img')
+    document.querySelectorAll("#screenToggle img")
 );
 const mainStateIcons = Array.from(
-    mainState.querySelectorAll('img')
+    mainState.querySelectorAll("img")
 );
 const loopIcons = Array.from(
-    loopButton.querySelectorAll('img')
+    loopButton.querySelectorAll("img")
 );
 const volumeIcons = Array.from(
-    volume.querySelectorAll('img')
+    volume.querySelectorAll("img")
 );
-const mainStateVolume = document.querySelector('#state_volume');
+const mainStateVolume = document.querySelector("#state_volume");
 
 // ============================================================================
 // STATE VARIABLES
@@ -102,18 +102,18 @@ let touchHoverActive = false;
 // INITIALIZATION
 // ============================================================================
 function initializeVideoPlayer() {
-    const savedSpeed      = localStorage.getItem('videoSpeed');
-    const savedVolume     = localStorage.getItem('videoVolume');
-    const savedMuted      = localStorage.getItem('videoMuted');
-    const savedLoopMode   = localStorage.getItem('videoLoop');
-    const savedLegacySubs = localStorage.getItem('subsLegacy');
+    const savedSpeed      = localStorage.getItem("videoSpeed");
+    const savedVolume     = localStorage.getItem("videoVolume");
+    const savedMuted      = localStorage.getItem("videoMuted");
+    const savedLoopMode   = localStorage.getItem("videoLoop");
+    const savedLegacySubs = localStorage.getItem("subsLegacy");
 
-    video.muted = savedMuted === 'true';
+    video.muted = savedMuted === "true";
     video.volume = parseFloat(savedVolume || 1);
     volumeSlider.value = video.volume;
-    video.playbackRate = parseFloat(savedSpeed || '1');
-    loopMode = parseInt(savedLoopMode || '0');
-    legacySubtitles = savedLegacySubs === 'true';
+    video.playbackRate = parseFloat(savedSpeed || "1");
+    loopMode = parseInt(savedLoopMode || "0");
+    legacySubtitles = savedLegacySubs === "true";
 
     updateVolumeSlider();
     updateVolumeIcon();
@@ -121,11 +121,13 @@ function initializeVideoPlayer() {
     updateLegacyDisplay();
 	updateLoopButton();
 
-    const isGecko = navigator.userAgent.includes('Gecko') &&
-                   !navigator.userAgent.includes('like Gecko');
+    const isGecko = navigator.userAgent.includes("Gecko") &&
+                   !navigator.userAgent.includes("like Gecko");
 
-    if (isGecko) document.body.dataset.fx = 'no';
-    else         document.body.dataset.fx = 'yes';
+    if (isGecko || !navigator.gpu)
+        document.body.dataset.fx = "no";
+    else
+        document.body.dataset.fx = "yes";
 
     loadSubtitleTracks();
     waitForVideoReady();
@@ -154,50 +156,51 @@ async function waitForVideoReady() {
 async function createAssSubtitleWorker(subtitleUrl) {
     const response = await fetch(subtitleUrl);
     if (!response.ok) {
-        alert('Cannot load subtitle [normal mode]');
+        alert("Cannot load subtitle [normal mode]");
         return;
     }
     return new JASSUB({
         video: video,
         canvas: subtitleCanvas,
         subContent: await response.text(),
-        workerUrl: '/static/jassub/worker.js',
-        wasmUrl: '/static/jassub/worker.wasm',
+        workerUrl: "/srv/static/jassub/worker.js",
+        wasmUrl: "/srv/static/jassub/worker.wasm",
         useLocalFonts: true,
-        fallbackFont: 'liberation sans',
+        fallbackFont: "liberation sans",
         availableFonts: {
-            'liberation sans': '/static/jassub/default.woff2'
+            "liberation sans": "/srv/static/jassub/default.woff2"
         }
     });
 }
 
 function loadWebVttSubtitles(subtitleUrl) {
-    const trackElement = document.createElement('track');
-    trackElement.kind = 'subtitles';
+    const trackElement = document.createElement("track");
+    trackElement.kind = "subtitles";
     trackElement.src = subtitleUrl;
     trackElement.default = true;
     trackElement.onerror = ()=>{
-        alert('Cannot load subtitle [legacy mode]');
+        alert("Cannot load subtitle [legacy mode]");
     };
     video.appendChild(trackElement);
-    trackElement.mode = 'showing';
-    video.textTracks[0].mode = 'showing';
+    trackElement.mode = "showing";
+    video.textTracks[0].mode = "showing";
 }
 
 async function changeSubtitles(subtitleIndex) {
-    const existingTrack = video.querySelector('track[kind="subtitles"]');
-    subtitleCanvas.getContext('2d').clearRect(0, 0, subtitleCanvas.width, subtitleCanvas.height);
+    const existingTrack = video.querySelector("track[kind='subtitles']");
+    subtitleCanvas.getContext("2d").clearRect(0, 0, subtitleCanvas.width, subtitleCanvas.height);
 
     if (assSubtitleWorker)
         assSubtitleWorker.destroy();
 
     if (existingTrack) {
-        existingTrack.track.mode = 'disabled';
+        existingTrack.track.mode = "disabled";
         existingTrack.remove();
     }
     if (subtitleIndex > -1) {
-        const mode = legacySubtitles ? 'subs_vtt' : 'subs_ssa';
+        const mode = legacySubtitles && "subs_vtt" || "subs_ssa";
         const subtitleUrl = `${window.location.pathname}?get=${mode}&id=${subtitleIndex}`;
+
         if (legacySubtitles)
             loadWebVttSubtitles(subtitleUrl);
         else
@@ -211,19 +214,19 @@ async function changeSubtitles(subtitleIndex) {
 
 async function toggleLegacySubtitles() {
     legacySubtitles = !legacySubtitles;
-    localStorage.setItem('subsLegacy', legacySubtitles);
+    localStorage.setItem("subsLegacy", legacySubtitles);
     await changeSubtitles(subtitleIndex);
     updateLegacyDisplay();
 }
 
 async function loadSubtitleTracks() {
-    const subsContent = subsSubmenu.querySelector('.menu-content');
-    const savedSubtitle = localStorage.getItem('videoSubs');
-    const subtitleList = await fetch('?get=tracks').then(res => res.json());
+    const subsContent = subsSubmenu.querySelector(".menu-content");
+    const savedSubtitle = localStorage.getItem("videoSubs");
+    const subtitleList = await fetch("?get=tracks").then(res => res.json());
 
     for (let i = 0; i < subtitleList.length; i++) {
         const trackName = subtitleList[i];
-        const button = document.createElement('button');
+        const button = document.createElement("button");
         button.textContent = trackName;
         subsContent.appendChild(button);
 
@@ -245,8 +248,8 @@ function fixVideoAspectRatio() {
     } else {
         if (video.videoWidth < video.videoHeight) {
             const videoContainerStyle = videoContainer.style;
-            videoContainerStyle.marginTop = '0 !important';
-            videoContainerStyle.paddingBottom = '0 !important';
+            videoContainerStyle.marginTop = "0 !important";
+            videoContainerStyle.paddingBottom = "0 !important";
         }
         scaleVideoToFit();
     }
@@ -259,16 +262,16 @@ function scaleVideoToFit() {
     const videoHeight = video.videoHeight;
     const scale = Math.min(containerWidth / videoWidth, containerHeight / videoHeight);
 
-    video.style.width = (videoWidth * scale) + 'px';
-    video.style.height = (videoHeight * scale) + 'px';
+    video.style.width = (videoWidth * scale) + "px";
+    video.style.height = (videoHeight * scale) + "px";
 
     // Align settings menu with buttons
     if (window.innerWidth <= 500) {
         const buttonRect = settingsButton.getBoundingClientRect();
         const buttonTop = buttonRect.top + window.scrollY;
-        settingsMenu.style.top = (buttonTop + buttonRect.height + 12) + 'px';
+        settingsMenu.style.top = (buttonTop + buttonRect.height + 12) + "px";
     } else {
-        settingsMenu.style.top = '';
+        settingsMenu.style.top = "";
     }
 }
 
@@ -292,18 +295,18 @@ function togglePlayPauseState() {
 
 function playVideo() {
     video.play().catch(()=>{});
-    playIcons [0].style.display = 'none';
-    playIcons [1].style.display = 'block';
-    showMainStateAnimation('play');
+    playIcons [0].style.display = "none";
+    playIcons [1].style.display = "block";
+    showMainStateAnimation("play");
     hideControlsWithDelay(MOUSE_CONTROL_DELAY);
 }
 
 function pauseVideo() {
     video.pause();
-    controlsContainer.classList.add('show');
-    showMainStateAnimation('pause');
-    playIcons [0].style.display = 'block';
-    playIcons [1].style.display = 'none';
+    controlsContainer.classList.add("show");
+    showMainStateAnimation("pause");
+    playIcons [0].style.display = "block";
+    playIcons [1].style.display = "none";
 }
 
 function handleVideoEnded() {
@@ -327,17 +330,17 @@ function handleVideoEnded() {
 function updateLoopButton() {
     if (loopMode === 0) {
         loopIcons[0].style.opacity = 0.4;
-        loopIcons[0].style.display = 'block';
-        loopIcons[1].style.display = 'none';
+        loopIcons[0].style.display = "block";
+        loopIcons[1].style.display = "none";
     } else if (loopMode === 1) {
         loopIcons[0].style.opacity = 1;
-        loopIcons[0].style.display = 'block';
-        loopIcons[1].style.display = 'none';
+        loopIcons[0].style.display = "block";
+        loopIcons[1].style.display = "none";
     } else {
-        loopIcons[0].style.display = 'none';
-        loopIcons[1].style.display = 'block';
+        loopIcons[0].style.display = "none";
+        loopIcons[1].style.display = "block";
     }
-    localStorage.setItem('videoLoop', loopMode);
+    localStorage.setItem("videoLoop", loopMode);
 }
 
 function cycleLoopMode() {
@@ -350,7 +353,7 @@ function cycleLoopMode() {
 // ============================================================================
 
 function updateProgressBar() {
-    progress.style.width = (video.currentTime / video.duration) * 100 + '%';
+    progress.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentTime.innerHTML = formatDuration(video.currentTime);
 }
 
@@ -376,21 +379,21 @@ function formatNumber(number) {
 // ============================================================================
 
 function toggleMuteState() {
-    volumeSlider.classList.remove('show');
+    volumeSlider.classList.remove("show");
     video.muted = !video.muted;
 
     if (video.muted) {
         updateVolumeIcon();
-        showMainStateAnimation('mute');
+        showMainStateAnimation("mute");
     } else {
         updateVolumeIcon();
-        showMainStateAnimation('unmute');
+        showMainStateAnimation("unmute");
     }
-    localStorage.setItem('videoMuted', video.muted);
+    localStorage.setItem("videoMuted", video.muted);
 }
 
 function saveVolumeToStorage() {
-    localStorage.setItem('videoVolume', video.volume.toString());
+    localStorage.setItem("videoVolume", video.volume.toString());
 }
 
 function updateVolumeSlider() {
@@ -407,8 +410,8 @@ function hideControlsWithDelay(delay) {
     controlsHideTimeout = setTimeout(()=>{
         if (!video.paused) {
             if (isCursorOnControls) return;
-            controlsContainer.classList.remove('show');
-            settingsMenu.classList.remove('show');
+            controlsContainer.classList.remove("show");
+            settingsMenu.classList.remove("show");
             document.activeElement.blur();
         }
     }, delay);
@@ -416,12 +419,12 @@ function hideControlsWithDelay(delay) {
 
 function showCursor() {
     clearTimeout(cursorHideTimeout);
-    document.body.style.cursor = 'auto';
+    document.body.style.cursor = "auto";
     if (video.paused) return;
 
     cursorHideTimeout = setTimeout(()=>{
         if (video.paused) return;
-        document.body.style.cursor = 'none';
+        document.body.style.cursor = "none";
     }, MOUSE_CONTROL_DELAY);
 }
 
@@ -436,18 +439,18 @@ function toggleFullscreenMode() {
         document.exitFullscreen();
 }
 
-videoContainer.addEventListener('fullscreenchange', ()=>{
+videoContainer.addEventListener("fullscreenchange", ()=>{
     if (document.fullscreenElement) {
-        fullscreenIcons[0].style.display = 'none';
-        fullscreenIcons[1].style.display = 'block';
+        fullscreenIcons[0].style.display = "none";
+        fullscreenIcons[1].style.display = "block";
     } else {
-        fullscreenIcons[0].style.display = 'block';
-        fullscreenIcons[1].style.display = 'none';
+        fullscreenIcons[0].style.display = "block";
+        fullscreenIcons[1].style.display = "none";
     }
     if (video.videoWidth >= video.videoHeight)
-        screen.orientation.lock('landscape').catch(()=>{});
+        screen.orientation.lock("landscape").catch(()=>{});
     else
-        screen.orientation.lock('portrait').catch(()=>{});
+        screen.orientation.lock("portrait").catch(()=>{});
 });
 
 // ============================================================================
@@ -481,14 +484,14 @@ function updateVideoTime(percentage) {
 }
 
 async function setupTimelineChapters() {
-    chapters = await fetch('?get=chapters').then(res => res.json());
+    chapters = await fetch("?get=chapters").then(res => res.json());
     const videoDuration = video.duration;
     const chapterData = [...chapters.map(item => item.start_time), videoDuration];
 
     chapterData.slice(0, -1).forEach((time, index) => {
         const startPercent = Math.min((time / videoDuration) * 100, 100);
-        const chapterSection = document.createElement('div');
-        chapterSection.classList.add('chapter');
+        const chapterSection = document.createElement("div");
+        chapterSection.classList.add("chapter");
         chapterSection.style.left = `${startPercent}%`;
         chapterContainer.appendChild(chapterSection);
     });
@@ -511,7 +514,7 @@ function showTimelineHover(clientX) {
     else
         hoverInfo.innerHTML = timeString;
 
-    hoverInfo.style.display = 'block';
+    hoverInfo.style.display = "block";
     hoverInfo.style.bottom = `${height + 9}px`;
 
     const barRect = seekBar.getBoundingClientRect();
@@ -525,26 +528,26 @@ function showTimelineHover(clientX) {
     hoverInfo.style.left = `${leftPosition}px`;
 
     if (tooltipWidth)
-        hoverInfo.style.visibility = 'visible';
+        hoverInfo.style.visibility = "visible";
     else
-        hoverInfo.style.visibility = 'hidden';
+        hoverInfo.style.visibility = "hidden";
 }
 
 function clearTimelineHover() {
-    hoverTime.style.width = '0';
-    hoverInfo.style.display = 'none';
+    hoverTime.style.width = "0";
+    hoverInfo.style.display = "none";
 }
 
 function setupMouseDrag(handlerMove) {
-    const endDrag = () => document.removeEventListener('mousemove', handlerMove);
-    document.addEventListener('mousemove', handlerMove);
-    document.addEventListener('mouseup', endDrag, { once: true });
+    const endDrag = () => document.removeEventListener("mousemove", handlerMove);
+    document.addEventListener("mousemove", handlerMove);
+    document.addEventListener("mouseup", endDrag, { once: true });
 }
 
 function setupTouchDrag(handlerMove) {
-    const endDrag = () => document.removeEventListener('touchmove', handlerMove);
-    document.addEventListener('touchmove', handlerMove, { passive: true });
-    document.addEventListener('touchend', endDrag, { once: true, passive: true });
+    const endDrag = () => document.removeEventListener("touchmove", handlerMove);
+    document.addEventListener("touchmove", handlerMove, { passive: true });
+    document.addEventListener("touchend", endDrag, { once: true, passive: true });
 }
 
 // ============================================================================
@@ -559,20 +562,20 @@ let animationTimeout;
 
 function showMainStateAnimation(animationMode) {
     clearTimeout(animationTimeout);
-    mainStateIcons.forEach(icon => icon.style.display = 'none');
-    mainStateVolume.style.display = 'none';
+    mainStateIcons.forEach(icon => icon.style.display = "none");
+    mainStateVolume.style.display = "none";
 
-    if (animationMode === 'show_vol') {
-        mainStateVolume.innerText = Math.round(video.volume * 100) + '%';
-        mainStateVolume.style.display = 'block';
-        mainState.classList.add('show');
+    if (animationMode === "show_vol") {
+        mainStateVolume.innerText = Math.round(video.volume * 100) + "%";
+        mainStateVolume.style.display = "block";
+        mainState.classList.add("show");
     } else {
         const idx = animationMap[animationMode];
         if (idx !== undefined) {
-            mainStateIcons[idx].style.display = 'block';
-            mainState.classList.add('show');
+            mainStateIcons[idx].style.display = "block";
+            mainState.classList.add("show");
         } else {
-            mainState.classList.remove('show');
+            mainState.classList.remove("show");
             return;
         }
     }
@@ -598,9 +601,9 @@ function updateVolumeIcon() {
 
     for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index)
-            volumeIcons[i].style.display = 'block';
+            volumeIcons[i].style.display = "block";
         else
-            volumeIcons[i].style.display = 'none';
+            volumeIcons[i].style.display = "none";
     }
 }
 
@@ -609,23 +612,18 @@ function updateVolumeIcon() {
 // ============================================================================
 
 function loadAudioTracks() {
-    const savedAudioTrack = localStorage.getItem('videoAudio');
-    const audioContent = audioSubmenu.querySelector('.menu-content');
+    const savedAudioTrack = localStorage.getItem("videoAudio");
+    const audioContent = audioSubmenu.querySelector(".menu-content");
     const audioTracks = video.audioTracks;
 
-    if (!audioTracks) {
-        const button = document.createElement('button');
-        button.disabled = true;
-        button.textContent = "Default";
-        audioContent.appendChild(button);
-        menuAudioText.textContent = "Default";
-        return;
-    }
+    if (!audioTracks) return;
+    audioContent.innerHTML = "";
+
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
-        const button = document.createElement('button');
+        const button = document.createElement("button");
 
-        const trackName = (track.label || track.language || 'Track ' + (i + 1));
+        const trackName = (track.label || track.language || "Track " + (i + 1));
         button.textContent = trackName;
         audioContent.appendChild(button);
 
@@ -670,13 +668,13 @@ function handleDoubleTouch(event) {
 
         if (isLeftSide) {
             video.currentTime -= 5;
-            showMainStateAnimation('back');
+            showMainStateAnimation("back");
         } else {
             video.currentTime += 5;
-            showMainStateAnimation('fordward');
+            showMainStateAnimation("fordward");
         }
         updateProgressBar();
-        controlsContainer.classList.add('show');
+        controlsContainer.classList.add("show");
         hideControlsWithDelay(TIME_CHANGE_DELAY);
     } else {
         touchActionTimeout = setTimeout(togglePlayPauseState, ANIMATION_START_DELAY);
@@ -690,9 +688,9 @@ function handleDoubleTouch(event) {
 
 function updateSubtitleDisplay() {
     if (subtitleIndex === -1) {
-        menuSubsText.textContent = 'None';
+        menuSubsText.textContent = "None";
     } else {
-        const subtitleOptions = subsSubmenu.querySelectorAll('.menu-content button');
+        const subtitleOptions = subsSubmenu.querySelectorAll(".menu-content button");
         const buttonIndex = subtitleIndex + 1;
         if (buttonIndex < subtitleOptions.length)
             menuSubsText.textContent = subtitleOptions[buttonIndex].textContent;
@@ -700,14 +698,14 @@ function updateSubtitleDisplay() {
 }
 
 function updateSpeedDisplay() {
-    menuSpeedText.textContent = video.playbackRate + 'x';
+    menuSpeedText.textContent = video.playbackRate + "x";
 }
 
 function updateLegacyDisplay() {
     if (legacySubtitles)
-        menuLegacyText.textContent = 'ON';
+        menuLegacyText.textContent = "ON";
     else
-        menuLegacyText.textContent = 'OFF';
+        menuLegacyText.textContent = "OFF";
 }
 
 function updateAudioDisplay() {
@@ -716,7 +714,7 @@ function updateAudioDisplay() {
 
     for (let i = 0; i < tracks.length; i++) {
         if (tracks[i].enabled) {
-            const trackName = tracks[i].label || tracks[i].language || 'Track ' + (i + 1);
+            const trackName = tracks[i].label || tracks[i].language || "Track " + (i + 1);
             menuAudioText.textContent = trackName;
             break;
         }
@@ -728,57 +726,57 @@ function updateAudioDisplay() {
 // ============================================================================
 
 function toggleSettingsMenu() {
-    settingsMenu.classList.toggle('show');
+    settingsMenu.classList.toggle("show");
     isCursorOnControls = !isCursorOnControls;
-    if (settingsMenu.classList.contains('show'))
+    if (settingsMenu.classList.contains("show"))
         showMainMenu();
 }
 
 function showMainMenu() {
-    mainMenu.style.display = 'block';
-    subsSubmenu.style.display = 'none';
-    audioSubmenu.style.display = 'none';
-    speedSubmenu.style.display = 'none';
+    mainMenu.style.display = "block";
+    subsSubmenu.style.display = "none";
+    audioSubmenu.style.display = "none";
+    speedSubmenu.style.display = "none";
 }
 
 function showSubmenu(submenuId) {
-    mainMenu.style.display = 'none';
-    subsSubmenu.style.display = 'none';
-    audioSubmenu.style.display = 'none';
-    speedSubmenu.style.display = 'none';
+    mainMenu.style.display = "none";
+    subsSubmenu.style.display = "none";
+    audioSubmenu.style.display = "none";
+    speedSubmenu.style.display = "none";
 
-    document.getElementById(submenuId).style.display = 'block';
+    document.getElementById(submenuId).style.display = "block";
 }
 
 function handleMenuSelection(element) {
-    const submenu = element.closest('[id$="-submenu"]');
+    const submenu = element.closest("[id$='-submenu']");
 
     if (submenu) {
-        const buttons = Array.from(submenu.querySelectorAll('.menu-content button'));
+        const buttons = Array.from(submenu.querySelectorAll(".menu-content button"));
         const index = buttons.indexOf(element);
 
-        if (submenu.id === 'subs-submenu') {
+        if (submenu.id === "subs-submenu") {
             subtitleIndex = index-1;
             updateSubtitleDisplay();
             changeSubtitles(subtitleIndex);
             const subtitleText = element.textContent;
 
             if (subtitleIndex === -1)
-                localStorage.removeItem('videoSubs');
+                localStorage.removeItem("videoSubs");
             else
-                localStorage.setItem('videoSubs', subtitleText);
+                localStorage.setItem("videoSubs", subtitleText);
 
-        } else if (submenu.id === 'audio-submenu') {
+        } else if (submenu.id === "audio-submenu") {
             changeAudioTrack(index);
             const trackText = element.textContent;
-            localStorage.setItem('videoAudio', trackText);
+            localStorage.setItem("videoAudio", trackText);
 
-        } else if (submenu.id === 'speed-submenu') {
+        } else if (submenu.id === "speed-submenu") {
             const speedText = element.textContent;
-            const menuSpeedText = parseFloat(speedText.replace('x', ''));
+            const menuSpeedText = parseFloat(speedText.replace("x", ""));
             video.playbackRate = menuSpeedText;
             updateSpeedDisplay();
-            localStorage.setItem('videoSpeed', video.playbackRate);
+            localStorage.setItem("videoSpeed", video.playbackRate);
         }
         showMainMenu();
     }
@@ -793,20 +791,20 @@ function handleVolumeKeyboardChange() {
     updateVolumeSlider();
     updateVolumeIcon();
     saveVolumeToStorage();
-    showMainStateAnimation('show_vol');
+    showMainStateAnimation("show_vol");
 }
 
 function handleTimeChangeKeyboard(delta) {
-    let mode = 'fordward';
-    if (delta < 0) mode = 'back';
-    controlsContainer.classList.add('show');
+    let mode = "fordward";
+    if (delta < 0) mode = "back";
+    controlsContainer.classList.add("show");
     hideControlsWithDelay(TIME_CHANGE_DELAY);
     updateProgressBar();
     showMainStateAnimation(mode);
 }
 
 function download() {
-    if (downloadSubtitlesLink.href !== "#") {
+    if (downloadSubtitlesLink.getAttribute("href") !== "#") {
         alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
         downloadSubtitlesLink.click();
     }
@@ -817,58 +815,58 @@ function download() {
 // EVENT LISTENERS - WINDOW & VIDEO
 // ============================================================================
 
-window.addEventListener('resize', scaleVideoToFit);
-window.addEventListener('fullscreenchange', scaleVideoToFit);
+window.addEventListener("resize", scaleVideoToFit);
+window.addEventListener("fullscreenchange", scaleVideoToFit);
 
-video.addEventListener('play', playVideo);
-video.addEventListener('pause', pauseVideo);
+video.addEventListener("play", playVideo);
+video.addEventListener("pause", pauseVideo);
 
-video.addEventListener('waiting', ()=>{
-    loadingSpinner.style.display = 'block';
+video.addEventListener("waiting", ()=>{
+    loadingSpinner.style.display = "block";
 });
-video.addEventListener('playing', ()=>{
-    loadingSpinner.style.display = 'none';
+video.addEventListener("playing", ()=>{
+    loadingSpinner.style.display = "none";
 });
 
 // ============================================================================
 // EVENT LISTENERS - SHOW/HIDE CONTROLS
 // ============================================================================
 
-videoContainer.addEventListener('mouseleave', ()=>{
+videoContainer.addEventListener("mouseleave", ()=>{
     clearTimeout(cursorHideTimeout);
-    document.body.style.cursor = 'auto';
+    document.body.style.cursor = "auto";
     hideControlsWithDelay(50);
 });
 
 function showControls(delay, cursor=false) {
     if (cursor) showCursor();
-    controlsContainer.classList.add('show');
+    controlsContainer.classList.add("show");
     hideControlsWithDelay(delay);
 }
 
-videoContainer.addEventListener('touchmove', ()=>{
+videoContainer.addEventListener("touchmove", ()=>{
     touchInteractionActive = true;
     showControls(TOUCH_CONTROL_DELAY);
 },{ passive: false });
 
-controlsContainer.addEventListener('touchend', event => {
+controlsContainer.addEventListener("touchend", event => {
     if (event.target === controlsContainer)
         handleDoubleTouch(event);
     else
         showControls(TOUCH_CONTROL_DELAY);
 },{ passive: false });
 
-controlsContainer.addEventListener('click', event => {
+controlsContainer.addEventListener("click", event => {
     if (event.target === controlsContainer)
         togglePlayPauseState();
 
     showControls(MOUSE_CONTROL_DELAY,true);
 });
 
-videoContainer.addEventListener('mousemove', event => {
+videoContainer.addEventListener("mousemove", event => {
     showControls(MOUSE_CONTROL_DELAY,true);
 });
-videoContainer.addEventListener('focusin', event => {
+videoContainer.addEventListener("focusin", event => {
     showControls(MOUSE_CONTROL_DELAY);
 });
 
@@ -876,47 +874,47 @@ videoContainer.addEventListener('focusin', event => {
 // EVENT LISTENERS - VOLUME
 // ============================================================================
 
-volumeControl.addEventListener('mouseenter', ()=>{
+volumeControl.addEventListener("mouseenter", ()=>{
     clearTimeout(volumeHideTimeout);
     if (video.muted)
-        volumeSlider.classList.remove('show');
+        volumeSlider.classList.remove("show");
     else
-        volumeSlider.classList.add('show');
+        volumeSlider.classList.add("show");
 });
 
-volumeControl.addEventListener('mouseleave', ()=>{
+volumeControl.addEventListener("mouseleave", ()=>{
     clearTimeout(volumeHideTimeout);
-    volumeSlider.classList.remove('show');
+    volumeSlider.classList.remove("show");
 });
 
-volumeSlider.addEventListener('input', event => {
+volumeSlider.addEventListener("input", event => {
     video.volume = event.target.value;
     updateVolumeSlider();
     saveVolumeToStorage();
     updateVolumeIcon();
 });
 
-volumeSlider.addEventListener('keydown', e => e.preventDefault());
+volumeSlider.addEventListener("keydown", e => e.preventDefault());
 
 // ============================================================================
 // EVENT LISTENERS - MENU NAVIGATION
 // ============================================================================
 
-mainMenu.addEventListener('click', event => {
-    const target = event.target.closest('button[data-submenu]');
+mainMenu.addEventListener("click", event => {
+    const target = event.target.closest("button[data-submenu]");
     if (target) {
-        const submenuTarget = target.getAttribute('data-submenu');
-        showSubmenu(submenuTarget + '-submenu');
+        const submenuTarget = target.getAttribute("data-submenu");
+        showSubmenu(submenuTarget + "-submenu");
     }
 });
 
-document.querySelectorAll('.back-button').forEach(button => {
-    button.addEventListener('click', showMainMenu);
+document.querySelectorAll(".back-button").forEach(button => {
+    button.addEventListener("click", showMainMenu);
 });
 
 [subsSubmenu, audioSubmenu, speedSubmenu].forEach(submenu => {
-    submenu.addEventListener('click', event => {
-        const target = event.target.closest('.menu-content button');
+    submenu.addEventListener("click", event => {
+        const target = event.target.closest(".menu-content button");
         if (target) handleMenuSelection(target);
     });
 });
@@ -925,32 +923,32 @@ document.querySelectorAll('.back-button').forEach(button => {
 // EVENT LISTENERS - TIMELINE
 // ============================================================================
 
-seekBar.addEventListener('mousedown', event => {
+seekBar.addEventListener("mousedown", event => {
     setupMouseDrag(moveEvent => updateVideoTime(
         getTimelinePosition(moveEvent.clientX).percentage)
     );
 });
 
-seekBar.addEventListener('touchstart', event => {
+seekBar.addEventListener("touchstart", event => {
     setupTouchDrag(moveEvent => updateVideoTime(
         getTimelinePosition(moveEvent.touches[0] && moveEvent.touches[0].clientX).percentage)
     );
 },{ passive: true });
 
-document.addEventListener('touchstart', ()=>{
+document.addEventListener("touchstart", ()=>{
     touchHoverActive = true;
     clearTimelineHover();
 },{ passive: true });
 
-seekBar.addEventListener('click', event => {
+seekBar.addEventListener("click", event => {
     updateVideoTime(getTimelinePosition(event.clientX).percentage);
 });
 
-seekBar.addEventListener('mousemove', event => {
+seekBar.addEventListener("mousemove", event => {
     if (!touchHoverActive) showTimelineHover(event.clientX);
 });
 
-seekBar.addEventListener('mouseleave', ()=>{
+seekBar.addEventListener("mouseleave", ()=>{
     touchHoverActive = false;
     clearTimelineHover();
 });
@@ -959,7 +957,7 @@ seekBar.addEventListener('mouseleave', ()=>{
 // EVENT LISTENERS - KEYBOARD
 // ============================================================================
 
-document.addEventListener('mouseup', event => {
+document.addEventListener("mouseup", event => {
     switch (event.button) {
         case 3:
             event.preventDefault();
@@ -974,19 +972,19 @@ document.addEventListener('mouseup', event => {
     }
 });
 
-document.addEventListener('keydown', event => {
+document.addEventListener("keydown", event => {
     if (settingsMenu.contains(event.target)) return;
     if (event.ctrlKey || event.metaKey || event.altKey) return;
 
     if (event.key.match(/[0-9]/gi)) {
         video.currentTime = (video.duration / 100) * (parseInt(event.key) * 10);
-        progress.style.width = parseInt(event.key) * 10 + '%';
+        progress.style.width = parseInt(event.key) * 10 + "%";
         return;
     }
     let delta = 1;
 
     switch (event.key.toLowerCase()) {
-        case ' ':
+        case " ":
             if (document.activeElement === document.body) {
                 event.preventDefault();
                 if (event.repeat) break;
@@ -995,32 +993,32 @@ document.addEventListener('keydown', event => {
             }
             break;
 
-        case 'arrowleft': delta -= 2;
-        case 'arrowright':
+        case "arrowleft": delta -= 2;
+        case "arrowright":
             video.currentTime += delta * 2;
             handleTimeChangeKeyboard(delta);
             break;
 
-        case 'arrowdown': delta -= 2;
-        case 'arrowup':
+        case "arrowdown": delta -= 2;
+        case "arrowup":
             const tmp = video.volume + (delta * 0.02);
             video.volume = Math.min(Math.max(tmp, 0), 1);
             handleVolumeKeyboardChange();
             break;
 
-        case 'f':
+        case "f":
             toggleFullscreenMode();
             break;
-        case 'p':
+        case "p":
             navigateToPrevious();
             break;
-        case 'n':
+        case "n":
             navigateToNext();
             break;
-        case 'l':
+        case "l":
             cycleLoopMode();
             break;
-        case 'm':
+        case "m":
             toggleMuteState();
             break;
         default:
@@ -1032,6 +1030,6 @@ document.addEventListener('keydown', event => {
 // INITIALIZATION CALL
 // ============================================================================
 
-window.addEventListener('pageshow', initializeVideoPlayer);
+window.addEventListener("pageshow", initializeVideoPlayer);
 
  

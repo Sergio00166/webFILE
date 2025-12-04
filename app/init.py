@@ -4,7 +4,6 @@ if __name__=="__main__": exit(0)
 
 from os import getenv, makedirs, urandom
 from os.path import abspath, isfile, join
-from secrets import token_hex
 from sys import path as pypath
 
 from flask import Flask, request
@@ -27,6 +26,9 @@ error_file  = getenv("ERRLOG_FILE" ,None)
 users_file  = getenv("USERS_FILE"  ,None)
 acl_file    = getenv("ACL_FILE"    ,None)
 folder_size = getenv("SHOW_DIRSIZE","FALSE").upper()=="TRUE"
+# Redis configuration, also defined in cache.py
+redis_port  = getenv("REDIS_PORT"  ,6379)
+redis_addr  = getenv("REDIS_ADDR"  ,"127.0.0.1")
 
 
 if root: root = abspath(root)
@@ -44,7 +46,7 @@ acl_file    = acl_file    or join(data_dir,"acl.json")
 
 # Load and define the USER/ACL database
 USERS,ACL = {},{}
-try: load_userACL(USERS,ACL,users_file,acl_file)
+try: load_userACL(USERS, ACL, users_file, acl_file)
 except Exception as e:
     printerr(e,error_file,"Cannot open the USER/ACL database files")
     exit(1) # Dont countinue if error
@@ -53,7 +55,7 @@ except Exception as e:
 # Initialize main flask app
 app = Flask(__name__, static_folder=None, template_folder=join(parent_path,"templates"))
 app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
-pool = ConnectionPool(host='127.0.0.1', port=6379, db=0)
+pool = ConnectionPool(host=redis_addr, port=redis_port, db=0)
 
 # Configure Redis for session storage
 app.config['SESSION_TYPE'] = 'redis'

@@ -32,7 +32,7 @@ def ffmpeg_get_chapters(file_path, inode, size, mtime):
     ffprobe_output = jsload( run([
         "ffprobe", "-v", "quiet", "-show_entries",
         "chapters",  "-of", "json", file_path
-    ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
+    ], stdout=PIPE, stderr=DEVNULL).stdout.decode() )
     try:
         return jsdump([ {
             "title": chapter["tags"].get("title", "Untitled"),
@@ -46,11 +46,11 @@ def ffmpeg_get_chapters(file_path, inode, size, mtime):
 def ffmpeg_get_tracks(file_path, inode, size, mtime):
     # This is to get all the subtitles name or language
     ffprobe_output = jsload( run([
-        "ffprobe", "-v", "quiet", "-select_streams",
-        "s", "-show_entries",
+        "ffprobe", "-v", "quiet",
+        "-select_streams", "s", "-show_entries",
         "stream=index:stream_tags=title:stream_tags=language",
         "-of", "json", file_path
-    ], stdout=PIPE,stderr=DEVNULL).stdout.decode() )
+    ], stdout=PIPE, stderr=DEVNULL).stdout.decode() )
 
     subtitles_list = []
     streams = ffprobe_output.get("streams",[])
@@ -71,12 +71,12 @@ def ffmpeg_get_subs(file, index, legacy, inode, size, mtime):
     if legacy:
         ass2vtt = get_codec(file,index)=="ass"
         codec = "ass" if ass2vtt else "webvtt"
-    else: ass2vtt,codec = False,"ass"
+    else: ass2vtt, codec = False, "ass"
 
-    out = run( [
+    out = run([
         "ffmpeg", "-i", file, "-map",
         f"0:s:{index}", "-f", codec, "-"
-    ], stdout=PIPE,stderr=DEVNULL )
+    ], stdout=PIPE, stderr=DEVNULL)
 
     if out.returncode != 0:
         raise NotImplementedError("Unsupported subtitle codec")
@@ -105,8 +105,8 @@ def get_codec(source,index):
         "-select_streams", f"s:{index}",
         "-show_entries", "stream=codec_name","-of",
         "default=noprint_wrappers=1:nokey=1",source
-    ], stdout=PIPE,stderr=DEVNULL).stdout.decode().strip() \
-    in ["ssa","ass"] else "webvtt"
+    ], stdout=PIPE, stderr=DEVNULL
+    ).stdout.decode().strip() in ["ssa","ass"] else "webvtt"
 
 
 def get_subtitles(index,file,legacy):
@@ -123,7 +123,7 @@ def get_subtitles(index,file,legacy):
     subsname += "vtt" if legacy else "ssa"
 
     mime = "text/vtt" if legacy else "application/x-substation-alpha"
-    headers = {"Content-Disposition": "attachment;filename="+subsname}
+    headers = {"Content-Disposition": "attachment;filename=" + subsname}
 
     return Response(out, mimetype=mime, headers=headers)
 
