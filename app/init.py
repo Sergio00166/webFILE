@@ -4,7 +4,6 @@ if __name__=="__main__": exit(0)
 
 from os import getenv, makedirs, urandom
 from os.path import abspath, isfile, join
-from secrets import token_hex
 from sys import path as pypath
 
 from flask import Flask, request

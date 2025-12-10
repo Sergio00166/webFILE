@@ -12,8 +12,6 @@ from views import *
 
 
 def path_handler(path, ACL, root, folder_size):
-    if not request.method in ["GET", "HEAD"]:
-        return "Method not allowed", 405
 
     # Allow root listing
     if path: validate_acl(path, ACL)
@@ -81,19 +79,20 @@ def logout():
 
 
 def error(e, error_file):
-    isApi = request.headers.get("Accept","") == "*/*"
+    accept = request.headers.get("Accept","")
+    isApi = accept.startswith("text/html")
 
     if isinstance(e, PermissionError):
-        if isApi: return "Forbidden",       403
+        if not isApi: return "",            403
         return render_template("403.html"), 403
 
     elif isinstance(e, FileNotFoundError):
-        if isApi: return "Not Found",       404
+        if not isApi: return "",            404
         return render_template("404.html"), 404
 
     else:
         printerr(e, error_file)  # Log the error
-        if isApi: return "Server Error",    500
+        if not isApi: return "",            500
         return render_template("500.html"), 500
 
  
