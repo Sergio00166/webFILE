@@ -2,14 +2,15 @@
 
 body {
     margin: 0;
-    font-family: sans-serif;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0;
     height: 100vh;
     height: 100dvh;
-    color: white;
-    background: black;
+    display: flex;
+    color: #eee;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -113,15 +114,15 @@ video::-moz-media-controls { display: none !important; }
 button {
     width: 32px;
     height: 32px;
+    margin: 0 4px;
+    cursor: pointer;
+    flex-shrink: 0;
     border-radius: 50%;
     color: white;
     border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 4px;
-    cursor: pointer;
-    flex-shrink: 0;
 }
 button img {
     width: 20px;
@@ -207,9 +208,9 @@ button img {
 }
 #progress::before {
     content: "";
-    width: 12px;
-    height: 12px;
-    right: -6px;
+    width: 16px;
+    height: 16px;
+    right: -8px;
     position: absolute;
     background: #ff6a00e0;
     border-radius: 50%;
@@ -229,9 +230,9 @@ button img {
 
 #hover-time {
     width: 0;
-    position: absolute;
     display: flex;
     height: 100%;
+    position: absolute;
     background: #fff4;
     align-items: center;
     border-radius: 5px;
@@ -254,16 +255,16 @@ button img {
  * ------------------------- */
 
 #chapter-container {
-    position: relative;
     height: 100%;
+    position: relative;
     border-radius: inherit;
     overflow: hidden;
 }
 .chapter {
-    position: absolute;
-    height: 100%;
     width: 3px;
+    height: 100%;
     margin-left: -1px;
+    position: absolute;
     background-color: black;
     box-shadow: 0 0 1px white;
     z-index: 1;

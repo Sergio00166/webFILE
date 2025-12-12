@@ -3,7 +3,6 @@
 body {
     margin: 0;
     padding: 0;
-    width: 100vw;
     height: 100vh;
     height: 100dvh;
     display: flex;
@@ -16,6 +15,11 @@ body {
     -webkit-user-select: none;
     user-select: none;
 }
+
+/* -------------------------
+ *   Base
+ * ------------------------- */
+
 .audio-player {
     max-width: 500px;
     width: 90vw;
@@ -105,15 +109,15 @@ button {
     margin-right: 12px;
 }
 .time-row {
-    display: flex;
     width: 100%;
+    display: flex;
     align-items: center;
 }
 #seek-bar {
-    position: relative;
     margin: auto;
-    width: calc(100% - 64px);
     height: 6px;
+    width: calc(100% - 64px);
+    position: relative;
     background: #555;
     cursor: pointer;
     border-radius: 4px;
@@ -125,8 +129,8 @@ button {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: calc(100% + 32px);
     height: 200%;
+    width: calc(100% + 32px);
     transform: translate(-50%, -50%);
 }
 
@@ -215,10 +219,10 @@ button {
  * ------------------------- */
 
 .volume-control {
+    gap: 8px;
     width: 90%;
     display: flex;
     align-items: center;
-    gap: 8px;
     padding-right: 12px;
 }
 #vol-icons {
