@@ -46,14 +46,6 @@
 }
 
  @media (hover:hover) {
-    #list-group > button:hover {
-        background: #2a2a2a;
-        border-color: #555;
-    }
-    .sidebar-content
-    button:not(:disabled):hover {
-        background: #444a;
-    }
     #path-bar button:hover {
         background: #444;
     }

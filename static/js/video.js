@@ -124,8 +124,10 @@ function initializeVideoPlayer() {
     const isGecko = navigator.userAgent.includes("Gecko") &&
                    !navigator.userAgent.includes("like Gecko");
 
-    if (isGecko) document.body.dataset.fx = "no";
-    else         document.body.dataset.fx = "yes";
+    if (isGecko || !navigator.gpu)
+        document.body.dataset.fx = "no";
+    else
+        document.body.dataset.fx = "yes";
 
     loadSubtitleTracks();
     waitForVideoReady();

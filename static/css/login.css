@@ -7,17 +7,16 @@ body {
     margin: 0;
     height: 100vh;
     height: 100dvh;
-    color: white;
+    color: #eee;
     display: grid;
     place-items: center;
+    font-family: system-ui;
     background-color: #111;
-    font-family: "Segoe UI", sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
-    /* For when the keyboard opens on mobile */
-    transition: height 0.3s;
 }
+
 #error {
     width: 100%;
     margin-top: 0;
