@@ -10,7 +10,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: black;
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -88,10 +88,9 @@ video::-moz-media-controls { display: none !important; }
     gap: 6px;
     left: 50%;
     display: flex;
-    line-height: 1;
-    font-size: 13px;
-    padding: 4px 6px;
-    border-radius: 6px;
+    font-size: 14px;
+    padding: 3px 6px;
+    border-radius: 8px;
     position: absolute;
     transform: translateX(-50%);
     box-shadow: none !important;
@@ -123,6 +122,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: inherit;
 }
 button img {
     width: 20px;
@@ -138,8 +138,8 @@ button img {
 #main-state {
     opacity: 0;
     transform: scale(0);
-    height: 64px;
-    width: 64px;
+    height: 67px;
+    width: 67px;
     position: absolute;
     cursor: pointer;
     border-radius: 50%;
@@ -151,7 +151,7 @@ button img {
     line-height: 1;
 }
 #main-state.show {
-    opacity: 0.9;
+    opacity: 1;
     transform: scale(1);
 }
 #main-state img {
@@ -241,12 +241,11 @@ button img {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw);
-    padding: 6px 8px;
-    border-radius: 8px;
-    font-size: 14px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 15px;
     font-weight: bold;
     text-align: center;
-    line-height: 1.2;
     z-index: 1;
 }
 
@@ -337,8 +336,8 @@ button img {
 }
 #setting-menu .back-button {
     padding: 6px 24px 6px 10px;
-    background: #2345;
     border-radius: 12px 12px 0 0;
+    background: #2345;
 }
 #setting-menu button {
     background: none;
@@ -346,11 +345,11 @@ button img {
     padding: 0;
     width: 100%;
     height: auto;
+    font-size: 14px;
     padding: 8px 12px;
     border-radius: 12px;
     white-space: nowrap;
     display: flex;
-    font-size: 14px;
     justify-content: flex-start;
 }
 #main-menu, .menu-content {
@@ -358,12 +357,12 @@ button img {
     overflow: auto;
 }
 .menu-content {
-    max-height: calc(min(40vh, 360px) - 30px);
-    max-height: calc(min(40dvh, 360px) - 30px);
+    max-height: calc(min(50vh, 360px) - 30px);
+    max-height: calc(min(50dvh, 360px) - 30px);
 }
 #main-menu {
-    max-height: min(40vh, 360px);
-    max-height: min(40dvh, 360px);
+    max-height: min(50vh, 360px);
+    max-height: min(50dvh, 360px);
 }
 #main-menu > button > span:last-of-type {
     flex: 1;

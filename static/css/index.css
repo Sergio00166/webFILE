@@ -2,14 +2,13 @@
 
 body {
     margin: 0;
-    padding: 0;
     height: 100vh;
     height: 100dvh;
-    display: flex;
     color: #eee;
+    display: flex;
     flex-direction: column;
-    background-color: #1a1a1a;
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: system-ui;
+    background-color: #131313;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -54,9 +53,9 @@ img {
 }
 pre {
     margin: 0;
+    font-size: 16px;
     white-space: pre-wrap;
     font-family: inherit;
-    font-size: 16px;
     -webkit-user-select: text;
     user-select: text;
 }
@@ -80,7 +79,7 @@ button {
     display: flex;
     width: fit-content;
     flex-direction: column;
-    background: #2a2a2a;
+    background: #242526;
     border-right: 1px solid #444;
     box-shadow: 2px 0 4px #0008;
     transition: transform .3s;
@@ -216,7 +215,6 @@ button {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #1a1a1a;
     animation: fadeIn .5s ease-out;
 }
 #loader > h1 {
@@ -325,12 +323,12 @@ button {
 
 @media (hover:hover) {
     #list-group > button:hover {
-        background: #2a2a2a;
+        background: #333a;
         border-color: #555;
     }
     .sidebar-content
     button:not(:disabled):hover {
-        background: #444a;
+        background: #4448;
     }
 }
 

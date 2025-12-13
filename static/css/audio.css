@@ -2,15 +2,14 @@
 
 body {
     margin: 0;
-    padding: 0;
     height: 100vh;
     height: 100dvh;
-    display: flex;
     color: #eee;
+    display: flex;
     align-items: center;
     justify-content: center;
+    font-family: system-ui;
     background-color: black;
-    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
