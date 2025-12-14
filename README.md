@@ -107,15 +107,15 @@ No part of `/srv/` can be used as a folder name in the root directory.
 
 #### Authentication
 - `GET /srv/login?redirect=encoded_url` → Returns login page, redirecting after successful login or exit.  
-- `POST /srv/login` → Authenticates with `username`, `password`.  
-- `GET /srv/logout` → Logs out and ends session.  
+- `POST /srv/login` → Authenticates with `username`, `password` (form data).  
+- `GET /srv/logout` → Logs out and ends current session.  
 
 Responses:
 - `200` → login successful / logout acknowledged.  
 - `401` → invalid credentials or not logged in.  
 
 #### File Access
-- `GET /path?get=file` → Always return the file or its representation.  
+- `GET /path?get=file` → Always return the file or its file representation.  
   - Regular files: returns the file directly.  
   - Directories: returns a TAR archive of contents.  
   - Useful to avoid player page for audio/video.  
