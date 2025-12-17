@@ -20,17 +20,16 @@ body {
  * ------------------------- */
 
 .audio-player {
-    max-width: 500px;
     width: 90vw;
+    padding: 12px;
+    max-width: 500px;
     background: #aaa2;
     border-radius: 20px;
     border: 1px solid #eee4;
     display: flex;
-    padding: 12px;
-    box-sizing: border-box;
     flex-direction: column;
     align-items: center;
-    overflow: hidden;
+    box-sizing: border-box;
 }
 img {
     height: 100%;
