@@ -132,11 +132,11 @@ button img {
  * ------------------------- */
 
 #main-state {
+    height: 70px;
+    width: 70px;
     opacity: 0;
     transform: scale(0);
     pointer-events: none;
-    height: 67px;
-    width: 67px;
     position: absolute;
     cursor: pointer;
     border-radius: 50%;
@@ -380,8 +380,8 @@ button img {
  * ------------------------- */
 
 #custom-loader {
-    width: 96px;
-    height: 96px;
+    width: 75px;
+    height: 75px;
     border-radius: 50%;
     border: 10px solid white;
     border-bottom-color: transparent;
@@ -438,7 +438,7 @@ button img {
  *   Other
  * ------------------------- */
 
-#state_volume { font-size: 20px; }
+#state_volume { font-size: 21px; }
 #video-container { position: relative; }
 .video-box, canvas { position: absolute; }
 #settings { position: relative; }
@@ -453,6 +453,14 @@ button img {
     }
     .time-container {
         bottom: 25px;
+    }
+    #main-state {
+        height: 60px;
+        width: 60px;
+    }
+    #custom-loader {
+        width: 67px;
+        height: 67px;
     }
 }
 @media (max-width: 500px) {
