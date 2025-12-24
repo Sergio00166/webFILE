@@ -82,8 +82,11 @@ Configure via environment variables:
 | ERRLOG_FILE   | No       | data/error.log | Server error log.                    |
 | ACL_FILE      | No       | data/acl.json  | ACL rules file.                      |
 | USERS_FILE    | No       | data/users.json| User accounts file.                  |
-| SECRET_KEY    | No       | Auto-generated | Secret key for multi-worker setups.  |
 | SHOW_DIRSIZE  | No       | False          | Display directory sizes.             |
+| REDIS_PORT    | No       | 6379           | Port number to connect to REDIS.     |
+| REDIS_ADDR    | No       | 127.0.0.1      | IP address to connect to REDIS.      |
+| SECRET_KEY    | No       | Auto-generated | Secret key for multi-worker setups.  |
+
 
 ### Running the Server
 **Development** (Flask builtin, `127.0.0.1:8000`):

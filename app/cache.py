@@ -7,9 +7,13 @@ from inspect import signature
 from functools import wraps
 from hashlib import sha256
 from redis import Redis
+from os import getenv
 
-def setup_cache(db, host="127.0.0.1", port=6379):
-    pool = ConnectionPool(host=host, port=port, db=db)
+redis_port  = getenv("REDIS_PORT" ,6379)
+redis_addr  = getenv("REDIS_ADDR" ,"127.0.0.1")
+
+def setup_cache(db):
+    pool = ConnectionPool(host=redis_addr, port=redis_port, db=db)
     redis_client = Redis(connection_pool=pool)
     return SelectiveRedisCache(redis_client)
 

@@ -40,10 +40,8 @@ def validate_acl(path, ACL, write=False):
     if path == ".": path = ""
     path = path.replace(sep, "/")
 
-    if path.startswith("//"):
-        path = path[2:]
-    if not path.startswith("/"):
-        path = "/" + path
+    if path.startswith("//"):    path = path[2:]
+    if not path.startswith("/"): path = "/" + path
 
     while True:
         # Check if there is a rule for it

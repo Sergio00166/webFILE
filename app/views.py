@@ -27,7 +27,7 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
         prev = files[files.index(path) - 1]
 
     if prev != "#": prev = basename(prev)
-    if next != "#": next  = basename(next)
+    if next != "#": next = basename(next)
 
     if not random: return prev, next, name
     else: return prev, next, name, basename(choice(files))
@@ -45,9 +45,7 @@ def get_index_data(folder_path, root, folder_size, sort, ACL):
 
 def directory(path, root, folder_size, sort, ACL, useApi):
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
-
-    folder_content, folder_path =\
-    get_index_data(path, root, folder_size, sort, ACL)
+    folder_content, folder_path = get_index_data(path, root, folder_size, sort, ACL)
 
     if useApi:
         return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
