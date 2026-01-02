@@ -507,7 +507,7 @@ button img {
  * ------------------------- */
 
 @media (hover:hover) {
-    #setting-menu button:hover,
+    #setting-menu button:hover:not(:disabled),
     button.glass:hover {
         outline: 2px solid #fffa !important;
     }

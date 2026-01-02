@@ -616,14 +616,9 @@ function loadAudioTracks() {
     const audioContent = audioSubmenu.querySelector(".menu-content");
     const audioTracks = video.audioTracks;
 
-    if (!audioTracks) {
-        const button = document.createElement("button");
-        button.disabled = true;
-        button.textContent = "Default";
-        audioContent.appendChild(button);
-        menuAudioText.textContent = "Default";
-        return;
-    }
+    if (!audioTracks) return;
+    audioContent.innerHTML = "";
+
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
         const button = document.createElement("button");
@@ -809,7 +804,7 @@ function handleTimeChangeKeyboard(delta) {
 }
 
 function download() {
-    if (downloadSubtitlesLink.href !== "#") {
+    if (downloadSubtitlesLink.getAttribute("href") !== "#") {
         alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
         downloadSubtitlesLink.click();
     }
