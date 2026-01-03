@@ -2,9 +2,8 @@
 
 from flask import redirect, render_template, request, session
 from functions import printerr, safe_path, validate_acl
-from fs_utils import get_file_type, autoload_webpage
+from functions import get_file_type, autoload_webpage
 from send_file import send_dir, send_file
-from functions import printerr
 from os.path import isfile
 from hashlib import sha256
 from os import sep

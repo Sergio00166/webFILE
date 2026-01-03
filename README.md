@@ -101,11 +101,10 @@ gunicorn -b 127.0.0.1:8000 app:app -w $(nproc) -t 900
 
 ### Important
 
-When deploying with Gunicorn, is of utmost importance setting the right timeout value (-t).   
-For large file uploads or slow networks, timeouts aorund 300-900 seconds are strongly recommended.    
-Without a sufficiently high timeout, uploads can be abruptly terminated in the middle of the transfer.
+When deploying with Gunicorn, set an appropriate timeout (-t).
+For large uploads or long-running file operations, a timeout of 300–900 seconds is recommended to prevent premature termination.
 
-If using behind an reverse proxy (e.g., Nginx), make sure its timeouts are the same as the backend to avoid issues.
+If running behind a reverse proxy (e.g., Nginx), ensure its timeout settings match Gunicorn’s to avoid mismatches.
 
 ---
 

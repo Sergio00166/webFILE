@@ -1,10 +1,13 @@
 # Code by Sergio00166
 
+from functions import validate_acl, get_file_type
 from datetime import datetime as dt
-from functions import validate_acl
-from os import scandir, sep
+from os import scandir, sep, stat
+from cache import setup_cache
+from shutil import disk_usage
 from os.path import relpath
-from fs_utils import *
+
+cache = setup_cache(2)
 
 
 def get_folder_content(folder_path, root, folder_size, ACL):
@@ -24,9 +27,9 @@ def get_folder_content(folder_path, root, folder_size, ACL):
                 "mtime": st.st_mtime,
             }
             if data["type"] == "disk":
-                disk = get_disk_stat(item.path)
-                data["capacity"] = disk["size"]
-                data["size"]     = disk["used"]
+                disk = disk_usage(item.path)
+                data["capacity"] = disk.total
+                data["size"]     = disk.used
             else:
                 data["size"] = (
                     (get_dir_size(item.path) if folder_size else 0)
@@ -80,5 +83,35 @@ def readable_date(date):
         cd = dt.fromtimestamp(date)
         return [cd.strftime("%d/%m/%Y"), cd.strftime("%H:%M")]
     return ["##/##/####", "##:##:##"]
+
+
+def get_dir_size(path):
+    disk_free = disk_usage(path).free
+    disk_free = disk_free // (1024 * 1024)
+    return size_traversal(path, disk_free)
+
+
+@cache.cached("disk_size", TTL=5 * 60)
+def size_traversal(root, disk_size):
+    root_dev = stat(root).st_dev
+    total, stack = 0, [root]
+
+    while stack:
+        path = stack.pop()
+        try: dir_ls = scandir(path)
+        except: continue
+
+        for e in dir_ls:
+            try:
+                st = e.stat()
+                if st.st_dev == 0:
+                    st = stat(e.path)
+            except: continue
+
+            if e.is_file():
+                total += st.st_size
+            elif e.is_dir() and st.st_dev == root_dev:
+                stack.append(e.path)
+    return total
 
  
