@@ -10,11 +10,12 @@
     box-shadow: 0 2px 4px #0006;
 }
 #path-bar button {
-    border: none;
-    height: 26px;
+    padding: 0;
     width: 26px;
-    background: #333;
+    height: 26px;
+    border: none;
     border-radius: 6px;
+    background: #333;
     cursor: pointer;
     display: flex;
     align-items: center;
