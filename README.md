@@ -33,27 +33,30 @@ Supports ACL-based access control, uploads, and file operations.
 
 ### Overview
 This service exposes a filesystem directory over HTTP, enabling:
-- **File operations**: upload, create, delete.
+- **File operations**: copy/move, rename, upload, create, delete.
 - **Streaming**: streaming via browser-supported formats using HTTP 206. No transcoding, no overhead.
 - **Access control** via on-memory hashmap-based ACLs (read/write/deny per resource and user).
 - Detects if a directory is a mount point and changes its type (and icon).
 - Fast recursive directory size calculation with custom caching system (disabled by default).
+
+[Main explorer screenshot](overview.png)
 
 ### Multimedia Streaming
 - Leverages browser-native codecs only.
 - Custom cache system for metadata and subtitles to minimize `ffmpeg` calls.
 - Switch audio tracks in-browser (requires experimental Web Platform Features).
 - SSA/ASS subtitle support via `JASSUB` on the client.
-- On-demand SSA/ASS → WebVTT conversion, used when JASSUB does not render or fails.
+- On-demand SSA/ASS → WebVTT conversion, use when JASSUB does not render or fails.
 - Extracts embedded subtitles and chapter data from `.mkv`, `.mp4`, etc.
 - Auto-loads external `.mks` subtitles matching video basename.
 
 ### ACL & User Management
-- Managed by `aclmgr.py` in the `app/` directory.
+- Managed by `aclmgr.py` in the `scripts/` directory.
 - ACLs define per-path permissions: read-only, write, or denied.
-- User accounts stored in JSON (`data/users.json`).
-- ACL rules stored in JSON (`data/acl.json`).
+- User accounts stored in JSON, specified by `env:USERS_FILE`.
+- ACL rules stored in JSON, , specified by `env:ACL_FILE`.
 - Both files loaded into RAM as a dictionary.
+- Default user (not logged in) is `DEFAULT`.
 - See [aclmgr documentation](scripts/aclmgr.md).
 
 ---
@@ -66,7 +69,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 ```bash
 pip install -r requirements.txt
 ```
-- Install `ffmpeg` at the system level for media playback.  
+- Install `ffmpeg` at the system level for video playback support.  
 - A `Redis` server for session storage and other cache.  
 
 #### Client-side
@@ -103,7 +106,7 @@ gunicorn -b 127.0.0.1:8000 app:app -w $(nproc) -t 900
 
 When deploying with Gunicorn, set an appropriate timeout (-t).
 For large uploads or long-running file operations, a timeout of 300–900 seconds is recommended to prevent premature termination.
-Also is recomended to disable post buffering on the proxy to avoid weird behaviours.
+Also is recomended to disable post buffering on the proxy to avoid weird file upload behaviour.
 
 If running behind a reverse proxy (e.g., Nginx), ensure its timeout settings match Gunicorn’s to avoid mismatches.
 
@@ -115,6 +118,7 @@ If running behind a reverse proxy (e.g., Nginx), ensure its timeout settings mat
 This server has no general-purpose endpoints; everything is path-based with optional query modifiers.  
 The entire `/srv/` namespace is reserved for server functionality.  
 No part of `/srv/` can be used as a folder name in the root directory.
+Static files are served from `/srv/static`.
 
 #### Authentication
 - `GET /srv/login?redirect=encoded_url` → Returns login page, redirecting after successful login or exit.  

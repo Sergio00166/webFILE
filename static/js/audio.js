@@ -199,7 +199,7 @@ function showTimelineHover(clientX) {
 
     hoverInfo.textContent = formatDuration(percentage * audio.duration);
     hoverInfo.style.display = "block";
-    hoverInfo.style.bottom = `${height + 6}px`;
+    hoverInfo.style.bottom = `${height + 4}px`;
 
     const barRect = seekBar.getBoundingClientRect();
     const tooltipWidth = hoverInfo.offsetWidth;
