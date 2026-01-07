@@ -1,9 +1,10 @@
 # Code by Sergio00166
 
 from urllib.parse import parse_qsl, quote as encurl, urlencode, urlparse, urlunparse
-from flask import redirect, render_template, request, stream_template
-from listing import get_folder_content, humanize_all, sort_contents
+from listing import get_folder_content, sort_contents
 from os.path import basename, dirname, relpath
+from flask import render_template, request
+from renderer import render_folder
 from random import choice
 from os import sep
 from video import *
@@ -33,27 +34,20 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
     else: return prev, next, name, basename(choice(files))
 
 
-def get_index_data(folder_path, root, folder_size, sort, ACL):
-    folder_content = get_folder_content(folder_path, root, folder_size, ACL)
-
-    folder_path = relpath(folder_path, start=root).replace(sep, "/")
-    folder_path = "/" if folder_path == "." else f"/{folder_path}/"
-
-    folder_content = sort_contents(folder_content, sort, root)
-    return folder_content, folder_path
-
-
 def directory(path, root, folder_size, sort, ACL, useApi):
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
-    folder_content, folder_path = get_index_data(path, root, folder_size, sort, ACL)
+    path_text = relpath(path, start=root).replace(sep, "/")
+    path_text = "/" if path_text == "." else f"/{path_text}/"
+
+    contents = get_folder_content(path, root, folder_size, ACL)
+    contents = sort_contents(contents, sort, root)
 
     if useApi:
-        return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
+        return [{**item, "path": "/" + encurl(item["path"])} for item in contents]
     else:
-        humanize_all(folder_content)  # The arg is a reference
-        return stream_template(
-            "index.html", folder_content=folder_content,
-            folder_path=folder_path, sort=sort
+        return render_template(
+            "index.html", content=render_folder(contents),
+            folder_path=path_text, sort=sort
         )
 
 
@@ -74,11 +68,9 @@ def video(path, root, file_type, ACL):
         legacy = get_mode == "subs_vtt"
         return get_subtitles(int(idx), path, legacy)
 
-    # Chapters and subtitle track metadata
     if get_mode == "chapters": return get_chapters(path);
     if get_mode == "tracks":   return get_tracks(path);
 
-    # Get explorer page
     prev, nxt, name = get_filepage_data(
         path, root, file_type, ACL, no_goto_start=True
     )

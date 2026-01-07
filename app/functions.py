@@ -23,12 +23,10 @@ boms = (
 )
 
 def get_file_type(path):
-    item = Path(path)
-    if item.is_mount(): return "disk"
-    if item.is_dir():   return "directory"
+    extension = path.rsplit(".", 1)[-1].lower()
+    file_type = file_type_map.get("." + extension)
 
-    file_type = file_type_map.get(item.suffix)
-    if file_type:       return file_type
+    if file_type: return file_type
     return "file" if is_binary(path) else "text"
 
 
@@ -68,7 +66,7 @@ def load_userACL(USERS, ACL, users_file, acl_file):
     ACL.update(jsload(open(acl_file)))
 
 
-def validate_acl(path, ACL, write=False):
+def validate_acl(path, ACL, write=False, retBool=False):
     askd_perm = 2 if write else 1
     user = session.get("user", "DEFAULT")
     prop = False
@@ -87,7 +85,8 @@ def validate_acl(path, ACL, write=False):
             if not values["inherit"] and prop: break
             perm = values["access"]
             if perm == 0: break
-            if perm >= askd_perm: return
+            if perm >= askd_perm:
+                return True if retBool else None
 
         # Check if on top and break loop
         if path == "/": break
@@ -95,6 +94,7 @@ def validate_acl(path, ACL, write=False):
         path = dirname(path)
         prop = True  # Flag
 
+    if retBool: return False
     raise PermissionError
 
 

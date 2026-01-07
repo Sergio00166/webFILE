@@ -134,7 +134,7 @@ button {
 
 .sidebar-content button {
     padding: 8px;
-    padding-right: 12px;
+    padding-right: 16px;
     border-radius: 8px;
     white-space: nowrap;
     text-align: left;
@@ -229,7 +229,7 @@ button {
     background: #333;
     border-radius: 8px;
     overflow: hidden;
-    position: relative;  
+    position: relative;
     border: 1px solid #555;
     width: min(350px, 90%);
 }

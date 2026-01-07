@@ -81,10 +81,7 @@
         </div>
       </div>
       <div id="list-group">
-        {%- from "macros.j2" import render_item %}
-        {%- for item in folder_content %}
-          {{ render_item(item) }}
-        {%- endfor %}
+        {{- content | safe -}}
       </div>
     </div>
   </body>
