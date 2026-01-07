@@ -12,13 +12,12 @@ from views import *
 
 def path_handler(path, ACL, root, folder_size):
 
-    # Allow root listing
     if path: validate_acl(path, ACL)
     path = safe_path(path, root)
-    file_type = get_file_type(path)
     get_mode = request.args.get("get","")
 
-    if not file_type in ["directory", "disk"]:
+    if isfile(path):
+        file_type = get_file_type(path)
 
         if get_mode != "file":
 

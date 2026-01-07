@@ -12,29 +12,35 @@ cache = setup_cache(2)
 
 def get_folder_content(folder_path, root, folder_size, ACL):
     contents = []
+    parent_dev = stat(folder_path).st_dev
 
     for item in scandir(folder_path):
         data = {}
         try:
             rel_path = relpath(item.path, start=root).replace(sep, "/")
             validate_acl(rel_path, ACL)
-            st = item.stat()
 
+            st = item.stat()
             data = {
                 "name":  item.name,
                 "path":  rel_path,
-                "type":  get_file_type(item.path),
                 "mtime": st.st_mtime,
             }
-            if data["type"] == "disk":
-                disk = disk_usage(item.path)
-                data["capacity"] = disk.total
-                data["size"]     = disk.used
+            if (item.is_dir()):
+                entry_dev = (stat(item.path) if sep == chr(92) else st).st_dev
+
+                if entry_dev != parent_dev:
+                    disk = disk_usage(item.path)
+                    data["type"]     = "disk"
+                    data["size"]     = disk.used
+                    data["capacity"] = disk.total
+                else:
+                    data["type"] = "directory"
+                    data["size"] = get_dir_size(item.path) if folder_size else 0
             else:
-                data["size"] = (
-                    (get_dir_size(item.path) if folder_size else 0)
-                    if data["type"] == "directory" else st.st_size
-                )
+                data["type"] = get_file_type(item.path)
+                data["size"] = st.st_size
+
             contents.append(data)
         except: pass
     return contents
@@ -89,7 +95,6 @@ def get_dir_size(path):
     disk_free = disk_usage(path).free
     disk_free = disk_free // (1024 * 1024)
     return size_traversal(path, disk_free)
-
 
 @cache.cached("disk_size", TTL=5 * 60)
 def size_traversal(root, disk_size):

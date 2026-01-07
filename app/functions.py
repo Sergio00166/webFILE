@@ -23,12 +23,10 @@ boms = (
 )
 
 def get_file_type(path):
-    item = Path(path)
-    if item.is_mount(): return "disk"
-    if item.is_dir():   return "directory"
+    extension = path.rsplit(".", 1)[-1].lower()
+    file_type = file_type_map.get("." + extension)
 
-    file_type = file_type_map.get(item.suffix)
-    if file_type:       return file_type
+    if file_type: return file_type
     return "file" if is_binary(path) else "text"
 
 

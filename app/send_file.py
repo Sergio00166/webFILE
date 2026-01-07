@@ -69,7 +69,8 @@ def safe_calc_tar_size(directory, ACL, root):
         curdir = stack.pop()
         for entry in scandir(curdir):
             path = entry.path
-            validate_acl(relpath(path, start=root).replace(sep, "/"), ACL)
+            rel_path = relpath(path, start=root).replace(sep, "/")
+            validate_acl(rel_path, ACL)
 
             st = entry.stat()
             total_size += 512 + ((st.st_size + 511) & ~0x1FF)
@@ -83,7 +84,7 @@ def send_dir(directory, root, ACL, name=None):
     size = safe_calc_tar_size(directory, ACL, root)
 
     headers={
-        "Content-Disposition": "attachment;filename=" + folder+".tar",
+        "Content-Disposition": "attachment;filename=" + folder + ".tar",
         "Content-Length": str(size)
     }
     return Response(generate_tar(directory), mimetype="application/x-tar", headers=headers)
