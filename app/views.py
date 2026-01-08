@@ -2,8 +2,9 @@
 
 from urllib.parse import parse_qsl, quote as encurl, urlencode, urlparse, urlunparse
 from flask import redirect, render_template, request, stream_template
-from listing import get_folder_content, humanize_all, sort_contents
+from listing import get_folder_content, sort_contents
 from os.path import basename, dirname, relpath
+from renderer import render_folder
 from random import choice
 from os import sep
 from video import *
@@ -50,9 +51,8 @@ def directory(path, root, folder_size, sort, ACL, useApi):
     if useApi:
         return [{**item, "path": "/" + encurl(item["path"])} for item in folder_content]
     else:
-        humanize_all(folder_content)  # The arg is a reference
         return stream_template(
-            "index.html", folder_content=folder_content,
+            "index.html", content=render_folder(folder_content),
             folder_path=folder_path, sort=sort
         )
 
