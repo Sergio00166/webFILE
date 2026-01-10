@@ -1,6 +1,9 @@
 # Code by Sergio00166
 
-from datetime import datetime as dt
+from time import timezone
+
+DATE_FMT = "{:02d}/{:02d}/{}"
+TIME_FMT = "{:02d}:{:02d}"
 
 icon_map = {
     'disk':         'hard-drive-solid.svg',
@@ -20,6 +23,26 @@ icon_map = {
     'webpage':      'globe-solid.svg'
 }
 
+def readable_date(ts):
+    ts = int(ts - timezone)
+    minutes = (ts // 60) % 60
+    hours = (ts // 3600) % 24
+    day_count = ts // 86400
+
+    z = day_count + 719468
+    era = z // 146097
+    doe = z - era * 146097
+    yoe = (doe - doe//1460 + doe//36524 - doe//146096) // 365
+    y = yoe + era * 400
+    doy = doe - (365 * yoe + yoe//4 - yoe//100)
+    mp = (5 * doy + 2) // 153
+    day = doy - (153 * mp + 2)//5 + 1
+    month = mp + 3 - 12 * (mp // 10)
+    year = y + (3 - month) // 3
+
+    return DATE_FMT.format(day, month, year), TIME_FMT.format(hours, minutes)
+
+
 def readable_size(num, suffix="B"):
     for unit in ["", "Ki", "Mi", "Gi", "Ti"]:
         if num < 1024:
@@ -28,24 +51,13 @@ def readable_size(num, suffix="B"):
     return f"{num:.1f} Yi{suffix}"
 
 
-def readable_date(date):
-    if date is not None:
-        cd = dt.fromtimestamp(date)
-        return [cd.strftime("%d/%m/%Y"), cd.strftime("%H:%M")]
-    return ["##/##/####", "##:##:##"]
-
-
 def render_folder(folder_content):
     content = []
 
     for item in folder_content:
         type = item["type"]
 
-        if type in ["directory", "disk"]:
-            content.append("<button isdir>")
-        else:
-            content.append("<button>")
-
+        content.append("<button isdir>" if type in ["directory", "disk"] else "<button>")
         content.append(f'<img src="/srv/static/svg/index/{icon_map.get(type, "file-solid.svg")}"><pre>{item["name"]}</pre><span>')
 
         if type == "disk":
@@ -57,8 +69,10 @@ def render_folder(folder_content):
             else:
                 content.append(f'<span>(0%)')
         else:
-            mtime = readable_date(item["mtime"])
-            content.append(f'{readable_size(item["size"])}</span><span>{mtime[0]} {mtime[1]}')
+            mtime, size = item["mtime"], item["size"]
+            date, time = readable_date(mtime)
+            size = "----" if size is None else readable_size(size)
+            content.append(f'{size}</span><span>{date} {time}')
                  
         content.append("</span></button>")
     return "".join(content)

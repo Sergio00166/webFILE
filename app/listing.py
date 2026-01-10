@@ -1,48 +1,48 @@
 # Code by Sergio00166
 
 from functions import validate_acl, get_file_type
+from os.path import relpath, getmtime
 from os import scandir, sep, stat
 from cache import setup_cache
 from shutil import disk_usage
-from os.path import relpath
 
 cache = setup_cache(2)
 
 
 def get_folder_content(folder_path, root, folder_size, ACL):
-    contents = []
+    data = list_folder(folder_path, root, folder_size, getmtime(folder_path))
+    return [x for x in data if validate_acl(x["path"], ACL, retBool=True)]
+
+@cache.cached("parent_mtime", TTL=60)
+def list_folder(folder_path, root, folder_size, parent_mtime):
     parent_dev = False if sep == chr(92) else stat(folder_path).st_dev
-    disk_free = disk_usage(folder_path).free // (1024 * 1024)
+    contents = []
 
     for item in scandir(folder_path):
-        data = {}
-        try:
-            rel_path = relpath(item.path, start=root).replace(sep, "/")
-            validate_acl(rel_path, ACL)
+        try: st = item.stat()
+        except: continue
 
-            st = item.stat()
-            data = {
-                "name":  item.name,
-                "path":  rel_path,
-                "mtime": st.st_mtime,
-            }
-            if (item.is_dir()):
-                entry_dev = item.is_symlink() if sep == chr(92) else st.st_dev
+        data = {
+            "name":  item.name,
+            "path":  relpath(item.path, start=root).replace(sep, "/"),
+            "mtime": st.st_mtime,
+        }
+        if (item.is_dir()):
+            entry_dev = item.is_symlink() if sep == chr(92) else st.st_dev
 
-                if entry_dev != parent_dev:
-                    disk = disk_usage(item.path)
-                    data["type"]     = "disk"
-                    data["size"]     = disk.used
-                    data["capacity"] = disk.total
-                else:
-                    data["type"] = "directory"
-                    data["size"] = size_traversal(item.path, disk_free) if folder_size else 0
+            if entry_dev != parent_dev:
+                disk = disk_usage(item.path)
+                data["type"]     = "disk"
+                data["size"]     = disk.used
+                data["capacity"] = disk.total
             else:
-                data["type"] = get_file_type(item.path)
-                data["size"] = st.st_size
+                data["type"] = "directory"
+                data["size"] = size_traversal(item.path) if folder_size else None
+        else:
+            data["type"] = get_file_type(item.path)
+            data["size"] = st.st_size
 
-            contents.append(data)
-        except: pass
+        contents.append(data)
     return contents
 
 
@@ -66,8 +66,7 @@ def sort_contents(folder_content, sort, root):
     return dirs + files
 
 
-@cache.cached("disk_free", TTL=5 * 60)
-def size_traversal(root, disk_free):
+def size_traversal(root):
     total, stack = 0, [root]
     root_dev = False if sep == chr(92) else stat(root).st_dev
 
