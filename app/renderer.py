@@ -73,7 +73,7 @@ def render_folder(folder_content):
             date, time = readable_date(mtime)
             size = "----" if size is None else readable_size(size)
             content.append(f'{size}</span><span>{date} {time}')
-                 
+
         content.append("</span></button>")
     return "".join(content)
 

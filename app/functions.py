@@ -93,7 +93,7 @@ def validate_acl(path, ACL, write=False, retBool=False):
         # Goto parent directory
         path = dirname(path)
         prop = True  # Flag
-    
+
     if retBool: return False
     raise PermissionError
 

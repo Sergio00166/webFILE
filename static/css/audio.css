@@ -23,6 +23,7 @@ body {
     width: 90vw;
     padding: 12px;
     max-width: 500px;
+    margin-bottom: 16px;
     background: #aaa2;
     border-radius: 20px;
     border: 1px solid #eee4;
@@ -259,6 +260,11 @@ button {
  *   Responsive rules
  * ------------------------- */
 
+@media (max-height: 500px) {
+    .audio-player {
+        margin-bottom: unset;
+    }
+}
 @media (max-height: 400px) or (max-width: 400px) {
     .header {
         font-size: 20px;

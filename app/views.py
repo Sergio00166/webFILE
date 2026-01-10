@@ -1,9 +1,9 @@
 # Code by Sergio00166
 
 from urllib.parse import parse_qsl, quote as encurl, urlencode, urlparse, urlunparse
-from flask import redirect, render_template, request, stream_template
 from listing import get_folder_content, sort_contents
 from os.path import basename, dirname, relpath
+from flask import render_template, request
 from renderer import render_folder
 from random import choice
 from os import sep
@@ -45,7 +45,7 @@ def directory(path, root, folder_size, sort, ACL, useApi):
     if useApi:
         return [{**item, "path": "/" + encurl(item["path"])} for item in contents]
     else:
-        return stream_template(
+        return render_template(
             "index.html", content=render_folder(contents),
             folder_path=path_text, sort=sort
         )
