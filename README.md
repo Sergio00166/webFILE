@@ -2,7 +2,7 @@
 # Web Server with Custom Video & Audio Player
 
 A lightweight Python-based HTTP file server with built-in streaming for video and audio.  
-Supports ACL-based access control, uploads, and file operations.
+Supports ACL-based access control, uploads, and file operations.   
 
 ---
 
@@ -11,6 +11,7 @@ Supports ACL-based access control, uploads, and file operations.
   - [Overview](#overview)
   - [Multimedia Streaming](#multimedia-streaming)
   - [ACL & User Management](#acl--user-management)
+  - [About its performance](#about-its-performance)
 - [Setup](#setup)
   - [Requirements](#requirements)
   - [Configuration](#configuration)
@@ -37,7 +38,9 @@ This service exposes a filesystem directory over HTTP, enabling:
 - **Streaming**: streaming via browser-supported formats using HTTP 206. No transcoding, no overhead.
 - **Access control** via on-memory hashmap-based ACLs (read/write/deny per resource and user).
 - Detects if a directory is a mount point and changes its type (and icon).
-- Fast recursive directory size calculation with custom caching system (disabled by default).
+- Server rendered HTML with small sizes.
+- Fast dir file listing with intelligent cache.
+- Fast recursive directory size calculation (disabled by default).
 
 [Main explorer screenshot](overview.png)
 
@@ -54,10 +57,17 @@ This service exposes a filesystem directory over HTTP, enabling:
 - Managed by `aclmgr.py` in the `scripts/` directory.
 - ACLs define per-path permissions: read-only, write, or denied.
 - User accounts stored in JSON, specified by `env:USERS_FILE`.
-- ACL rules stored in JSON, , specified by `env:ACL_FILE`.
+- ACL rules stored in JSON, specified by `env:ACL_FILE`.
 - Both files loaded into RAM as a dictionary.
 - Default user (not logged in) is `DEFAULT`.
 - See [aclmgr documentation](scripts/aclmgr.md).
+
+### About its performance
+
+On an E5‑1660v4 with 16 workers, is able to reach up to 1.6K RPS when listing directories with 600 items, and around 4K–6K RPS for listings with an more normal amount of items.   
+Even such large listing stay lightweight, producing only ~30 KB of HTML without compression.
+
+It would not be archiveable without some manual optimizations: custom mtime formatting and HTML rendering (both 2–4× faster than Python/Jinja2), minimal syscalls via scandir + cached stat, and a 1‑minute mtime‑invalidated cache that keeps listings real‑time while deferring metadata refresh and optimized ACL-based permissions as on-memory HASHMAP.
 
 ---
 
