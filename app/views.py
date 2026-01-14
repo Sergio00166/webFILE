@@ -44,8 +44,7 @@ def directory(path, root, folder_size, sort, ACL, useApi):
         return [{**item, "path": "/" + encurl(item["path"])} for item in contents]
     else:
         path_text = relpath(path, start=root).replace(sep, "/")
-        # Normalize it and use an hacky way to ensure on explorer keeps order
-        path_text = "/" if path_text == "." else f"\u200E/{path_text}/\u200E\u200F"
+        path_text = "/" if path_text == "." else f"/{path_text}/"
 
         return render_template(
             "index.html", content=render_folder(contents),
