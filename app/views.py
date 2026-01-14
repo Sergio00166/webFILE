@@ -9,6 +9,7 @@ from random import choice
 from os import sep
 from video import *
 
+from re import findall as re_findall
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_start=False):
     path = relpath(file_path, start=root).replace(sep, "/")
@@ -36,15 +37,15 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
 
 def directory(path, root, folder_size, sort, ACL, useApi):
     sort = sort if sort in ["np", "nd", "sp", "sd", "dp", "dd"] else "np"
-    path_text = relpath(path, start=root).replace(sep, "/")
-    path_text = "/" if path_text == "." else f"/{path_text}/"
-
     contents = get_folder_content(path, root, folder_size, ACL)
     contents = sort_contents(contents, sort, root)
 
     if useApi:
         return [{**item, "path": "/" + encurl(item["path"])} for item in contents]
     else:
+        path_text = relpath(path, start=root).replace(sep, "/")
+        path_text = "/" if path_text == "." else f"/{path_text}/"
+
         return render_template(
             "index.html", content=render_folder(contents),
             folder_path=path_text, sort=sort
@@ -53,7 +54,11 @@ def directory(path, root, folder_size, sort, ACL, useApi):
 
 def audio(path, root, file_type, ACL):
     prev, nxt, name, rnd = get_filepage_data(path, root, file_type, ACL, random=True)
-    return render_template("audio.html", path=path, name=name, prev=prev, nxt=nxt, rnd=rnd)
+    return render_template("audio.html", name=name, prev=prev, nxt=nxt, rnd=rnd)
+
+def photo(path, root, file_type, ACL):
+    prev, nxt, name = get_filepage_data(path, root, file_type, ACL)
+    return render_template("photo.html", name=name, prev=prev, nxt=nxt)
 
 
 def video(path, root, file_type, ACL):
@@ -78,7 +83,7 @@ def video(path, root, file_type, ACL):
     subs = basename(subs) if subs != path else "#"
 
     return render_template(
-        "video.html", path=path, name=name,
+        "video.html", name=name,
         prev=prev, nxt=nxt, subs_file=subs
     )
 

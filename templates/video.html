@@ -18,12 +18,12 @@
       </div>
       <span id="custom-loader" style="display: none"></span>
       <span id="main-state" class="glass">
-        <img src="/srv/static/svg/videoplayer/play-outline.svg" style="display: none">
-        <img src="/srv/static/svg/videoplayer/pause-outline.svg" style="display: none">
-        <img src="/srv/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
-        <img src="/srv/static/svg/videoplayer/volume-high-outline.svg" style="display: none">
-        <img src="/srv/static/svg/videoplayer/chevron-back-outline.svg" style="display: none">
-        <img src="/srv/static/svg/videoplayer/chevron-forward-outline.svg" style="display: none">
+        <img src="/srv/static/svg/video/play-outline.svg" style="display: none">
+        <img src="/srv/static/svg/video/pause-outline.svg" style="display: none">
+        <img src="/srv/static/svg/video/volume-mute-outline.svg" style="display: none">
+        <img src="/srv/static/svg/video/volume-high-outline.svg" style="display: none">
+        <img src="/srv/static/svg/video/chevron-back-outline.svg" style="display: none">
+        <img src="/srv/static/svg/video/chevron-forward-outline.svg" style="display: none">
         <div id="state_volume" style="display: none"></div>
       </span>
       <div id="controls">
@@ -37,20 +37,20 @@
         <div class="btn-controls">
           <div class="side-controls">
             <button id="play-pause" onclick="togglePlayPauseState()" class="glass" title="Play">
-              <img src="/srv/static/svg/videoplayer/play-outline.svg" style="display: block">
-              <img src="/srv/static/svg/videoplayer/pause-outline.svg" style="display: none">
+              <img src="/srv/static/svg/video/play-outline.svg" style="display: block">
+              <img src="/srv/static/svg/video/pause-outline.svg" style="display: none">
             </button>
             <button id="loop-btn" onclick="cycleLoopMode()" class="glass" title="Loop (L)">
-			        <img src="/srv/static/svg/videoplayer/repeat-button.svg" style="display: block">
-              <img src="/srv/static/svg/videoplayer/repeat-single-button.svg" style="display: none">
+			        <img src="/srv/static/svg/video/repeat-button.svg" style="display: block">
+              <img src="/srv/static/svg/video/repeat-single-button.svg" style="display: none">
 			      </button>
             <span id="volume">
               <button onclick="toggleMuteState()" class="glass" title="Mute (M)">
-                <img src="/srv/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
-                <img src="/srv/static/svg/videoplayer/volume-high-outline.svg" style="display: block">
-                <img src="/srv/static/svg/videoplayer/volume-medium-outline.svg" style="display: none">
-                <img src="/srv/static/svg/videoplayer/volume-low-outline.svg" style="display: none">
-                <img src="/srv/static/svg/videoplayer/volume-off-outline.svg" style="display: none">
+                <img src="/srv/static/svg/video/volume-mute-outline.svg" style="display: none">
+                <img src="/srv/static/svg/video/volume-high-outline.svg" style="display: block">
+                <img src="/srv/static/svg/video/volume-medium-outline.svg" style="display: none">
+                <img src="/srv/static/svg/video/volume-low-outline.svg" style="display: none">
+                <img src="/srv/static/svg/video/volume-off-outline.svg" style="display: none">
               </button>
               <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
             </span>
@@ -62,14 +62,14 @@
           </span>
           <div class="side-controls">
             <button onclick="navigateToPrevious()" class="glass" title="Prev (P)">
-              <img src="/srv/static/svg/videoplayer/play-skip-back-outline.svg">
+              <img src="/srv/static/svg/video/play-skip-back-outline.svg">
             </button>
             <button onclick="navigateToNext()" class="glass" title="Next (N)">
-              <img src="/srv/static/svg/videoplayer/play-skip-forward-outline.svg">
+              <img src="/srv/static/svg/video/play-skip-forward-outline.svg">
             </button>
             <span id="settings">
               <button class="glass" onclick="toggleSettingsMenu()" title="Menu">
-                <img src="/srv/static/svg/videoplayer/settings-outline.svg">
+                <img src="/srv/static/svg/video/settings-outline.svg">
               </button>
               <div id="setting-menu" class="glass">
                 <div id="main-menu">
@@ -122,8 +122,8 @@
               </div>
             </span>
             <button id="screenToggle" onclick="toggleFullscreenMode()" class="glass" title="Fullscren (F)">
-              <img src="/srv/static/svg/videoplayer/scan-outline.svg" style="display: block">
-              <img src="/srv/static/svg/videoplayer/contract-outline.svg" style="display: none">
+              <img src="/srv/static/svg/video/scan-outline.svg" style="display: block">
+              <img src="/srv/static/svg/video/contract-outline.svg" style="display: none">
             </button>
           </div>
         </div>

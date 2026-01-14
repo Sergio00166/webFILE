@@ -15,34 +15,34 @@ def get_folder_content(folder_path, root, folder_size, ACL):
 
 @cache.cached("parent_mtime", TTL=60)
 def list_folder(folder_path, root, folder_size, parent_mtime):
-    parent_dev = False if sep == chr(92) else stat(folder_path).st_dev
+    parent_dev = stat(folder_path).st_dev
     contents = []
 
     for item in scandir(folder_path):
-        try: st = item.stat()
-        except: continue
+        try:
+            st = item.stat()
+            data = {
+                "name":  item.name,
+                "path":  relpath(item.path, start=root).replace(sep, "/"),
+                "mtime": st.st_mtime,
+            }
+            if (item.is_dir()):
+                entry_dev = (stat(item.path) if sep == chr(92) else st).st_dev
 
-        data = {
-            "name":  item.name,
-            "path":  relpath(item.path, start=root).replace(sep, "/"),
-            "mtime": st.st_mtime,
-        }
-        if (item.is_dir()):
-            entry_dev = item.is_symlink() if sep == chr(92) else st.st_dev
-
-            if entry_dev != parent_dev:
-                disk = disk_usage(item.path)
-                data["type"]     = "disk"
-                data["size"]     = disk.used
-                data["capacity"] = disk.total
+                if entry_dev != parent_dev:
+                    disk = disk_usage(item.path)
+                    data["type"]     = "disk"
+                    data["size"]     = disk.used
+                    data["capacity"] = disk.total
+                else:
+                    data["type"] = "directory"
+                    data["size"] = size_traversal(item.path) if folder_size else None
             else:
-                data["type"] = "directory"
-                data["size"] = size_traversal(item.path) if folder_size else None
-        else:
-            data["type"] = get_file_type(item.path)
-            data["size"] = st.st_size
+                data["type"] = get_file_type(item.path)
+                data["size"] = st.st_size
 
-        contents.append(data)
+            contents.append(data)
+        except: continue
     return contents
 
 
@@ -68,7 +68,7 @@ def sort_contents(folder_content, sort, root):
 
 def size_traversal(root):
     total, stack = 0, [root]
-    root_dev = False if sep == chr(92) else stat(root).st_dev
+    root_dev = stat(root).st_dev
 
     while stack:
         path = stack.pop()
@@ -76,13 +76,13 @@ def size_traversal(root):
         except: continue
 
         for e in dir_ls:
-            try: st = e.stat()
+            try: 
+                st = e.stat()
+                if e.is_file(): total += st.st_size
+                else:
+                    entry_dev = (stat(item.path) if sep == chr(92) else st).st_dev
+                    if root_dev == entry_dev: stack.append(e.path)
             except: continue
-
-            if e.is_file(): total += st.st_size
-            else:
-                entry_dev = e.is_symlink() if sep == chr(92) else st.st_dev
-                if root_dev == entry_dev: stack.append(e.path)
     return total
 
  

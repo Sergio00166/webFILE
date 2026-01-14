@@ -26,38 +26,38 @@
         </div>
         <div class="playback-controls">
           <button class="nav-btn" onclick="navigateToPrevious()" title="Prev (P)">
-            <img src="/srv/static/svg/audioplayer/round-play-skip-back.svg">
+            <img src="/srv/static/svg/audio/round-play-skip-back.svg">
           </button>
           <button id="play-pause" onclick="togglePlayPauseState()" title="Play">
-            <img src="/srv/static/svg/videoplayer/play-outline.svg" style="display: block">
-            <img src="/srv/static/svg/videoplayer/pause-outline.svg" style="display: none">
+            <img src="/srv/static/svg/video/play-outline.svg" style="display: block">
+            <img src="/srv/static/svg/video/pause-outline.svg" style="display: none">
           </button>
           <button class="nav-btn" onclick="navigateToNext()" title="Next (N)">
-            <img src="/srv/static/svg/audioplayer/round-play-skip-forward.svg">
+            <img src="/srv/static/svg/audio/round-play-skip-forward.svg">
           </button>
         </div>
         <div class="volume-control">
           <div id="vol-icons" tabindex="0" onclick="toggleMuteState()" title="Mute (M)">
-            <img src="/srv/static/svg/videoplayer/volume-mute-outline.svg" style="display: none">
-            <img src="/srv/static/svg/videoplayer/volume-high-outline.svg" style="display: block">
-            <img src="/srv/static/svg/videoplayer/volume-medium-outline.svg" style="display: none">
-            <img src="/srv/static/svg/videoplayer/volume-low-outline.svg" style="display: none">
-            <img src="/srv/static/svg/videoplayer/volume-off-outline.svg" style="display: none">
+            <img src="/srv/static/svg/video/volume-mute-outline.svg" style="display: none">
+            <img src="/srv/static/svg/video/volume-high-outline.svg" style="display: block">
+            <img src="/srv/static/svg/video/volume-medium-outline.svg" style="display: none">
+            <img src="/srv/static/svg/video/volume-low-outline.svg" style="display: none">
+            <img src="/srv/static/svg/video/volume-off-outline.svg" style="display: none">
           </div>
           <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
         </div>
       </div>
       <div class="extra-controls">
         <button id="shuffle-btn" onclick="toggleShuffleMode()" title="Shuffle (S)">
-          <img src="/srv/static/svg/audioplayer/shuffle-tracks-button.svg">
+          <img src="/srv/static/svg/audio/shuffle-tracks-button.svg">
         </button>
         <button id="loop-btn" onclick="cycleLoopMode()" title="Loop (L)">
-          <img src="/srv/static/svg/audioplayer/repeat-button.svg" style="display: block">
-          <img src="/srv/static/svg/audioplayer/repeat-single-button.svg" style="display: none">
+          <img src="/srv/static/svg/audio/repeat-button.svg" style="display: block">
+          <img src="/srv/static/svg/audio/repeat-single-button.svg" style="display: none">
         </button>
         <button id="speed-btn" title="Speed">1x</button>
         <button onclick="download()" title="Download">
-          <img src="/srv/static/svg/audioplayer/down-arrow.svg">
+          <img src="/srv/static/svg/audio/down-arrow.svg">
         </button>
       </div>
     </div>
