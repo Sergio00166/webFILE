@@ -1,0 +1,161 @@
+/* Code by Sergio00166 */
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+    background-color: black;
+    font-family: sans-serif;
+    overflow: hidden;
+    touch-action: none;
+}
+
+@keyframes fadeInAnimation {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* -------------------------
+ *   Base buttons
+ * ------------------------- */
+
+button {
+    padding: 0;
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    flex-shrink: 0;
+    border-radius: 50%;
+    color: white;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+}
+button img {
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+}
+
+/* -------------------------
+ *   Main structure
+ * ------------------------- */
+
+#main-img  {
+    max-width: none;
+    pointer-events: none;
+    animation: fadeInAnimation 0.5s;
+}
+#controls {
+    width: 100%;
+    height: 100%;
+    padding: 24px 18px;
+    box-sizing: border-box;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.navigation {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.tools, .zoomBox {
+    display: flex;
+    align-items: center;
+}
+
+/* -------------------------
+ *   Controls
+ * ------------------------- */
+
+.zoomBox {
+    margin-left: 16px;
+    margin-right: 16px;
+    border-radius: 24px;
+}
+.zoomBox button {
+    font-size: 20px;
+}
+#file-name {
+    border-radius: 16px;
+    padding: 6px 10px;
+    font-size: 14px;
+    line-height: 1;
+}
+#zoomIcon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* -------------------------
+ *   Transparent style
+ * ------------------------- */
+
+.glass {
+    background-color: #222B;
+    box-shadow: 0 0 2px #FFFA;
+}
+@supports (backdrop-filter: blur(4px)) {
+    .glass{
+        backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(4px);
+        background: transparent;
+    }
+}
+
+/* -------------------------
+ *   Hide if screen too small
+ * ------------------------- */
+
+@media (max-width: 500px) {
+    #controls {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+}
+@media (max-height: 500px) {
+    #controls {
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+}
+
+@media (max-width: 250px), (max-height:250px) {
+    body > * {
+        display: none !important;
+    }
+    body::before {
+        content: "display too small";
+        margin: auto;
+        padding: 8px;
+        color: #eea;
+        text-align: center;
+    }
+}
+
+/* -------------------------
+ *   Disable hover when touch
+ * ------------------------- */
+
+@media (hover:hover) {
+    button:hover {
+        outline: 2px solid #fffa !important;
+    }
+}
+
+ 

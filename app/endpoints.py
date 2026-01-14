@@ -10,6 +10,12 @@ from os import sep
 from views import *
 
 
+file_map = {
+    "video": video,
+    "audio": audio,
+    "photo": photo
+}
+
 def path_handler(path, ACL, root, folder_size):
 
     if path: validate_acl(path, ACL)
@@ -18,8 +24,9 @@ def path_handler(path, ACL, root, folder_size):
 
     if isfile(path):
         file_type = get_file_type(path)
+        static = get_mode == "static"
 
-        if get_mode != "file":
+        if not (get_mode == "file" or static):
 
             if file_type == "webpage":
                 return send_file(path, mimetype="text/html")
@@ -27,15 +34,11 @@ def path_handler(path, ACL, root, folder_size):
             if request.path.endswith("/"):
                 return redirect(request.path[:-1])
 
-            if file_type == "video":
-                return video(path, root, file_type, ACL)
+            if file_type in file_map:
+                return file_map[file_type](path, root, file_type, ACL)
 
-            if file_type == "audio":
-                return audio(path, root, file_type, ACL)
-
-        encache = get_mode == "cached"
-        mime = None if encache or file_type not in ["text", "source"] else "text/plain"
-        return send_file(path, mimetype=mime, cache=encache)
+        mime = None if static or file_type not in ["text", "source"] else "text/plain"
+        return send_file(path, mimetype=mime, cache=static)
 
     else:
         if get_mode == "file":

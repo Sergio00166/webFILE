@@ -1,8 +1,8 @@
 
 # Web Server with Custom Video & Audio Player
 
-A lightweight Python-based HTTP file server with built-in streaming for video and audio.  
-Supports ACL-based access control, uploads, and file operations.   
+A lightweight Python-based HTTP file server with built-in streaming for video and audio.
+Supports ACL-based access control, uploads, and file operations.
 
 ---
 
@@ -64,7 +64,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 
 ### About its performance
 
-On an E5‑1660v4 with 16 workers, is able to reach up to 1.6K RPS when listing directories with 600 items, and around 4K–6K RPS for listings with an more normal amount of items.   
+On an E5‑1660v4 with 16 workers, is able to reach up to 1.6K RPS when listing directories with 600 items, and around 4K–6K RPS for listings with an more normal amount of items.    
 Even such large listing stay lightweight, producing only ~30 KB of HTML without compression.
 
 It would not be archiveable without some manual optimizations: custom mtime formatting and HTML rendering (both 2–4× faster than Python/Jinja2), minimal syscalls via scandir + cached stat, and a 1‑minute mtime‑invalidated cache that keeps listings real‑time while deferring metadata refresh and optimized ACL-based permissions as on-memory HASHMAP.
@@ -79,26 +79,26 @@ It would not be archiveable without some manual optimizations: custom mtime form
 ```bash
 pip install -r requirements.txt
 ```
-- Install `ffmpeg` at the system level for video playback support.  
-- A `Redis` server for session storage and other cache.  
+- Install `ffmpeg` at the system level for video playback support.
+- A `Redis` server for session storage and other cache.
 
 #### Client-side
-- The web interface requires a modern browser (2021 or newer).  
-- If you're using something ancient, like a 2018-era fossil that hasn't seen an update in half a decade, expect broken styles and layout quirks.      
+- The web interface requires a modern browser (2021 or newer).
+- If you're using something ancient, like a 2018-era fossil that hasn't seen an update in half a decade, expect broken styles and layout quirks.
 
 ### Configuration
 Configure via environment variables:
 
 | Variable      | Required | Default        | Description                          |
 |---------------|----------|----------------|--------------------------------------|
-| SERVE_PATH    | Yes      | —              | Directory to serve.                  |
-| ERRLOG_FILE   | No       | data/error.log | Server error log.                    |
-| ACL_FILE      | No       | data/acl.json  | ACL rules file.                      |
-| USERS_FILE    | No       | data/users.json| User accounts file.                  |
-| SHOW_DIRSIZE  | No       | False          | Display directory sizes.             |
-| REDIS_PORT    | No       | 6379           | Port number to connect to REDIS.     |
-| REDIS_ADDR    | No       | 127.0.0.1      | IP address to connect to REDIS.      |
-| SECRET_KEY    | No       | Auto-generated | Secret key for multi-worker setups.  |
+| SERVE_PATH    | Yes      | —              | Directory to serve.                |
+| ERRLOG_FILE   | No       | data/error.log | Server error log.                  |
+| ACL_FILE      | No       | data/acl.json  | ACL rules file.                    |
+| USERS_FILE    | No       | data/users.json| User accounts file.                |
+| SHOW_DIRSIZE  | No       | False          | Display directory sizes.           |
+| REDIS_PORT    | No       | 6379           | Port number to connect to REDIS.   |
+| REDIS_ADDR    | No       | 127.0.0.1      | IP address to connect to REDIS.    |
+| SECRET_KEY    | No       | Auto-generated | Secret key for multi-worker setups.|
 
 
 ### Running the Server
@@ -125,51 +125,52 @@ If running behind a reverse proxy (e.g., Nginx), ensure its timeout settings mat
 ## Usage
 
 ### Endpoints
-This server has no general-purpose endpoints; everything is path-based with optional query modifiers.  
-The entire `/srv/` namespace is reserved for server functionality.  
+This server has no general-purpose endpoints; everything is path-based with optional query modifiers.
+The entire `/srv/` namespace is reserved for server functionality.
 No part of `/srv/` can be used as a folder name in the root directory.
 Static files are served from `/srv/static`.
 
 #### Authentication
-- `GET /srv/login?redirect=encoded_url` → Returns login page, redirecting after successful login or exit.  
-- `POST /srv/login` → Authenticates with `username`, `password` (form data).  
-- `GET /srv/logout` → Logs out and ends current session.  
+- `GET /srv/login?redirect=encoded_url` → Returns login page, redirecting after successful login or exit.
+- `POST /srv/login` → Authenticates with `username`, `password` (form data).
+- `GET /srv/logout` → Logs out and ends current session.
 
 Responses:
-- `200` → login successful / logout acknowledged.  
-- `401` → invalid credentials or not logged in.  
+- `200` → login successful / logout acknowledged.
+- `401` → invalid credentials or not logged in.
 
 #### File Access
-- `GET /path?get=file` → Always return the file or its file representation.  
-  - Regular files: returns the file directly.  
-  - Directories: returns a TAR archive of contents.  
-  - Useful to avoid player page for audio/video.  
+- `GET /path?get=file` → Always return the file or its file representation.
+  - Regular files: returns the file directly.
+  - Directories: returns a TAR archive of contents.
+  - Useful to avoid player page for audio/video.
 
-- `GET /path?get=cached` → Return the file with cache headers.  
-  - Applies **only to files**.  
-  - Uses same cache headers as `/srv/static/`.  
-  - Intended for plugin usage.  
+- `GET /path?get=static` → Returns it as static file.
+  - Applies **only to files**.
+  - Overrides default server custom MIME.
+  - Uses same cache headers as `/srv/static/`.
+  - Intended for plugin usage.
 
 #### Video Access
-- `GET /videopath?get=chapters` → Get chapters (JSON).  
-- `GET /videopath?get=tracks` → Get subtitle tracks (JSON list).  
-- `GET /videopath?get=subs_ssa&id=x` → Get subtitle track by ID in SSA format.  
-- `GET /videopath?get=subs_vtt&id=x` → Get subtitle track by ID in VTT format (legacy).  
+- `GET /videopath?get=chapters` → Get chapters (JSON).
+- `GET /videopath?get=tracks` → Get subtitle tracks (JSON list).
+- `GET /videopath?get=subs_ssa&id=x` → Get subtitle track by ID in SSA format.
+- `GET /videopath?get=subs_vtt&id=x` → Get subtitle track by ID in VTT format (legacy).
 
 #### Directory Listing
-- `GET /path?sort=XY` → Sorts directory listing by field and order.  
-  - `X`: sort field → `n` = name, `s` = size, `d` = date.  
-  - `Y`: sort order → `p` = ascending, `d` = descending.  
+- `GET /path?sort=XY` → Sorts directory listing by field and order.
+  - `X`: sort field → `n` = name, `s` = size, `d` = date.
+  - `Y`: sort order → `p` = ascending, `d` = descending.
 
 #### Directory Listings as JSON
-- `GET /dir_path?get=json` → Retrieve directory listings in JSON format.  
-- Works **only for directories**.  
-- Sorting parameter ignored.  
+- `GET /dir_path?get=json` → Retrieve directory listings in JSON format.
+- Works **only for directories**.
+- Sorting parameter ignored.
 
 **Behavior:**
-- Results follow server’s default order.  
-- Valid `type` values: `disk`, `directory`, `text`, `file`.  
-- Additional types defined in `app/file_types.json`.  
+- Results follow server’s default order.
+- Valid `type` values: `disk`, `directory`, `text`, `file`.
+- Additional types defined in `app/file_types.json`.
 
 **Example response for `/`:**
 ```json
@@ -200,8 +201,8 @@ Responses:
 ```
 
 ### Other HTTP Methods
-The server internally uses some WebDAV methods for file/folder operations.  
-**Note:** This is not full WebDAV support—methods are adopted for internal use only.  
+The server internally uses some WebDAV methods for file/folder operations.
+**Note:** This is not full WebDAV support—methods are adopted for internal use only.
 
 | Method | Action performed           |
 |--------|----------------------------|
@@ -212,13 +213,13 @@ The server internally uses some WebDAV methods for file/folder operations.
 | PUT    | Upload a file              |
 
 ### HTML vs .web Extensions
-- `.html` files are treated as plain text.  
-- `.web` files are recognized as HTML pages.  
-- Placing `index.web` in any folder auto-loads that page instead of default listing.  
-- Disable with `?get=default` to get file listing page.  
+- `.html` files are treated as plain text.
+- `.web` files are recognized as HTML pages.
+- Placing `index.web` in any folder auto-loads that page instead of default listing.
+- Disable with `?get=default` to get file listing page.
 
 ### Official Plugins
-Plugins allow creation of new pages and customization of the frontend GUI by dropping `.web` extensions into served directories.  
+Plugins allow creation of new pages and customization of the frontend GUI by dropping `.web` extensions into served directories.
 Available at: [webFILE-plugins](https://github.com/Sergio00166/webFILE-plugins)
 
 ---

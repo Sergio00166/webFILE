@@ -1,0 +1,43 @@
+<!-- Code by Sergio00166 -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="/srv/static/ico/photo.ico">
+    <link rel="stylesheet" href="/srv/static/css/photo.css">
+    <script defer src="/srv/static/js/photo.js"></script>
+  </head>
+  <body>
+    <img id="main-img" src="?get=file">
+    <div id="controls">
+      <span id="file-name" class="glass">{{ name }}</span>
+      <div class="navigation">
+        <button onclick="navigateToPrevious()" class="glass" title="Prev (P)">
+          <img src="/srv/static/svg/video/play-skip-back-outline.svg">
+        </button>
+        <button onclick="navigateToNext()" class="glass" title="Next (N)">
+          <img src="/srv/static/svg/video/play-skip-forward-outline.svg">
+      </div>
+      <div class="tools">
+        <button onClick="download()" class="glass" title="Download">
+          <img src="/srv/static/svg/photo/download-outline.svg">
+        </button>
+        <span class="zoomBox glass">
+          <button onclick="zoomOut()" title="Zoom out">−</button>
+          <img id="zoomIcon" src="/srv/static/svg/photo/magnifying-glass.svg" title="Reset">
+          <button onclick="zoomIn()" title="Zoom in">+</button>
+        </span>
+        <button onClick="rotateImg()" class="glass" title="Rotate (R)">
+          <img src="/srv/static/svg/photo/rotate.svg">
+        </button>
+      </div>
+    </div>
+    <a href="?get=file" id="download-link" download hidden></a>
+    <a href="{{ prev }}" id="prev" hidden></a>
+    <a href="{{ nxt }}" id="next" hidden></a>
+  </body>
+</html>
+
+ 
