@@ -4,15 +4,16 @@ from os.path import exists, isfile, basename
 from subprocess import Popen,PIPE,run,DEVNULL
 from ssatovtt import convert as convert_ssa
 from shutil import which as find_proc
-from json import loads as jsload
-from json import dumps as jsdump
+from sys import path as pypath
 from cache import setup_cache
 from flask import Response
-from os import stat
+from os import stat, sep
+import json
 
 cache = setup_cache(1)
 cache_TTL = 60*60 # 1h
 is_ffmpeg_available = False
+ISO_codes = json.load(open(pypath[0] + sep + "iso_639.json"))
 
 
 def check_ffmpeg_installed():
@@ -29,12 +30,12 @@ def external_subs(file):
 
 @cache.cached("inode","size","mtime",TTL=cache_TTL)
 def ffmpeg_get_chapters(file_path, inode, size, mtime):
-    ffprobe_output = jsload( run([
+    ffprobe_output = json.loads( run([
         "ffprobe", "-v", "quiet", "-show_entries",
         "chapters",  "-of", "json", file_path
     ], stdout=PIPE, stderr=DEVNULL).stdout.decode() )
     try:
-        return jsdump([ {
+        return json.dumps([ {
             "title": chapter["tags"].get("title", "Untitled"),
             "start_time": int(float(chapter["start_time"]))
         } for chapter in ffprobe_output["chapters"] ])
@@ -45,7 +46,7 @@ def ffmpeg_get_chapters(file_path, inode, size, mtime):
 @cache.cached("inode","size","mtime",TTL=cache_TTL)
 def ffmpeg_get_tracks(file_path, inode, size, mtime):
     # This is to get all the subtitles name or language
-    ffprobe_output = jsload( run([
+    ffprobe_output = json.loads( run([
         "ffprobe", "-v", "quiet",
         "-select_streams", "s", "-show_entries",
         "stream=index:stream_tags=title:stream_tags=language",
@@ -55,15 +56,19 @@ def ffmpeg_get_tracks(file_path, inode, size, mtime):
     subtitles_list = []
     streams = ffprobe_output.get("streams",[])
 
-    for p,stream in enumerate(streams):
+    for p, stream in enumerate(streams):
         tags = stream.get("tags", {})
         title = tags.get("title")
-        lang = tags.get("language")
-        subtitles_list.append(
-            f"{title} - [{lang}]" if title
-            else f"Track {p} - [{lang}]"
+ 
+        lang = ISO_codes.get(
+            tags.get("language")
         )
-    return jsdump(subtitles_list)
+        subtitles_list.append(
+            f"{lang} - {title}"
+            if lang and title else 
+            lang or title or f"Track{p}"
+        )
+    return json.dumps(subtitles_list)
 
 
 @cache.cached("inode","size","mtime",TTL=cache_TTL)

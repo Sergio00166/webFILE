@@ -293,7 +293,7 @@ button img {
     -webkit-appearance: none;
     appearance: none;
 }
-#volume-bar.show {
+#controls.show #volume-bar.show {
     transform: scaleX(1);
 }
 #volume-bar::-webkit-slider-thumb {

@@ -23,10 +23,13 @@ def path_handler(path, ACL, root, folder_size):
     get_mode = request.args.get("get","")
 
     if isfile(path):
-        file_type = get_file_type(path)
+        file_type, mime = get_file_type(path), None
         static = get_mode == "static"
 
         if not (get_mode == "file" or static):
+
+            if file_type in ["text", "source"]:
+                mime = "text/plain"
 
             if file_type == "webpage":
                 return send_file(path, mimetype="text/html")
@@ -37,26 +40,25 @@ def path_handler(path, ACL, root, folder_size):
             if file_type in file_map:
                 return file_map[file_type](path, root, file_type, ACL)
 
-        mime = None if static or file_type not in ["text", "source"] else "text/plain"
         return send_file(path, mimetype=mime, cache=static)
 
     else:
         if get_mode == "file":
             return send_dir(path, root, ACL)
 
-        if get_mode != "json":
+        if not (json_mode := get_mode == "json"):
 
-            if isfile(path + sep + autoload_webpage) and get_mode != "default":
+            if get_mode != "default" and isfile(path + sep + autoload_webpage):
                 url_sep = "" if request.path.endswith("/") else "/"
                 return redirect(request.path + url_sep + autoload_webpage)
 
             if not request.path.endswith("/"):
                 query = request.query_string.decode()
-                query = "?" + query if query else ""
+                query = f"?{query}" if query else ""
                 return redirect(request.path + "/" + query)
 
-        sort = request.args["sort"] if "sort" in request.args else ""
-        return directory(path, root, folder_size, sort, ACL, get_mode == "json")
+        sort = request.args.get("sort", "")
+        return directory(path, root, folder_size, sort, ACL, json_mode)
 
 
 
