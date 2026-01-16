@@ -56,13 +56,18 @@ def ffmpeg_get_tracks(file_path, inode, size, mtime):
     subtitles_list = []
     streams = ffprobe_output.get("streams",[])
 
-    for p,stream in enumerate(streams):
+    for p, stream in enumerate(streams):
         tags = stream.get("tags", {})
         title = tags.get("title")
-        lang = tags.get("language")
-        lang = ISO_codes.get(lang, lang)
-        subtitles_list.append(f"{lang} - {title}" if title else lang)
-        
+ 
+        lang = ISO_codes.get(
+            tags.get("language")
+        )
+        subtitles_list.append(
+            f"{lang} - {title}"
+            if lang and title else 
+            lang or title or f"Track{p}"
+        )
     return json.dumps(subtitles_list)
 
 
