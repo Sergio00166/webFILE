@@ -1,6 +1,7 @@
 # Web Server with Custom Video & Audio Player
 
-A lightweight Python-based HTTP file server with built‑in streaming for video and audio.  
+A lightweight Python-based HTTP file server.  
+Custom video and audio players and a custom photo viewer
 Supports ACL‑based access control, uploads, and file operations.
 
 ---
@@ -131,6 +132,7 @@ Responses:
 #### File Access
 - `GET /path?get=file` → Always returns the file or its file representation.
   - Regular files: returned directly.
+  - Overrides the server’s custom MIME handling.
   - Directories: returned as a TAR archive.
   - Useful for bypassing the player page for audio/video.
 

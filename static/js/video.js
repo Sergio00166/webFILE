@@ -4,8 +4,9 @@
 // CONSTANTS & CONFIGURATION
 // ============================================================================
 
-const MOUSE_CONTROL_DELAY = 1500;
-const TOUCH_CONTROL_DELAY = 2500;
+const MOUSE_CONTROL_DELAY = 2000;
+const TOUCH_CONTROL_DELAY = 3000;
+const EXTRA_SETTINGS_DELAY = 2000;
 const TIME_CHANGE_DELAY = 750;
 const DOUBLE_TOUCH_DELAY = 400;
 const ANIMATION_START_DELAY = 400;
@@ -84,14 +85,9 @@ let chapters;
 let loopMode = 0;
 let legacySubtitles = false;
 let assSubtitleWorker;
-let isCursorOnControls = false;
-let isMouseOnSelect = false;
-let isPressing = false;
-let pressHasTriggered = false;
 let previousVideoTime = 0;
 let touchInteractionActive;
 let controlsHideTimeout;
-let volumeHideTimeout;
 let touchActionTimeout;
 let cursorHideTimeout;
 let subtitleIndex = -1;
@@ -101,6 +97,7 @@ let touchHoverActive = false;
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
+
 function initializeVideoPlayer() {
     const savedSpeed      = localStorage.getItem("videoSpeed");
     const savedVolume     = localStorage.getItem("videoVolume");
@@ -407,9 +404,12 @@ function updateVolumeSlider() {
 
 function hideControlsWithDelay(delay) {
     clearTimeout(controlsHideTimeout);
+
+    if (settingsMenu.classList.contains("show"))
+        delay += EXTRA_SETTINGS_DELAY;
+
     controlsHideTimeout = setTimeout(()=>{
         if (!video.paused) {
-            if (isCursorOnControls) return;
             controlsContainer.classList.remove("show");
             settingsMenu.classList.remove("show");
             document.activeElement.blur();
@@ -727,7 +727,6 @@ function updateAudioDisplay() {
 
 function toggleSettingsMenu() {
     settingsMenu.classList.toggle("show");
-    isCursorOnControls = !isCursorOnControls;
     if (settingsMenu.classList.contains("show"))
         showMainMenu();
 }
@@ -875,17 +874,15 @@ videoContainer.addEventListener("focusin", event => {
 // ============================================================================
 
 volumeControl.addEventListener("mouseenter", ()=>{
-    clearTimeout(volumeHideTimeout);
     if (video.muted)
         volumeSlider.classList.remove("show");
     else
         volumeSlider.classList.add("show");
 });
 
-volumeControl.addEventListener("mouseleave", ()=>{
-    clearTimeout(volumeHideTimeout);
-    volumeSlider.classList.remove("show");
-});
+volumeControl.addEventListener("mouseleave", ()=>
+    volumeSlider.classList.remove("show")
+);
 
 volumeSlider.addEventListener("input", event => {
     video.volume = event.target.value;
