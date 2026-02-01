@@ -336,19 +336,20 @@ function handleAudioEnded() {
 // ============================================================================
 
 function navigateToPrevious() {
-    if (isShuffled)
+    if (isShuffled && randomLink)
         window.history.go(-1);
-    else
+
+    else if (previousLink)
         previousLink.click();
 }
 
 function navigateToNext() {
-    if (isShuffled) {
+    if (isShuffled && randomLink) {
         window.history.forward();
         setTimeout(() => randomLink.click(), 250);
-    } else {
-        nextLink.click();
     }
+    else if (nextLink)
+        nextLink.click();
 }
 
 function download() {

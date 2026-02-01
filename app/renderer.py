@@ -1,6 +1,7 @@
 # Code by Sergio00166
 
 from time import timezone
+from html import escape
 
 DATE_FMT = "{:02d}/{:02d}/{}"
 TIME_FMT = "{:02d}:{:02d}"
@@ -58,7 +59,7 @@ def render_folder(folder_content):
         type = item["type"]
 
         content.append("<button isdir>" if type in ["directory", "disk"] else "<button>")
-        content.append(f'<img src="/srv/static/svg/index/{icon_map.get(type, "file-solid.svg")}"><pre>{item["name"]}</pre><span>')
+        content.append(f'<img src="/srv/static/svg/index/{icon_map.get(type, "file-solid.svg")}"><pre>{escape(item["name"])}</pre><span>')
 
         if type == "disk":
             capacity = item["capacity"]

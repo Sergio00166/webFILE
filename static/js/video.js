@@ -116,7 +116,7 @@ function initializeVideoPlayer() {
     updateVolumeIcon();
     updateSpeedDisplay();
     updateLegacyDisplay();
-	updateLoopButton();
+    updateLoopButton();
 
     const isGecko = navigator.userAgent.includes("Gecko") &&
                    !navigator.userAgent.includes("like Gecko");
@@ -277,10 +277,12 @@ function scaleVideoToFit() {
 // ============================================================================
 
 function navigateToNext() {
-    nextLink.click();
+    if (nextLink)
+        nextLink.click();
 }
 function navigateToPrevious() {
-    previousLink.click();
+    if (previousLink)
+        previousLink.click();
 }
 
 function togglePlayPauseState() {
@@ -803,7 +805,7 @@ function handleTimeChangeKeyboard(delta) {
 }
 
 function download() {
-    if (downloadSubtitlesLink.getAttribute("href") !== "#") {
+    if (downloadSubtitlesLink) {
         alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
         downloadSubtitlesLink.click();
     }

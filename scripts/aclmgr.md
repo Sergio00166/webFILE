@@ -95,6 +95,17 @@ I recommend to use the extension .aqs (Acl Query Script)
 
 ---
 
+
+## EXPORT-ACL
+**Syntax:**
+```
+EXPORT-ACL;
+```
+Exports the ACL and prints the equivalent sentences
+to restore the ACL rules on the screen.
+
+---
+
 ## GET-ENTRIES
 **Syntax:**
 ```

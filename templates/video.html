@@ -41,9 +41,9 @@
               <img src="/srv/static/svg/video/pause-outline.svg" style="display: none">
             </button>
             <button id="loop-btn" onclick="cycleLoopMode()" class="glass" title="Loop (L)">
-			        <img src="/srv/static/svg/video/repeat-button.svg" style="display: block">
+              <img src="/srv/static/svg/video/repeat-button.svg" style="display: block">
               <img src="/srv/static/svg/video/repeat-single-button.svg" style="display: none">
-			      </button>
+            </button>
             <span id="volume">
               <button onclick="toggleMuteState()" class="glass" title="Mute (M)">
                 <img src="/srv/static/svg/video/volume-mute-outline.svg" style="display: none">
@@ -130,9 +130,15 @@
       </div>
     </div>
     <a href="?get=file" id="download_video" download hidden></a>
-    <a href="{{ subs_file }}" id="download_subs" download hidden></a>
-    <a href='{{ nxt }}' id="next" hidden></a>
-    <a href='{{ prev }}' id="prev" hidden></a>
+  {% if subs_file != "" %}
+    <a href="{{ subs_file | urlencode }}?get=file" id="download_subs" download hidden></a>
+  {% endif %}
+  {% if next != "" %}
+    <a href='{{ next | urlencode }}' id="next" hidden></a>
+  {% endif %}
+  {% if prev != "" %}
+    <a href='{{ prev | urlencode }}' id="prev" hidden></a>
+  {% endif %}
   </body>
 </html>
 

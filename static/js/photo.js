@@ -63,10 +63,12 @@ function download() {
     downloadLink.click();
 }
 function navigateToNext() {
-    nextLink.click();
+    if (nextLink)
+        nextLink.click();
 }
 function navigateToPrevious() {
-    previousLink.click();
+    if (previousLink)
+        previousLink.click();
 }
 
 // ============================================================================
@@ -107,7 +109,7 @@ function setScale(newScale, opts) {
     let cx, cy, rect;
     if (!opts) opts = {};
     const oldScale = scale;
-    
+
     if (newScale === oldScale) return;
     newScale = Math.max(newScale, 0.05);
     const factor = newScale / oldScale;
@@ -305,7 +307,7 @@ window.addEventListener("keydown", e => {
             e.preventDefault();
             zoomOut();
             break;
-        case " ": 
+        case " ":
             e.preventDefault();
             resetView();
             break;
