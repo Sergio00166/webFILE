@@ -8,12 +8,12 @@ from sys import path as pypath
 from cache import setup_cache
 from flask import Response
 from os import stat, sep
-import json
+from msgspec import json
 
 cache = setup_cache(1)
 cache_TTL = 60*60 # 1h
 is_ffmpeg_available = False
-ISO_codes = json.load(open(pypath[0] + sep + "iso_639.json"))
+ISO_codes = json.decode(open(f"{pypath[0]}{sep}iso_639.json").read())
 
 
 def check_ffmpeg_installed():
@@ -30,12 +30,12 @@ def external_subs(file):
 
 @cache.cached("inode","size","mtime",TTL=cache_TTL)
 def ffmpeg_get_chapters(file_path, inode, size, mtime):
-    ffprobe_output = json.loads( run([
+    ffprobe_output = json.decode( run([
         "ffprobe", "-v", "quiet", "-show_entries",
         "chapters",  "-of", "json", file_path
     ], stdout=PIPE, stderr=DEVNULL).stdout.decode() )
     try:
-        return json.dumps([ {
+        return json.encode([ {
             "title": chapter["tags"].get("title", "Untitled"),
             "start_time": int(float(chapter["start_time"]))
         } for chapter in ffprobe_output["chapters"] ])
@@ -46,7 +46,7 @@ def ffmpeg_get_chapters(file_path, inode, size, mtime):
 @cache.cached("inode","size","mtime",TTL=cache_TTL)
 def ffmpeg_get_tracks(file_path, inode, size, mtime):
     # This is to get all the subtitles name or language
-    ffprobe_output = json.loads( run([
+    ffprobe_output = json.decode( run([
         "ffprobe", "-v", "quiet",
         "-select_streams", "s", "-show_entries",
         "stream=index:stream_tags=title:stream_tags=language",
@@ -68,7 +68,7 @@ def ffmpeg_get_tracks(file_path, inode, size, mtime):
             if lang and title else 
             lang or title or f"Track{p}"
         )
-    return json.dumps(subtitles_list)
+    return json.encode(subtitles_list)
 
 
 @cache.cached("inode","size","mtime",TTL=cache_TTL)
@@ -111,7 +111,7 @@ def get_codec(source,index):
         "-show_entries", "stream=codec_name","-of",
         "default=noprint_wrappers=1:nokey=1",source
     ], stdout=PIPE, stderr=DEVNULL
-    ).stdout.decode().strip() in ["ssa","ass"] else "webvtt"
+    ).stdout.decode().strip() in ("ssa","ass") else "webvtt"
 
 
 def get_subtitles(index,file,legacy):
@@ -124,7 +124,7 @@ def get_subtitles(index,file,legacy):
         file, index, legacy,
         inode, st.st_size, st.st_mtime
     )
-    subsname = basename(file)+f".track{str(index)}."
+    subsname = f"{basename(file)}.track{str(index)}."
     subsname += "vtt" if legacy else "ssa"
 
     mime = "text/vtt" if legacy else "application/x-substation-alpha"

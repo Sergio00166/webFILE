@@ -17,7 +17,7 @@ from endpoints import *
 
 
 # Base paths for templates/static content
-parent_path = abspath(join(pypath[0],".."))
+parent_path = abspath(join(pypath[0], ".."))
 sroot = join(parent_path,"static")
 
 # Load environment configuration

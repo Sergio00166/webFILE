@@ -1,6 +1,7 @@
 # Code by Sergio00166
 
 from functions import validate_acl, get_file_type
+from urllib.parse import quote as encurl
 from os.path import relpath, getmtime
 from os import scandir, sep, stat
 from cache import setup_cache
@@ -23,7 +24,7 @@ def list_folder(folder_path, root, folder_size, parent_mtime):
             st = item.stat()
             data = {
                 "name":  item.name,
-                "path":  relpath(item.path, start=root).replace(sep, "/"),
+                "path":  "/" + encurl(relpath(item.path, start=root).replace(sep, "/")),
                 "mtime": st.st_mtime,
             }
             if (item.is_dir()):
@@ -50,7 +51,7 @@ def sort_contents(folder_content, sort, root):
     dirs, files = [], []
 
     for x in folder_content:
-        (dirs if x["type"] in ["disk", "directory"] else files).append(x)
+        (dirs if x["type"] in ("disk", "directory") else files).append(x)
 
     key_map = {
         "d": lambda x: x["mtime"] or 0,

@@ -162,6 +162,7 @@ Responses:
 - Results follow the server’s default order.
 - Valid `type` values: `disk`, `directory`, `text`, `file`.
 - Additional types defined in `app/file_types.json`.
+- path is URL encoded
 
 **Example response for `/`:**
 ```json

@@ -84,7 +84,7 @@ def send_dir(directory, root, ACL, name=None):
     size = safe_calc_tar_size(directory, ACL, root)
 
     headers={
-        "Content-Disposition": "attachment;filename=" + folder + ".tar",
+        "Content-Disposition": f"attachment;filename={folder}.tar",
         "Content-Length": str(size)
     }
     return Response(generate_tar(directory), mimetype="application/x-tar", headers=headers)

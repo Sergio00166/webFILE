@@ -10,6 +10,9 @@ from os import getenv
 redis_port  = getenv("REDIS_PORT" ,6379)
 redis_addr  = getenv("REDIS_ADDR" ,"127.0.0.1")
 
+pack_dec = msgpack.Decoder()
+pack_enc = msgpack.Encoder()
+
 def setup_cache(db):
     pool = ConnectionPool(host=redis_addr, port=redis_port, db=db)
     redis_client = Redis(connection_pool=pool)
@@ -43,19 +46,19 @@ class SelectiveRedisCache:
                 cache_key, inv_key = f"cache:{digest}", f"inv:{digest}"
 
                 if (inv_raw := redis.get(inv_key)):
-                    hit = msgpack.decode(inv_raw) == inv_values
+                    hit = pack_dec.decode(inv_raw) == inv_values
 
                     if hit and (cached_blob := redis.get(cache_key)):
-                        return msgpack.decode(cached_blob)
+                        return pack_dec.decode(cached_blob)
 
                 result = func(*args, **kwargs)
                 pipe = redis.pipeline()
-                pipe.set(cache_key, msgpack.encode(result),     ex=TTL)
-                pipe.set(inv_key,   msgpack.encode(inv_values), ex=TTL)
+                pipe.set(cache_key, pack_enc.encode(result),     ex=TTL)
+                pipe.set(inv_key,   pack_enc.encode(inv_values), ex=TTL)
                 pipe.execute()
 
                 return result
             return wrapper
         return decorator
 
-  
+ 

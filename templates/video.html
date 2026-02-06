@@ -13,7 +13,7 @@
   <body>
     <div id="video-container">
       <div class="video-box">
-        <video src="{{ request.path }}?get=file" disablePictureInPicture></video>
+        <video src="?get=file" disablePictureInPicture></video>
         <canvas></canvas>
       </div>
       <span id="custom-loader" style="display: none"></span>
@@ -131,13 +131,13 @@
     </div>
     <a href="?get=file" id="download_video" download hidden></a>
   {% if subs_file != "" %}
-    <a href="{{ subs_file | urlencode }}?get=file" id="download_subs" download hidden></a>
+    <a href="{{ subs_file }}?get=file" id="download_subs" download hidden></a>
   {% endif %}
   {% if next != "" %}
-    <a href='{{ next | urlencode }}' id="next" hidden></a>
+    <a href='{{ next }}' id="next" hidden></a>
   {% endif %}
   {% if prev != "" %}
-    <a href='{{ prev | urlencode }}' id="prev" hidden></a>
+    <a href='{{ prev  }}' id="prev" hidden></a>
   {% endif %}
   </body>
 </html>

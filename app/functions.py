@@ -2,15 +2,15 @@
 
 from os.path import abspath, commonpath, dirname, exists, normpath
 from datetime import datetime as dt
-from json import load as jsload
 from os import R_OK, access, sep
 from sys import path as pypath
 from flask import session
 from pathlib import Path
+from msgspec import json
 from sys import stderr
 
 # Load file type metadata only once at import time
-file_types = jsload(open(pypath[0] + sep + "file_types.json"))
+file_types = json.decode(open(f"{pypath[0]}{sep}file_types.json").read())
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 autoload_webpage = "index" + file_types.get("webpage")[0]
 
@@ -24,7 +24,7 @@ boms = (
 
 def get_file_type(path):
     extension = path.rsplit(".", 1)[-1].lower()
-    file_type = file_type_map.get("." + extension)
+    file_type = file_type_map.get(f".{extension}")
 
     if file_type: return file_type
     return "file" if is_binary(path) else "text"
@@ -45,7 +45,7 @@ def is_binary(filepath):
 
 def safe_path(path, root, igntf=False):
     path = path.replace("/", sep)
-    path = abspath(root + sep + path)
+    path = abspath(f"{root}{sep}{path}")
 
     # Check if is subdirectory from root
     if commonpath([root, path]) == root:
@@ -62,8 +62,8 @@ def safe_path(path, root, igntf=False):
 
 def load_userACL(USERS, ACL, users_file, acl_file):
     USERS.clear(); ACL.clear()
-    USERS.update(jsload(open(users_file)))
-    ACL.update(jsload(open(acl_file)))
+    USERS.update(json.decode(open(users_file).read()))
+    ACL.update(json.decode(open(acl_file).read()))
 
 
 def validate_acl(path, ACL, write=False, retBool=False):
@@ -76,7 +76,7 @@ def validate_acl(path, ACL, write=False, retBool=False):
     path = path.replace(sep, "/")
 
     if path.startswith("//"):    path = path[2:]
-    if not path.startswith("/"): path = "/" + path
+    if not path.startswith("/"): path = f"/{path}"
 
     while True:
         # Check if there is a rule for it
@@ -109,7 +109,7 @@ def printerr(e, log_path, override_msg=None):
     if e_message.startswith("["):
         idx = e_message.find("] ")
         errno = e_message[: idx + 1]
-        e_type += " (" + errno[1:-1] + ")"
+        e_type += f" ({errno[1:-1]} )"
         e_message = e_message[idx + 2 :]
 
     time_str = dt.now().strftime("%Y-%m-%d %H:%M:%S")

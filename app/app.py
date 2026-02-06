@@ -2,10 +2,10 @@
 
 from init import *
 
-http_methods = [
+http_methods = (
     "GET", "PUT", "POST", "MKCOL",
     "DELETE", "COPY", "MOVE"
-]
+)
 method_map = {
     "DELETE": delfile,
     "MOVE":   move,
@@ -15,14 +15,14 @@ method_map = {
 }
 
 # Main endpoint for file serve or dir listing
-@app.route('/', methods=["GET","POST"], defaults={'path': ''})
+@app.route('/', methods=("GET","POST"), defaults={'path': ''})
 @app.route("/<path:path>", methods=http_methods)
 def explorer(path):
     try:
         if request.method in method_map:
             return method_map[request.method](path, ACL, root, error_file)
 
-        if not request.method in ["GET", "HEAD"]: return "", 405
+        if not request.method in ("GET", "HEAD"): return "", 405
         return path_handler(path, ACL, root, folder_size)
 
     except Exception as e:
@@ -40,10 +40,10 @@ def internal(path):
     try:
         if path.startswith("static/"):
             path = path.removeprefix("static/")
-            if request.method not in ["HEAD", "GET"]:
+            if request.method not in ("HEAD", "GET"):
                 raise PermissionError
 
-            path = safe_path(path,sroot)
+            path = safe_path(path, sroot)
             if not isfile(path): raise PermissionError
             return send_file( path, cache=True)
 

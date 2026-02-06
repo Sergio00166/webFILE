@@ -45,7 +45,7 @@ def readable_date(ts):
 
 
 def readable_size(num, suffix="B"):
-    for unit in ["", "Ki", "Mi", "Gi", "Ti"]:
+    for unit in ("", "Ki", "Mi", "Gi", "Ti"):
         if num < 1024:
             return f"{num:.1f} {unit}{suffix}"
         num /= 1024
@@ -58,7 +58,7 @@ def render_folder(folder_content):
     for item in folder_content:
         type = item["type"]
 
-        content.append("<button isdir>" if type in ["directory", "disk"] else "<button>")
+        content.append("<button isdir>" if type in ("directory", "disk") else "<button>")
         content.append(f'<img src="/srv/static/svg/index/{icon_map.get(type, "file-solid.svg")}"><pre>{escape(item["name"])}</pre><span>')
 
         if type == "disk":

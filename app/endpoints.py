@@ -9,7 +9,6 @@ from hashlib import sha256
 from os import sep
 from views import *
 
-
 file_map = {
     "video": video,
     "audio": audio,
@@ -20,7 +19,7 @@ def path_handler(path, ACL, root, folder_size):
 
     if path: validate_acl(path, ACL)
     path = safe_path(path, root)
-    get_mode = request.args.get("get","")
+    get_mode = request.args.get("get", "")
 
     if isfile(path):
         file_type, mime = get_file_type(path), None
@@ -28,14 +27,16 @@ def path_handler(path, ACL, root, folder_size):
 
         if not (get_mode == "file" or static):
 
-            if file_type in ["text", "source"]:
+            if file_type in ("text", "source"):
                 mime = "text/plain"
 
             if file_type == "webpage":
                 return send_file(path, mimetype="text/html")
 
             if request.path.endswith("/"):
-                return redirect(request.path[:-1])
+                query = request.query_string.decode()
+                query = f"?query" if query else ""
+                return redirect(request.path[:-1] + query)
 
             if file_type in file_map:
                 return file_map[file_type](path, root, file_type, ACL)
@@ -48,14 +49,14 @@ def path_handler(path, ACL, root, folder_size):
 
         if not (json_mode := get_mode == "json"):
 
-            if get_mode != "default" and isfile(path + sep + autoload_webpage):
+            if get_mode != "default" and isfile(f"{path}{sep}{autoload_webpage}"):
                 url_sep = "" if request.path.endswith("/") else "/"
-                return redirect(request.path + url_sep + autoload_webpage)
+                return redirect(f"{request.path}{url_sep}{autoload_webpage}")
 
             if not request.path.endswith("/"):
                 query = request.query_string.decode()
                 query = f"?{query}" if query else ""
-                return redirect(request.path + "/" + query)
+                return redirect(f"{request.path}/{query}")
 
         sort = request.args.get("sort", "")
         return directory(path, root, folder_size, sort, ACL, json_mode)
