@@ -2,11 +2,10 @@
 
 from video import get_tracks, get_chapters, get_subtitles
 from video import external_subs, check_ffmpeg_installed
-from listing import get_folder_content, sort_contents
 from flask import render_template, request, Response
 from os.path import basename, dirname, relpath
 from urllib.parse import quote as encurl
-from renderer import render_folder
+from listing import get_folder_content
 from random import choice
 from msgspec import json
 from os import sep
@@ -17,10 +16,8 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
     folder, name = dirname(file_path), basename(path)
 
     content = get_folder_content(folder, root, False, ACL)
-    content = sort_contents(content, "np", root) #Alphanumerical
-
-    files = [x["path"] for x in content if x["type"] == filetype]
-    path_index = files.index(f"/{encurl(path)}")
+    files = [x["name"] for x in content if x["type"] == filetype]
+    path_index = files.index(name)
 
     if len(files) == 1:
         if not random: return "", "", name
@@ -35,31 +32,16 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
     else:
         prev = files[path_index - 1]
 
-    if prev != "": prev = basename(prev)
-    if next != "": next = basename(next)
-
     if not random: return prev, next, name
     else: return prev, next, name, basename(choice(files))
 
 
-def directory(path, root, folder_size, sort, ACL, useApi):
-    sort = sort if sort in ("np", "nd", "sp", "sd", "dp", "dd") else "np"
+def directory(path, root, folder_size, ACL, useApi):
     contents = get_folder_content(path, root, folder_size, ACL)
-    contents = sort_contents(contents, sort, root)
-
     if useApi:
-        return Response(
-            json.encode(contents),
-            mimetype="application/json"
-        )
+        return Response(json.encode(contents), mimetype="application/json")
     else:
-        path_text = relpath(path, start=root).replace(sep, "/")
-        path_text = "/" if path_text == "." else f"/{path_text}/"
-
-        return render_template(
-            "index.html", content=render_folder(contents),
-            folder_path=path_text, sort=sort
-        )
+        return render_template("index.html")
 
 
 def audio(path, root, file_type, ACL):

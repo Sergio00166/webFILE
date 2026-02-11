@@ -148,42 +148,33 @@ Responses:
 - `GET /videopath?get=subs_ssa&id=x` → Returns subtitle track `x` in SSA format.
 - `GET /videopath?get=subs_vtt&id=x` → Returns subtitle track `x` in VTT format (legacy).
 
-#### Directory Listing
-- `GET /path?sort=XY` → Sorts directory listing by field and order.
-  - `X`: sort field → `n` = name, `s` = size, `d` = date.
-  - `Y`: sort order → `p` = ascending, `d` = descending.
-
 #### Directory Listings as JSON
 - `GET /dir_path?get=json` → Retrieve directory listings in JSON format.
 - Works **only for directories**.
-- Sorting parameter is ignored.
+- Used mainly on main explorer and plugins.
 
 **Behavior:**
 - Results follow the server’s default order.
 - Valid `type` values: `disk`, `directory`, `text`, `file`.
 - Additional types defined in `app/file_types.json`.
-- path is URL encoded
 
 **Example response for `/`:**
 ```json
 [
   {
     "name": "media",
-    "path": "/media",
     "type": "directory",
     "mtime": 1750592302.2184954,
     "size": 0
   },
   {
     "name": "something.txt",
-    "path": "/something.txt",
     "type": "text",
     "mtime": 1750589251.4473305,
     "size": 9823
   },
   {
     "name": "STORAGE",
-    "path": "/STORAGE",
     "type": "disk",
     "capacity": 2147483648000,
     "size": 509872014832,

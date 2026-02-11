@@ -158,6 +158,7 @@ button {
 }
 #list-group {
     gap: 6px;
+    opacity: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -165,6 +166,10 @@ button {
     padding: 6px 8px 12px;
     box-sizing: border-box;
     overflow: auto;
+}
+#list-group.show {
+    transition: opacity 0.1s;
+    opacity: 1
 }
 
 /* -------------------------
@@ -206,7 +211,7 @@ button {
 }
 
 /* -------------------------
- *   Loading/Uploading screen
+ *   Loading screen
  * ------------------------- */
 
 #loader {

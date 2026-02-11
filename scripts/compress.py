@@ -122,6 +122,9 @@ if __name__ == '__main__':
     base = abspath(join(path[0], '..'))
     process_files(join(base, 'static', 'css', '*.css'), compress_css)
     process_files(join(base, 'static', 'js', '*.js'), compress_js)
+    process_files(join(base, 'static', 'js', 'video', '*.js'), compress_js)
+    process_files(join(base, 'static', 'js', 'index', '*.js'), compress_js)
+    process_files(join(base, 'static', 'js', 'audio', '*.js'), compress_js)
     process_files(join(base, 'templates', '*'), compress_html)
 
 

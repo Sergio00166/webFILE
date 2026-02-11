@@ -9,18 +9,20 @@
     <link rel="icon" type="image/x-icon" href="/srv/static/ico/favicon.ico">
     <link rel="stylesheet" href="/srv/static/css/index.css">
     <link rel="stylesheet" href="/srv/static/css/path-bar.css">
-    <script defer src="/srv/static/js/index.js"></script>
+    <script defer src="/srv/static/js/index/main.js"></script>
+    <script defer src="/srv/static/js/index/render.js"></script>
+    <script defer src="/srv/static/js/index/actions.js"></script>
   </head>
   <body>
     <div id="path-bar">
-      <button onclick="window.location.href='..'" title="Parent">
+      <button onclick="goBack()" title="Parent">
         <img src="/srv/static/svg/index/arrow-left-solid.svg">
       </button>
-      <button onclick="window.location.href='/'" title="Home (H)">
+      <button onclick="goBack(true)" title="Home (H)">
         <img src="/srv/static/svg/index/house-chimney-solid.svg">
       </button>
       <span class="path-box">
-        <pre id="path-text">&lrm;{{ folder_path }}&lrm;</pre>
+        <pre id="path-text">/</pre>
       </span>
     </div>
 
@@ -48,12 +50,9 @@
           </div>
           <div>
             <h3>SORT</h3>
-            {%- set sort_name = ('nd', '⬆️') if sort == 'np' else ('np', '⬇️') if sort == 'nd' else ('np', '◻️') -%}
-            {%- set sort_size = ('sd', '⬆️') if sort == 'sp' else ('sp', '⬇️') if sort == 'sd' else ('sd', '◻️') -%}
-            {%- set sort_date = ('dd', '⬆️') if sort == 'dp' else ('dp', '⬇️') if sort == 'dd' else ('dd', '◻️') -%}
-            <button id="sortName" onclick="setUrlKey('sort','{{ sort_name[0] }}')" title="(1)">{{ sort_name[1] }} Name</button>
-            <button id="sortSize" onclick="setUrlKey('sort','{{ sort_size[0] }}')" title="(2)">{{ sort_size[1] }} Size</button>
-            <button id="sortDate" onclick="setUrlKey('sort','{{ sort_date[0] }}')" title="(3)">{{ sort_date[1] }} Date</button>
+            <button id="sortName" onclick="setSortingMode('name')" title="(1)">⬆️ Name</button>
+            <button id="sortSize" onclick="setSortingMode('size')" title="(2)">◻️ Size</button>
+            <button id="sortDate" onclick="setSortingMode('date')" title="(3)">◻️ Date</button>
           </div>
           <div>
             <h3>SELECTION</h3>
@@ -81,7 +80,6 @@
         </div>
       </div>
       <div id="list-group">
-        {{- content | safe -}}
       </div>
     </div>
   </body>
