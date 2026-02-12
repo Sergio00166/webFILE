@@ -9,7 +9,7 @@ let basePath;
 // ICON MAPPINGS
 // ============================================================================
 
-icon_map = {
+const icon_map = {
     'disk':         'hard-drive-solid.svg',
     'directory':    'folder-solid.svg',
     'source':       'file-code-solid.svg',
@@ -25,7 +25,7 @@ icon_map = {
     'compressed':   'file-zipper-solid.svg',
     'binary':       'square-binary-solid.svg',
     'webpage':      'globe-solid.svg'
-}
+};
 
 // ============================================================================
 // UTILS & HELPERS
@@ -52,19 +52,29 @@ function renderItem(item) {
     const el    = document.createElement("button");
     const icon  = document.createElement("img");
     const name  = document.createElement("pre");
-    const mtime = document.createElement("span");
-    const size  = document.createElement("span");
-    const svg = (icon_map[item.type] || "file-solid.svg")
+    const span1  = document.createElement("span");
+    const span2 = document.createElement("span");
+    const svg = (icon_map[item.type] || "file-solid.svg");
 
     icon.src = "/srv/static/svg/index/" + svg;
     name.textContent  = item.name;
-    size.textContent  = readableSize(item.size);
-    mtime.textContent = readableDate(item.mtime);
 
-    if (item.type === "directory" || item.type === "disk")
+    if (item.type === "disk") {
+        const size = readableSize(item.size);
+        const capacity = readableSize(item.capacity);
+        const percent = (item.size / item.capacity) * 100;
+
+        span1.textContent = `${size} / ${capacity}`;
+        span2.textContent = `(${percent.toFixed(2)}%)`;
         el.setAttribute("isdir", "");
+    } else {
+        span1.textContent  = readableSize(item.size);
+        span2.textContent = readableDate(item.mtime);
 
-    el.append(icon, name, size, mtime);
+        if (item.type === "directory")
+            el.setAttribute("isdir", "");
+    }
+    el.append(icon, name, span1, span2);
     return el;
 }
 
@@ -72,6 +82,7 @@ async function renderFolder(useCache = false) {
     const path = window.location.pathname;
     listGroup.classList.remove("show");
     let data; basePath = path;
+    selectedItems.clear();
 
     if (useCache && cache[0] === path) {
         data = cache[1];
@@ -82,10 +93,12 @@ async function renderFolder(useCache = false) {
     }
     data = sortContents(data, sort_mode);
     const frag = document.createDocumentFragment();
+    const params = new URLSearchParams(window.location.search);
+    const noautoload = params.get("get") !== "default";
 
     for (let i = 0; i < data.length; i++) {
         const item  = data[i];
-        if (item.name === "index.web" && item.type === "webpage") {
+        if (item.name === autoload_webpage && noautoload) {
             location.reload(); return;
         }
         frag.appendChild(renderItem(item));
@@ -133,7 +146,7 @@ function sortContents(folderContent, sort) {
     if (!key) return folderContent;
     
     for (const x of folderContent)
-        (x.type === "disk" || x.type === "directory" && dirs.push(x)) || files.push(x);
+        ((x.type === "disk" || x.type === "directory") && dirs.push(x)) || files.push(x);
 
     const rev = (sort[1] === "d") * -2 + 1;
     const compare =

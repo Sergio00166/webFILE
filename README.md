@@ -177,8 +177,7 @@ Responses:
     "name": "STORAGE",
     "type": "disk",
     "capacity": 2147483648000,
-    "size": 509872014832,
-    "mtime": null
+    "size": 509872014832
   }
 ]
 ```

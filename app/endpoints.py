@@ -58,7 +58,6 @@ def path_handler(path, ACL, root, folder_size):
                 query = f"?{query}" if query else ""
                 return redirect(f"{request.path}/{query}")
 
-        sort = request.args.get("sort", "")
         return directory(path, root, folder_size, ACL, json_mode)
 
 

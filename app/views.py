@@ -6,6 +6,7 @@ from flask import render_template, request, Response
 from os.path import basename, dirname, relpath
 from urllib.parse import quote as encurl
 from listing import get_folder_content
+from functions import autoload_webpage
 from random import choice
 from msgspec import json
 from os import sep
@@ -37,11 +38,11 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
 
 
 def directory(path, root, folder_size, ACL, useApi):
-    contents = get_folder_content(path, root, folder_size, ACL)
     if useApi:
+        contents = get_folder_content(path, root, folder_size, ACL)
         return Response(json.encode(contents), mimetype="application/json")
     else:
-        return render_template("index.html")
+        return render_template("index.html", autoload_webpage=autoload_webpage)
 
 
 def audio(path, root, file_type, ACL):
