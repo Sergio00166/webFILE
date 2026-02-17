@@ -24,7 +24,8 @@ const icon_map = {
     'virtualdisk':  'compact-disc-solid.svg',
     'compressed':   'file-zipper-solid.svg',
     'binary':       'square-binary-solid.svg',
-    'webpage':      'globe-solid.svg'
+    'webpage':      'globe-solid.svg',
+    'markdown':     'markdown-solid.svg',
 };
 
 // ============================================================================

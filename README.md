@@ -102,7 +102,6 @@ gunicorn -b 127.0.0.1:8000 app:app -w $(nproc) -t 900
 ```
 
 ### Important
-
 For production always set the SECRET_KEY, otherwise multi-worker setup will break.  
 When deploying with Gunicorn, set an appropriate timeout (`-t`).  
 For large uploads or long‑running file operations, a timeout of **300–900 seconds** is recommended to avoid premature termination.  

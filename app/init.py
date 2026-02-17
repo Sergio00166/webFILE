@@ -48,20 +48,26 @@ acl_file    = acl_file    or join(data_dir,"acl.json")
 USERS,ACL = {},{}
 try: load_userACL(USERS, ACL, users_file, acl_file)
 except Exception as e:
-    printerr(e,error_file,"Cannot open the USER/ACL database files")
-    exit(1) # Dont countinue if error
+    printerr(e, error_file, "Cannot open the USER/ACL database files")
+    exit(1) # Dont continue if error
 
 
 # Initialize main flask app
 app = Flask(__name__, static_folder=None, template_folder=join(parent_path,"templates"))
 app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
 pool = ConnectionPool(host=redis_addr, port=redis_port, db=0)
+redis_client = Redis(connection_pool=pool)
+
+try: redis_client.ping()
+except Exception as e:
+    printerr(e, error_file,"Unable to conect to REDIS")
+    exit(1) # Dont continue if error 
 
 # Configure Redis for session storage
 app.config['SESSION_TYPE'] = 'redis'
 app.config['SESSION_PERMANENT'] = False
 app.config['SESSION_USE_SIGNER'] = True
-app.config['SESSION_REDIS'] = Redis(connection_pool=pool)
+app.config['SESSION_REDIS'] = redis_client
 app.config["PERMANENT_SESSION_LIFETIME"] = 3600
 
 # Init session

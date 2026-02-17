@@ -1,4 +1,6 @@
 {
+    "pdf": [ ".pdf" ], "webpage": [ ".web" ], "markdown": [ ".md" ],
+
     "source": [
         ".js", ".py", ".pyw", ".java", ".cpp", ".c", ".html", ".htm", ".css",
         ".php", ".ts", ".swift", ".go", ".kt", ".lua", ".pl", ".rb",
@@ -17,7 +19,7 @@
         ".doc", ".docx", ".odt", ".rtf", ".wps", ".wpd"
     ],
     "database": [
-        ".xml", ".json", ".csv", ".xsl", ".xlsx", ".ods", ".odb"
+        ".xml", ".json", ".csv", ".xsl", ".xlsx", ".xlsm", ".ods", ".odb"
     ],
     "presentation": [
         ".ppt", ".pptx", ".odp", ".pps", ".ppsx"
@@ -35,8 +37,7 @@
     "binary": [
         ".exe", ".sys", ".wasm", ".pyd", ".lib", ".so", ".dll", ".elf",
         ".com", ".msi", ".kext", ".ko", ".deb", ".rpm", ".efi", ".bin"
-    ],
-    "pdf": [ ".pdf" ], "webpage": [ ".web" ]
+    ]
 }
 
  

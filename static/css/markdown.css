@@ -1,0 +1,149 @@
+/* Code by Sergio00166 */
+
+body {
+    font-family: sans-serif;
+    line-height: 1.6;
+    font-size: 16px;
+    color: #f0f6fc;
+    background: black;
+    display: flex;
+    justify-content: center;
+}
+#container {
+    background: #0d1117;
+    margin-bottom: 8px;
+    padding: 16px 48px 24px;
+    border: solid 2px #3d444d;
+    border-radius: 16px;
+    max-width: 1200px;
+    overflow: hidden;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    box-sizing: border-box;
+}
+#container:empty {
+    display: none;
+}
+
+/* -------------------------
+ *  SCROLL-BARS
+ *  ------------------------- */
+
+pre::-webkit-scrollbar {
+    width: 4px; height: 4px;
+}
+pre::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+pre {
+    scrollbar-width: thin;
+    scrollbar-color: #fff3 transparent;
+}
+
+/* -------------------------
+ *  MARKDOWN STYLING
+ *  ------------------------- */
+
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; }
+h3 { font-size: 1.25em; }
+h4 { font-size: 1.1em; }
+h5 { font-size: 1em; }
+h6 { font-size: 0.9em; color: #8b949e; }
+a { color: #58a6ff; }
+p { margin: 16px 0; }
+li { margin: 4px 0; }
+ul ul, ol ol, ul ol, ol ul { margin: 0; }
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+h1, h2 {
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 4px;
+    margin-bottom: 0px;
+}
+h1::after, h2::after {
+    content: "";
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    border-radius: 8px;
+    background: #2f353d;
+}
+ul, ol {
+    padding-left: 32px;
+    margin: 16px 0;
+}
+blockquote {
+    border-left: 4px solid #3d444d;
+    padding: 0 16px;
+    color: #8b949e;
+    margin: 16px 0;
+}
+code {
+    background: #1f232a;
+    padding: 3px 6px;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 85%;
+}
+pre {
+    background: #151b23;
+    padding: 16px;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 16px 0;
+}
+pre > code {
+    padding: 0;
+    background: transparent;
+    font-size: 90%;
+}
+table {
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+th, td {
+    border: 1px solid #30363d;
+    padding: 8px 12px;
+}
+th {
+    background: #161b22;
+    font-weight: 600;
+}
+tr:nth-child(even) {
+    background: #0f141a;
+}
+hr {
+    border: none;
+    background: #3d444d;
+    border-radius: 4px;
+    height: 4px;
+}
+img {
+    max-width: 100%;
+    display: block;
+    margin: 16px 0;
+}
+strong {
+    font-weight: 600;
+}
+em {
+    font-style: italic;
+}
+kbd {
+    background: #1f232a;
+    border: 1px solid #3d444d;
+    border-radius: 4px;
+    padding: 2px 4px;
+    font-size: 85%;
+}
+
+ 

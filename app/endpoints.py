@@ -12,7 +12,8 @@ from views import *
 file_map = {
     "video": video,
     "audio": audio,
-    "photo": photo
+    "photo": photo,
+    "markdown": markdown
 }
 
 def path_handler(path, ACL, root, folder_size):

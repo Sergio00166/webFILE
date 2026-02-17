@@ -1,0 +1,23 @@
+<!-- Code by Sergio00166 -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
+    <title>{{ name }}</title>
+    <link rel="icon" type="image/x-icon" href="/srv/static/ico/markdown.ico">
+    <link rel="stylesheet" href="/srv/static/css/markdown.css">
+    <script src="/srv/static/js/marked.js"></script>
+  <head>
+  <body>
+    <div id="container"></div>
+  </body>
+  <script>
+    fetch("?get=file").then(res => res.text()).then((data) => {
+      document.getElementById("container").innerHTML = marked.parse(data);
+    }).catch(() => alert("Unable to load file"));
+  </script>
+</html>
+
+ 
