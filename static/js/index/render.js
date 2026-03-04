@@ -3,7 +3,6 @@
 const path_text = document.getElementById("path-text");
 let cache = [null, null];
 let sort_mode = "np";
-let basePath;
 
 // ============================================================================
 // ICON MAPPINGS
@@ -80,10 +79,9 @@ function renderItem(item) {
 }
 
 async function renderFolder(useCache = false) {
-    const path = window.location.pathname;
     listGroup.classList.remove("show");
-    let data; basePath = path;
-    selectedItems.clear();
+    const path = window.location.pathname;
+    selectedItems.clear(); let data;
 
     if (useCache && cache[0] === path) {
         data = cache[1];
@@ -97,13 +95,13 @@ async function renderFolder(useCache = false) {
     const params = new URLSearchParams(window.location.search);
     const noautoload = params.get("get") !== "default";
 
-    for (let i = 0; i < data.length; i++) {
-        const item  = data[i];
-        if (item.name === autoload_webpage && noautoload) {
-            location.reload(); return;
-        }
-        frag.appendChild(renderItem(item));
+    if (noautoload && data.some(item => item.name === autoload_webpage)) {
+        location.reload(); return;
     }
+    for (let i = 0; i < data.length; i++) {
+        frag.appendChild(renderItem(data[i]));
+    }
+    basePath = path;
     const pathStr = decodeURIComponent(path);
     path_text.textContent = `\u200E${pathStr}\u200E`;
     listGroup.replaceChildren(frag);

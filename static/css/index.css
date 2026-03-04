@@ -184,6 +184,10 @@ button {
     background: #3336;
     border-radius: 8px;
     border: 1px solid transparent;
+    pointer-events: none;
+}
+#list-group.show > button {
+    pointer-events: auto;
 }
 #list-group > button:focus-visible {
     outline: 1px solid white;
