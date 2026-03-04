@@ -104,10 +104,8 @@ gunicorn -b 127.0.0.1:8000 app:app -w $(nproc) -t 900
 ### Important
 For production always set the SECRET_KEY, otherwise multi-worker setup will break.  
 When deploying with Gunicorn, set an appropriate timeout (`-t`).  
-For large uploads or long‑running file operations, a timeout of **300–900 seconds** is recommended to avoid premature termination.  
-It is also recommended to disable post‑buffering on the proxy to prevent odd upload behavior.
-
-If running behind a reverse proxy (e.g., Nginx), ensure its timeout settings match Gunicorn’s to avoid mismatches.
+For long‑running file operations such as large downloads or uploads, use a timeout of 30 minutes to 2 hours to prevent premature termination.   
+When using NGINX as a reverse proxy, disable post‑buffering and increase proxy_read_timeout to ensure long operations are not interrupted.   
 
 ---
 
