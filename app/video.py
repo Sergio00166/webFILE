@@ -35,12 +35,12 @@ def ffmpeg_get_chapters(file_path, inode, size, mtime):
         "chapters",  "-of", "json", file_path
     ], stdout=PIPE, stderr=DEVNULL).stdout.decode() )
     try:
-        return json.encode([ {
+        return [{
             "title": chapter["tags"].get("title", "Untitled"),
             "start_time": int(float(chapter["start_time"]))
-        } for chapter in ffprobe_output["chapters"] ])
+        } for chapter in ffprobe_output["chapters"] ]
 
-    except: return ""
+    except: return []
 
 
 @cache.cached("inode","size","mtime",TTL=cache_TTL)
@@ -68,7 +68,7 @@ def ffmpeg_get_tracks(file_path, inode, size, mtime):
             if lang and title else 
             lang or title or f"Track{p}"
         )
-    return json.encode(subtitles_list)
+    return subtitles_list
 
 
 @cache.cached("inode","size","mtime",TTL=cache_TTL)

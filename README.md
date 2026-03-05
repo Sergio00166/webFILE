@@ -140,8 +140,7 @@ Responses:
   - Intended for plugin usage.
 
 #### Video Access
-- `GET /videopath?get=chapters` → Returns chapter data (JSON).
-- `GET /videopath?get=tracks` → Returns subtitle tracks (JSON list).
+- `GET /videopath?get=info` → Provides chapter data, subtitle track details, and adjacent track filenames as JSON.
 - `GET /videopath?get=subs_ssa&id=x` → Returns subtitle track `x` in SSA format.
 - `GET /videopath?get=subs_vtt&id=x` → Returns subtitle track `x` in VTT format (legacy).
 

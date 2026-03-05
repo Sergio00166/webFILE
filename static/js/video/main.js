@@ -6,7 +6,8 @@
 
 const MOUSE_CONTROL_DELAY = 2000;
 const TOUCH_CONTROL_DELAY = 3000;
-const EXTRA_SETTINGS_DELAY = 2000;
+const EXTRA_CONTROL_DELAY = 2000;
+const EXTRA_SKIP_DELAY = 6000;
 const TIME_CHANGE_DELAY = 750;
 const DOUBLE_TOUCH_DELAY = 400;
 const ANIMATION_START_DELAY = 400;
@@ -46,15 +47,14 @@ const menuAudioText = document.getElementById("menuAudioText");
 // DOM ELEMENTS - NAVIGATION & MEDIA
 // ============================================================================
 
-const previousLink = document.getElementById("prev");
-const nextLink = document.getElementById("next");
 const subtitleCanvas = document.querySelector("canvas");
 const video = document.querySelector("video");
 const videoContainer = document.getElementById("video-container");
 const loopButton = document.getElementById("loop-btn");
-const downloadVideoLink = document.getElementById("download_video");
-const downloadSubtitlesLink = document.getElementById("download_subs");
+const downloadVideo = document.getElementById("download_video");
+const downloadSubs = document.getElementById("download_subs");
 const chapterContainer = document.getElementById("chapter-container");
+const skipBtn = document.getElementById("skipBtn");
 
 // ============================================================================
 // DOM ELEMENTS - ICONS & STATES
@@ -93,12 +93,13 @@ let cursorHideTimeout;
 let subtitleIndex = -1;
 let lastTouchTimestamp = 0;
 let touchHoverActive = false;
+let prev, next;
 
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
 
-function initializeVideoPlayer() {
+function configurePlayer() {
     const savedSpeed      = localStorage.getItem("videoSpeed");
     const savedVolume     = localStorage.getItem("videoVolume");
     const savedMuted      = localStorage.getItem("videoMuted");
@@ -125,8 +126,24 @@ function initializeVideoPlayer() {
         document.body.dataset.fx = "no";
     else
         document.body.dataset.fx = "yes";
+}
 
-    loadSubtitleTracks();
+async function initializePlayer() {
+    const parts = window.location.pathname;
+    document.title = parts.split("/").pop();
+    const data = await (await fetch("?get=info")).json();
+    ({ next, prev, chapters } = data); // Global
+
+    video.pause();
+    video.currentTime = 0;
+    video.load();
+
+    if (data.subtitles.external)
+        downloadSubs.href = data.subtitles.external + "?get=file";
+
+    if (data.subtitles.tracks)
+        loadSubtitleTracks(data.subtitles.tracks);
+
     waitForVideoReady();
 }
 
@@ -150,13 +167,13 @@ async function waitForVideoReady() {
 // GET BASE TRACK DATA
 // ============================================================================
 
-async function loadSubtitleTracks() {
+async function loadSubtitleTracks(trackList) {
     const subsContent = subsSubmenu.querySelector(".menu-content");
     const savedSubtitle = localStorage.getItem("videoSubs");
-    const subtitleList = await fetch("?get=tracks").then(res => res.json());
+    subsContent.innerHTML = "<button>None</button>";
 
-    for (let i = 0; i < subtitleList.length; i++) {
-        const trackName = subtitleList[i];
+    for (let i = 0; i < trackList.length; i++) {
+        const trackName = trackList[i];
         const button = document.createElement("button");
         button.textContent = trackName;
         subsContent.appendChild(button);
@@ -192,16 +209,18 @@ function loadAudioTracks() {
 }
 
 async function setupTimelineChapters() {
-    chapters = await fetch("?get=chapters").then(res => res.json());
     const videoDuration = video.duration;
     const chapterData = [...chapters.map(item => item.start_time), videoDuration];
+    chapterContainer.innerHTML = "";
 
     chapterData.slice(0, -1).forEach((time, index) => {
         const startPercent = Math.min((time / videoDuration) * 100, 100);
-        const chapterSection = document.createElement("div");
-        chapterSection.classList.add("chapter");
-        chapterSection.style.left = `${startPercent}%`;
-        chapterContainer.appendChild(chapterSection);
+        if (startPercent > 0) {
+            const chapterSection = document.createElement("div");
+            chapterSection.classList.add("chapter");
+            chapterSection.style.left = `${startPercent}%`;
+            chapterContainer.appendChild(chapterSection);
+        }
     });
 }
 
@@ -209,6 +228,7 @@ async function setupTimelineChapters() {
 // INITIALIZATION CALL
 // ============================================================================
 
-window.addEventListener("pageshow", initializeVideoPlayer);
+window.addEventListener("popstate", initializePlayer);
+window.addEventListener("pageshow", () => { configurePlayer(); initializePlayer(); });
 
  

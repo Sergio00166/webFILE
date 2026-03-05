@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ name }}</title>
+    <title>Video Player</title>
     <link rel="icon" type="image/x-icon" href="/srv/static/ico/video.ico">
     <link rel="stylesheet" href="/srv/static/css/video.css">
     <script defer src="/srv/static/js/video/main.js"></script>
@@ -30,6 +30,7 @@
         <div id="state_volume" style="display: none"></div>
       </span>
       <div id="controls">
+        <button onclick="skipChapter()" class="glass" id="skipBtn" style="display: none">SKIP</button>
         <div id="seek-bar">
           <div id="progress"></div>
           <div id="hover-time">
@@ -133,15 +134,7 @@
       </div>
     </div>
     <a href="?get=file" id="download_video" download hidden></a>
-  {% if subs_file != "" %}
-    <a href="{{ subs_file }}?get=file" id="download_subs" download hidden></a>
-  {% endif %}
-  {% if next != "" %}
-    <a href='{{ next }}' id="next" hidden></a>
-  {% endif %}
-  {% if prev != "" %}
-    <a href='{{ prev  }}' id="prev" hidden></a>
-  {% endif %}
+    <a id="download_subs" download hidden></a>
   </body>
 </html>
 

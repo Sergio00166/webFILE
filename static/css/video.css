@@ -125,6 +125,16 @@ button img {
     height: 20px;
     pointer-events: none;
 }
+#skipBtn {
+    right: 0;
+    left: 36px;
+    bottom: 50px;
+    width: 75px;
+    position: absolute;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: bold;
+}
 
 /* -------------------------
  *   Main state (show status)

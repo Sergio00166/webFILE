@@ -1,16 +1,22 @@
 /* Code by Sergio00166 */
 
+let skipChapterList = ["opening", "intro", "outro", "ending", "preview", "recap"];
+
 // ============================================================================
 // PLAYBACK CONTROL
 // ============================================================================
 
 function navigateToNext() {
-    if (nextLink)
-        nextLink.click();
+    if (next) {
+        history.pushState({}, "", next);
+        initializePlayer();
+    }
 }
 function navigateToPrevious() {
-    if (previousLink)
-        previousLink.click();
+    if (prev) {
+        history.pushState({}, "", prev);
+        initializePlayer();
+    }
 }
 
 function togglePlayPauseState() {
@@ -94,7 +100,7 @@ function hideControlsWithDelay(delay) {
     clearTimeout(controlsHideTimeout);
 
     if (settingsMenu.classList.contains("show"))
-        delay += EXTRA_SETTINGS_DELAY;
+        delay += EXTRA_CONTROL_DELAY;
 
     controlsHideTimeout = setTimeout(()=>{
         if (!video.paused) {
@@ -123,6 +129,15 @@ function showCursor() {
 function updateProgressBar() {
     progress.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentTime.innerHTML = formatDuration(video.currentTime);
+    let chapter = chapters[getChapterIndex(video.currentTime)].title.toLowerCase();
+    
+    if (!skipChapterList.some(k => chapter.includes(k))) {
+        skipBtn.style.display = "none";
+    } else if (skipBtn.style.display == "none") {
+        skipBtn.style.display = "block";
+        controlsContainer.classList.add("show");
+        hideControlsWithDelay(EXTRA_SKIP_DELAY);
+    }
 }
 
 function formatDuration(timeInSeconds) {
@@ -146,29 +161,40 @@ function formatNumber(number) {
 // TIMELINE & CHAPTERS
 // ============================================================================
 
-function getChapterNameAtTime(timeInSeconds) {
+function updateVideoTime(percentage) {
+    video.currentTime = percentage * video.duration;
+    updateProgressBar();
+}
+
+function getTimelinePosition(clientX) {
+    const { x, width, height } = seekBar.getBoundingClientRect();
+    const position = Math.min(Math.max(0, clientX - x), width);
+    return {percentage: position / width, position: position, height: height};
+}
+
+function getChapterIndex(timeInSeconds) {
     for (let i = 0; i < chapters.length; i++) {
         const current = chapters[i];
         const next = chapters[i + 1];
 
         const hasStarted = timeInSeconds >= current.start_time;
         const beforeNext = !next || timeInSeconds < next.start_time;
-        if (hasStarted && beforeNext) return current.title;
+        if (hasStarted && beforeNext) return i;
     }
 }
 
-function getTimelinePosition(clientX) {
-    const { x, width, height } = seekBar.getBoundingClientRect();
-    const position = Math.min(Math.max(0, clientX - x), width);
-    return {
-        percentage: position / width,
-        position: position,
-        height: height
-    };
-}
+function skipChapter() {
+    const index = getChapterIndex(video.currentTime);
 
-function updateVideoTime(percentage) {
-    video.currentTime = percentage * video.duration;
+    if (chapters[index + 1]) {
+        video.currentTime = chapters[index + 1].start_time;
+    } else {
+        video.currentTime = video.duration;
+        setTimeout(() => 
+            {skipBtn.style.display = "none"}, 500
+        );
+        video.play();
+    }
     updateProgressBar();
 }
 
@@ -182,7 +208,7 @@ function showTimelineHover(clientX) {
 
     const time = percentage * video.duration;
     const timeString = formatDuration(time);
-    const chapterName = getChapterNameAtTime(time);
+    const chapterName = chapters[getChapterIndex(time)].title;
 
     if (chapterName)
         hoverInfo.innerHTML = `${timeString}<br>${chapterName}`;
@@ -211,45 +237,6 @@ function showTimelineHover(clientX) {
 function clearTimelineHover() {
     hoverTime.style.width = "0";
     hoverInfo.style.display = "none";
-}
-
-// ============================================================================
-// MAIN MENU VALUE UPDATERs
-// ============================================================================
-
-function updateSubtitleDisplay() {
-    if (subtitleIndex === -1) {
-        menuSubsText.textContent = "None";
-    } else {
-        const subtitleOptions = subsSubmenu.querySelectorAll(".menu-content button");
-        const buttonIndex = subtitleIndex + 1;
-        if (buttonIndex < subtitleOptions.length)
-            menuSubsText.textContent = subtitleOptions[buttonIndex].textContent;
-    }
-}
-
-function updateSpeedDisplay() {
-    menuSpeedText.textContent = video.playbackRate + "x";
-}
-
-function updateLegacyDisplay() {
-    if (legacySubtitles)
-        menuLegacyText.textContent = "ON";
-    else
-        menuLegacyText.textContent = "OFF";
-}
-
-function updateAudioDisplay() {
-    const tracks = video.audioTracks;
-    if (!tracks || tracks.length < 1) return;
-
-    for (let i = 0; i < tracks.length; i++) {
-        if (tracks[i].enabled) {
-            const trackName = tracks[i].label || tracks[i].language || "Track " + (i + 1);
-            menuAudioText.textContent = trackName;
-            break;
-        }
-    }
 }
 
 // ============================================================================

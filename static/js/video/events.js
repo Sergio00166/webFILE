@@ -284,11 +284,11 @@ function handleTimeChangeKeyboard(delta) {
 }
 
 function download() {
-    if (downloadSubtitlesLink) {
+    if (downloadSubs.href) {
         alert("The video has external subtitles (.mks) it may need to be combined with the video manually");
-        downloadSubtitlesLink.click();
+        downloadSubs.click();
     }
-    downloadVideoLink.click();
+    downloadVideo.click();
 }
 
  

@@ -177,6 +177,45 @@ function scaleVideoToFit() {
 }
 
 // ============================================================================
+// MAIN MENU VALUE UPDATERs
+// ============================================================================
+
+function updateSubtitleDisplay() {
+    if (subtitleIndex === -1) {
+        menuSubsText.textContent = "None";
+    } else {
+        const subtitleOptions = subsSubmenu.querySelectorAll(".menu-content button");
+        const buttonIndex = subtitleIndex + 1;
+        if (buttonIndex < subtitleOptions.length)
+            menuSubsText.textContent = subtitleOptions[buttonIndex].textContent;
+    }
+}
+
+function updateSpeedDisplay() {
+    menuSpeedText.textContent = video.playbackRate + "x";
+}
+
+function updateLegacyDisplay() {
+    if (legacySubtitles)
+        menuLegacyText.textContent = "ON";
+    else
+        menuLegacyText.textContent = "OFF";
+}
+
+function updateAudioDisplay() {
+    const tracks = video.audioTracks;
+    if (!tracks || tracks.length < 1) return;
+
+    for (let i = 0; i < tracks.length; i++) {
+        if (tracks[i].enabled) {
+            const trackName = tracks[i].label || tracks[i].language || "Track " + (i + 1);
+            menuAudioText.textContent = trackName;
+            break;
+        }
+    }
+}
+
+// ============================================================================
 // ICONS MANAGEMENT
 // ============================================================================
 

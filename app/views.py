@@ -54,8 +54,7 @@ def photo(path, root, file_type, ACL):
     return render_template("photo.html", name=name, prev=prev, next=next)
 
 def markdown(path, root, file_type, ACL):
-    name = basename(path)
-    return render_template("markdown.html", name=name)
+    return render_template("markdown.html", name=basename(path))
 
 
 def video(path, root, file_type, ACL):
@@ -70,18 +69,23 @@ def video(path, root, file_type, ACL):
         legacy = get_mode == "subs_vtt"
         return get_subtitles(int(idx), path, legacy)
 
-    if get_mode == "chapters": return get_chapters(path);
-    if get_mode == "tracks":   return get_tracks(path);
+    # Just to get some needed data/info
+    if get_mode == "info":
+        subs = external_subs(path)
+        prev, next, _ = get_filepage_data(
+            path, root, file_type, ACL, no_goto_start=True
+        )
+        data = {
+            "next":      next if next else None,
+            "prev":      prev if prev else None,
+            "chapters":  get_chapters(path),
+            "subtitles": {
+                "tracks":   get_tracks(path),
+                "external": basename(subs) if subs != path else None,
+            }
+        }
+        return json.encode(data)
 
-    prev, next, name = get_filepage_data(
-        path, root, file_type, ACL, no_goto_start=True
-    )
-    subs = external_subs(path)
-    subs = basename(subs) if subs != path else ""
-
-    return render_template(
-        "video.html", name=name,
-        prev=prev, next=next, subs_file=subs
-    )
+    return render_template("video.html")
 
  
