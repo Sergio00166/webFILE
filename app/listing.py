@@ -16,7 +16,7 @@ def get_folder_content(folder_path, root, folder_size, ACL):
     return [x for x in data if validate_acl(f'/{rel_path}/{x["name"]}', ACL, retBool=True)]
 
 
-@cache.cached("parent_mtime", TTL=60)
+@cache.cached("parent_mtime", TTL=120)
 def list_folder(folder_path, root, folder_size, parent_mtime):
     parent_dev = stat(folder_path).st_dev
     dirs, files = [], []

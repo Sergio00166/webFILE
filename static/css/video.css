@@ -79,9 +79,8 @@ video::-moz-media-controls { display: none !important; }
     gap: 6px;
     left: 50%;
     display: flex;
-    line-height: 1;
     font-size: 14px;
-    padding: 4px 6px;
+    padding: 4px 8px;
     border-radius: 8px;
     position: absolute;
     transform: translateX(-50%);
@@ -248,14 +247,16 @@ button img {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw);
-    padding: 6px 9px;
+    padding: 6px 10px;
     border-radius: 10px;
     font-size: 15px;
-    line-height: 1.3;
     font-weight: bold;
     text-align: center;
     pointer-events: none;
     z-index: 1;
+}
+#hover-info > p {
+    margin: 2px;
 }
 
 /* -------------------------

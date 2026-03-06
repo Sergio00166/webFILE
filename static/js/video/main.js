@@ -1,5 +1,7 @@
 /* Code by Sergio00166 */
 
+let skipChapterList = ["opening", "intro", "outro", "ending", "preview", "recap", "credits"];
+
 // ============================================================================
 // CONSTANTS & CONFIGURATION
 // ============================================================================
@@ -81,7 +83,7 @@ const mainStateVolume = document.querySelector("#state_volume");
 // STATE VARIABLES
 // ============================================================================
 
-let chapters;
+let chapters = [];
 let loopMode = 0;
 let legacySubtitles = false;
 let assSubtitleWorker;
@@ -128,16 +130,20 @@ function configurePlayer() {
         document.body.dataset.fx = "yes";
 }
 
-async function initializePlayer() {
-    const parts = window.location.pathname;
-    document.title = parts.split("/").pop();
+async function initializePlayer(reset=false) {
+    const title = window.location.pathname.split("/").pop();
+    document.title = decodeURIComponent(title);
+
     const data = await (await fetch("?get=info")).json();
     ({ next, prev, chapters } = data); // Global
 
-    video.pause();
-    video.currentTime = 0;
-    video.load();
-
+    if (reset) {
+        const speed = video.playbackRate;
+        video.pause();
+        video.currentTime = 0;
+        video.load();
+        video.playbackRate = speed;
+    }
     if (data.subtitles.external)
         downloadSubs.href = data.subtitles.external + "?get=file";
 

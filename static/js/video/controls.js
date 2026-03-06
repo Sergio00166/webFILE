@@ -1,7 +1,5 @@
 /* Code by Sergio00166 */
 
-let skipChapterList = ["opening", "intro", "outro", "ending", "preview", "recap"];
-
 // ============================================================================
 // PLAYBACK CONTROL
 // ============================================================================
@@ -9,13 +7,13 @@ let skipChapterList = ["opening", "intro", "outro", "ending", "preview", "recap"
 function navigateToNext() {
     if (next) {
         history.pushState({}, "", next);
-        initializePlayer();
+        initializePlayer(true);
     }
 }
 function navigateToPrevious() {
     if (prev) {
         history.pushState({}, "", prev);
-        initializePlayer();
+        initializePlayer(true);
     }
 }
 
@@ -38,8 +36,8 @@ function pauseVideo() {
     video.pause();
     controlsContainer.classList.add("show");
     showMainStateAnimation("pause");
-    playIcons [0].style.display = "block";
-    playIcons [1].style.display = "none";
+    playIcons[0].style.display = "block";
+    playIcons[1].style.display = "none";
 }
 
 function handleVideoEnded() {
@@ -129,14 +127,19 @@ function showCursor() {
 function updateProgressBar() {
     progress.style.width = (video.currentTime / video.duration) * 100 + "%";
     currentTime.innerHTML = formatDuration(video.currentTime);
-    let chapter = chapters[getChapterIndex(video.currentTime)].title.toLowerCase();
-    
-    if (!skipChapterList.some(k => chapter.includes(k))) {
-        skipBtn.style.display = "none";
-    } else if (skipBtn.style.display == "none") {
-        skipBtn.style.display = "block";
-        controlsContainer.classList.add("show");
-        hideControlsWithDelay(EXTRA_SKIP_DELAY);
+    let chapter = chapters[getChapterIndex(video.currentTime)];
+
+    if (chapter) {
+        chapter = chapter.title.toLowerCase();
+
+        if (!skipChapterList.some(k => chapter.includes(k))) {
+            skipBtn.style.display = "none";
+
+        } else if (skipBtn.style.display == "none") {
+            skipBtn.style.display = "block";
+            controlsContainer.classList.add("show");
+            hideControlsWithDelay(EXTRA_SKIP_DELAY);
+        }
     }
 }
 
@@ -208,10 +211,10 @@ function showTimelineHover(clientX) {
 
     const time = percentage * video.duration;
     const timeString = formatDuration(time);
-    const chapterName = chapters[getChapterIndex(time)].title;
+    const chapter = chapters[getChapterIndex(time)];
 
-    if (chapterName)
-        hoverInfo.innerHTML = `${timeString}<br>${chapterName}`;
+    if (chapter)
+        hoverInfo.innerHTML = `<p>${timeString}</p><p>${chapter.title}</p>`;
     else
         hoverInfo.innerHTML = timeString;
 
@@ -289,9 +292,8 @@ function handleMenuSelection(element) {
             localStorage.setItem("videoAudio", trackText);
 
         } else if (submenu.id === "speed-submenu") {
-            const speedText = element.textContent;
-            const menuSpeedText = parseFloat(speedText.replace("x", ""));
-            video.playbackRate = menuSpeedText;
+            const speedText = element.textContent.replace("x", "");
+            video.playbackRate = parseFloat(speedText);
             updateSpeedDisplay();
             localStorage.setItem("videoSpeed", video.playbackRate);
         }

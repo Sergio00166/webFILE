@@ -43,12 +43,12 @@ const playIcons = Array.from(
 // STATE VARIABLES
 // ============================================================================
 
-let isShuffled = false;
-let loopMode = 0;
-let speedIndex = 1;
-let speedButtonStartY = 0;
-let isTouchHoverActive = false;
 const speedValues = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+let loopMode = 0;
+let speedButtonStartY = 0;
+let isShuffled = false;
+let isTouchHoverActive = false;
+let speedIndex = speedValues.indexOf(1);
 
 // ============================================================================
 // INITIALIZATION
@@ -65,9 +65,9 @@ function initializeAudioPlayer() {
     isShuffled = savedShuffled === "true";
     audio.volume = parseFloat(savedVolume || 1);
     audio.muted = savedMuted === "true";
-    speedIndex = Math.max(speedValues.indexOf(savedSpeed), speedValues.indexOf(1));
-    audio.playbackRate = speedValues[speedIndex];
     volumeSlider.value = audio.volume;
+    speedIndex = speedValues.indexOf(parseFloat(savedSpeed) || 1);
+    audio.playbackRate = speedValues[speedIndex];
 
     updateSpeed();
     updateVolumeBar();
