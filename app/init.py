@@ -61,7 +61,7 @@ redis_client = Redis(connection_pool=pool)
 try: redis_client.ping()
 except Exception as e:
     printerr(e, error_file,"Unable to conect to REDIS")
-    exit(1) # Dont continue if error 
+    exit(1) # Dont continue if error
 
 # Configure Redis for session storage
 app.config['SESSION_TYPE'] = 'redis'

@@ -193,7 +193,7 @@ function skipChapter() {
         video.currentTime = chapters[index + 1].start_time;
     } else {
         video.currentTime = video.duration;
-        setTimeout(() => 
+        setTimeout(() =>
             {skipBtn.style.display = "none"}, 500
         );
         video.play();

@@ -38,13 +38,13 @@ def list_folder(folder_path, root, folder_size, parent_mtime):
                     data["capacity"] = disk.total
                 else:
                     data["type"] = "directory"
-                    data["size"] = size_traversal(item.path) if folder_size else None  
+                    data["size"] = size_traversal(item.path) if folder_size else None
 
                 dirs.append(data)
             else:
                 data["type"] = get_file_type(item.path)
                 data["size"] = st.st_size
-                
+
                 files.append(data)
         except: continue
 
@@ -64,7 +64,7 @@ def size_traversal(root):
         except: continue
 
         for e in dir_ls:
-            try: 
+            try:
                 st = e.stat()
                 if e.is_file(): total += st.st_size
                 else:
@@ -72,6 +72,5 @@ def size_traversal(root):
                     if root_dev == entry_dev: stack.append(e.path)
             except: continue
     return total
-
 
  

@@ -44,44 +44,52 @@ function getJSON() {
       .catch(() => location.reload());
 }
 
+function escapeHTML(str) {
+    return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 // ============================================================================
 // FOLDER RENDERING
 // ============================================================================
 
-function renderItem(item) {
-    const el    = document.createElement("button");
-    const icon  = document.createElement("img");
-    const name  = document.createElement("pre");
-    const span1  = document.createElement("span");
-    const span2 = document.createElement("span");
-    const svg = (icon_map[item.type] || "file-solid.svg");
-
-    icon.src = "/srv/static/svg/index/" + svg;
-    name.textContent  = item.name;
+function renderItem(item, list) {
+    const svg = icon_map[item.type] || "file-solid.svg";
+    const iconSrc = "/srv/static/svg/index/" + svg;
+    let span1, span2, isdirAttr = "";
 
     if (item.type === "disk") {
         const size = readableSize(item.size);
         const capacity = readableSize(item.capacity);
         const percent = (item.size / item.capacity) * 100;
 
-        span1.textContent = `${size} / ${capacity}`;
-        span2.textContent = `(${percent.toFixed(2)}%)`;
-        el.setAttribute("isdir", "");
+        span1 = `${size} / ${capacity}`;
+        span2 = `(${percent.toFixed(2)}%)`;
+        isdirAttr = " isdir=";
     } else {
-        span1.textContent  = readableSize(item.size);
-        span2.textContent = readableDate(item.mtime);
-
-        if (item.type === "directory")
-            el.setAttribute("isdir", "");
+        span1 = readableSize(item.size);
+        span2 = readableDate(item.mtime);
+        if (item.type === "directory") isdirAttr = " isdir";
     }
-    el.append(icon, name, span1, span2);
-    return el;
+    list.push(
+        "<button", isdirAttr, ">",
+        '<img src="', iconSrc, '">',
+        "<pre>", escapeHTML(item.name), "</pre>",
+        "<span>", span1, "</span>",
+        "<span>", span2, "</span>",
+        "</button>"
+    );
 }
 
 async function renderFolder(useCache = false) {
     listGroup.classList.remove("show");
     const path = window.location.pathname;
-    selectedItems.clear(); let data;
+    selectedItems.clear();
+    let data, html = [];
 
     if (useCache && cache[0] === path) {
         data = cache[1];
@@ -91,7 +99,6 @@ async function renderFolder(useCache = false) {
         cache[1] = data;
     }
     data = sortContents(data, sort_mode);
-    const frag = document.createDocumentFragment();
     const params = new URLSearchParams(window.location.search);
     const noautoload = params.get("get") !== "default";
 
@@ -99,12 +106,12 @@ async function renderFolder(useCache = false) {
         location.reload(); return;
     }
     for (let i = 0; i < data.length; i++) {
-        frag.appendChild(renderItem(data[i]));
+        renderItem(data[i], html);
     }
     basePath = path;
     const pathStr = decodeURIComponent(path);
     path_text.textContent = `\u200E${pathStr}\u200E`;
-    listGroup.replaceChildren(frag);
+    listGroup.innerHTML = html.join("");
     listGroup.classList.add("show");
 }
 
@@ -121,7 +128,7 @@ function readableDate(ts) {
 
 const size_units = ["", "Ki", "Mi", "Gi", "Ti"];
 function readableSize(num, suffix = "B") {
-    if (num === null) return "---";     
+    if (num === null) return "---";
     let i = 0;
 
     while (i < size_units.length && num >= 1024) {
@@ -143,7 +150,7 @@ function sortContents(folderContent, sort) {
     const dirs = [], files = [];
     const key = sort_keymap[sort[0]];
     if (!key) return folderContent;
-    
+
     for (const x of folderContent)
         ((x.type === "disk" || x.type === "directory") && dirs.push(x)) || files.push(x);
 
@@ -188,7 +195,7 @@ function setSortingMode(mode) {
         target.el.textContent = "⬆️" + target.el.textContent.slice(1);
     else
         target.el.textContent = "⬇️" + target.el.textContent.slice(1);
-    
+
     renderFolder(true);
 }
 

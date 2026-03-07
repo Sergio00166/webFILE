@@ -128,5 +128,4 @@ if __name__ == '__main__':
     process_files(join(base, 'static', 'js', 'audio', '*.js'), compress_js)
     process_files(join(base, 'templates', '*'), compress_html)
 
-
  
