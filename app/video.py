@@ -59,13 +59,13 @@ def ffmpeg_get_tracks(file_path, inode, size, mtime):
     for p, stream in enumerate(streams):
         tags = stream.get("tags", {})
         title = tags.get("title")
- 
+
         lang = ISO_codes.get(
             tags.get("language")
         )
         subtitles_list.append(
             f"{lang} - {title}"
-            if lang and title else 
+            if lang and title else
             lang or title or f"Track{p}"
         )
     return subtitles_list
