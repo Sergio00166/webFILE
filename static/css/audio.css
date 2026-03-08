@@ -97,7 +97,7 @@ button {
 #total-time {
     font-size: 12px;
     font-family: monospace;
-    line-height: 1 !important;
+    line-height: 1;
 }
 #total-time {
     margin-left: 12px;
@@ -201,7 +201,6 @@ button {
     font-size: 18px;
     color: #0a84ff;
     transition: color 0.2s;
-    line-height: 1;
 }
 .nav-btn {
     width: 32px;

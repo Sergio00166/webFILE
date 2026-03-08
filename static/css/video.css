@@ -153,7 +153,6 @@ button img {
     justify-content: center;
     transition: all 0.3s;
     box-shadow: none;
-    line-height: 1;
 }
 #main-state.show {
     opacity: 1;
@@ -247,16 +246,17 @@ button img {
     position: absolute;
     width: max-content;
     max-width: min(150px, 40vw);
-    padding: 6px 9px;
+    padding: 4px 8px;
     border-radius: 10px;
     font-size: 15px;
     font-weight: bold;
     text-align: center;
     pointer-events: none;
+    line-height: 1.2;
     z-index: 1;
 }
 #hover-info > p {
-    margin: 2px;
+    margin: 4px;
 }
 
 /* -------------------------

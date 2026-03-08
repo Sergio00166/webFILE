@@ -36,8 +36,8 @@ const smoothing = 0.25;
 // ============================================================================
 
 function getBestFitScale() {
-    let iw = img.naturalWidth;
-    let ih = img.naturalHeight;
+    let iw = img.width;
+    let ih = img.height;
     const cw = body.clientWidth;
     const ch = body.clientHeight;
 

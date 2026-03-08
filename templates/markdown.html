@@ -14,9 +14,16 @@
     <div id="container"></div>
   </body>
   <script>
-    fetch("?get=file").then(res => res.text()).then((data) => {
-      document.getElementById("container").innerHTML = marked.parse(data);
-    }).catch(() => alert("Unable to load file"));
+    function renderMarkdown(data) {
+        const container = document.getElementById("container");
+        container.innerHTML = marked.parse(data);
+        container.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(h => {
+            if (!h.id) h.id = h.textContent.toLowerCase().trim().replace(/[^\w]+/g, '-');
+        });
+    }
+    fetch("?get=file").then(res => res.text())
+      .then((data) => renderMarkdown(data))
+      .catch(() => alert("Unable to load file"));
   </script>
 </html>
 

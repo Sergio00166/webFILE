@@ -21,7 +21,6 @@ Supports ACL‑based access control, uploads, and file operations.
     - [Authentication](#authentication)
     - [File Access](#file-access)
     - [Video Access](#video-access)
-    - [Directory Listing](#directory-listing)
     - [Directory Listings as JSON](#directory-listings-as-json)
   - [Other HTTP Methods](#other-http-methods)
   - [HTML vs .web Extensions](#html-vs-web-extensions)
