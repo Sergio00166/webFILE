@@ -144,16 +144,10 @@ function showMainStateAnimation(animationMode) {
 // ============================================================================
 
 function fixVideoAspectRatio() {
-    if (video.videoWidth <= 0 || video.videoHeight <= 0) {
+    if (video.videoWidth <= 0 || video.videoHeight <= 0)
         setTimeout(fixVideoAspectRatio, 25);
-    } else {
-        if (video.videoWidth < video.videoHeight) {
-            const videoContainerStyle = videoContainer.style;
-            videoContainerStyle.marginTop = "0 !important";
-            videoContainerStyle.paddingBottom = "0 !important";
-        }
+    else
         scaleVideoToFit();
-    }
 }
 
 function scaleVideoToFit() {
@@ -163,7 +157,7 @@ function scaleVideoToFit() {
     const videoHeight = video.videoHeight;
     const scale = Math.min(containerWidth / videoWidth, containerHeight / videoHeight);
 
-    video.style.width = (videoWidth * scale) + "px";
+    video.style.width  = (videoWidth  * scale) + "px";
     video.style.height = (videoHeight * scale) + "px";
 
     // Align settings menu with buttons

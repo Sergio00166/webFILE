@@ -59,11 +59,13 @@
               <input type="range" id="volume-bar" min="0" max="1" step="0.01" value="1" tabindex="-1">
             </span>
           </div>
-          <span class="time-container glass">
-            <span id="current-time">00:00</span>
-            <span>/</span>
-            <span id="total-time">00:00</span>
-          </span>
+          <div class="time-wrapper">
+            <span class="time-container glass">
+              <span id="current-time">00:00</span>
+              <span>/</span>
+              <span id="total-time">00:00</span>
+            </span>
+          </div>
           <div class="side-controls">
             <button onclick="navigateToPrevious()" class="glass" title="Prev (P)">
               <img src="/srv/static/svg/video/play-skip-back-outline.svg">

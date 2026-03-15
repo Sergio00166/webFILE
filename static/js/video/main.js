@@ -1,6 +1,17 @@
 /* Code by Sergio00166 */
 
-let skipChapterList = ["opening", "intro", "outro", "ending", "preview", "recap", "credits"];
+const skipPatterns = [
+  /\bop(\d+)?\b/i,    // OP, OP1, OP2
+  /\bopening\b/i,     // Opening
+  /\bed(\d+)?\b/i,    // ED, ED1, ED2
+  /\bend(ing)?\b/i,   // Ending
+  /\bintro\b/i,       // Intro
+  /\boutro\b/i,       // Outro
+  /\bpreview\b/i,     // Preview
+  /\brecap\b/i,       // Recap
+  /\bpreviously\b/i,  // Previously On...
+  /\bcredits?\b/i,    // Credit, Credits
+];
 
 // ============================================================================
 // CONSTANTS & CONFIGURATION

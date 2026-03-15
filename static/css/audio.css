@@ -14,6 +14,7 @@ body {
     -webkit-user-select: none;
     user-select: none;
 }
+@view-transition { navigation: auto; }
 
 /* -------------------------
  *   Base
@@ -126,11 +127,10 @@ button {
 #seek-bar::before {
     content: "";
     position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 200%;
-    width: calc(100% + 32px);
-    transform: translate(-50%, -50%);
+    top:    -50%;
+    bottom: -50%;
+    left:  -16px;
+    right: -16px;
 }
 
 /* -------------------------
@@ -145,7 +145,7 @@ button {
     background: #fff5;
     display: flex;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 4px;
 }
 #hover-info {
     position: absolute;
@@ -153,6 +153,7 @@ button {
     visibility: hidden;
     font-weight: bold;
     pointer-events: none;
+    margin-bottom: 4px;
     transform: translateZ(0);
 }
 #progress {
@@ -162,7 +163,7 @@ button {
     position: absolute;
     background: #ff4a10;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 4px;
     z-index: 1;
 }
 #progress::before {

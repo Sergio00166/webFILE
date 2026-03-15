@@ -1,0 +1,36 @@
+ <!-- Code by Sergio00166 -->
+
+{% set messages = {
+    403: {
+        "name": "FORBIDDEN",
+        "text": "Sorry, you don't have permission to access this page."
+    },
+    404: {
+        "name": "NOT FOUND",
+        "text": "Sorry, that does not exist on the server."
+    },
+    500: {
+        "name": "SERVER ERROR",
+        "text": "Sorry, something went wrong on the server."
+    }
+} %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ messages[code].name }}</title>
+        <link rel="icon" type="image/x-icon" href="/srv/static/ico/alert.ico">
+        <link rel="stylesheet" href="/srv/static/css/error.css">
+    </head>
+    <body>
+        <h1>{{ code }} {{ messages[code].name }}</h1>
+        <br><p>{{ messages[code].text }}</p>
+
+        {%- set is_dir = request.path.endswith('/') -%}
+        <a href="{{ '..' if is_dir else '.' }}">Previous Page</a>
+    </body>
+</html>
+
+ 

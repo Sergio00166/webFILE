@@ -87,16 +87,16 @@ def error(e, error_file):
     isApi = accept.startswith("text/html")
 
     if isinstance(e, PermissionError):
-        if not isApi: return "",            403
-        return render_template("403.html"), 403
+        if not isApi: return "", 403
+        return render_template("error.html", code=403), 403
 
     elif isinstance(e, FileNotFoundError):
-        if not isApi: return "",            404
-        return render_template("404.html"), 404
+        if not isApi: return "", 404
+        return render_template("error.html", code=404), 404
 
     else:
         printerr(e, error_file)  # Log the error
-        if not isApi: return "",            500
-        return render_template("500.html"), 500
+        if not isApi: return "", 500
+        return render_template("error.html", code=500), 500
 
  

@@ -3,26 +3,22 @@
 body {
     margin: 0;
     padding: 0;
+    color: #eee;
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
-    color: #eee;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
+    background: black;
+    font-family: system-ui;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
-    background-color: black;
-    font-family: sans-serif;
-    overflow: hidden;
     touch-action: none;
 }
-
-@keyframes fadeInAnimation {
-    from { opacity: 0; }
-    to   { opacity: 1; }
-}
+@view-transition { navigation: auto; }
 
 /* -------------------------
  *   Base buttons
@@ -33,15 +29,15 @@ button {
     width: 36px;
     height: 36px;
     cursor: pointer;
-    flex-shrink: 0;
     border-radius: 50%;
-    color: white;
-    background: transparent;
     border: none;
+    color: white;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     font-family: inherit;
+    background: transparent;
 }
 button img {
     width: 24px;
@@ -53,26 +49,39 @@ button img {
  *   Main structure
  * ------------------------- */
 
+.background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: scale(1.1);
+    filter: blur(36px);
+    pointer-events: none;
+}
 #main-img  {
     max-width: none;
     pointer-events: none;
-    animation: fadeInAnimation 0.5s;
 }
 #controls {
     width: 100%;
     height: 100%;
-    padding: 24px 18px;
+    padding: 16px;
+    padding-bottom: 18px;
     box-sizing: border-box;
     position: absolute;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
     justify-content: space-between;
 }
 .navigation {
     width: 100%;
     display: flex;
     justify-content: space-between;
+}
+.navigation > button {
+    width: 24px;
+    height: 40px;
+    border-radius: 10px;
 }
 .tools, .zoomBox {
     display: flex;
@@ -88,13 +97,12 @@ button img {
     margin-right: 16px;
     border-radius: 24px;
 }
-.zoomBox button {
-    font-size: 20px;
-}
 #file-name {
-    border-radius: 12px;
-    padding: 4px 8px;
+    padding: 0 4px;
     font-size: 14px;
+    border-radius: 12px;
+    border: 4px solid transparent;
+    box-shadow: none !important;
 }
 #zoomIcon {
     width: 20px;

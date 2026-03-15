@@ -132,7 +132,7 @@ function updateProgressBar() {
     if (chapter) {
         chapter = chapter.title.toLowerCase();
 
-        if (!skipChapterList.some(k => chapter.includes(k))) {
+        if (!skipPatterns.some(p => p.test(chapter))) {
             skipBtn.style.display = "none";
 
         } else if (skipBtn.style.display == "none") {
@@ -219,7 +219,7 @@ function showTimelineHover(clientX) {
         hoverInfo.innerHTML = timeString;
 
     hoverInfo.style.display = "block";
-    hoverInfo.style.bottom = `${height + 9}px`;
+    hoverInfo.style.bottom = `${height}px`;
 
     const barRect = seekBar.getBoundingClientRect();
     const tooltipWidth = hoverInfo.offsetWidth;

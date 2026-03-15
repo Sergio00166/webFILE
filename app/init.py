@@ -53,7 +53,7 @@ except Exception as e:
 
 
 # Initialize main flask app
-app = Flask(__name__, static_folder=None, template_folder=join(parent_path,"templates"))
+app = Flask("webFILE", static_folder=None, template_folder=join(parent_path,"templates"))
 app.secret_key = getenv("SECRET_KEY",urandom(24).hex())
 pool = ConnectionPool(host=redis_addr, port=redis_port, db=0)
 redis_client = Redis(connection_pool=pool)

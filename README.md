@@ -11,7 +11,6 @@ Supports ACL‑based access control, uploads, and file operations.
   - [Overview](#overview)
   - [Multimedia Streaming](#multimedia-streaming)
   - [ACL & User Management](#acl--user-management)
-  - [Main explorer screenshot](overview.png)
 - [Setup](#setup)
   - [Requirements](#requirements)
   - [Configuration](#configuration)

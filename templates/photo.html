@@ -10,6 +10,7 @@
     <script defer src="/srv/static/js/photo.js"></script>
   </head>
   <body>
+    <img class="background" src="?get=file">
     <img id="main-img" src="?get=file">
     <div id="controls">
       <span id="file-name" class="glass">{{ name }}</span>
@@ -19,15 +20,20 @@
         </button>
         <button onclick="navigateToNext()" class="glass" title="Next (N)">
           <img src="/srv/static/svg/video/play-skip-forward-outline.svg">
+        </button>
       </div>
       <div class="tools">
         <button onClick="download()" class="glass" title="Download">
           <img src="/srv/static/svg/photo/download-outline.svg">
         </button>
         <span class="zoomBox glass">
-          <button onclick="zoomOut()" title="Zoom out">−</button>
+          <button onclick="zoomOut()" title="Zoom out">
+            <img src="/srv/static/svg/photo/minus-solid.svg">
+          </button>
           <img id="zoomIcon" src="/srv/static/svg/photo/magnifying-glass.svg" title="Reset">
-          <button onclick="zoomIn()" title="Zoom in">+</button>
+          <button onclick="zoomIn()" title="Zoom in">
+            <img src="/srv/static/svg/photo/plus-solid.svg">
+          </button>
         </span>
         <button onClick="rotateImg()" class="glass" title="Rotate (R)">
           <img src="/srv/static/svg/photo/rotate.svg">

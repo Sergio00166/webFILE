@@ -2,38 +2,41 @@
 
 #username { margin-bottom: 13px; }
 #password { margin-bottom: 18px; }
+@view-transition { navigation: auto; }
 
 body {
     margin: 0;
     height: 100vh;
     height: 100dvh;
     color: #eee;
-    display: grid;
-    place-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: system-ui;
     background-color: #111;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
 }
-
 #error {
     width: 100%;
     margin-top: 0;
     padding: 10px;
     padding-bottom: 12px;
-    border-radius: 8px;
+    border-radius: 12px;
     background: #3a3a3a;
     box-sizing: border-box;
     text-align: center;
     color: #f21;
+    -webkit-user-select: text;
+    user-select: text
 }
 .container {
     padding: 30px;
     padding-top: 26px;
     padding-bottom: 30px;
     background-color: #222;
-    border-radius: 15px;
+    border-radius: 16px;
     box-shadow: 0 0 24px #000;
     width: min(95%, 400px);
     box-sizing: border-box;
@@ -44,6 +47,7 @@ input {
     outline: none;
     color: white;
     border-radius: 10px;
+    font-family: inherit;
     border: 2px solid transparent;
     background-color: #333;
     box-shadow: 4px 4px 24px #0006;
@@ -58,10 +62,11 @@ button {
     width: 100%;
     padding: 18px;
     border: none;
-    border-radius: 10px;
     color: white;
     cursor: pointer;
     font-weight: 600;
+    border-radius: 10px;
+    font-family: inherit;
     box-shadow: 4px 4px 24px #0006;
     transition: background 0.3s;
 }

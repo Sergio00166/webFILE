@@ -49,13 +49,13 @@ controlsContainer.addEventListener("click", event => {
     if (event.target === controlsContainer)
         togglePlayPauseState();
 
-    showControls(MOUSE_CONTROL_DELAY,true);
+    showControls(MOUSE_CONTROL_DELAY, true);
 });
 
-videoContainer.addEventListener("mousemove", event => {
-    showControls(MOUSE_CONTROL_DELAY,true);
+videoContainer.addEventListener("mousemove", ()=>{
+    showControls(MOUSE_CONTROL_DELAY, true);
 });
-videoContainer.addEventListener("focusin", event => {
+videoContainer.addEventListener("focusin", ()=>{
     showControls(MOUSE_CONTROL_DELAY);
 });
 
