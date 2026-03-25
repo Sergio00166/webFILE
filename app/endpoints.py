@@ -82,21 +82,19 @@ def logout():
     session.pop("user");        return "", 200
 
 
+error_map = {
+    PermissionError: 403,
+    FileNotFoundError: 404,
+}
 def error(e, error_file):
     accept = request.headers.get("Accept","")
-    isApi = accept.startswith("text/html")
+    isBrowser = accept.startswith("text/html")
 
-    if isinstance(e, PermissionError):
-        if not isApi: return "", 403
-        return render_template("error.html", code=403), 403
+    code = error_map.get(type(e), 500)
+    if code == 500: printerr(e, error_file)
 
-    elif isinstance(e, FileNotFoundError):
-        if not isApi: return "", 404
-        return render_template("error.html", code=404), 404
+    if not isBrowser: return "", code
+    return render_template("error.html", code=code), code
 
-    else:
-        printerr(e, error_file)  # Log the error
-        if not isApi: return "", 500
-        return render_template("error.html", code=500), 500
 
  
