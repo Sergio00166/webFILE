@@ -1,16 +1,16 @@
 # Code by Sergio00166
 
-from os.path import basename, getmtime, isfile
-from os.path import getsize, relpath, join
+from os.path import getsize, relpath, join, basename
 from flask import send_file as df_send_file
-from os import sep, stat, scandir, walk
 from re import compile as re_compile
 from flask import Response, request
 from functions import validate_acl
+from os import sep, stat, walk
 import tarfile
 
 RANGE_REGEX = re_compile(r"bytes=(\d+)-(\d*)")
 
+""" SEND FILE WITH HTTP 206 SUPPORT """
 
 def send_file(file_path, mimetype=None, cache=False):
     file_size = getsize(file_path)
@@ -60,24 +60,7 @@ def generate(file_path, ranges):
 
 
 
-""" TO SEND FOLDER AS TAR FILES IN REALTIME """
-
-def safe_calc_tar_size(directory, ACL, root):
-    total_size, stack = 0, [directory]
-
-    while stack:
-        curdir = stack.pop()
-        for entry in scandir(curdir):
-            path = entry.path
-            rel_path = relpath(path, start=root).replace(sep, "/")
-            validate_acl(rel_path, ACL)
-
-            st = entry.stat()
-            total_size += 512 + ((st.st_size + 511) & ~0x1FF)
-            if entry.is_dir(): stack.append(path)
-
-    return total_size + 1024
-
+""" STREAMING ON-THE-FLY TAR FILE GENERATOR """
 
 def send_dir(directory, root, ACL, name=None):
     folder = name if name else basename(directory)
@@ -90,37 +73,46 @@ def send_dir(directory, root, ACL, name=None):
     return Response(generate_tar(directory), mimetype="application/x-tar", headers=headers)
 
 
-def create_tar_header(file_path, arcname):
+def safe_calc_tar_size(directory, ACL, root):
+    root_len = len(directory.rstrip(sep)) + 1
+    size = 0
+    for path, st in iter_files(directory):
+        rel_path = relpath(path, start=root).replace(sep, "/")
+        validate_acl(rel_path, ACL)
+
+        size += len(create_tar_header(path[root_len:], st))
+        size += st.st_size + ((512 - (st.st_size % 512)) % 512)
+    return size + 1024
+
+
+def generate_tar(directory):
+    root_len = len(directory.rstrip(sep)) + 1
+    for path, st in iter_files(directory):
+        yield create_tar_header(path[root_len:], st)
+
+        with open(path, "rb") as f:
+            while (chunk := f.read(65536)): yield chunk
+
+        yield b"\0" * ((512 - (st.st_size % 512)) % 512)
+    yield b"\0" * 1024
+
+
+def iter_files(directory):
+    for root, _, files in walk(directory):
+        for name in files:
+            path = join(root, name)
+            yield path, stat(path)
+
+
+def create_tar_header(arcname, st):
     tarinfo = tarfile.TarInfo(name=arcname)
-    tarinfo.size = getsize(file_path)
-    tarinfo.mtime = getmtime(file_path)
-    tarinfo.mode = stat(file_path).st_mode
+    tarinfo.size = st.st_size
+    tarinfo.mtime = st.st_mtime
+    tarinfo.mode = st.st_mode
     tarinfo.type = tarfile.REGTYPE
     tarinfo.uname = ""
     tarinfo.gname = ""
     return tarinfo.tobuf()
 
-
-def stream_tar_file(file_path, arcname):
-    yield create_tar_header(file_path, arcname)
-
-    with open(file_path, "rb") as f:
-        while (chunk := f.read(65536)): yield chunk
-
-    file_size = getsize(file_path)
-    padding_size = (512 - (file_size % 512)) % 512
-    yield b"\0" * padding_size
-
-
-def generate_tar(directory_path):
-    root_len = len(directory_path.rstrip(sep)) + 1
-
-    for root, _, files in walk(directory_path):
-        for name in files:
-            file_path = join(root, name)
-            arcname = file_path[root_len:]
-            yield from stream_tar_file(file_path, arcname)
-
-    yield b"\0" * 1024
 
  
