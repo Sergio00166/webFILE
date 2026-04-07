@@ -36,7 +36,7 @@ def path_handler(path, ACL, root, folder_size):
 
             if request.path.endswith("/"):
                 query = request.query_string.decode()
-                query = f"?query" if query else ""
+                query = f"?{query}" if query else ""
                 return redirect(request.path[:-1] + query)
 
             if file_type in file_map:

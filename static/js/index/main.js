@@ -60,12 +60,14 @@ function toggleSidebar() {
 }
 
 function showLoader() {
+    progressBar.textContent = "";
     loader.style.display = "";
     pathBar.style.display = "none";
     mainContainer.style.display = "none";
 }
 
 function hideLoader() {
+    progressBar.textContent = "";
     loader.style.display = "none";
     pathBar.style.display = "";
     mainContainer.style.display = "";
@@ -92,14 +94,15 @@ function copySelectedFiles() {
 function moveSelectedFiles() {
     performStorageOperation("move", getSelectedURLs());
 }
-function clearAllCopyMoveOperations() {
-    ["copy", "move"].forEach(key => localStorage.removeItem(key));
-}
 
 function performStorageOperation(operationKey, fileList) {
     if (isSelectModeActive) toggleSelectMode();
     if (fileList && fileList.length)
         localStorage.setItem(operationKey, JSON.stringify(fileList));
+}
+
+function clearAllCopyMoveOperations() {
+    ["copy", "move"].forEach(key => localStorage.removeItem(key));
 }
 
 function getItemURL(fileItem) {

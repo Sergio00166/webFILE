@@ -21,6 +21,7 @@ async function executeDownloads() {
             downloadURL(itemURL + "?get=file");
             await delay(100);
         }
+        toggleSelectMode();
     } else {
         downloadURL(basePath + "?get=file");
     }
@@ -33,8 +34,8 @@ async function executeDownloads() {
 async function executeDeletes() {
     if (!isSelectModeActive || !selectedItems.size) return;
     if (!confirm("Are you sure to delete?")) return;
-
     let errorMessage = null;
+    showLoader()
 
     for (const fileItem of selectedItems) {
         const itemURL = getItemURL(fileItem);
@@ -58,7 +59,8 @@ async function executeDeletes() {
         await delay(100);
     }
     if (errorMessage) alert(errorMessage);
-    renderFolder();
+    hideLoader(); renderFolder();
+    if (isSelectModeActive) toggleSelectMode();
 }
 
 // ============================================================================
@@ -107,11 +109,41 @@ async function renameSelectedFiles() {
     }
     clearAllCopyMoveOperations();
     renderFolder();
+    if (isSelectModeActive) toggleSelectMode();
 }
 
 // ============================================================================
 // PASTE OPERATIONS
 // ============================================================================
+
+async function getRemoteFileSize(url) {
+    const r = await fetch(url, { method: "HEAD" }).catch(() => null);
+    if (!r || !r.ok) return 0;
+    const n = Number(r.headers.get("Content-Length"));
+    if (!isFinite(n)) return 0; return n;
+}
+
+async function pollProgress(sourceUrl, destUrl, reqPromise, updateProgress) {
+    let last = 0, next = 0, tick = 0;
+    let done = false, period = 8;
+
+    const total = await getRemoteFileSize(sourceUrl);
+    reqPromise.then(ok => { if (!ok) done = true; });
+
+    while (!done) {
+        const step = tick % period;
+
+        if (step === 0) {
+            last = next;
+            next = await getRemoteFileSize(destUrl);
+        }
+        const value = last + (next - last) * (step / period);
+        updateProgress((value / total) * 100);
+
+        if (value >= total) done = true;
+        await delay(250); tick++;
+    }
+}
 
 async function pasteFiles() {
     const copyList = JSON.parse(localStorage.getItem("copy") || "[]");
@@ -124,18 +156,27 @@ async function pasteFiles() {
         pasteOperation = { list: moveList, mode: "MOVE" };
 
     if (!pasteOperation.list) return;
-    showLoader();
-    await delay(250);
+    const lenght = pasteOperation.list.length;
 
-    for (let i = 0; i < pasteOperation.list.length; i++) {
+    showLoader();
+    for (let i = 0; i < lenght; i++) {
         const sourcePath = pasteOperation.list[i].replace(/\/$/, "");
         const destinationPath = basePath + sourcePath.split("/").pop();
-        if (!await sendHTTPRequest(sourcePath, destinationPath, pasteOperation.mode)) break;
+        const req = sendHTTPRequest(sourcePath, destinationPath, pasteOperation.mode);
+
+        await pollProgress(
+            sourcePath + "?get=file", destinationPath + "?get=file", req,
+            percent => {
+                const value = (i / lenght) * 100 + (percent / lenght);
+                progressBar.textContent = value.toFixed(2) + "%";
+            }
+        );
+        if (!await req) break;
     }
     clearAllCopyMoveOperations();
-    hideLoader();
-    renderFolder();
+    hideLoader(); renderFolder();
 }
+
 
 // ============================================================================
 // DIRECTORY CREATION

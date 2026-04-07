@@ -1,8 +1,9 @@
 # Code by Sergio00166
 
-from os.path import abspath, commonpath, dirname, exists, normpath
+from os.path import abspath, commonpath, dirname
+from os.path import exists, normpath, isdir
+from os import R_OK, access, sep, scandir
 from datetime import datetime as dt
-from os import R_OK, access, sep
 from sys import path as pypath
 from flask import session
 from pathlib import Path
@@ -49,14 +50,11 @@ def safe_path(path, root, igntf=False):
 
     # Check if is subdirectory from root
     if commonpath([root, path]) == root:
-        if igntf:
-            return path
-        if not exists(path):
-            raise FileNotFoundError
-        if not access(path, R_OK):
-            raise PermissionError
-    else:
-        raise PermissionError
+        if igntf:                  return path
+        if not exists(path):       raise FileNotFoundError
+        if not access(path, R_OK): raise PermissionError
+        if isdir(path):            scandir(path).close()
+    else:                          raise PermissionError
     return path
 
 

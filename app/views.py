@@ -9,7 +9,7 @@ from listing import get_folder_content
 from functions import autoload_webpage
 from random import choice
 from msgspec import json
-from os import sep
+from os import sep, scandir
 
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_start=False):
