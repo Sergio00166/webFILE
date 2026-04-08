@@ -1,0 +1,68 @@
+/* Code by Sergio00166 */
+
+/* -------------------------
+ *  SCROLL-BARS
+ *  ------------------------- */
+
+::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 4px;
+}
+::-webkit-scrollbar {
+    width: 6px; height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+#terminal {
+    scrollbar-width: thin;
+    scrollbar-color: #fff3 transparent;
+}
+
+/* -------------------------
+ *  Main content
+ *  ------------------------- */
+
+body {
+    background: #111;
+    color: #eee;
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    font-family: monospace;
+    margin: 0;
+    padding: 0;
+}
+#terminal {
+    flex: 1;
+    margin: 8px;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 16px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    background: #001;
+}
+#input-line {
+    display: flex;
+    padding: 10px;
+    margin: 8px;
+    margin-bottom: 12px;
+    margin-top: 0;
+    border-radius: 16px;
+    box-sizing: border-box;
+    background: #000;
+    border-top: 1px solid #333;
+}
+#cmd {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #0f0;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+ 

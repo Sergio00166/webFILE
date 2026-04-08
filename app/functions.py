@@ -22,15 +22,6 @@ boms = (
     b"\xff\xfe\x00\x00",
     b"\x00\x00\xfe\xff",
 )
-
-def get_file_type(path):
-    extension = path.rsplit(".", 1)[-1].lower()
-    file_type = file_type_map.get(f".{extension}")
-
-    if file_type: return file_type
-    return "file" if is_binary(path) else "text"
-
-
 def is_binary(filepath):
     with open(filepath, "rb") as f:
         head = f.read(4)
@@ -42,6 +33,19 @@ def is_binary(filepath):
         while chunk := f.read(1024):
             if b"\x00" in chunk: return True
     return False
+
+
+def get_file_type(path):
+    extension = path.rsplit(".", 1)[-1].lower()
+    file_type = file_type_map.get(f".{extension}")
+
+    if file_type: return file_type
+    return "file" if is_binary(path) else "text"
+
+
+def isAdmin(USERS):
+    user = USERS.get(session.get("user"))
+    return user and user.get("admin")
 
 
 def safe_path(path, root, igntf=False):
@@ -59,7 +63,7 @@ def safe_path(path, root, igntf=False):
 
 
 def load_userACL(USERS, ACL, users_file, acl_file):
-    USERS.clear(); ACL.clear()
+    USERS.clear(); ACL.clear() # Clear data
     USERS.update(json.decode(open(users_file).read()))
     ACL.update(json.decode(open(acl_file).read()))
 
@@ -81,10 +85,10 @@ def validate_acl(path, ACL, write=False, retBool=False):
         if path in ACL and user in ACL[path]:
             values = ACL[path][user]
             if not values["inherit"] and prop: break
+
             perm = values["access"]
-            if perm == 0: break
-            if perm >= askd_perm:
-                return True if retBool else None
+            if perm < askd_perm: break
+            else: return True if retBool else None
 
         # Check if on top and break loop
         if path == "/": break
@@ -116,7 +120,7 @@ def printerr(e, log_path, override_msg=None):
         + f"   [Time] {time_str} \n"
         + f"   [File] '{e_file}':{e_line}\n"
         + f"   [Type] {e_type}\n"
-        + f"   [eMsg] {e_message}\n"
+        + f"   [Info] {e_message}\n"
         + "[END]\n"
     )
     open(log_path, "a").write(msg)

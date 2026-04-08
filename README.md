@@ -51,6 +51,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 
 ### ACL & User Management
 - Managed by `aclmgr.py` in the `scripts/` directory.
+- Also accesible from web-console from the endpoint `/srv/console`.
 - ACLs define per‑path permissions: read‑only, write, or deny.
 - User accounts stored in JSON, configured via `USERS_FILE`.
 - ACL rules stored in JSON, configured via `ACL_FILE`.

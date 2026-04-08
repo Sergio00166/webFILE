@@ -2,15 +2,15 @@
 
 if __name__=="__main__": exit(0)
 
+from os.path import abspath, isfile, join, getmtime
 from os import getenv, makedirs, urandom
-from os.path import abspath, isfile, join
 from sys import path as pypath
+from time import time
 
-from flask import Flask, request
 from flask_session import Session
 from redis import ConnectionPool, Redis
+from flask import Flask, request, session
 
-from files_mgr import copy, delfile, handle_upload, mkdir, move
 from functions import load_userACL, printerr, safe_path, validate_acl
 from send_file import send_file
 from endpoints import *
@@ -46,7 +46,9 @@ acl_file    = acl_file    or join(data_dir,"acl.json")
 
 # Load and define the USER/ACL database
 USERS,ACL = {},{}
-try: load_userACL(USERS, ACL, users_file, acl_file)
+try: 
+    load_userACL(USERS, ACL, users_file, acl_file)
+    datafiles_mtime = [getmtime(users_file), getmtime(acl_file)]
 except Exception as e:
     printerr(e, error_file, "Cannot open the USER/ACL database files")
     exit(1) # Dont continue if error
@@ -72,5 +74,6 @@ app.config["PERMANENT_SESSION_LIFETIME"] = 3600
 
 # Init session
 Session(app)
+
 
  

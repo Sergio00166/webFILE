@@ -1,150 +1,392 @@
-# Command Syntax Documentation for aclmgr.py
+# ACL Manager Command Language
 
-## For what this is
-This script is used for managing all users and access permissions for the server using the SQL-like commands showed below.
+This document describes the interactive command language accepted by `aclmgr.py`.
+
+## Overview
+
+Each command is entered as a statement and terminated with `;`.
+
+The parser splits input using semicolons, so you can type one command per line or multiple commands in a single line.
+
+Example:
+
+```text
+ADD-DF-USER;
+ADD-USER 'alice' PWD 'secret';
+ALLOW 'alice' TO DOALL ON '/srv';
+GET-ACL;
+````
+
+## General Rules
+
+* Commands are case-sensitive.
+* Command names use hyphenated uppercase spelling, such as `GET-ACL` and `ADD-USER`.
+* String values must be enclosed in single quotes: `'example'`.
+* Comments start with `#` and are ignored only when the line begins with `#`.
+* Paths are normalized internally.
+* Resource paths must be valid absolute paths when a command expects a path.
+* `ALL` can be used in some commands to target every existing ACL entry.
+
+## Resources and Paths
+
+A resource is usually an absolute path such as:
+
+```text
+'/'
+'/home'
+'/home/docs'
+'/var/log/'
+```
+
+The parser accepts paths that follow Unix-style absolute path rules. Internally, equivalent paths may be normalized to the same stored form.
+
+---
+
+# Commands
 
 ## ALLOW
-**Syntax:**
-```
+
+Grants a user access to a resource.
+
+```text
 ALLOW 'username' TO READ|DOALL ON 'resource'|ALL [DONT INHERIT];
 ```
-Assigns permissions for a user to a specific resource or all resources.
-Also allows to disable inheritance, by default (not present) is enabled.
+
+### Meaning
+
+* `READ` gives read permission.
+* `DOALL` gives full access.
+* `ALL` applies the same rule to every existing ACL entry.
+* `DONT INHERIT` disables inheritance for that ACL entry.
+
+### Examples
+
+```text
+ALLOW 'alice' TO READ ON '/documents';
+ALLOW 'admin' TO DOALL ON '/srv' DONT INHERIT;
+ALLOW 'bob' TO READ ON ALL;
+```
 
 ---
 
 ## REJECT
-**Syntax:**
-```
+
+Explicitly denies access for a user on a resource.
+
+```text
 REJECT 'username' ON 'resource'|ALL;
 ```
-Denies permissions for a user on a specific resource or all resources.
+
+### Meaning
+
+* Sets the user’s access level to `NONE`.
+* `ALL` applies the denial to every existing ACL entry.
+
+### Examples
+
+```text
+REJECT 'guest' ON '/secret';
+REJECT 'guest' ON ALL;
+```
 
 ---
 
 ## DROP
-**Syntax:**
-```
+
+Removes a user from an ACL entry.
+
+```text
 DROP 'username' FROM 'resource'|ALL;
 ```
-Removes a user from the access control list for a specific resource or all resources.
+
+### Meaning
+
+* Deletes the user’s ACL record for the given resource.
+* `ALL` removes that user from every stored ACL entry.
+
+### Examples
+
+```text
+DROP 'alice' FROM '/documents';
+DROP 'bob' FROM ALL;
+```
 
 ---
 
 ## GET-ACL
-**Syntax:**
+
+Shows ACL information.
+
+```text
+GET-ACL;
+GET-ACL FOR 'resource';
 ```
-GET-ACL [FOR 'resource'];
+
+### Meaning
+
+* Without `FOR`, it prints all ACL entries.
+* With `FOR 'resource'`, it prints only that resource.
+
+### Examples
+
+```text
+GET-ACL;
+GET-ACL FOR '/documents';
 ```
-Retrieves the access control list for a specific resource if specified, else shows all.
 
 ---
 
 ## ADD-USER
-**Syntax:**
-```
+
+Creates a new user with a password.
+
+```text
 ADD-USER 'username' PWD 'password';
 ```
-Adds a new user with the specified password.
+
+### Meaning
+
+* The password is stored as a SHA-256 hash.
+* The special user name `DEFAULT` cannot be created with this command.
+
+### Example
+
+```text
+ADD-USER 'alice' PWD 'secret';
+```
 
 ---
 
 ## DEL-USER
-**Syntax:**
-```
+
+Deletes a user and removes that user from all ACL entries.
+
+```text
 DEL-USER 'username';
 ```
-Deletes a specified user.
+
+### Example
+
+```text
+DEL-USER 'alice';
+```
 
 ---
 
 ## GET-USERS
-**Syntax:**
-```
+
+Lists all registered users.
+
+```text
 GET-USERS;
 ```
-Lists all registered users.
+
+---
+
+## WHICH-ADMIN
+
+Lists all users in the admin group.
+
+```text
+WHICH-ADMIN;
+```
 
 ---
 
 ## COMMIT
-**Syntax:**
-```
+
+Saves the current users and ACL data to the configured database files.
+
+```text
 COMMIT;
 ```
-Commits changes made to the system.
 
 ---
 
 ## FLUSH
-**Syntax:**
-```
+
+Clears stored data from memory.
+
+```text
 FLUSH ACL|USERS|ALL;
 ```
-Clears the users/ACL database or both.
+
+### Meaning
+
+* `ACL` clears all ACL entries.
+* `USERS` clears all users.
+* `ALL` clears both users and ACL data.
+
+### Examples
+
+```text
+FLUSH ACL;
+FLUSH USERS;
+FLUSH ALL;
+```
 
 ---
 
 ## SOURCE
-**Syntax:**
-```
+
+Executes a script file.
+
+```text
 SOURCE 'script_path';
 ```
-Executes a script from the specified path.    
-I recommend to use the extension .aqs (Acl Query Script)
+
+### Notes
+
+* Intended for batch execution.
+* `.aml` is the recommended extension for ACL Management Language files.
+
+### Example
+
+```text
+SOURCE 'setup.aml';
+```
 
 ---
 
-
 ## EXPORT-ACL
-**Syntax:**
-```
+
+Prints the ACL as `ALLOW` and `REJECT` statements that can be used to recreate the current rules.
+
+```text
 EXPORT-ACL;
 ```
-Exports the ACL and prints the equivalent sentences
-to restore the ACL rules on the screen.
 
 ---
 
 ## GET-ENTRIES
-**Syntax:**
-```
+
+Lists all ACL resource entries currently stored.
+
+```text
 GET-ENTRIES;
 ```
-Retrieves all entries from the access control system.
 
 ---
 
 ## DEL-ENTRY
-**Syntax:**
-```
+
+Deletes a complete ACL entry for a resource.
+
+```text
 DEL-ENTRY 'resource';
 ```
-Deletes an ACL entry.
+
+### Example
+
+```text
+DEL-ENTRY '/documents';
+```
 
 ---
 
-## ADD-DF-USR
-**Syntax:**
+## ADD-DF-USER
+
+Creates the default system user named `DEFAULT`.
+
+```text
+ADD-DF-USER;
 ```
-ADD-DF-USR;
+
+### Notes
+
+* `DEFAULT` is a special built-in user entity.
+* It cannot be created with `ADD-USER`.
+
+---
+
+## ADD-ADMIN
+
+Adds an existing user to the admin group.
+
+```text
+ADD-ADMIN 'user';
 ```
-Adds the default user for the system.
+
+### Example
+
+```text
+ADD-ADMIN 'alice';
+```
+
+---
+
+## REVOKE-ADMIN
+
+Removes a user from the admin group.
+
+```text
+REVOKE-ADMIN 'user';
+```
+
+### Example
+
+```text
+REVOKE-ADMIN 'alice';
+```
 
 ---
 
 ## EXIT
-**Syntax:**
-```
+
+Terminates the application.
+
+```text
 EXIT;
 ```
-Terminates the application.
 
 ---
 
 ## CLEAR
-**Syntax:**
-```
+
+Clears the terminal display.
+
+```text
 CLEAR;
 ```
-Clears the terminal display.
+
+---
+
+# Permissions
+
+The language recognizes these permission values:
+
+* `READ`
+* `DOALL`
+* `NONE` is the internal deny state used by `REJECT`
+
+---
+
+# Inheritance
+
+ACL entries can be inheritable or non-inheritable.
+
+```text
+ALLOW 'user' TO READ ON '/path' DONT INHERIT;
+```
+
+By default, `ALLOW` entries inherit unless `DONT INHERIT` is used.
+
+---
+
+# Practical Examples
+
+```text
+ADD-DF-USER;
+ADD-USER 'alice' PWD 'secret';
+ADD-USER 'bob' PWD 'hello123';
+ADD-ADMIN 'alice';
+ALLOW 'alice' TO DOALL ON '/srv';
+ALLOW 'bob' TO READ ON '/srv/docs';
+REJECT 'bob' ON '/srv/private';
+GET-USERS;
+GET-ACL;
+COMMIT;
+EXIT;
+```
+
+ 

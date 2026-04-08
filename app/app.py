@@ -1,10 +1,12 @@
 #Code by Sergio00166
 
 from init import *
+last_acl_check = 0
 
 http_methods = (
-    "GET", "PUT", "POST", "MKCOL",
-    "DELETE", "COPY", "MOVE"
+    "GET", "PUT", "POST",
+    "MKCOL", "DELETE",
+    "COPY", "MOVE"
 )
 method_map = {
     "DELETE": delfile,
@@ -13,6 +15,21 @@ method_map = {
     "MKCOL":  mkdir,
     "PUT":    handle_upload
 }
+
+@app.before_request
+def check4acl_change():
+    global last_acl_check
+    # Check only each 2 seconds
+    if (now := time()) - last_acl_check < 2: return
+    last_acl_check = now
+
+    mtimes = [getmtime(users_file), getmtime(acl_file)]
+    if mtimes > datafiles_mtime:
+        try:
+            load_userACL(USERS, ACL, users_file, acl_file)
+            datafiles_mtime[:] = mtimes
+        except: pass
+
 
 # Main endpoint for file serve or dir listing
 @app.route('/', methods=("GET","POST"), defaults={'path': ''})
@@ -29,24 +46,26 @@ def explorer(path):
         return error(e, error_file)
 
 
+@app.route("/srv/static/<path:path>", methods=["GET", "HEAD"])
+def static(path):
+    try:
+        path = safe_path(path, sroot)
+        if not isfile(path): raise PermissionError
+        return send_file( path, cache=True)
+
+    except Exception as e:
+        return error(e, error_file)
+
+
 @app.route("/srv", defaults={'path': ''}, methods=http_methods)
 @app.route("/srv/<path:path>", methods=http_methods)
 def internal(path):
-
-    path = path.removesuffix("/")
-    if path == "login":  return login(USERS)
-    if path == "logout": return logout()
-
     try:
-        if path.startswith("static/"):
-            path = path.removeprefix("static/")
-            if request.method not in ("HEAD", "GET"):
-                raise PermissionError
-
-            path = safe_path(path, sroot)
-            if not isfile(path): raise PermissionError
-            return send_file( path, cache=True)
-
+        path = path.removesuffix("/")
+        if path == "login":   return login(USERS)
+        if path == "logout":  return logout()
+        if path == "console": return console(USERS)
+        if path == "aml":     return aml_endpoint(USERS, ACL, users_file, acl_file)
         raise PermissionError
 
     except Exception as e:
