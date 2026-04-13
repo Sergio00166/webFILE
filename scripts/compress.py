@@ -11,7 +11,7 @@ from sys import path
 # Precompiled regex patterns
 # ---------------------------
 
-STRING_PAT = re_compile(r'(["\'`])(?:\\.|(?!\1).)*\1', re_S)
+STRING_PAT = re_compile(r'(?<!/)(["\'`])(?:\\.|(?!\1).)*?\1', re_S)
 BLOCK_COMMENT_PAT = re_compile(r'/\*.*?\*/', re_S)
 LINE_COMMENT_PAT = re_compile(r'//[^\r\n]*')
 WS_COLLAPSE_PAT = re_compile(r'\s+')

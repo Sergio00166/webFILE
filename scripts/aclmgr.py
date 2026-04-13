@@ -44,12 +44,12 @@ users_file = users_file or (f"{data_dir}{sep}users.json")
 acl_file   = acl_file   or (f"{data_dir}{sep}acl.json")
 
 try:
-    tmp = jsload(open(data_files[0]))
+    tmp = jsload(open(users_file))
     USERS.clear(); USERS.update(tmp)
 except: pass
 
 try:
-    tmp = jsload(open(data_files[1]))
+    tmp = jsload(open(acl_file))
     ACL.clear(); ACL.update(tmp)
 except: pass
 

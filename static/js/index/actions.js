@@ -35,7 +35,7 @@ async function executeDeletes() {
     if (!isSelectModeActive || !selectedItems.size) return;
     if (!confirm("Are you sure to delete?")) return;
     let errorMessage = null;
-    showLoader()
+    showLoader();
 
     for (const fileItem of selectedItems) {
         const itemURL = getItemURL(fileItem);
@@ -107,8 +107,8 @@ async function renameSelectedFiles() {
         const destinationPath = cleanURL.substring(0, cleanURL.lastIndexOf("/")) + "/" + encodedNewName;
         if (!await sendHTTPRequest(cleanURL, destinationPath, "MOVE")) break;
     }
-    clearAllCopyMoveOperations();
     renderFolder();
+    clearAllCopyMoveOperations();
     if (isSelectModeActive) toggleSelectMode();
 }
 
@@ -123,24 +123,21 @@ async function getRemoteFileSize(url) {
     if (!isFinite(n)) return 0; return n;
 }
 
-async function pollProgress(sourceUrl, destUrl, reqPromise, updateProgress) {
-    let last = 0, next = 0, tick = 0;
-    let done = false, period = 8;
-
-    const total = await getRemoteFileSize(sourceUrl);
+async function pollProgress(srcSize, destUrl, reqPromise, updateProgress) {
+    let next = 0, last = 0, tick = 0, done = false, period = 8;
     reqPromise.then(ok => { if (!ok) done = true; });
 
     while (!done) {
         const step = tick % period;
-
         if (step === 0) {
             last = next;
             next = await getRemoteFileSize(destUrl);
         }
         const value = last + (next - last) * (step / period);
-        updateProgress((value / total) * 100);
+        const percent = Math.min((value / srcSize) * 100, 100);
+        if (percent === 100) done = true;
 
-        if (value >= total) done = true;
+        updateProgress(percent);
         await delay(250); tick++;
     }
 }
@@ -162,10 +159,12 @@ async function pasteFiles() {
     for (let i = 0; i < lenght; i++) {
         const sourcePath = pasteOperation.list[i].replace(/\/$/, "");
         const destinationPath = basePath + sourcePath.split("/").pop();
+
+        const srcSize = await getRemoteFileSize(sourcePath); // Before operation
         const req = sendHTTPRequest(sourcePath, destinationPath, pasteOperation.mode);
 
         await pollProgress(
-            sourcePath + "?get=file", destinationPath + "?get=file", req,
+            srcSize, destinationPath + "?get=file", req,
             percent => {
                 const value = (i / lenght) * 100 + (percent / lenght);
                 progressBar.textContent = value.toFixed(2) + "%";
