@@ -6,13 +6,20 @@ const cmdInput = document.getElementById("cmd");
 async function sendCommand(command) {
     appendToTerminal(`$ ${command}`);
     try {
-        const response = await fetch("/srv/aml", {
+        const res = await fetch("", {
             method: "POST", body: command
         });
-        const text = await response.text();
-        appendToTerminal(text);
-    } catch (err) {
-        appendToTerminal("Error: " + err.message);
+        if (!res.ok) {
+            if (res.status === 403)
+                appendToTerminal("ERROR: Permission Denied");
+            else
+                appendToTerminal("ERROR: Command execution failed");
+            return;
+        }
+        appendToTerminal(await res.text());
+
+    } catch (err) { 
+        appendToTerminal("ERROR: Cannot send command");
     }
 }
 

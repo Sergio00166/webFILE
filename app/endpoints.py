@@ -84,28 +84,27 @@ def logout():
     session.clear();            return "", 200
 
 
-def console(USERS):
-    if request.method != "GET": return "", 405
-    if not isAdmin(USERS): raise PermissionError
-    return render_template("console.html")
-
-
 # Its not efficient but needed to keep it
 # atomic, thread-safe and shared across workers
-def aml_endpoint(USERS, ACL, users_file, acl_file): 
-    if request.method != "POST": return "", 405
+def aml_endpoint(USERS, ACL, users_file, acl_file):
     if not isAdmin(USERS): raise PermissionError
 
-    aml_engine = acl_mgm_engine(users_file, acl_file)
-    aml_engine.ACL.update(session.get("ACL-scratchpad", ACL))
-    aml_engine.USERS.update(session.get("USERS-scratchpad", USERS))
+    if request.method == "GET":
+        return render_template("console.html")
 
-    cmd = request.get_data(as_text=True).split(";")
-    result = "".join([aml_engine.run(x) for x in cmd])
+    elif request.method == "POST":
+        aml_engine = acl_mgm_engine(users_file, acl_file)
+        aml_engine.ACL.update(session.get("ACL-scratchpad", ACL))
+        aml_engine.USERS.update(session.get("USERS-scratchpad", USERS))
 
-    session["USERS-scratchpad"] = aml_engine.USERS
-    session["ACL-scratchpad"]   = aml_engine.ACL
-    return result
+        cmd = request.get_data(as_text=True).split(";")
+        result = "".join([aml_engine.run(x) for x in cmd])
+
+        session["USERS-scratchpad"] = aml_engine.USERS
+        session["ACL-scratchpad"]   = aml_engine.ACL
+        return result
+    
+    else: return "", 405
 
 
 error_map = {

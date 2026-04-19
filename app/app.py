@@ -64,8 +64,7 @@ def internal(path):
         path = path.removesuffix("/")
         if path == "login":   return login(USERS)
         if path == "logout":  return logout()
-        if path == "console": return console(USERS)
-        if path == "aml":     return aml_endpoint(USERS, ACL, users_file, acl_file)
+        if path == "console": return aml_endpoint(USERS, ACL, users_file, acl_file)
         raise PermissionError
 
     except Exception as e:
