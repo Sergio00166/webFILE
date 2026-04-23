@@ -117,7 +117,7 @@ async function renameSelectedFiles() {
 // ============================================================================
 
 async function getRemoteFileSize(url) {
-    const r = await fetch(url, { method: "HEAD" }).catch(() => null);
+    const r = await fetch(`${url}?get=file`, { method: "HEAD" }).catch(() => 0);
     if (!r || !r.ok) return 0;
     const n = Number(r.headers.get("Content-Length"));
     if (!isFinite(n)) return 0; return n;
@@ -164,7 +164,7 @@ async function pasteFiles() {
         const req = sendHTTPRequest(sourcePath, destinationPath, pasteOperation.mode);
 
         await pollProgress(
-            srcSize, destinationPath + "?get=file", req,
+            srcSize, destinationPath, req,
             percent => {
                 const value = (i / lenght) * 100 + (percent / lenght);
                 progressBar.textContent = value.toFixed(2) + "%";

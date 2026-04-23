@@ -224,16 +224,16 @@ window.addEventListener("mouseup", () => {
     isDown = false;
 });
 
-window.addEventListener("mousedown", e => {
-    beginDrag(e.clientX, e.clientY);
+window.addEventListener("mousedown", event => {
+    beginDrag(event.clientX, event.clientY);
 });
 
-window.addEventListener("mousemove", e => {
-    moveDrag(e.clientX, e.clientY);
+window.addEventListener("mousemove", event => {
+    moveDrag(event.clientX, event.clientY);
 });
 
-document.addEventListener("wheel", e => {
-    e.preventDefault();
+document.addEventListener("wheel", event => {
+    event.preventDefault();
     let newScale;
     const preRect = img.getBoundingClientRect();
 
@@ -244,7 +244,7 @@ document.addEventListener("wheel", e => {
         if (ns < 0.05) newScale = 0.05;
         else newScale = ns;
     }
-    setScale(newScale, {preRect: preRect, centerScreen: {x: e.clientX, y: e.clientY} });
+    setScale(newScale, {preRect: preRect, centerScreen: {x: event.clientX, y: event.clientY} });
 }, { passive: false });
 
 // ============================================================================
@@ -256,22 +256,22 @@ window.addEventListener("touchend", () => {
     resetPinchState();
 });
 
-window.addEventListener("touchstart", e => {
-    if (e.touches.length !== 1) return;
-    const t = e.touches[0];
+window.addEventListener("touchstart", event => {
+    if (event.touches.length !== 1) return;
+    const t = event.touches[0];
     beginDrag(t.clientX, t.clientY);
 });
 
-window.addEventListener("touchmove", e => {
-    switch (e.touches.length) {
+window.addEventListener("touchmove", event => {
+    switch (event.touches.length) {
         case 1:
-            e.preventDefault();
-            const t = e.touches[0];
+            event.preventDefault();
+            const t = event.touches[0];
             moveDrag(t.clientX, t.clientY);
             break;
         case 2:
-            e.preventDefault();
-            handlePinchTouch(e);
+            event.preventDefault();
+            handlePinchTouch(event);
             break;
         default:
             break;
@@ -282,33 +282,33 @@ window.addEventListener("touchmove", e => {
 // KEYBOARD LISTENER
 // ============================================================================
 
-window.addEventListener("keydown", e => {
+window.addEventListener("keydown", event => {
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     let delta = 1;
 
-    switch (e.key) {
+    switch (event.key) {
         case "ArrowDown": delta = -1;
         case "ArrowUp":
-            e.preventDefault();
+            event.preventDefault();
             posY += kbdsteps * delta;
             break;
 
         case "ArrowRight": delta = -1;
         case "ArrowLeft":
-            e.preventDefault();
+            event.preventDefault();
             posX += kbdsteps * delta;
             break;
 
         case "+":
-            e.preventDefault();
+            event.preventDefault();
             zoomIn();
             break;
         case "-":
-            e.preventDefault();
+            event.preventDefault();
             zoomOut();
             break;
         case " ":
-            e.preventDefault();
+            event.preventDefault();
             resetView();
             break;
 
