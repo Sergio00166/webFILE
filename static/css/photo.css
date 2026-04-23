@@ -79,9 +79,9 @@ button img {
     justify-content: space-between;
 }
 .navigation > button {
-    width: 24px;
+    width: 28px;
     height: 40px;
-    border-radius: 10px;
+    border-radius: 16px
 }
 .tools, .zoomBox {
     display: flex;

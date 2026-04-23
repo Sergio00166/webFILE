@@ -36,12 +36,12 @@ This service exposes a filesystem directory over HTTP, enabling:
 - **Streaming**: browser‑native playback using HTTP 206 partial content. No transcoding, no extra overhead.
 - **Access control** via in‑memory hashmap‑based ACLs (read/write/deny per resource and user).
 - Detects mount points and adjusts directory type (and icon) accordingly.
-- Server‑rendered HTML with minimal size.
+- Fast client-side rendering for directory listing.
 - Fast directory listing with intelligent caching.
 - Fast recursive directory size calculation (disabled by default).
 
 ### Multimedia Streaming
-- Uses only browser‑native codecs.
+- Uses only browser native codecs.
 - Custom metadata and subtitle cache to reduce `ffmpeg` calls.
 - Switch audio tracks directly in the browser (requires experimental Web Platform Features).
 - SSA/ASS subtitle support via `JASSUB` on the client.
@@ -52,10 +52,10 @@ This service exposes a filesystem directory over HTTP, enabling:
 ### ACL & User Management
 - Managed by `aclmgr.py` in the `scripts/` directory.
 - Also accesible from web-console from the endpoint `/srv/console`.
-- ACLs define per‑path permissions: read‑only, write, or deny.
+- ACLs define per‑path and per user permissions, read-only, read and write or deny access.
 - User accounts stored in JSON, configured via `USERS_FILE`.
 - ACL rules stored in JSON, configured via `ACL_FILE`.
-- Both files are loaded into RAM as dictionaries.
+- Both files are loaded into RAM as static hashmaps for performance.
 - The default user (not logged in) is `DEFAULT`.
 - See [aclmgr documentation](scripts/aclmgr.md).
 
@@ -121,7 +121,7 @@ Static files are served from `/srv/static`.
 - `POST /srv/login` → Authenticates using `username` and `password` (form data).
 - `GET /srv/logout` → Logs out and ends the current session.
 
-Responses:
+Responses (for API usage):
 - `200` → login successful / logout acknowledged.
 - `401` → invalid credentials or not logged in.
 

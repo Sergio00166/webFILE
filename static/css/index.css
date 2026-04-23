@@ -8,7 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     font-family: system-ui;
-    background-color: #131313;
+    background-color: #111;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -80,7 +80,7 @@ button {
     width: 18px;
     right: -18px;
     height: 44px;
-    top: calc(50% - 44px);
+    top: calc(50% - 45px);
     cursor: pointer;
     position: absolute;
     background: #2348;
@@ -172,7 +172,7 @@ button {
     cursor: default;
     align-items: center;
     padding: 6px 9px;
-    background: #3336;
+    background: #1E1E1E;
     border-radius: 9px;
     border: 1px solid transparent;
     pointer-events: none;
@@ -183,9 +183,9 @@ button {
 #list-group > button:focus-visible {
     outline: 1px solid white;
 }
-.selected {
-    background: #1e3a5f !important;
-    border-color: #4a90d9 !important;
+#list-group > button.selected {
+    background: #2A313B;
+    border-color: #68A;
 }
 #list-group > button > pre {
     flex: 1;
@@ -319,12 +319,16 @@ button {
 
 @media (hover:hover) {
     #list-group > button:hover {
-        background: #333a;
-        border-color: #555;
+        background: #262728;
+        border-color: #4C4C4C;
+    }
+    #list-group > .selected:hover {
+        border-color: white;
+        background: #2F3E4D;
     }
     .sidebar-content
     button:not(:disabled):hover {
-        background: #4448;
+        background: #333437;
     }
 }
 

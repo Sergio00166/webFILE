@@ -5,11 +5,7 @@ const skipPatterns = [
   /\bopening\b/i,      // Opening
   /\bed(\d+)?\b/i,     // ED, ED1, ED2
   /\bend(ing)?\b/i,    // Ending
-  /\bpreview\b/i,      // Preview
-  /\brecap\b/i,        // Recap
-  /\bpreviously\b/i,   // Previously On...
   /\bcredits?\b/i,     // Credit, Credits
-  /\bepilog(ue)?\b/i,  // Epilog, Epilogue
 ];
 
 
