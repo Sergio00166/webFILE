@@ -180,6 +180,7 @@ Responses (for API usage):
 ### Other HTTP Methods
 The server internally uses a subset of WebDAV methods for file/folder operations.  
 **Note:** This is not full WebDAV support—these methods are used internally only.
+**Note:** Destination header must be always URL encoded in order to support UTF8
 
 | Method | Action performed           |
 |--------|----------------------------|

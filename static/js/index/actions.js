@@ -72,7 +72,7 @@ async function sendHTTPRequest(path, destination, method) {
         const requestOptions = { method };
         if (destination)
             requestOptions.headers = {
-                Destination: decodeURIComponent(destination)
+                Destination: destination
             };
         const response = await fetch(path, requestOptions);
         if (!response.ok) throw response.status;
@@ -124,21 +124,22 @@ async function getRemoteFileSize(url) {
 }
 
 async function pollProgress(srcSize, destUrl, reqPromise, updateProgress) {
-    let next = 0, last = 0, tick = 0, done = false, period = 8;
+    let last = 0, next = 0, period = 2, done = false;
     reqPromise.then(ok => { if (!ok) done = true; });
 
     while (!done) {
-        const step = tick % period;
-        if (step === 0) {
-            last = next;
-            next = await getRemoteFileSize(destUrl);
-        }
-        const value = last + (next - last) * (step / period);
-        const percent = Math.min((value / srcSize) * 100, 100);
-        if (percent === 100) done = true;
+        last = next;
+        next = await getRemoteFileSize(destUrl);
 
-        updateProgress(percent);
-        await delay(250); tick++;
+        for (let step = 0; step < period; step++) {
+            const value = last + (next - last) * (step / period);
+            const percent = Math.min((value / srcSize) * 100, 100);
+
+            updateProgress(percent);
+            if (percent === 100) return;
+            await delay(125);
+        }
+        if (period < 16) period += 2;
     }
 }
 

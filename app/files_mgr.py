@@ -5,6 +5,7 @@ from functions import validate_acl, safe_path, printerr
 from shutil import move as sh_move, copy as sh_copy
 from os import sep, remove, walk, mkdir as os_mkdir
 from shutil import rmtree, copytree, copyfileobj
+from urllib.parse import unquote as urldecode
 from os import access, R_OK, W_OK
 from flask import request
 
@@ -40,11 +41,13 @@ def check_rec_chg_parent(path, ACL, root, new_parent):
 
 def move(path, ACL, root, error_file):
     destination = request.headers.get('Destination')
+    destination = urldecode(destination)
     if not destination: return "", 400
     return mvcp_worker(ACL, path, destination, root, True, error_file)
 
 def copy(path, ACL, root, error_file):
     destination = request.headers.get('Destination')
+    destination = urldecode(destination)
     if not destination: return "", 400
     return mvcp_worker(ACL, path, destination, root, False, error_file)
 
@@ -130,5 +133,6 @@ def mvcp_worker(ACL, path, destination, root, mv, error_file):
         else:                 return log("", 500, e, error_file)
     except Exception as e:    return log("", 500, e, error_file)
     else:                     return "",     201
+
 
  
