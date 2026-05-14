@@ -40,11 +40,8 @@ async function executeDeletes() {
     for (const fileItem of selectedItems) {
         const itemURL = getItemURL(fileItem);
         const response = await fetch(itemURL, { method: "DELETE" });
+        if (response.ok) continue;
 
-        if (response.ok) {
-            await delay(100);
-            continue;
-        }
         switch (response.status) {
             case 403:
                 errorMessage = "You dont have permission to do that";
@@ -56,7 +53,6 @@ async function executeDeletes() {
                 errorMessage = "Something went wrong on the server";
                 break;
         }
-        await delay(100);
     }
     if (errorMessage) alert(errorMessage);
     hideLoader(); renderFolder();
@@ -124,23 +120,25 @@ async function getRemoteFileSize(url) {
 }
 
 async function pollProgress(srcSize, destUrl, reqPromise, updateProgress) {
-    let last = 0, next = 0, period = 2, done = false;
-    reqPromise.then(ok => { if (!ok) done = true; });
+    let last = 0, next = 0, period = 1, stop = false;
+    (async () => {
+        while (!stop) {
+            last = next;
+            next = await getRemoteFileSize(destUrl);
 
-    while (!done) {
-        last = next;
-        next = await getRemoteFileSize(destUrl);
+            for (let step = 0; step < period; step++) {
+                const value = last + (next - last) * (step / period);
+                const percent = Math.min((value / srcSize) * 100, 100);
 
-        for (let step = 0; step < period; step++) {
-            const value = last + (next - last) * (step / period);
-            const percent = Math.min((value / srcSize) * 100, 100);
-
-            updateProgress(percent);
-            if (percent === 100) return;
-            await delay(125);
+                if (percent === 100 || stop) return;
+                updateProgress(percent);
+                await delay(125);
+            }
+            if (period < 4) period += 1;
         }
-        if (period < 16) period += 2;
-    }
+    })();
+    await reqPromise; stop = true;
+    updateProgress(100);
 }
 
 async function pasteFiles() {
