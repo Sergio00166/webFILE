@@ -1,8 +1,8 @@
 /* Code by Sergio00166 */
 
 const path_text = document.getElementById("path-text");
-let cache = [null, null];
-let sort_mode = "np";
+let cache       = [null, null];
+let sort_mode   = "np";
 
 // ============================================================================
 // ICON MAPPINGS

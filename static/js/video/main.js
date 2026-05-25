@@ -1,108 +1,101 @@
 /* Code by Sergio00166 */
 
-const skipPatterns = [
-  /\bop(\d+)?\b/i,     // OP, OP1, OP2
-  /\bopening\b/i,      // Opening
-  /\bed(\d+)?\b/i,     // ED, ED1, ED2
-  /\bend(ing)?\b/i,    // Ending
-  /\bcredits?\b/i,     // Credit, Credits
-];
-
+// Async to make page load faster
+const ISO_codes_promise = fetch("/srv/static/langcodes.json").then(res => res.json());
 
 // ============================================================================
 // CONSTANTS & CONFIGURATION
 // ============================================================================
 
-const MOUSE_CONTROL_DELAY = 2000;
-const TOUCH_CONTROL_DELAY = 3000;
-const EXTRA_CONTROL_DELAY = 2000;
-const EXTRA_SKIP_DELAY = 6000;
-const TIME_CHANGE_DELAY = 750;
-const DOUBLE_TOUCH_DELAY = 400;
-const ANIMATION_START_DELAY = 400;
+const MOUSE_CONTROL_DELAY   = 2000;
+const TOUCH_CONTROL_DELAY   = 3000;
+const EXTRA_CONTROL_DELAY   = 2000;
+const EXTRA_SKIP_DELAY      = 6000;
+const TIME_CHANGE_DELAY     =  750;
+const DOUBLE_TOUCH_DELAY    =  400;
+const ANIMATION_START_DELAY =  400;
+
+const skipPatterns = [
+    /\bop(\d+)?\b/i,     // OP, OP1, OP2
+    /\bopening\b/i,      // Opening
+    /\bed(\d+)?\b/i,     // ED, ED1, ED2
+    /\bend(ing)?\b/i,    // Ending
+    /\bcredits?\b/i,     // Credit, Credits
+];
 
 // ============================================================================
 // DOM ELEMENTS - CONTROLS
 // ============================================================================
 
-const volumeControl = document.getElementById("volume");
-const progress = document.getElementById("progress");
-const seekBar = document.getElementById("seek-bar");
-const totalTime = document.getElementById("total-time");
-const currentTime = document.getElementById("current-time");
+const volumeControl     = document.getElementById("volume");
+const volumeSlider      = document.getElementById("volume-bar");
+const progress          = document.getElementById("progress");
+const seekBar           = document.getElementById("seek-bar");
+const totalTime         = document.getElementById("total-time");
+const currentTime       = document.getElementById("current-time");
+const mainState         = document.getElementById("main-state");
+const hoverTime         = document.getElementById("hover-time");
+const hoverInfo         = document.getElementById("hover-info");
+const settingsButton    = document.getElementById("settings");
+const loadingSpinner    = document.getElementById("custom-loader");
 const controlsContainer = document.getElementById("controls");
-const volumeSlider = document.getElementById("volume-bar");
-const mainState = document.getElementById("main-state");
-const hoverTime = document.getElementById("hover-time");
-const hoverInfo = document.getElementById("hover-info");
-const settingsButton = document.getElementById("settings");
-const loadingSpinner = document.getElementById("custom-loader");
 
 // ============================================================================
 // DOM ELEMENTS - MENU
 // ============================================================================
 
-const settingsMenu = document.getElementById("setting-menu");
-const mainMenu = document.getElementById("main-menu");
-const subsSubmenu = document.getElementById("subs-submenu");
-const audioSubmenu = document.getElementById("audio-submenu");
-const speedSubmenu = document.getElementById("speed-submenu");
+const mainMenu       = document.getElementById("main-menu");
+const settingsMenu   = document.getElementById("setting-menu");
+const subsSubmenu    = document.getElementById("subs-submenu");
+const audioSubmenu   = document.getElementById("audio-submenu");
+const speedSubmenu   = document.getElementById("speed-submenu");
 const menuLegacyText = document.getElementById("menuLegacyText");
-const menuSubsText = document.getElementById("menuSubsText");
-const menuSpeedText = document.getElementById("menuSpeedText");
-const menuAudioText = document.getElementById("menuAudioText");
+const menuSubsText   = document.getElementById("menuSubsText");
+const menuSpeedText  = document.getElementById("menuSpeedText");
+const menuAudioText  = document.getElementById("menuAudioText");
 
 // ============================================================================
 // DOM ELEMENTS - NAVIGATION & MEDIA
 // ============================================================================
 
-const subtitleCanvas = document.querySelector("canvas");
-const video = document.querySelector("video");
-const videoContainer = document.getElementById("video-container");
-const loopButton = document.getElementById("loop-btn");
-const downloadVideo = document.getElementById("download_video");
-const downloadSubs = document.getElementById("download_subs");
+const video            = document.querySelector("video");
+const subtitleCanvas   = document.querySelector("canvas");
+const skipBtn          = document.getElementById("skipBtn");
+const videoContainer   = document.getElementById("video-container");
+const loopButton       = document.getElementById("loop-btn");
+const downloadVideo    = document.getElementById("download_video");
+const downloadSubs     = document.getElementById("download_subs");
 const chapterContainer = document.getElementById("chapter-container");
-const skipBtn = document.getElementById("skipBtn");
 
 // ============================================================================
 // DOM ELEMENTS - ICONS & STATES
 // ============================================================================
 
-const playIcons = Array.from(
-    document.querySelectorAll("#play-pause img")
-);
-const fullscreenIcons = Array.from(
-    document.querySelectorAll("#screenToggle img")
-);
-const mainStateIcons = Array.from(
-    mainState.querySelectorAll("img")
-);
-const loopIcons = Array.from(
-    loopButton.querySelectorAll("img")
-);
-const volumeIcons = Array.from(
-    volume.querySelectorAll("img")
-);
+const playIcons       = Array.from(document.querySelectorAll("#play-pause img"));
+const fullscreenIcons = Array.from(document.querySelectorAll("#screenToggle img"));
+const mainStateIcons  = Array.from(mainState.querySelectorAll("img"));
+const loopIcons       = Array.from(loopButton.querySelectorAll("img"));
+const volumeIcons     = Array.from(volume.querySelectorAll("img"));
 const mainStateVolume = document.querySelector("#state_volume");
 
 // ============================================================================
 // STATE VARIABLES
 // ============================================================================
 
-let chapters = [];
-let loopMode = 0;
-let legacySubtitles = false;
-let assSubtitleWorker;
-let previousVideoTime = 0;
-let touchInteractionActive;
-let controlsHideTimeout;
-let touchActionTimeout;
-let cursorHideTimeout;
-let subtitleIndex = -1;
-let lastTouchTimestamp = 0;
-let touchHoverActive = false;
 let prev, next;
+let cursorHideTimeout;
+let assSubtitleWorker;
+let touchActionTimeout;
+let controlsHideTimeout;
+let touchInteractionActive;
+
+let chapters           = [];
+let loopMode           =  0;
+let subtitleIndex      = -1;
+let lastTouchTimestamp =  0;
+let previousVideoTime  =  0;
+let touchHoverActive   = false;
+let legacySubtitles    = false;
 
 // ============================================================================
 // INITIALIZATION
@@ -115,12 +108,12 @@ function configurePlayer() {
     const savedLoopMode   = localStorage.getItem("videoLoop");
     const savedLegacySubs = localStorage.getItem("subsLegacy");
 
-    video.muted = savedMuted === "true";
-    video.volume = parseFloat(savedVolume || 1);
+    video.muted        = savedMuted === "true";
+    loopMode           = parseInt(savedLoopMode || "0");
+    video.volume       = parseFloat(savedVolume || 1);
+    video.playbackRate = parseFloat(savedSpeed  || "1");
+    legacySubtitles    = savedLegacySubs === "true";
     volumeSlider.value = video.volume;
-    video.playbackRate = parseFloat(savedSpeed || "1");
-    loopMode = parseInt(savedLoopMode || "0");
-    legacySubtitles = savedLegacySubs === "true";
 
     updateVolumeSlider();
     updateVolumeIcon();
@@ -141,8 +134,9 @@ async function initializePlayer(reset=false) {
     const title = window.location.pathname.split("/").pop();
     document.title = decodeURIComponent(title);
 
-    const data = await (await fetch("?get=info")).json();
-    ({ next, prev, chapters } = data); // Global
+    const data = await fetch("?get=info").then(res => res.json());
+    ISO_codes  = await ISO_codes_promise;
+    ({ next, prev, chapters } = data);
 
     if (reset) {
         const speed = video.playbackRate;
@@ -186,15 +180,16 @@ async function loadSubtitleTracks(trackList) {
     subsContent.innerHTML = "<button>None</button>";
 
     for (let i = 0; i < trackList.length; i++) {
-        const trackName = trackList[i];
-        const button = document.createElement("button");
-        button.textContent = trackName;
-        subsContent.appendChild(button);
+        const track = trackList[i];
+        const trackName = createTrackName(track.lang, track.title, i);
 
         if (trackName === savedSubtitle) {
             changeSubtitles(i);
             subtitleIndex = i;
         }
+        const button = document.createElement("button");
+        button.textContent = trackName;
+        subsContent.appendChild(button);
     }
     updateSubtitleDisplay();
 }
@@ -209,9 +204,9 @@ function loadAudioTracks() {
 
     for (let i = 0; i < audioTracks.length; i++) {
         const track = audioTracks[i];
-        const button = document.createElement("button");
+        const trackName = createTrackName(track.language, track.label, i);
 
-        const trackName = (track.label || track.language || "Track " + (i + 1));
+        const button = document.createElement("button");
         button.textContent = trackName;
         audioContent.appendChild(button);
 
@@ -242,6 +237,8 @@ async function setupTimelineChapters() {
 // ============================================================================
 
 window.addEventListener("popstate", initializePlayer);
-window.addEventListener("pageshow", () => { configurePlayer(); initializePlayer(); });
+window.addEventListener("pageshow", () => {
+    configurePlayer(); initializePlayer();
+});
 
  

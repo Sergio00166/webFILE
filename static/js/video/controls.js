@@ -213,7 +213,7 @@ function showTimelineHover(clientX) {
     const timeString = formatDuration(time);
     const chapter = chapters[getChapterIndex(time)];
 
-    if (chapter)
+    if (chapter && chapter.title)
         hoverInfo.innerHTML = `<p>${timeString}</p><p>${chapter.title}</p>`;
     else
         hoverInfo.innerHTML = timeString;

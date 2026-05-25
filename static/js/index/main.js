@@ -11,8 +11,8 @@
 
 const selectButton = document.getElementById("selectBtn");
 const deleteButton = document.getElementById("delBtn");
-const copyButton = document.getElementById("copyBtn");
-const moveButton = document.getElementById("moveBtn");
+const copyButton   = document.getElementById("copyBtn");
+const moveButton   = document.getElementById("moveBtn");
 const renameButton = document.getElementById("renBtn");
 const invertButton = document.getElementById("invertBtn");
 
@@ -20,13 +20,13 @@ const invertButton = document.getElementById("invertBtn");
 // DOM ELEMENTS - UI COMPONENTS
 // ============================================================================
 
-const progressBar = document.getElementById("progress");
-const sidebar = document.getElementById("sidebar");
-const loader = document.getElementById("loader");
+const sidebar       = document.getElementById("sidebar");
+const loader        = document.getElementById("loader");
+const loginButton   = document.getElementById("login");
+const progressBar   = document.getElementById("progress");
 const mainContainer = document.getElementById("main-container");
-const listGroup = document.getElementById("list-group");
-const loginButton = document.getElementById("login");
-const pathBar = document.getElementById("path-bar");
+const listGroup     = document.getElementById("list-group");
+const pathBar       = document.getElementById("path-bar");
 
 // ============================================================================
 // DOM ELEMENTS - SORTING
@@ -49,8 +49,8 @@ let isSelectModeActive = false;
 
 function updateButtonStates() {
     invertButton.disabled = !isSelectModeActive;
-    copyButton.disabled =   !isSelectModeActive;
-    moveButton.disabled =   !isSelectModeActive;
+    copyButton.disabled   = !isSelectModeActive;
+    moveButton.disabled   = !isSelectModeActive;
     renameButton.disabled = !isSelectModeActive;
     deleteButton.disabled = !isSelectModeActive;
 }

@@ -11,7 +11,6 @@ from hashlib import sha256
 from os import sep
 from views import *
 
-
 file_map = {
     "video": video,
     "audio": audio,

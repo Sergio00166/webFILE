@@ -82,6 +82,22 @@ function changeAudioTrack(selectedIndex) {
     updateAudioDisplay();
 }
 
+function createTrackName(language, title, index) {
+    const lang = ISO_codes[language];
+    let trackName;
+
+    if (lang && title)
+        trackName = `${lang} - ${title}`;
+    else if (lang)
+        trackName = lang;
+    else if (title)
+        trackName = title;
+    else
+        trackName = `Track${index + 1}`;
+
+    return trackName
+}
+
 // ============================================================================
 // FULLSCREEN & ORIENTATION
 // ============================================================================
@@ -180,8 +196,7 @@ function updateSubtitleDisplay() {
     } else {
         const subtitleOptions = subsSubmenu.querySelectorAll(".menu-content button");
         const buttonIndex = subtitleIndex + 1;
-        if (buttonIndex < subtitleOptions.length)
-            menuSubsText.textContent = subtitleOptions[buttonIndex].textContent;
+        menuSubsText.textContent = subtitleOptions[buttonIndex].textContent;
     }
 }
 
@@ -202,8 +217,8 @@ function updateAudioDisplay() {
 
     for (let i = 0; i < tracks.length; i++) {
         if (tracks[i].enabled) {
-            const trackName = tracks[i].label || tracks[i].language || "Track " + (i + 1);
-            menuAudioText.textContent = trackName;
+            const audioOptions = audioSubmenu.querySelectorAll(".menu-content button");
+            menuAudioText.textContent = audioOptions[i].textContent;
             break;
         }
     }

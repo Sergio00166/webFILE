@@ -4,7 +4,6 @@ from os.path import exists, isfile, basename
 from subprocess import Popen, PIPE, run, DEVNULL
 from ssatovtt import convert as convert_ssa
 from shutil import which as find_proc
-from sys import path as pypath
 from cache import setup_cache
 from flask import Response
 from os import stat, sep
@@ -13,8 +12,6 @@ from msgspec import json
 cache = setup_cache(1)
 cache_TTL = 60*60 # 1h
 is_ffmpeg_available = False
-ISO_codes = json.decode(open(f"{pypath[0]}{sep}iso_639.json").read())
-
 
 def check_ffmpeg_installed():
     global is_ffmpeg_available
@@ -32,14 +29,13 @@ def external_subs(file):
 def ffmpeg_get_chapters(file_path, inode, size, mtime):
     ffprobe_output = json.decode( run([
         "ffprobe", "-v", "quiet", "-show_entries",
-        "chapters",  "-of", "json", file_path
+        "chapters", "-of", "json", file_path
     ], stdout=PIPE, stderr=DEVNULL).stdout.decode() )
     try:
         return [{
-            "title": chapter["tags"].get("title", "Untitled"),
+            "title": chapter.get("tags", {}).get("title"),
             "start_time": int(float(chapter["start_time"]))
         } for chapter in ffprobe_output["chapters"] ]
-
     except: return []
 
 
@@ -57,17 +53,11 @@ def ffmpeg_get_tracks(file_path, inode, size, mtime):
     streams = ffprobe_output.get("streams",[])
 
     for p, stream in enumerate(streams):
-        tags = stream.get("tags", {})
-        title = tags.get("title")
-
-        lang = ISO_codes.get(
-            tags.get("language")
-        )
-        subtitles_list.append(
-            f"{lang} - {title}"
-            if lang and title else
-            lang or title or f"Track{p}"
-        )
+        tags  = stream.get("tags", {})
+        subtitles_list.append({
+            "title": tags.get("title"),
+            "lang":  tags.get("language"),
+        })
     return subtitles_list
 
 
