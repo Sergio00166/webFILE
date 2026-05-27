@@ -12,23 +12,20 @@ RANGE_REGEX = re_compile(r"bytes=(\d+)-(\d*)")
 
 """ SEND FILE WITH HTTP 206 SUPPORT """
 
-def send_file(file_path, mimetype=None, cache=False):
+def send_file(file_path, headers={}):
     file_size = getsize(file_path)
     range_header = request.headers.get("Range")
 
     if range_header:
         ranges = parse_ranges(range_header, file_size)
         if not ranges: return Response("Invalid Range", status=416)
-        headers = {
-            "Accept-Ranges": "bytes",
-            "Content-Range": f"bytes {ranges[0][0]}-{ranges[-1][1]}/{file_size}",
-            "Content-Length": str(sum([end - start + 1 for start, end in ranges])),
-        }
-        if mimetype: headers["Content-Type"] = mimetype
+        headers.update({"Accept-Ranges": "bytes"})
+        headers.update({"Content-Range": f"bytes {ranges[0][0]}-{ranges[-1][1]}/{file_size}"})
+        headers.update({"Content-Length": str(sum([end - start + 1 for start, end in ranges]))})
         return Response(generate(file_path, ranges), status=206, headers=headers)
 
-    response = df_send_file(file_path, mimetype=mimetype)
-    if cache: response.headers["Cache-Control"] = "public, max-age=36000"
+    response = df_send_file(file_path)
+    response.headers.update(headers)
     return response
 
 
@@ -57,7 +54,6 @@ def generate(file_path, ranges):
             file.seek(start)
             remaining_bytes = end - start + 1
             yield from read_chunk(file, remaining_bytes)
-
 
 
 """ STREAMING ON-THE-FLY TAR FILE GENERATOR """

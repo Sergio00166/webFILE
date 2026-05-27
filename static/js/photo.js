@@ -4,32 +4,32 @@
 // DOM ELEMENTS - IMAGE VIEWER
 // ============================================================================
 
-const body = document.querySelector("body");
-const img = document.getElementById("main-img");
-const zoomIcon = document.getElementById("zoomIcon");
+const body         = document.querySelector("body");
+const img          = document.getElementById("main-img");
+const zoomIcon     = document.getElementById("zoomIcon");
 const downloadLink = document.getElementById("download-link");
 const previousLink = document.getElementById("prev");
-const nextLink = document.getElementById("next");
+const nextLink     = document.getElementById("next");
 
 // ============================================================================
 // VARIABLES AND CONFIG
 // ============================================================================
 
-let dispX = 0;
-let dispY = 0;
-let posX = 0;
-let posY = 0;
-let startX = 0;
-let startY = 0;
-let startPosX = 0;
-let startPosY = 0;
-let scale = 1;
-let rotation = 0;
-const kbdsteps = 40;
-let isDown = false;
-let pinchStartDist = 0;
+const kbdsteps      = 40;
+const smoothing     = 0.25;
+let scale           = 1;
+let posX            = 0;
+let posY            = 0;
+let dispX           = 0;
+let dispY           = 0;
+let startX          = 0;
+let startY          = 0;
+let startPosX       = 0;
+let startPosY       = 0;
+let rotation        = 0;
+let pinchStartDist  = 0;
 let pinchStartScale = 1;
-const smoothing = 0.25;
+let isDown          = false;
 
 // ============================================================================
 // UTILITIES

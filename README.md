@@ -100,6 +100,10 @@ python3 app.py
 gunicorn -b 127.0.0.1:8000 app:app -w $(nproc) -t 900
 ```
 
+**Extra**
+The compress.py script inside scripts dir can be used to minify frontend files and compress the static files.
+To use the compression part of the script the brotli tool must be installed systemwide.
+
 ### Important
 For production always set the SECRET_KEY, otherwise multi-worker setup will break.  
 When deploying with Gunicorn, set an appropriate timeout (`-t`).  

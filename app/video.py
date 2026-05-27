@@ -3,7 +3,7 @@
 from os.path import exists, isfile, basename
 from subprocess import Popen, PIPE, run, DEVNULL
 from ssatovtt import convert as convert_ssa
-from shutil import which as find_proc
+from shutil import which as search4cmd
 from cache import setup_cache
 from flask import Response
 from os import stat, sep
@@ -16,7 +16,7 @@ is_ffmpeg_available = False
 def check_ffmpeg_installed():
     global is_ffmpeg_available
     if is_ffmpeg_available: return
-    if find_proc("ffmpeg"): is_ffmpeg_available = True
+    if search4cmd("ffmpeg"): is_ffmpeg_available = True
     else: raise ModuleNotFoundError("FFMPEG is not installed")
 
 def external_subs(file):

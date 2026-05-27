@@ -4,15 +4,16 @@ from init import *
 last_acl_check = 0
 
 http_methods = (
-    "GET", "PUT", "POST",
-    "MKCOL", "DELETE",
-    "COPY", "MOVE"
+    "GET", "POST", 
+    "PUT", "MKCOL",
+    "COPY", "MOVE",
+    "DELETE", 
 )
 method_map = {
-    "DELETE": delfile,
     "MOVE":   move,
     "COPY":   copy,
     "MKCOL":  mkdir,
+    "DELETE": delfile,
     "PUT":    handle_upload
 }
 
@@ -51,7 +52,12 @@ def static(path):
     try:
         path = safe_path(path, sroot)
         if not isfile(path): raise PermissionError
-        return send_file( path, cache=True)
+
+        encoding = request.headers.get("Accept-Encoding", "").lower()
+        if "br" in encoding and isfile(path + ".br"): path = path + ".br"
+
+        response_headers = {"Cache-Control": "public, max-age=36000"}
+        return send_file(path, headers=response_headers)
 
     except Exception as e:
         return error(e, error_file)
@@ -69,7 +75,6 @@ def internal(path):
 
     except Exception as e:
         return error(e, error_file)
-
 
 
 # Run internal server for testing

@@ -1,11 +1,14 @@
 # Code by Sergio00166
 
-from os.path import abspath, join
+from os.path import abspath, join, getsize, isfile
 from re import compile as re_compile
 from re import sub as re_sub
 from re import S as re_S
 from glob import glob
 from sys import path
+from os import remove, system as cmd
+from shutil import which as search4cmd
+import subprocess
 
 # ---------------------------
 # Precompiled regex patterns
@@ -28,7 +31,6 @@ JS_SEMI_CLOSE_PAT = re_compile(r';+}')
 CSS_PUNCT_PAT = re_compile(r'\s*([{};:,>~])\s*')
 TAG_WS_RE = re_compile(r'\s+(?=<)|(?<=>)\s+')
 PLACEHOLDER_PATTERN = re_compile(r'__STR_REPL_(\d+)__')
-
 
 # ---------------------------
 # string + comment handling
@@ -57,7 +59,7 @@ def collapse_ws(s):
 # JS minifier
 # ---------------------------
 
-def compress_js(src):
+def minify_js(src):
     s, strings = strip_comments(src)
     s = collapse_ws(s)
     s = JS_PUNCT_PAT.sub(r'\1', s)
@@ -79,7 +81,7 @@ def compress_js(src):
 # CSS minifier
 # ---------------------------
 
-def compress_css(src):
+def minify_css(src):
     s, strings = strip_comments(src)
     s = collapse_ws(s)
     s = CSS_PUNCT_PAT.sub(r'\1', s)
@@ -92,7 +94,7 @@ def compress_css(src):
 # Simple HTML minifier (line strip + join)
 # ---------------------------
 
-def compress_html(src):
+def minify_html(src):
     s, strings = strip_comments(src)
     s = collapse_ws(s)
     s = TAG_WS_RE.sub('', s)
@@ -104,14 +106,39 @@ def compress_html(src):
 # File processing
 # ---------------------------
 
-def process_files(pattern, compressor):
-    for p in glob(pattern):
-        with open(p, 'r', encoding='utf-8') as f:
-            content = f.read()
-        compressed = compressor(content)
-        if compressed != content:
-            with open(p, 'w', encoding='utf-8') as f:
-                f.write(compressed)
+def minify_files(pattern, compressor):
+    for path in glob(pattern, recursive=True):
+        if not isfile(path): continue
+        with open(path, 'r', encoding='utf-8') as f: content = f.read()
+        if (minify := compressor(content)) == content: continue
+        with open(path, 'w', encoding='utf-8') as f: f.write(minify)
+
+
+# ---------------------------
+# Try to compress using brotli
+# ---------------------------
+
+def compress_brotli(pattern):
+    for path in glob(pattern, recursive=True):
+        try: # Catch if explodes for some reason
+            if (
+                not isfile(path) or
+                path.endswith(".br") or
+                getsize(path) < 2000
+            ):  continue # Skip
+
+            subprocess.run(
+                ["brotli", "--best", "--keep", path],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                check=False
+            )
+            # If it is not worth it, drop it
+            new_size = getsize(path + ".br")
+            if getsize(path) * 0.75 < new_size:
+                remove(path + ".br")
+
+        except: continue # Skip
 
 
 # ---------------------------
@@ -120,12 +147,17 @@ def process_files(pattern, compressor):
 
 if __name__ == '__main__':
     base = abspath(join(path[0], '..'))
-    process_files(join(base, 'static', 'css', '*.css'), compress_css)
-    process_files(join(base, 'static', 'js', 'photo.js'), compress_js)
-    process_files(join(base, 'static', 'js', 'login.js'), compress_js)
-    process_files(join(base, 'static', 'js', 'video', '*.js'), compress_js)
-    process_files(join(base, 'static', 'js', 'index', '*.js'), compress_js)
-    process_files(join(base, 'static', 'js', 'audio', '*.js'), compress_js)
-    process_files(join(base, 'templates', '*'), compress_html)
+
+    print("Shrinking files")
+    minify_files(join(base, 'templates', '*.html'),          minify_html)
+    minify_files(join(base, 'static', 'js',  '**', "*.js"),  minify_js)
+    minify_files(join(base, 'static', 'css', '**', "*.css"), minify_css)
+
+    if not search4cmd("brotli"):
+        print("Brotli is not installed, skipping...")
+    else:
+        print("Compressing files")
+        compress_brotli(join(base, 'static', '**', '*'))
+        
 
  

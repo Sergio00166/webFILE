@@ -24,26 +24,24 @@ def path_handler(path, ACL, root, folder_size):
     get_mode = request.args.get("get", "")
 
     if isfile(path):
-        file_type, mime = get_file_type(path), None
+        file_type = get_file_type(path)
         static = get_mode == "static"
+        headers = {}
 
         if not (get_mode == "file" or static):
-
-            if file_type in ("text", "source"):
-                mime = "text/plain"
-
-            if file_type == "webpage":
-                return send_file(path, mimetype="text/html")
-
             if request.path.endswith("/"):
                 query = request.query_string.decode()
                 query = f"?{query}" if query else ""
                 return redirect(request.path[:-1] + query)
 
-            if file_type in file_map:
+            if file_type == "webpage":            headers["Content-Type"] = "text/html"
+            elif file_type in ("text", "source"): headers["Content-Type"] = "text/plain"
+
+            elif file_type in file_map:
                 return file_map[file_type](path, root, file_type, ACL)
 
-        return send_file(path, mimetype=mime, cache=static)
+        if static: headers.update({"Cache-Control": "public, max-age=36000"})
+        return send_file(path, headers=headers)
 
     else:
         if get_mode == "file":
