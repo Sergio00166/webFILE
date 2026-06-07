@@ -38,7 +38,7 @@ This service exposes a filesystem directory over HTTP, enabling:
 - Detects mount points and adjusts directory type (and icon) accordingly.
 - Fast client-side rendering for directory listing.
 - Fast directory listing with intelligent caching.
-- Fast recursive directory size calculation (disabled by default).
+- Fast recursive directory size calculation (recursion disabled by default).
 
 ### Multimedia Streaming
 - Uses only browser native codecs.

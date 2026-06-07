@@ -34,8 +34,11 @@ def path_handler(path, ACL, root, folder_size):
                 query = f"?{query}" if query else ""
                 return redirect(request.path[:-1] + query)
 
-            if file_type == "webpage":            headers["Content-Type"] = "text/html"
-            elif file_type in ("text", "source"): headers["Content-Type"] = "text/plain"
+            if file_type == "webpage":
+                headers["Content-Type"] = "text/html; charset=utf8"
+
+            elif file_type in ("text", "source"):
+                headers["Content-Type"] = "text/plain; charset=utf8"
 
             elif file_type in file_map:
                 return file_map[file_type](path, root, file_type, ACL)

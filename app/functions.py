@@ -19,8 +19,6 @@ boms = (
     b"\xef\xbb\xbf",
     b"\xff\xfe",
     b"\xfe\xff",
-    b"\xff\xfe\x00\x00",
-    b"\x00\x00\xfe\xff",
 )
 def is_binary(filepath):
     with open(filepath, "rb") as f:
