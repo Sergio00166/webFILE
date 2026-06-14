@@ -53,9 +53,6 @@ def photo(path, root, file_type, ACL):
     prev, next, name = get_filepage_data(path, root, file_type, ACL)
     return render_template("photo.html", name=name, prev=prev, next=next)
 
-def markdown(path, root, file_type, ACL):
-    return render_template("markdown.html", name=basename(path))
-
 
 def video(path, root, file_type, ACL):
     check_ffmpeg_installed()

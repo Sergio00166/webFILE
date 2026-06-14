@@ -1,5 +1,5 @@
 {
-    "pdf": [ ".pdf" ], "webpage": [ ".web" ], "markdown": [ ".md" ],
+    "pdf": [ ".pdf" ], "webpage": [ ".web" ],
 
     "source": [
         ".js", ".py", ".pyw", ".java", ".cpp", ".c", ".html", ".htm", ".css",

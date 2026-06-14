@@ -24,7 +24,6 @@ const icon_map = {
     'compressed':   'file-zipper-solid.svg',
     'binary':       'square-binary-solid.svg',
     'webpage':      'globe-solid.svg',
-    'markdown':     'markdown-solid.svg',
 };
 
 // ============================================================================
