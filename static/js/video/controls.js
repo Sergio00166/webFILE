@@ -1,20 +1,29 @@
 /* Code by Sergio00166 */
 
+let nav_timeout;
+
 // ============================================================================
 // PLAYBACK CONTROL
 // ============================================================================
 
 function navigateToNext() {
-    if (next) {
+    if (!next) return;
+    clearTimeout(nav_timeout);
+
+    nav_timeout = setTimeout(() => {
         history.pushState({}, "", next);
         initializePlayer(true);
-    }
+    }, 150);
 }
+
 function navigateToPrevious() {
-    if (prev) {
+    if (!prev) return;
+    clearTimeout(nav_timeout);
+
+    nav_timeout = setTimeout(() => {
         history.pushState({}, "", prev);
         initializePlayer(true);
-    }
+    }, 150);
 }
 
 function togglePlayPauseState() {
