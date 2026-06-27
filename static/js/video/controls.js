@@ -34,7 +34,7 @@ function togglePlayPauseState() {
 }
 
 function playVideo() {
-    video.play().catch(()=>{});
+    video.play().catch(() => {});
     playIcons [0].style.display = "none";
     playIcons [1].style.display = "block";
     showMainStateAnimation("play");
@@ -109,7 +109,7 @@ function hideControlsWithDelay(delay) {
     if (settingsMenu.classList.contains("show"))
         delay += EXTRA_CONTROL_DELAY;
 
-    controlsHideTimeout = setTimeout(()=>{
+    controlsHideTimeout = setTimeout(() => {
         if (!video.paused) {
             controlsContainer.classList.remove("show");
             settingsMenu.classList.remove("show");
@@ -123,7 +123,7 @@ function showCursor() {
     document.body.style.cursor = "auto";
     if (video.paused) return;
 
-    cursorHideTimeout = setTimeout(()=>{
+    cursorHideTimeout = setTimeout(() => {
         if (video.paused) return;
         document.body.style.cursor = "none";
     }, MOUSE_CONTROL_DELAY);

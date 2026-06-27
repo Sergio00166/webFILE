@@ -104,9 +104,8 @@ async function renderFolder(useCache = false) {
     if (noautoload && data.some(item => item.name === autoload_webpage)) {
         location.reload(); return;
     }
-    for (let i = 0; i < data.length; i++) {
-        renderItem(data[i], html);
-    }
+    for (let i = 0; i < data.length; i++) renderItem(data[i], html);
+    
     basePath = path;
     const pathStr = decodeURIComponent(path);
     path_text.textContent = `\u200E${pathStr}\u200E`;
@@ -130,9 +129,9 @@ function readableSize(num, suffix = "B") {
     if (num === null) return "---";
     let i = 0;
 
-    while (i < size_units.length && num >= 1024) {
+    while (i < size_units.length && num >= 1024)
         num = num / 1024; i++;
-    }
+
     if (i < size_units.length)
         return `${num.toFixed(1)} ${size_units[i]}${suffix}`;
 

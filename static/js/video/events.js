@@ -10,18 +10,18 @@ window.addEventListener("fullscreenchange", scaleVideoToFit);
 video.addEventListener("play", playVideo);
 video.addEventListener("pause", pauseVideo);
 
-video.addEventListener("waiting", ()=>{
-    loadingSpinner.style.display = "block";
-});
-video.addEventListener("playing", ()=>{
-    loadingSpinner.style.display = "none";
-});
+video.addEventListener("waiting", () =>
+    loadingSpinner.style.display = "block"
+);
+video.addEventListener("playing", () =>
+    loadingSpinner.style.display = "none"
+);
 
 // ============================================================================
 // EVENT LISTENERS - SHOW/HIDE CONTROLS
 // ============================================================================
 
-videoContainer.addEventListener("mouseleave", ()=>{
+videoContainer.addEventListener("mouseleave", () => {
     clearTimeout(cursorHideTimeout);
     document.body.style.cursor = "auto";
     hideControlsWithDelay(50);
@@ -33,7 +33,7 @@ function showControls(delay, cursor=false) {
     hideControlsWithDelay(delay);
 }
 
-videoContainer.addEventListener("touchmove", ()=>{
+videoContainer.addEventListener("touchmove", () => {
     touchInteractionActive = true;
     showControls(TOUCH_CONTROL_DELAY);
 },{ passive: false });
@@ -52,25 +52,25 @@ controlsContainer.addEventListener("click", event => {
     showControls(MOUSE_CONTROL_DELAY, true);
 });
 
-videoContainer.addEventListener("mousemove", ()=>{
-    showControls(MOUSE_CONTROL_DELAY, true);
-});
-videoContainer.addEventListener("focusin", ()=>{
-    showControls(MOUSE_CONTROL_DELAY);
-});
+videoContainer.addEventListener("mousemove", () =>
+    showControls(MOUSE_CONTROL_DELAY, true)
+);
+videoContainer.addEventListener("focusin", () =>
+    showControls(MOUSE_CONTROL_DELAY)
+);
 
 // ============================================================================
 // EVENT LISTENERS - VOLUME
 // ============================================================================
 
-volumeControl.addEventListener("mouseenter", ()=>{
+volumeControl.addEventListener("mouseenter", () => {
     if (video.muted)
         volumeSlider.classList.remove("show");
     else
         volumeSlider.classList.add("show");
 });
 
-volumeControl.addEventListener("mouseleave", ()=>
+volumeControl.addEventListener("mouseleave", () =>
     volumeSlider.classList.remove("show")
 );
 
@@ -95,9 +95,9 @@ mainMenu.addEventListener("click", event => {
     }
 });
 
-document.querySelectorAll(".back-button").forEach(button => {
-    button.addEventListener("click", showMainMenu);
-});
+document.querySelectorAll(".back-button").forEach(button =>
+    button.addEventListener("click", showMainMenu)
+);
 
 [subsSubmenu, audioSubmenu, speedSubmenu].forEach(submenu => {
     submenu.addEventListener("click", event => {
@@ -134,20 +134,20 @@ seekBar.addEventListener("touchstart", event => {
     );
 },{ passive: true });
 
-document.addEventListener("touchstart", ()=>{
+document.addEventListener("touchstart", () => {
     touchHoverActive = true;
     clearTimelineHover();
 },{ passive: true });
 
-seekBar.addEventListener("click", event => {
-    updateVideoTime(getTimelinePosition(event.clientX).percentage);
-});
+seekBar.addEventListener("click", event =>
+    updateVideoTime(getTimelinePosition(event.clientX).percentage)
+);
 
 seekBar.addEventListener("mousemove", event => {
     if (!touchHoverActive) showTimelineHover(event.clientX);
 });
 
-seekBar.addEventListener("mouseleave", ()=>{
+seekBar.addEventListener("mouseleave", () => {
     touchHoverActive = false;
     clearTimelineHover();
 });
