@@ -220,17 +220,14 @@ function rotateImg() {
 // MOUSE LISTENERS
 // ============================================================================
 
-window.addEventListener("mouseup", () => {
-    isDown = false;
-});
+window.addEventListener("mouseup", () => isDown = false);
 
-window.addEventListener("mousedown", event => {
-    beginDrag(event.clientX, event.clientY);
-});
-
-window.addEventListener("mousemove", event => {
-    moveDrag(event.clientX, event.clientY);
-});
+window.addEventListener("mousedown", event =>
+    beginDrag(event.clientX, event.clientY)
+);
+window.addEventListener("mousemove", event =>
+    moveDrag(event.clientX, event.clientY)
+);
 
 document.addEventListener("wheel", event => {
     event.preventDefault();
@@ -252,8 +249,7 @@ document.addEventListener("wheel", event => {
 // ============================================================================
 
 window.addEventListener("touchend", () => {
-    isDown = false;
-    resetPinchState();
+    isDown = false; resetPinchState();
 });
 
 window.addEventListener("touchstart", event => {

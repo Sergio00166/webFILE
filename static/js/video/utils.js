@@ -29,7 +29,7 @@ function loadWebVttSubtitles(subtitleUrl) {
     trackElement.kind = "subtitles";
     trackElement.src = subtitleUrl;
     trackElement.default = true;
-    trackElement.onerror = ()=>{
+    trackElement.onerror = () => {
         alert("Cannot load subtitle [legacy mode]");
     };
     video.appendChild(trackElement);
@@ -109,7 +109,7 @@ function toggleFullscreenMode() {
         document.exitFullscreen();
 }
 
-videoContainer.addEventListener("fullscreenchange", ()=>{
+videoContainer.addEventListener("fullscreenchange", () => {
     if (document.fullscreenElement) {
         fullscreenIcons[0].style.display = "none";
         fullscreenIcons[1].style.display = "block";
@@ -118,9 +118,9 @@ videoContainer.addEventListener("fullscreenchange", ()=>{
         fullscreenIcons[1].style.display = "none";
     }
     if (video.videoWidth >= video.videoHeight)
-        screen.orientation.lock("landscape").catch(()=>{});
+        screen.orientation.lock("landscape").catch(() => {});
     else
-        screen.orientation.lock("portrait").catch(()=>{});
+        screen.orientation.lock("portrait").catch(() => {});
 });
 
 // ============================================================================

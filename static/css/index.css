@@ -77,7 +77,7 @@ button {
     transition: transform 0.3s;
 }
 .sidebar-toggle {
-    width: 18px;
+    width:  18px;
     right: -18px;
     height: 44px;
     top: calc(50% - 45px);
@@ -89,6 +89,14 @@ button {
     display: none;
     align-items: center;
     justify-content: center;
+}
+/* Extra area to help touch */
+.sidebar-toggle::after {
+    content: "";
+    position: absolute;
+    width:  150%;
+    height: 100%;
+    right:  -36%;
 }
 
 /* -------------------------
@@ -155,7 +163,7 @@ button {
     overflow: auto;
     display: flex;
     flex-direction: column;
-    padding: 6px 8px 12px;
+    padding: 6px 8px 10px;
     box-sizing: border-box;
 }
 #list-group.show {

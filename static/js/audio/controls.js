@@ -112,7 +112,7 @@ function pauseAudio() {
 }
 
 function playAudio() {
-    audio.play().catch(()=>{});
+    audio.play().catch(() => {});
     playIcons[0].style.display = "none";
     playIcons[1].style.display = "block";
 }

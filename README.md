@@ -73,7 +73,7 @@ pip install -r requirements.txt
 
 #### Client-side
 - The web interface requires a modern browser (2021 or newer).
-- If you're using something ancient—like a 2018 relic that hasn’t seen an update in half a decade—expect broken styles and layout quirks.
+- If you're using something ancient—like a 2018 relic that hasn’t seen an update in half a decade, expect broken styles and layout quirks.
 
 ### Configuration
 Configure via environment variables:
@@ -132,7 +132,6 @@ Responses (for API usage):
 #### File Access
 - `GET /path?get=file` → Always returns the file or its file representation.
   - Regular files: returned directly.
-  - Overrides the server’s custom MIME handling.
   - Directories: returned as a TAR archive.
   - Useful for bypassing the player page for audio/video.
 
@@ -182,9 +181,9 @@ Responses (for API usage):
 ```
 
 ### Other HTTP Methods
-The server internally uses a subset of WebDAV methods for file/folder operations.  
-**Note:** This is not full WebDAV support—these methods are used internally only.
-**Note:** Destination header must be always URL encoded in order to support UTF8
+The server internally uses a subset of WebDAV methods for file/folder operations.     
+**Note:** This is not full WebDAV support, these methods are used internally only.    
+**Note:** Destination header must be always URL encoded in order to support UTF8    
 
 | Method | Action performed           |
 |--------|----------------------------|
@@ -198,6 +197,7 @@ The server internally uses a subset of WebDAV methods for file/folder operations
 - `.html` files are treated as plain text.
 - `.web` files are recognized as HTML pages.
 - Placing `index.web` in any folder auto‑loads that page instead of the default listing.
+- .web files are static, server sends them raw without any server-side processing.
 - Disable with `?get=default` to show the file listing page.
 
 ### Official Plugins

@@ -218,7 +218,7 @@ function uploadFileWithProgress(file, uploadURL, progressCallback) {
             if (event.lengthComputable && progressCallback)
                 progressCallback(event.loaded, event.total);
         };
-        xhr.onload = ()=>{
+        xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300)
                 resolve();
             else
@@ -283,7 +283,7 @@ function openFileUploadMenu(selectDirectory = false) {
     if (selectDirectory)
         fileInput.setAttribute("webkitdirectory", true);
 
-    fileInput.onchange = ()=>{
+    fileInput.onchange = () => {
         const msg = "Upload " + fileInput.files.length + " item(s)?";
         if (fileInput.files.length && (selectDirectory || confirm(msg)))
             uploadFiles(fileInput.files, selectDirectory);

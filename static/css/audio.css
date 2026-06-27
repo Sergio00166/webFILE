@@ -122,8 +122,8 @@ button {
     cursor: pointer;
     border-radius: 4px;
 }
-/* This weird shit is only to let the */
-/* user select easily the start and end */
+/* This weird shit is only to let the
+ * user select easily the start and end */
 #seek-bar::before {
     content: "";
     position: absolute;

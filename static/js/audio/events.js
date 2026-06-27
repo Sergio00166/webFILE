@@ -99,7 +99,7 @@ function updateSpeed() {
     speedButton.textContent = speedValues[speedIndex] + "x";
 }
 
-speedButton.addEventListener("click", ()=>{
+speedButton.addEventListener("click", () => {
     speedIndex = (speedIndex + 1) % speedValues.length;
     audio.playbackRate = speedValues[speedIndex];
     localStorage.setItem("audioSpeed", speedValues[speedIndex]);
@@ -157,7 +157,7 @@ seekBar.addEventListener("touchstart", event => {
     );
 },{ passive: true });
 
-document.addEventListener("touchstart", ()=>{
+document.addEventListener("touchstart", () => {
     isTouchHoverActive = true;
     clearTimelineHover();
 },{ passive: true });
@@ -170,7 +170,7 @@ seekBar.addEventListener("mousemove", event => {
     if (!isTouchHoverActive) showTimelineHover(event.clientX);
 });
 
-seekBar.addEventListener("mouseleave", ()=>{
+seekBar.addEventListener("mouseleave", () => {
     isTouchHoverActive = false;
     clearTimelineHover();
 });
