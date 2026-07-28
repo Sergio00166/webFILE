@@ -120,5 +120,4 @@ def error(e, error_file):
     if not isBrowser: return "", code
     return render_template("error.html", code=code), code
 
-
  

@@ -110,5 +110,4 @@ def create_tar_header(arcname, st):
     tarinfo.gname = ""
     return tarinfo.tobuf()
 
-
  

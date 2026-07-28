@@ -3,12 +3,6 @@
 from init import *
 last_acl_check = 0
 
-http_methods = (
-    "GET", "POST", 
-    "PUT", "MKCOL",
-    "COPY", "MOVE",
-    "DELETE", 
-)
 method_map = {
     "MOVE":   move,
     "COPY":   copy,
@@ -33,21 +27,38 @@ def check4acl_change():
 
 
 # Main endpoint for file serve or dir listing
-@app.route('/', methods=("GET","POST"), defaults={'path': ''})
-@app.route("/<path:path>", methods=http_methods)
+explorer_methods = list(method_map.keys()) + ["GET"]
+@app.route('/', defaults={'path': ''}, methods=["GET"])
+@app.route("/<path:path>", methods=explorer_methods)
 def explorer(path):
     try:
         if request.method in method_map:
             return method_map[request.method](path, ACL, root, error_file)
 
-        if not request.method in ("GET", "HEAD"): return "", 405
         return path_handler(path, ACL, root, folder_size)
 
     except Exception as e:
         return error(e, error_file)
 
 
-@app.route("/srv/static/<path:path>", methods=["GET", "HEAD"])
+# It must use all methods as it path overlaps with the main one
+srv_methods = list(method_map.keys()) + ["GET", "POST"]
+@app.route("/srv", defaults={'path': ''}, methods=srv_methods)
+@app.route("/srv/<path:path>",            methods=srv_methods)
+def internal(path):
+    try:
+        match path.removesuffix("/"):
+            case "logout":  return logout()
+            case "login":   return login(USERS)
+            case "console": return aml_endpoint(USERS, ACL, users_file, acl_file)
+            case _:         raise  PermissionError
+
+    except Exception as e:
+        return error(e, error_file)
+
+
+# Serve all static files
+@app.route("/srv/static/<path:path>", methods=["GET"])
 def static(path):
     try:
         path = safe_path(path, sroot)
@@ -58,20 +69,6 @@ def static(path):
 
         response_headers = {"Cache-Control": "public, max-age=36000"}
         return send_file(path, headers=response_headers)
-
-    except Exception as e:
-        return error(e, error_file)
-
-
-@app.route("/srv", defaults={'path': ''}, methods=http_methods)
-@app.route("/srv/<path:path>", methods=http_methods)
-def internal(path):
-    try:
-        path = path.removesuffix("/")
-        if path == "login":   return login(USERS)
-        if path == "logout":  return logout()
-        if path == "console": return aml_endpoint(USERS, ACL, users_file, acl_file)
-        raise PermissionError
 
     except Exception as e:
         return error(e, error_file)

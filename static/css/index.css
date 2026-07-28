@@ -167,7 +167,7 @@ button {
     box-sizing: border-box;
 }
 #list-group.show {
-    transition: opacity 0.1s ease-in-out;
+    transition: opacity 0.2s;
     opacity: 1
 }
 

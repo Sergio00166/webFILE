@@ -158,6 +158,5 @@ if __name__ == '__main__':
     else:
         print("Compressing files")
         compress_brotli(join(base, 'static', '**', '*'))
-        
 
  

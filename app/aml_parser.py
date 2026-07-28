@@ -7,7 +7,6 @@ from os.path import normpath
 from hashlib import sha256
 from os import sep
 
-
 ######################################################
 #   Regex and constants
 ######################################################
@@ -22,7 +21,6 @@ is_valid_path      = recompile(r"^(/|(/[^\x00/]+)*/?)$")
 
 perms              = {"NONE": 0, "READ": 1, "DOALL": 2}
 perms_rev          = {0: "NONE", 1: "READ", 2: "DOALL"}
-
 
 ######################################################
 #   Utils and tools
@@ -344,6 +342,5 @@ class acl_mgm_engine:
         try: out = func(self._ctx, rest)
         except SyntaxError: return " SYNTAX ERROR"
         return out or ""
-
 
  

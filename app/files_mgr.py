@@ -9,7 +9,6 @@ from urllib.parse import unquote as urldecode
 from os import access, R_OK, W_OK
 from flask import request
 
-
 def log(text, code, e, error_file):
     printerr(e, error_file)
     return text, code
@@ -32,6 +31,7 @@ def check_recursive(path, ACL, root, write=False):
 def check_rec_chg_parent(path, ACL, root, new_parent):
     parent = len(path.split("/"))
     new_parent = new_parent.split("/")
+
     for fulldir, _, files in walk(path):
         for item in files:
             item_path = relpath(join(fulldir, item), start=root).replace(sep, "/")
@@ -60,8 +60,8 @@ def handle_upload(path, ACL, root, error_file):
         if not exists(dirname(path)): raise FileNotFoundError
         if exists(path): raise FileExistsError
 
-        with open(path,"wb") as f:
-            copyfileobj(request.stream, f, length=1024*1024)
+        with open(path, "wb") as f:
+            copyfileobj(request.stream, f, length=8388608)
 
     except PermissionError:   return "",     403
     except FileNotFoundError: return "",     404
@@ -97,10 +97,12 @@ def delfile(path, ACL, root, error_file):
     try:
         validate_acl(path, ACL, True)
         path = safe_path(path, root)
+
         if isdir(path):
             check_recursive(path, ACL, root, True)
             rmtree(path)
-        else: remove(path)
+        else:
+            remove(path)
 
     except FileNotFoundError: return "",     404
     except PermissionError:   return "",     403
@@ -111,7 +113,7 @@ def delfile(path, ACL, root, error_file):
 def mvcp_worker(ACL, path, destination, root, mv, error_file):
     try:
         validate_acl(path, ACL, mv)
-        validate_acl(destination,ACL,True)
+        validate_acl(destination, ACL, True)
         path = safe_path(path, root)
 
         if isdir(path):
@@ -133,6 +135,5 @@ def mvcp_worker(ACL, path, destination, root, mv, error_file):
         else:                 return log("", 500, e, error_file)
     except Exception as e:    return log("", 500, e, error_file)
     else:                     return "",     201
-
 
  
