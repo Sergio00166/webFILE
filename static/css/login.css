@@ -6,10 +6,10 @@
 
 body {
     margin: 0;
-    height: 100vh;
-    height: 100dvh;
     color: #eee;
     display: flex;
+    min-height: 100vh;
+    min-height: 100dvh;
     align-items: center;
     justify-content: center;
     font-family: system-ui;
@@ -32,13 +32,12 @@ body {
     user-select: text
 }
 .container {
+    margin: 12px;
     padding: 30px;
-    padding-top: 26px;
-    padding-bottom: 30px;
-    background-color: #222;
+    max-width: 400px;
     border-radius: 16px;
+    background-color: #222;
     box-shadow: 0 0 24px #000;
-    width: min(95%, 400px);
     box-sizing: border-box;
 }
 input {
