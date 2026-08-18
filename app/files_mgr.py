@@ -61,7 +61,7 @@ def handle_upload(path, ACL, root, error_file):
         if exists(path): raise FileExistsError
 
         with open(path, "wb") as f:
-            copyfileobj(request.stream, f, length=8388608)
+            copyfileobj(request.stream, f, length=131072)
 
     except PermissionError:   return "",     403
     except FileNotFoundError: return "",     404

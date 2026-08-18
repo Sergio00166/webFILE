@@ -10,7 +10,7 @@ from os import stat, sep
 from msgspec import json
 
 cache = setup_cache(1)
-cache_TTL = 60*60 # 1h
+cache_TTL = 3600 # 1h
 is_ffmpeg_available = False
 
 def check_ffmpeg_installed():
