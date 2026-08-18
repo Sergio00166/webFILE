@@ -10,7 +10,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: black;
-    font-family: system-ui;
+    font-family: sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -87,9 +87,9 @@ video::-moz-media-controls { display: none !important; }
 .time-container {
     gap: 4px;
     display: flex;
-    padding: 0 5px;
-    border-radius: 9px;
-    border: 2px solid transparent;
+    padding: 0 4px;
+    border-radius: 8px;
+    border: 3px solid transparent;
     box-shadow: none !important;
 }
 .btn-controls {
@@ -361,7 +361,7 @@ button img {
     width: 100%;
     height: auto;
     font-size: 14px;
-    padding: 6px 10px;
+    padding: 8px 10px;
     border-radius: 10px;
     white-space: nowrap;
     background: none;
