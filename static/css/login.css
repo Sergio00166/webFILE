@@ -20,16 +20,17 @@ body {
 }
 #error {
     width: 100%;
-    margin-top: 0;
-    padding: 10px;
-    padding-bottom: 12px;
-    border-radius: 12px;
+    padding: 16px;
+    margin-top: -8px;
+    color: #f21;
     background: #421;
+    border-radius: 12px;
     box-sizing: border-box;
     text-align: center;
-    color: #f21;
+    line-height: 1;
+    text-box: trim-both cap alphabetic;
     -webkit-user-select: text;
-    user-select: text
+    user-select: text;
 }
 .container {
     margin: 12px;
@@ -42,12 +43,13 @@ body {
 }
 input {
     width: 100%;
-    padding: 18px;
+    height: 56px;
+    padding: 0 18px;
     outline: none;
+    border: none;
     color: white;
     border-radius: 10px;
     font-family: inherit;
-    border: 2px solid transparent;
     background-color: #3A3C3F;
     transition: background-color 0.3s;
     box-sizing: border-box;
@@ -58,7 +60,8 @@ input:-webkit-autofill {
 }
 button {
     width: 100%;
-    padding: 18px;
+    height: 54px;
+    padding: 0 18px;
     border: none;
     color: white;
     cursor: pointer;

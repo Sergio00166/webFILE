@@ -12,8 +12,8 @@ const TOUCH_CONTROL_DELAY   = 3000;
 const EXTRA_CONTROL_DELAY   = 2000;
 const EXTRA_SKIP_DELAY      = 6000;
 const TIME_CHANGE_DELAY     =  750;
-const DOUBLE_TOUCH_DELAY    =  400;
-const ANIMATION_START_DELAY =  400;
+const DOUBLE_TOUCH_DELAY    =  250;
+const TIME_JUMP_OFFSET      =    5;
 
 const skipPatterns = [
     /\bop(\d+)?\b/i,     // OP, OP1, OP2
@@ -73,10 +73,13 @@ const chapterContainer = document.getElementById("chapter-container");
 
 const playIcons       = Array.from(document.querySelectorAll("#play-pause img"));
 const fullscreenIcons = Array.from(document.querySelectorAll("#screenToggle img"));
-const mainStateIcons  = Array.from(mainState.querySelectorAll("img"));
+const mainStateIcons  = Array.from(document.querySelectorAll("#main-state > *"));
 const loopIcons       = Array.from(loopButton.querySelectorAll("img"));
-const volumeIcons     = Array.from(volume.querySelectorAll("img"));
-const mainStateVolume = document.querySelector("#state_volume");
+const mainStateText   = document.querySelector("#state_textbox");
+
+const volume_boxes = [...document.querySelectorAll(".volume_indicator")];
+const volume_imgs  = volume_boxes.map(b => [...b.querySelectorAll("img")]);
+const volumeIcons  = volume_imgs[0].map((_, i) => volume_imgs.map(row => row[i]));
 
 // ============================================================================
 // STATE VARIABLES

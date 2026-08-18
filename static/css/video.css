@@ -54,12 +54,16 @@ video::-moz-media-controls { display: none !important; }
  *   Main structure
  * ------------------------- */
 
+.video-box, canvas {
+    position: absolute;
+}
 #video-container {
     width: 90vw;
     height: 90vh;
     height: 90dvh;
     overflow: hidden;
     display: flex;
+    position: relative;
     align-items: center;
     justify-content: center;
 }
@@ -86,11 +90,23 @@ video::-moz-media-controls { display: none !important; }
 }
 .time-container {
     gap: 4px;
+    padding: 0 6px;
+    height: 20px;
     display: flex;
-    padding: 0 5px;
+    align-items: center;
     border-radius: 9px;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     box-shadow: none !important;
+}
+.time-container > span {
+    font-size: 14px;
+    /* Dirty alignment hack */
+    padding-bottom: 0.9px;
+
+    @supports(text-box: trim-both) {
+        text-box: trim-both cap alphabetic;
+        padding: 0;
+    }
 }
 .btn-controls {
     margin-top: 4px;
@@ -134,10 +150,12 @@ button img {
     left: 36px;
     bottom: 50px;
     width: 75px;
+    font-size: 16px;
+    font-weight: 500;
     position: absolute;
     border-radius: 10px;
-    font-size: 15px;
-    font-weight: bold;
+    letter-spacing: 1px;
+    text-box: trim-both cap alphabetic;
 }
 
 /* -------------------------
@@ -145,28 +163,38 @@ button img {
  * ------------------------- */
 
 #main-state {
-    height: 70px;
-    width: 70px;
     opacity: 0;
+    width: 70px;
+    height: 70px;
     transform: scale(0);
     pointer-events: none;
     position: absolute;
     cursor: pointer;
     border-radius: 50%;
+    box-shadow: none;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
-    box-shadow: none;
 }
 #main-state.show {
     opacity: 1;
     transform: scale(1);
 }
-#main-state img {
+#main-state > * {
     width: 75%;
     height: 75%;
     pointer-events: none;
+}
+#state_textbox {
+    padding: 8px;
+    font-size: 24px;
+    position: absolute;
+    margin-top: -130px;
+    border-radius: 16px;
+    box-shadow: none !important;
+    border: 2px solid transparent;
+    text-box: trim-both cap alphabetic;
 }
 
 /* -------------------------
@@ -249,20 +277,29 @@ button img {
 #hover-info {
     z-index: 1;
     font-size: 15px;
-    line-height: 1.2;
-    font-weight: bold;
+    line-height: 16px;
+    font-weight: bolder;
     text-align: center; 
     pointer-events: none;
-    padding: 0 4px;
+    padding: 0 2px;
     margin-bottom: 10px;
     position: absolute;
     width: max-content;
-    max-width: min(150px, 40vw);
-    border: 4px solid transparent;
+    max-width: min(200px, 40vw);
+    border: 6px solid transparent;
     box-shadow: none !important;
     border-radius: 10px;
+    letter-spacing: 0.5px;
+    text-box: trim-both cap alphabetic;
 }
-#hover-info > p { margin: 4px; }
+#hover-info > p {
+    margin: 4px;
+    text-box: trim-both cap alphabetic;
+}
+@supports(text-box: trim-both) {
+    #hover-info >   p  { margin: 10px; }
+    #hover-info:has(p) { border: 2px solid transparent; }
+}
 
 /* -------------------------
  *   Time bar chapters
@@ -291,10 +328,6 @@ button img {
 #volume {
     display: flex;
     align-items: center;
-}
-.mute-unmute {
-    display: flex;
-    cursor: pointer;
 }
 #volume-bar {
     width: 48px;
@@ -334,6 +367,9 @@ button img {
  *   Settings Menu
  * ------------------------- */
 
+#settings {
+    position: relative;
+}
 #setting-menu {
     top: 42px;
     opacity: 0;
@@ -349,46 +385,56 @@ button img {
     opacity: 1;
     pointer-events: auto;
 }
-#setting-menu .back-button {
-    font-size: 13px;
-    background: #2345;
-    padding: 6px 24px 6px 9px;
-    border-radius: 12px 12px 0 0;
-}
-#setting-menu button {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: auto;
-    font-size: 14px;
-    padding: 6px 10px;
-    border-radius: 10px;
-    white-space: nowrap;
-    background: none;
-    display: flex;
-    justify-content: flex-start;
-    box-shadow: 1px solid white;
-}
 .menu-content {
     padding: 4px;
     padding-top: 2px;
     overflow: auto;
-    max-height: calc(min(40vh,  360px) - 28px);
-    max-height: calc(min(40dvh, 360px) - 28px);
+    max-height: calc(min(50vh,  360px) - 24px);
+    max-height: calc(min(50dvh, 360px) - 24px);
 }
 #main-menu {
     padding: 4px;
     overflow: auto;
-    max-height: min(40vh,  360px);
-    max-height: min(40dvh, 360px);
+    max-height: min(50vh,  360px);
+    max-height: min(50dvh, 360px);
+}
+
+/* -------------------------
+ *   Menu buttons
+ * ------------------------- */
+
+#setting-menu button {
+    margin: 0;
+    width: 100%;
+    display: block;
+    text-align: left;
+    font-size: 14px;
+    line-height: 1;
+    padding: 6px 10px;
+    border-radius: 10px;
+    white-space: nowrap;
+    background: none;
+    justify-content: flex-start;
+    box-shadow: 1px solid white
+}
+#main-menu button {
+    display: flex;
+}
+#setting-menu .back-button {
+    height: 26px;
+    font-size: 12px;
+    background: #2345;
+    padding: 0 24px 0 9px;
+    border-radius: 12px 12px 0 0;
 }
 #main-menu > button > span:last-of-type {
     flex: 1;
     color: #bfd;
-    padding-right: 1px;
+    padding: 0 2px;
     font-style: italic;
     margin-left: 24px;
     font-size: 12px;
+    line-height: normal;
     text-align: right;
     overflow: hidden;
     white-space: nowrap;
@@ -453,15 +499,6 @@ button img {
 #chapter-container, #hover-time {
     transition: none !important;
 }
-
-/* -------------------------
- *   Other
- * ------------------------- */
-
-#state_volume { font-size: 21px; }
-#video-container { position: relative; }
-.video-box, canvas { position: absolute; }
-#settings { position: relative; }
 
 /* -------------------------
  *   Responsive

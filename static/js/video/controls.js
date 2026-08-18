@@ -35,8 +35,8 @@ function togglePlayPauseState() {
 
 function playVideo() {
     video.play().catch(() => {});
-    playIcons [0].style.display = "none";
-    playIcons [1].style.display = "block";
+    playIcons[0].style.display = "none";
+    playIcons[1].style.display = "block";
     showMainStateAnimation("play");
     hideControlsWithDelay(MOUSE_CONTROL_DELAY);
 }
@@ -79,14 +79,8 @@ function cycleLoopMode() {
 function toggleMuteState() {
     volumeSlider.classList.remove("show");
     video.muted = !video.muted;
-
-    if (video.muted) {
-        updateVolumeIcon();
-        showMainStateAnimation("mute");
-    } else {
-        updateVolumeIcon();
-        showMainStateAnimation("unmute");
-    }
+    updateVolumeIcon();
+    showMainStateAnimation("volume");
     localStorage.setItem("videoMuted", video.muted);
 }
 
@@ -111,8 +105,9 @@ function hideControlsWithDelay(delay) {
 
     controlsHideTimeout = setTimeout(() => {
         if (!video.paused) {
-            controlsContainer.classList.remove("show");
+            hideAllSettingsMenus();
             settingsMenu.classList.remove("show");
+            controlsContainer.classList.remove("show");
             document.activeElement.blur();
         }
     }, delay);
@@ -258,23 +253,20 @@ function clearTimelineHover() {
 function toggleSettingsMenu() {
     settingsMenu.classList.toggle("show");
     if (settingsMenu.classList.contains("show"))
-        showMainMenu();
+        showSubmenu("main-menu");
 }
 
-function showMainMenu() {
-    mainMenu.style.display = "block";
-    subsSubmenu.style.display = "none";
+function hideAllSettingsMenus() {
+    mainMenu.style.display     = "none";
+    subsSubmenu.style.display  = "none";
     audioSubmenu.style.display = "none";
     speedSubmenu.style.display = "none";
 }
 
 function showSubmenu(submenuId) {
-    mainMenu.style.display = "none";
-    subsSubmenu.style.display = "none";
-    audioSubmenu.style.display = "none";
-    speedSubmenu.style.display = "none";
-
-    document.getElementById(submenuId).style.display = "block";
+    hideAllSettingsMenus();
+    const menu = document.getElementById(submenuId);
+    menu.style.display = "block";
 }
 
 function handleMenuSelection(element) {
@@ -306,7 +298,7 @@ function handleMenuSelection(element) {
             updateSpeedDisplay();
             localStorage.setItem("videoSpeed", video.playbackRate);
         }
-        showMainMenu();
+        showSubmenu("main-menu");
     }
 }
 

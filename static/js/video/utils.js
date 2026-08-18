@@ -128,30 +128,34 @@ videoContainer.addEventListener("fullscreenchange", () => {
 // ============================================================================
 
 const animationMap = {
-    play: 0, pause: 1, mute: 2,
-    unmute: 3, back: 4, fordward: 5
+    play: 0, pause: 1,
+    back: 2, forward: 3,
+    volume: 4, change_vol: 4
 };
 let animationTimeout;
 
-function showMainStateAnimation(animationMode) {
+function showMainStateAnimation(mode) {
     clearTimeout(animationTimeout);
-    mainStateIcons.forEach(icon => icon.style.display = "none");
-    mainStateVolume.style.display = "none";
+    mainStateIcons.forEach(i => i.style.display = "none");
+    mainStateText.style.display = "none";
+    const idx = animationMap[mode];
 
-    if (animationMode === "show_vol") {
-        mainStateVolume.innerText = Math.round(video.volume * 100) + "%";
-        mainStateVolume.style.display = "block";
-        mainState.classList.add("show");
-    } else {
-        const idx = animationMap[animationMode];
-        if (idx !== undefined) {
-            mainStateIcons[idx].style.display = "block";
-            mainState.classList.add("show");
-        } else {
-            mainState.classList.remove("show");
-            return;
-        }
+    if (idx === undefined) {
+        mainState.classList.remove("show");
+        return;
+
+    } else if (mode === "change_vol") {
+        mainStateText.innerText = Math.round(video.volume * 100) + "%";
+        mainStateText.style.display = "";
+        mode = "volume";
+
+    } else if (idx > 1 && idx < 4) {
+        const sign = (idx > 2) && "+" || "-";
+        mainStateText.innerText = `${sign}${TIME_JUMP_OFFSET}s`;
+        mainStateText.style.display = "";
     }
+    mainState.classList.add("show");
+    mainStateIcons[idx].style.display = "block";
     animationTimeout = setTimeout(showMainStateAnimation, 400);
 }
 
@@ -259,9 +263,9 @@ function updateVolumeIcon() {
 
     for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index)
-            volumeIcons[i].style.display = "block";
+            volumeIcons[i].forEach((el) => el.style.display = "block");
         else
-            volumeIcons[i].style.display = "none";
+            volumeIcons[i].forEach((el) => el.style.display = "none");
     }
 }
 

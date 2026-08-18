@@ -104,27 +104,31 @@ button {
  * ------------------------- */
 
 .sidebar-content {
-    padding: 8px 6px 12px;
+    gap: 12px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    padding: 8px 6px 16px 8px;
 }
 .sidebar-content > div {
     display: flex;
     flex-direction: column;
-    gap: 2px;
 }
-.sidebar-content > div > h3 {
+.sidebar-content h3 {
     color: #aaa;
+    height: 18px;
+    padding: 0 8px;
     margin: 0 0 4px;
-    padding: 3px 6px;
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    line-height: 1;
     text-align: center;
-    letter-spacing: 0.5px;
-    background: #3a3a3a;
-    border-radius: 4px;
+    letter-spacing: 2px;
+    border-radius: 6px;
+    background: #6664;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-box: trim-both cap alphabetic;
 }
 
 /* -------------------------
@@ -132,12 +136,13 @@ button {
  * ------------------------- */
 
 .sidebar-content button {
-    padding: 6px;
-    padding-right: 16px;
+    height: 30px;
+    font-size: 14px;
+    line-height: 1;
+    text-align: left;
     border-radius: 8px;
     white-space: nowrap;
-    text-align: left;
-    font-size: 14px;
+    padding: 0 16px 0 6px;
 }
 .sidebar-content button:disabled {
     color: #666;
@@ -163,12 +168,12 @@ button {
     overflow: auto;
     display: flex;
     flex-direction: column;
-    padding: 6px 8px 10px;
+    padding: 6px 8px 12px;
     box-sizing: border-box;
 }
 #list-group.show {
     transition: opacity 0.2s;
-    opacity: 1
+    opacity: 1;
 }
 
 /* -------------------------
@@ -177,11 +182,11 @@ button {
 
 #list-group > button {
     display: flex;
-    cursor: default;
     align-items: center;
-    padding: 6px 9px;
+    padding: 0 10px 0 9px;
+    cursor: default;
     background: #1E1E1E;
-    border-radius: 9px;
+    border-radius: 10px;
     border: 1px solid transparent;
     pointer-events: none;
 }
@@ -197,23 +202,30 @@ button {
 }
 #list-group > button > pre {
     flex: 1;
-    margin: 0 12px 0 6px;
     text-align: left;
+    padding: 6px 0;
     font-size: 16px;
+    margin: 0 12px 0 6px;
     white-space: pre-wrap;
     font-family: inherit;
     -webkit-user-select: text;
     user-select: text;
+
+    @supports(text-box: trim-both) {
+        text-box: trim-both cap alphabetic;
+        line-height: 18px;
+        padding: 10px 0;
+    }
+}
+#list-group > button > span {
+    font-size: 14px;
+    text-box: trim-both cap alphabetic;
 }
 #list-group > button > span:first-of-type {
-    font-size: 14px;
-    margin-left: 4px;
-    color: #8fd8b3;
+    margin-left: 4px;  color: #8fd8b3;
 }
 #list-group > button > span:last-of-type {
-    font-size: 14px;
-    margin-left: 10px;
-    color: #9fc5dc;
+    margin-left: 10px; color: #9fc5dc;
 }
 
 /* -------------------------
@@ -328,15 +340,15 @@ button {
 @media (hover:hover) {
     #list-group > button:hover {
         background: #262728;
-        border-color: #4C4C4C;
+        border-color: #4c4c4c;
     }
     #list-group > .selected:hover {
         border-color: white;
-        background: #2F3E4D;
+        background: #2f3e4d;
     }
     .sidebar-content
     button:not(:disabled):hover {
-        background: #333437;
+        background: #353638;
     }
 }
 

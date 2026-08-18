@@ -1,13 +1,13 @@
 # Code by Sergio00166
 
 from os.path import abspath, join, getsize, isfile
+from shutil import which as search4cmd
 from re import compile as re_compile
+from os import remove, system as cmd
 from re import sub as re_sub
 from re import S as re_S
 from glob import glob
 from sys import path
-from os import remove, system as cmd
-from shutil import which as search4cmd
 import subprocess
 
 # ---------------------------
