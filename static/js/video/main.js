@@ -12,8 +12,7 @@ const TOUCH_CONTROL_DELAY   = 3000;
 const EXTRA_CONTROL_DELAY   = 2000;
 const EXTRA_SKIP_DELAY      = 6000;
 const TIME_CHANGE_DELAY     =  750;
-const DOUBLE_TOUCH_DELAY    =  400;
-const ANIMATION_START_DELAY =  400;
+const DOUBLE_TOUCH_DELAY    =  250;
 
 const skipPatterns = [
     /\bop(\d+)?\b/i,     // OP, OP1, OP2

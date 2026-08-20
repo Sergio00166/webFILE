@@ -21,17 +21,40 @@ video.addEventListener("playing", () =>
 // EVENT LISTENERS - SHOW/HIDE CONTROLS
 // ============================================================================
 
+function showControls(delay, cursor=false) {
+    if (cursor) showCursor();
+    controlsContainer.classList.add("show");
+    hideControlsWithDelay(delay);
+}
+
+document.addEventListener("click", event => {
+    const isMenuOpen = settingsMenu.classList.contains("show");
+    document.activeElement.blur();
+
+    if (event.target === controlsContainer) {
+        if (!isMenuOpen) togglePlayPauseState(); 
+        showControls(MOUSE_CONTROL_DELAY, true);
+    }
+    if (!settingsButton.contains(event.target))
+        settingsMenu.classList.remove("show");
+});
+
 videoContainer.addEventListener("mouseleave", () => {
     clearTimeout(cursorHideTimeout);
     document.body.style.cursor = "auto";
     hideControlsWithDelay(50);
 });
 
-function showControls(delay, cursor=false) {
-    if (cursor) showCursor();
-    controlsContainer.classList.add("show");
-    hideControlsWithDelay(delay);
-}
+videoContainer.addEventListener("mousemove", () =>
+    showControls(MOUSE_CONTROL_DELAY, true)
+);
+videoContainer.addEventListener("focusin", () =>
+    showControls(MOUSE_CONTROL_DELAY)
+);
+
+// ============================================================================
+// TOUCH INTERACTIONS
+// ============================================================================
 
 videoContainer.addEventListener("touchmove", () => {
     touchInteractionActive = true;
@@ -45,19 +68,42 @@ controlsContainer.addEventListener("touchend", event => {
         showControls(TOUCH_CONTROL_DELAY);
 },{ passive: false });
 
-controlsContainer.addEventListener("click", event => {
-    if (event.target === controlsContainer)
-        togglePlayPauseState();
+function handleDoubleTouch(event) {
+    event.preventDefault();
+    clearTimeout(touchActionTimeout);
 
-    showControls(MOUSE_CONTROL_DELAY, true);
-});
+    if (touchInteractionActive) {
+        touchInteractionActive = false;
+        return;
+    }
+    const now = Date.now();
+    const touchInterval = now - lastTouchTimestamp;
+    const touchBoxRect = controlsContainer.getBoundingClientRect();
 
-videoContainer.addEventListener("mousemove", () =>
-    showControls(MOUSE_CONTROL_DELAY, true)
-);
-videoContainer.addEventListener("focusin", () =>
-    showControls(MOUSE_CONTROL_DELAY)
-);
+    const isMenuOpen = settingsMenu.classList.contains("show");
+    settingsMenu.classList.remove("show");
+
+    if (touchInterval < DOUBLE_TOUCH_DELAY) {
+        const touchX = event.changedTouches[0].clientX;
+        const centerX = touchBoxRect.left + (touchBoxRect.width / 2);
+        const isLeftSide = touchX < centerX;
+
+        if (isLeftSide) {
+            video.currentTime -= 5;
+            showMainStateAnimation("back");
+        } else {
+            video.currentTime += 5;
+            showMainStateAnimation("fordward");
+        }
+        updateProgressBar();
+        controlsContainer.classList.add("show");
+        hideControlsWithDelay(TIME_CHANGE_DELAY);
+
+    } else if (!isMenuOpen) {
+        touchActionTimeout = setTimeout(togglePlayPauseState, DOUBLE_TOUCH_DELAY);
+    }
+    lastTouchTimestamp = now;
+}
 
 // ============================================================================
 // EVENT LISTENERS - VOLUME
@@ -151,43 +197,6 @@ seekBar.addEventListener("mouseleave", () => {
     touchHoverActive = false;
     clearTimelineHover();
 });
-
-// ============================================================================
-// TOUCH INTERACTIONS
-// ============================================================================
-
-function handleDoubleTouch(event) {
-    event.preventDefault();
-    clearTimeout(touchActionTimeout);
-
-    if (touchInteractionActive) {
-        touchInteractionActive = false;
-        return;
-    }
-    const now = Date.now();
-    const touchInterval = now - lastTouchTimestamp;
-    const touchBoxRect = controlsContainer.getBoundingClientRect();
-
-    if (touchInterval < DOUBLE_TOUCH_DELAY) {
-        const touchX = event.changedTouches[0].clientX;
-        const centerX = touchBoxRect.left + (touchBoxRect.width / 2);
-        const isLeftSide = touchX < centerX;
-
-        if (isLeftSide) {
-            video.currentTime -= 5;
-            showMainStateAnimation("back");
-        } else {
-            video.currentTime += 5;
-            showMainStateAnimation("fordward");
-        }
-        updateProgressBar();
-        controlsContainer.classList.add("show");
-        hideControlsWithDelay(TIME_CHANGE_DELAY);
-    } else {
-        touchActionTimeout = setTimeout(togglePlayPauseState, ANIMATION_START_DELAY);
-    }
-    lastTouchTimestamp = now;
-}
 
 // ============================================================================
 // EVENT LISTENERS - KEYBOARD
