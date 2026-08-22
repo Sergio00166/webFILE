@@ -35,8 +35,10 @@ document.addEventListener("click", event => {
         if (!isMenuOpen) togglePlayPauseState(); 
         showControls(MOUSE_CONTROL_DELAY, true);
     }
-    if (!settingsButton.contains(event.target))
+    if (!settingsButton.contains(event.target)) {
+        hideAllSettingsMenus();
         settingsMenu.classList.remove("show");
+    }
 });
 
 videoContainer.addEventListener("mouseleave", () => {
@@ -82,6 +84,7 @@ function handleDoubleTouch(event) {
 
     const isMenuOpen = settingsMenu.classList.contains("show");
     settingsMenu.classList.remove("show");
+    hideAllSettingsMenus();
 
     if (touchInterval < DOUBLE_TOUCH_DELAY) {
         const touchX = event.changedTouches[0].clientX;
@@ -142,7 +145,7 @@ mainMenu.addEventListener("click", event => {
 });
 
 document.querySelectorAll(".back-button").forEach(button =>
-    button.addEventListener("click", showMainMenu)
+    button.addEventListener("click", () => showSubmenu("main-menu"))
 );
 
 [subsSubmenu, audioSubmenu, speedSubmenu].forEach(submenu => {
