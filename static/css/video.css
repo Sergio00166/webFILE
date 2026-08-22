@@ -10,7 +10,7 @@ body {
     align-items: center;
     justify-content: center;
     background-color: black;
-    font-family: sans-serif;
+    font-family: system-ui;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -81,15 +81,16 @@ video::-moz-media-controls { display: none !important; }
     width: 100%;
     display: flex;
     font-size: 14px;
+    line-height: 18px;
     position: absolute;
     justify-content: center;
 }
 .time-container {
     gap: 4px;
     display: flex;
-    padding: 0 4px;
-    border-radius: 8px;
-    border: 3px solid transparent;
+    padding: 0 5px;
+    border-radius: 9px;
+    border: 2px solid transparent;
     box-shadow: none !important;
 }
 .btn-controls {
@@ -137,6 +138,7 @@ button img {
     position: absolute;
     border-radius: 10px;
     font-size: 15px;
+    line-height: 16px;
     font-weight: bold;
 }
 
@@ -249,7 +251,7 @@ button img {
 #hover-info {
     z-index: 1;
     font-size: 15px;
-    line-height: 1.2;
+    line-height: 18px;
     font-weight: bold;
     text-align: center; 
     pointer-events: none;
@@ -351,6 +353,7 @@ button img {
 }
 #setting-menu .back-button {
     font-size: 13px;
+    line-height: 16px;
     background: #2345;
     padding: 6px 24px 6px 9px;
     border-radius: 12px 12px 0 0;
@@ -361,7 +364,8 @@ button img {
     width: 100%;
     height: auto;
     font-size: 14px;
-    padding: 8px 10px;
+    line-height: 18px;
+    padding: 6px 10px;
     border-radius: 10px;
     white-space: nowrap;
     background: none;
@@ -389,6 +393,7 @@ button img {
     font-style: italic;
     margin-left: 24px;
     font-size: 12px;
+    line-height: 16px;
     text-align: right;
     overflow: hidden;
     white-space: nowrap;
@@ -458,7 +463,10 @@ button img {
  *   Other
  * ------------------------- */
 
-#state_volume { font-size: 21px; }
+#state_volume { 
+    font-size: 21px;
+    line-height: 24px;
+}
 #video-container { position: relative; }
 .video-box, canvas { position: absolute; }
 #settings { position: relative; }

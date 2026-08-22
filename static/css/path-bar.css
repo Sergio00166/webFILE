@@ -37,6 +37,7 @@
 #path-text {
     margin: 0 8px;
     font-size: 14px;
+    line-height: 15px;
     font-weight: 600;
     font-family: monospace;
     text-align: left;

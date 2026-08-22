@@ -120,6 +120,7 @@ button {
     margin: 0 0 4px;
     padding: 3px 6px;
     font-size: 11px;
+    line-height: 14px;
     font-weight: 600;
     text-align: center;
     letter-spacing: 0.5px;
@@ -138,6 +139,7 @@ button {
     white-space: nowrap;
     text-align: left;
     font-size: 14px;
+    line-height: 18px;
 }
 .sidebar-content button:disabled {
     color: #666;
@@ -179,9 +181,9 @@ button {
     display: flex;
     cursor: default;
     align-items: center;
-    padding: 6px 9px;
+    padding: 6px 10px 6px 9px;
     background: #1E1E1E;
-    border-radius: 9px;
+    border-radius: 10px;
     border: 1px solid transparent;
     pointer-events: none;
 }
@@ -200,6 +202,7 @@ button {
     margin: 0 12px 0 6px;
     text-align: left;
     font-size: 16px;
+    line-height: 20px;
     white-space: pre-wrap;
     font-family: inherit;
     -webkit-user-select: text;
@@ -207,11 +210,13 @@ button {
 }
 #list-group > button > span:first-of-type {
     font-size: 14px;
+    line-height: 18px;
     margin-left: 4px;
     color: #8fd8b3;
 }
 #list-group > button > span:last-of-type {
     font-size: 14px;
+    line-height: 18px;
     margin-left: 10px;
     color: #9fc5dc;
 }

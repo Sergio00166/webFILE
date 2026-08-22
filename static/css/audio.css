@@ -97,8 +97,8 @@ button {
 #current-time,
 #total-time {
     font-size: 12px;
+    line-height: 14px;
     font-family: monospace;
-    line-height: 1;
 }
 #total-time {
     margin-left: 12px;
@@ -150,6 +150,7 @@ button {
 #hover-info {
     position: absolute;
     font-size: 11px;
+    line-height: 14px;
     visibility: hidden;
     font-weight: bold;
     pointer-events: none;
@@ -200,6 +201,7 @@ button {
 }
 #speed-btn {
     font-size: 18px;
+    line-height: 20px;
     color: #0a84ff;
     transition: color 0.2s;
 }
