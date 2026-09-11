@@ -12,8 +12,8 @@ loginForm.addEventListener("submit", async (event) => {
     else {
         const errorEl = document.getElementById("error");
         errorEl.textContent = "Invalid User or Password";
-        errorEl.style.display = "block";
         document.getElementById("password").value = "";
+        errorEl.style.display = null;
     }
 });
 

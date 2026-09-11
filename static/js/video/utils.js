@@ -112,9 +112,9 @@ function toggleFullscreenMode() {
 videoContainer.addEventListener("fullscreenchange", () => {
     if (document.fullscreenElement) {
         fullscreenIcons[0].style.display = "none";
-        fullscreenIcons[1].style.display = "block";
+        fullscreenIcons[1].style.display = null;
     } else {
-        fullscreenIcons[0].style.display = "block";
+        fullscreenIcons[0].style.display = null;
         fullscreenIcons[1].style.display = "none";
     }
     if (video.videoWidth >= video.videoHeight)
@@ -132,7 +132,7 @@ const animationMap = {
     back: 2, forward: 3,
     volume: 4, change_vol: 4
 };
-let animationTimeout;
+let animationTimeout, timeJumpTotal;
 
 function showMainStateAnimation(mode) {
     clearTimeout(animationTimeout);
@@ -142,6 +142,7 @@ function showMainStateAnimation(mode) {
 
     if (idx === undefined) {
         mainState.classList.remove("show");
+        timeJumpTotal = 0;
         return;
 
     } else if (mode === "change_vol") {
@@ -150,12 +151,16 @@ function showMainStateAnimation(mode) {
         mode = "volume";
 
     } else if (idx > 1 && idx < 4) {
-        const sign = (idx > 2) && "+" || "-";
-        mainStateText.innerText = `${sign}${TIME_JUMP_OFFSET}s`;
+        const isInvalid = (!video.currentTime || video.currentTime === video.duration);
+        const offset = idx > 2 && TIME_JUMP_OFFSET || -TIME_JUMP_OFFSET;
+        timeJumpTotal = !isInvalid && timeJumpTotal + offset || 0;
+
+        const sign = (timeJumpTotal > 0 && "+" || "");
+        mainStateText.innerText = `${sign}${timeJumpTotal}s`;
         mainStateText.style.display = "";
     }
     mainState.classList.add("show");
-    mainStateIcons[idx].style.display = "block";
+    mainStateIcons[idx].style.display = null;
     animationTimeout = setTimeout(showMainStateAnimation, 400);
 }
 
@@ -235,15 +240,15 @@ function updateAudioDisplay() {
 function updateLoopButton() {
     if (loopMode === 0) {
         loopIcons[0].style.opacity = 0.4;
-        loopIcons[0].style.display = "block";
+        loopIcons[0].style.display = null;
         loopIcons[1].style.display = "none";
     } else if (loopMode === 1) {
         loopIcons[0].style.opacity = 1;
-        loopIcons[0].style.display = "block";
+        loopIcons[0].style.display = null;
         loopIcons[1].style.display = "none";
     } else {
         loopIcons[0].style.display = "none";
-        loopIcons[1].style.display = "block";
+        loopIcons[1].style.display = null;
     }
     localStorage.setItem("videoLoop", loopMode);
 }
@@ -263,7 +268,7 @@ function updateVolumeIcon() {
 
     for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index)
-            volumeIcons[i].forEach((el) => el.style.display = "block");
+            volumeIcons[i].forEach((el) => el.style.display = null);
         else
             volumeIcons[i].forEach((el) => el.style.display = "none");
     }

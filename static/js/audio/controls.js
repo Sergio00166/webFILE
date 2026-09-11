@@ -7,16 +7,16 @@
 function updateLoopButton() {
     if (loopMode === 0) {
         loopButton.style.opacity = 0.4;
-        loopIcons[0].style.display = "block";
+        loopIcons[0].style.display = null;
         loopIcons[1].style.display = "none";
     } else if (loopMode === 1) {
         loopButton.style.opacity = 1;
-        loopIcons[0].style.display = "block";
+        loopIcons[0].style.display = null;
         loopIcons[1].style.display = "none";
     } else {
         loopButton.style.opacity = 1;
         loopIcons[0].style.display = "none";
-        loopIcons[1].style.display = "block";
+        loopIcons[1].style.display = null;
     }
     localStorage.setItem("audioLoop", loopMode);
 }
@@ -70,7 +70,7 @@ function updateVolumeIcon() {
 
     for (let i = 0; i < volumeIcons.length; i++) {
         if (i === index)
-            volumeIcons[i].style.display = "block";
+            volumeIcons[i].style.display = null;
         else
             volumeIcons[i].style.display = "none";
     }
@@ -108,13 +108,13 @@ function handleVolumeKeyboardChange() {
 function pauseAudio() {
     audio.pause();
     playIcons[1].style.display = "none";
-    playIcons[0].style.display = "block";
+    playIcons[0].style.display = null;
 }
 
 function playAudio() {
     audio.play().catch(() => {});
     playIcons[0].style.display = "none";
-    playIcons[1].style.display = "block";
+    playIcons[1].style.display = null;
 }
 
 function togglePlayPauseState() {
@@ -134,7 +134,7 @@ function handleAudioEnded() {
             break;
         default:
             playIcons[1].style.display = "none";
-            playIcons[0].style.display = "block";
+            playIcons[0].style.display = null;
             break;
 
     }
@@ -227,7 +227,7 @@ function showTimelineHover(clientX) {
     hoverTime.style.width = `${percentage * 100}%`;
 
     hoverInfo.textContent = formatDuration(percentage * audio.duration);
-    hoverInfo.style.display = "block";
+    hoverInfo.style.display = null;
     hoverInfo.style.bottom = `${height}px`;
 
     const barRect = seekBar.getBoundingClientRect();

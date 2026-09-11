@@ -48,7 +48,7 @@
     user-select: text;
 }
 
- @media (hover:hover) {
+@media (hover:hover) {
     #path-bar button:hover {
         background: #444;
     }

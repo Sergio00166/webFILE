@@ -8,7 +8,7 @@ body {
     display: flex;
     flex-direction: column;
     font-family: system-ui;
-    background-color: #111;
+    background-color: #011;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -120,14 +120,12 @@ button {
     padding: 0 8px;
     margin: 0 0 4px;
     font-size: 10px;
-    line-height: 1;
+    display: block;
     text-align: center;
+    align-content: center;
     letter-spacing: 2px;
     border-radius: 6px;
     background: #6664;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-box: trim-both cap alphabetic;
 }
 
@@ -138,11 +136,11 @@ button {
 .sidebar-content button {
     height: 30px;
     font-size: 14px;
-    line-height: 1;
     text-align: left;
     border-radius: 8px;
     white-space: nowrap;
     padding: 0 16px 0 6px;
+    text-box: trim-both cap alphabetic;
 }
 .sidebar-content button:disabled {
     color: #666;
@@ -161,14 +159,14 @@ button {
     position: relative;
 }
 #list-group {
-    gap: 6px;
+    gap: 4px;
     opacity: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
     display: flex;
     flex-direction: column;
-    padding: 6px 8px 12px;
+    padding: 5px 8px 10px;
     box-sizing: border-box;
 }
 #list-group.show {
@@ -183,39 +181,29 @@ button {
 #list-group > button {
     display: flex;
     align-items: center;
-    padding: 0 10px 0 9px;
-    cursor: default;
     background: #1E1E1E;
-    border-radius: 10px;
+    border-radius: 8px;
     border: 1px solid transparent;
+    padding: 6px 10px 6px 9px;
     pointer-events: none;
-}
-#list-group.show > button {
-    pointer-events: auto;
-}
-#list-group > button:focus-visible {
-    outline: 1px solid white;
-}
-#list-group > button.selected {
-    background: #2A313B;
-    border-color: #68A;
+	cursor: default;
+
+    @supports(text-box: trim-both) {
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
 }
 #list-group > button > pre {
     flex: 1;
-    text-align: left;
-    padding: 6px 0;
     font-size: 16px;
+	line-height: 18px;
+	text-align: left;
     margin: 0 12px 0 6px;
     white-space: pre-wrap;
     font-family: inherit;
-    -webkit-user-select: text;
+	text-box: trim-both cap alphabetic;
+	-webkit-user-select: text;
     user-select: text;
-
-    @supports(text-box: trim-both) {
-        text-box: trim-both cap alphabetic;
-        line-height: 18px;
-        padding: 10px 0;
-    }
 }
 #list-group > button > span {
     font-size: 14px;
@@ -226,6 +214,16 @@ button {
 }
 #list-group > button > span:last-of-type {
     margin-left: 10px; color: #9fc5dc;
+}
+#list-group.show > button {
+    pointer-events: auto;
+}
+#list-group > button:focus-visible {
+    outline: 1px solid white;
+}
+#list-group > button.selected {
+    background: #2A313B;
+    border-color: #68A;
 }
 
 /* -------------------------
