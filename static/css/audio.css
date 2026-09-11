@@ -202,9 +202,11 @@ button {
     height: 24px;
 }
 #speed-btn {
+    display: block;
     font-size: 18px;
     color: #0a84ff;
     transition: color 0.2s;
+    text-box:trim-both cap alphabetic;
 }
 .nav-btn {
     width: 32px;

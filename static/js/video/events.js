@@ -11,7 +11,7 @@ video.addEventListener("play", playVideo);
 video.addEventListener("pause", pauseVideo);
 
 video.addEventListener("waiting", () =>
-    loadingSpinner.style.display = "block"
+    loadingSpinner.style.display = null
 );
 video.addEventListener("playing", () =>
     loadingSpinner.style.display = "none"

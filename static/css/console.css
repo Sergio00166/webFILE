@@ -24,15 +24,15 @@
  *  ------------------------- */
 
 body {
-    background: #111;
+	margin: 0;
+    padding: 0;
     color: #eee;
     height: 100vh;
     height: 100dvh;
     display: flex;
     flex-direction: column;
     font-family: monospace;
-    margin: 0;
-    padding: 0;
+	background: #111;
 }
 #terminal {
     flex: 1;
@@ -45,15 +45,15 @@ body {
     background: #001;
 }
 #input-line {
-    display: flex;
+	margin: 8px;
     padding: 10px;
-    margin: 8px;
+    display: flex;
+	margin-top: 0;
     margin-bottom: 12px;
-    margin-top: 0;
     border-radius: 16px;
     box-sizing: border-box;
-    background: #000;
-    border-top: 1px solid #333;
+	border: 1px solid #480;
+    background: black;
 }
 #cmd {
     flex: 1;

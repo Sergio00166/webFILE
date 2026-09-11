@@ -64,6 +64,7 @@ def static(path):
         path = safe_path(path, sroot)
         if not isfile(path): raise PermissionError
 
+        # Check if we have brotli precompressed assets
         encoding = request.headers.get("Accept-Encoding", "").lower()
         if "br" in encoding and isfile(path + ".br"): path = path + ".br"
 

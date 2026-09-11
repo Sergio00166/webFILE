@@ -1,7 +1,7 @@
 /* Code by Sergio00166 */
 
-#username { margin-bottom: 13px; }
-#password { margin-bottom: 18px; }
+#username { margin-bottom: 10px; }
+#password { margin-bottom: 16px; }
 @view-transition { navigation: auto; }
 
 body {
@@ -19,18 +19,20 @@ body {
     user-select: none;
 }
 #error {
+	color: #f21;
     width: 100%;
-    padding: 16px;
+    height: 48px;
+    padding: 0 16px;
     margin-top: -8px;
-    color: #f21;
     background: #421;
-    border-radius: 12px;
+    display: block;
+    align-content: center;
+	text-align: center;
+	border-radius: 16px;
     box-sizing: border-box;
-    text-align: center;
-    line-height: 1;
     text-box: trim-both cap alphabetic;
     -webkit-user-select: text;
-    user-select: text;
+    user-select: text
 }
 .container {
     margin: 12px;
@@ -48,7 +50,7 @@ input {
     outline: none;
     border: none;
     color: white;
-    border-radius: 10px;
+    border-radius: 12px;
     font-family: inherit;
     background-color: #3A3C3F;
     transition: background-color 0.3s;
@@ -66,16 +68,17 @@ button {
     color: white;
     cursor: pointer;
     font-weight: 600;
-    border-radius: 10px;
+    border-radius: 12px;
     font-family: inherit;
     transition: background 0.3s;
+    text-box:trim-both cap alphabetic;
 }
 .button-upload {
     background: #34a;
 }
 .button-danger {
     background: #c32;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 /* -------------------------

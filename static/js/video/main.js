@@ -77,9 +77,11 @@ const mainStateIcons  = Array.from(document.querySelectorAll("#main-state > *"))
 const loopIcons       = Array.from(loopButton.querySelectorAll("img"));
 const mainStateText   = document.querySelector("#state_textbox");
 
-const volume_boxes = [...document.querySelectorAll(".volume_indicator")];
-const volume_imgs  = volume_boxes.map(b => [...b.querySelectorAll("img")]);
-const volumeIcons  = volume_imgs[0].map((_, i) => volume_imgs.map(row => row[i]));
+const volumeIcons = (() => {
+    const volume_boxes = [...document.querySelectorAll(".volume_indicator")];
+    const volume_imgs  = volume_boxes.map(b => [...b.querySelectorAll("img")]);
+    return volume_imgs[0].map((_, i) => volume_imgs.map(row => row[i]));
+})();
 
 // ============================================================================
 // STATE VARIABLES
