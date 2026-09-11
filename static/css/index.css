@@ -120,14 +120,12 @@ button {
     padding: 0 8px;
     margin: 0 0 4px;
     font-size: 10px;
-    line-height: 1;
+    display: block;
     text-align: center;
+    align-content: center;
     letter-spacing: 2px;
     border-radius: 6px;
     background: #6664;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     text-box: trim-both cap alphabetic;
 }
 
@@ -138,11 +136,11 @@ button {
 .sidebar-content button {
     height: 30px;
     font-size: 14px;
-    line-height: 1;
     text-align: left;
     border-radius: 8px;
     white-space: nowrap;
     padding: 0 16px 0 6px;
+    text-box: trim-both cap alphabetic;
 }
 .sidebar-content button:disabled {
     color: #666;
@@ -203,7 +201,7 @@ button {
 #list-group > button > pre {
     flex: 1;
     text-align: left;
-    padding: 6px 0;
+    padding: 5px 0;
     font-size: 16px;
     margin: 0 12px 0 6px;
     white-space: pre-wrap;

@@ -36,7 +36,7 @@ function togglePlayPauseState() {
 function playVideo() {
     video.play().catch(() => {});
     playIcons[0].style.display = "none";
-    playIcons[1].style.display = "block";
+    playIcons[1].style.display = null;
     showMainStateAnimation("play");
     hideControlsWithDelay(MOUSE_CONTROL_DELAY);
 }
@@ -45,7 +45,7 @@ function pauseVideo() {
     video.pause();
     controlsContainer.classList.add("show");
     showMainStateAnimation("pause");
-    playIcons[0].style.display = "block";
+    playIcons[0].style.display = null;
     playIcons[1].style.display = "none";
 }
 
@@ -140,7 +140,7 @@ function updateProgressBar() {
             skipBtn.style.display = "none";
 
         } else if (skipBtn.style.display == "none") {
-            skipBtn.style.display = "block";
+            skipBtn.style.display = null;
             controlsContainer.classList.add("show");
             hideControlsWithDelay(EXTRA_SKIP_DELAY);
         }
@@ -222,23 +222,21 @@ function showTimelineHover(clientX) {
     else
         hoverInfo.innerHTML = timeString;
 
-    hoverInfo.style.display = "block";
-    hoverInfo.style.bottom = `${height}px`;
-
     const barRect = seekBar.getBoundingClientRect();
     const tooltipWidth = hoverInfo.offsetWidth;
+    const tooltipHeight = hoverInfo.offsetHeight;
+
     let leftPosition = position - tooltipWidth / 2;
+    const topPosition = tooltipHeight + height + 4;
 
     if (leftPosition < 0) leftPosition = 0;
     if (leftPosition + tooltipWidth > barRect.width)
         leftPosition = barRect.width - tooltipWidth;
 
+    hoverInfo.style.display = null;
     hoverInfo.style.left = `${leftPosition}px`;
-
-    if (tooltipWidth)
-        hoverInfo.style.visibility = "visible";
-    else
-        hoverInfo.style.visibility = "hidden";
+    hoverInfo.style.top = `-${topPosition}px`;
+    hoverInfo.style.visibility = tooltipWidth && "visible" || "hidden";
 }
 
 function clearTimelineHover() {
@@ -266,7 +264,7 @@ function hideAllSettingsMenus() {
 function showSubmenu(submenuId) {
     hideAllSettingsMenus();
     const menu = document.getElementById(submenuId);
-    menu.style.display = "block";
+    menu.style.display = null;
 }
 
 function handleMenuSelection(element) {

@@ -13,7 +13,7 @@
     <img class="background" src="?get=file">
     <img id="main-img" src="?get=file">
     <div id="controls">
-      <span id="file-name" class="glass">{{ name }}</span>
+      <div id="file-name" class="glass">{{ name }}</div>
       <div class="navigation">
         <button onclick="navigateToPrevious()" class="glass" title="Prev (P)">
           <img src="/srv/static/svg/video/play-skip-back-outline.svg">
@@ -26,7 +26,7 @@
         <button onClick="download()" class="glass" title="Download">
           <img src="/srv/static/svg/photo/download-outline.svg">
         </button>
-        <span class="zoomBox glass">
+        <div class="zoomBox glass">
           <button onclick="zoomOut()" title="Zoom out">
             <img src="/srv/static/svg/photo/minus-solid.svg">
           </button>
@@ -34,7 +34,7 @@
           <button onclick="zoomIn()" title="Zoom in">
             <img src="/srv/static/svg/photo/plus-solid.svg">
           </button>
-        </span>
+        </div>
         <button onClick="rotateImg()" class="glass" title="Rotate (R)">
           <img src="/srv/static/svg/photo/rotate.svg">
         </button>

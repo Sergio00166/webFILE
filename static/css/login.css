@@ -20,17 +20,19 @@ body {
 }
 #error {
     width: 100%;
-    padding: 16px;
+    height: 48px;
+    padding: 0 16px;
     margin-top: -8px;
     color: #f21;
     background: #421;
     border-radius: 12px;
-    box-sizing: border-box;
     text-align: center;
-    line-height: 1;
+    display: block;
+    align-content: center;
+    box-sizing: border-box;
     text-box: trim-both cap alphabetic;
     -webkit-user-select: text;
-    user-select: text;
+    user-select: text
 }
 .container {
     margin: 12px;
@@ -69,6 +71,7 @@ button {
     border-radius: 10px;
     font-family: inherit;
     transition: background 0.3s;
+    text-box:trim-both cap alphabetic;
 }
 .button-upload {
     background: #34a;
