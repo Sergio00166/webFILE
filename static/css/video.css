@@ -100,6 +100,7 @@ video::-moz-media-controls { display: none !important; }
 }
 .time-container > span {
     font-size: 14px;
+    letter-spacing: 0.5px;
     /* Dirty alignment hack */
     padding-bottom: 0.9px;
 
@@ -147,9 +148,10 @@ button img {
 }
 #skipBtn {
     right: 0;
-    left: 36px;
-    bottom: 50px;
+    left: 24px;
+    bottom: 60px;
     width: 75px;
+    display: block;
     font-size: 16px;
     font-weight: 500;
     position: absolute;
@@ -187,13 +189,17 @@ button img {
     pointer-events: none;
 }
 #state_textbox {
-    padding: 8px;
+    width: auto;
+    height: 36px;
+    padding: 0 8px;
     font-size: 24px;
+    display: block;
+    align-content: center;
     position: absolute;
-    margin-top: -130px;
+    margin-top: -136px;
     border-radius: 16px;
     box-shadow: none !important;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     text-box: trim-both cap alphabetic;
 }
 
@@ -276,29 +282,31 @@ button img {
 }
 #hover-info {
     z-index: 1;
-    font-size: 15px;
-    line-height: 16px;
-    font-weight: bolder;
+    padding: 0 5px;
+    font-size: 16px;
+    line-height: 18px;
+    font-weight: bold;
     text-align: center; 
     pointer-events: none;
-    padding: 0 2px;
-    margin-bottom: 10px;
     position: absolute;
     width: max-content;
+    border-radius: 12px;
     max-width: min(200px, 40vw);
-    border: 6px solid transparent;
     box-shadow: none !important;
-    border-radius: 10px;
-    letter-spacing: 0.5px;
+    border: 6px solid transparent;
     text-box: trim-both cap alphabetic;
 }
 #hover-info > p {
-    margin: 4px;
+    margin: 3px;
     text-box: trim-both cap alphabetic;
 }
 @supports(text-box: trim-both) {
-    #hover-info >   p  { margin: 10px; }
     #hover-info:has(p) { border: 2px solid transparent; }
+    #hover-info >   p  { margin: 10px; }
+    #hover-info {
+        padding: 0 2px;
+        border: 9px solid transparent;
+    }
 }
 
 /* -------------------------
@@ -409,13 +417,16 @@ button img {
     display: block;
     text-align: left;
     font-size: 14px;
-    line-height: 1;
-    padding: 6px 10px;
+    padding: 0 10px;
     border-radius: 10px;
     white-space: nowrap;
     background: none;
     justify-content: flex-start;
-    box-shadow: 1px solid white
+    box-shadow: 1px solid white;
+    text-box: trim-both cap alphabetic;
+}
+#main-menu button > span {
+    text-box: trim-both cap alphabetic;
 }
 #main-menu button {
     display: flex;
@@ -430,11 +441,10 @@ button img {
 #main-menu > button > span:last-of-type {
     flex: 1;
     color: #bfd;
-    padding: 0 2px;
+    padding: 4px 2px;
     font-style: italic;
     margin-left: 24px;
     font-size: 12px;
-    line-height: normal;
     text-align: right;
     overflow: hidden;
     white-space: nowrap;

@@ -94,20 +94,14 @@ button img {
 
 #file-name {
     height: 20px;
-    font-size: 14px;
     padding: 0 6px;
-    display: flex;
-    align-items: center;
+    font-size: 14px;
+    display: block;
+    align-content: center;
     border-radius: 12px;
     border: 2px solid transparent;
     box-shadow: none !important;
-    /* Dirty alignment hack */
-    padding-bottom: 0.9px;
-
-    @supports(text-box: trim-both) {
-        text-box: trim-both cap alphabetic;
-        padding-bottom: 0;
-    }
+    text-box: trim-both cap alphabetic;
 }
 .zoomBox {
     margin-left: 16px;
