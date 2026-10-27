@@ -123,9 +123,11 @@ button img {
     box-shadow: 0 0 2px #FFFA;
 }
 @supports (backdrop-filter: blur(4px)) {
-    .glass{
-        backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(4px);
-        background: transparent;
+    .glass {
+        background: none;
+        backdrop-filter: 
+            saturate(200%) invert(10%) 
+            brightness(75%) blur(4px);
     }
 }
 

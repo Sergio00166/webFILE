@@ -4,11 +4,11 @@ body {
     margin: 0;
     height: 100vh;
     height: 100dvh;
+    background: #011;
     color: #eee;
     display: flex;
     flex-direction: column;
     font-family: system-ui;
-    background-color: #011;
     -webkit-tap-highlight-color: transparent;
     -webkit-user-select: none;
     user-select: none;
@@ -69,9 +69,9 @@ button {
 #sidebar {
     z-index: 1;
     display: flex;
-    width: fit-content;
     flex-direction: column;
     background: #242526;
+    width: fit-content;
     border-right: 1px solid #444;
     box-shadow: 2px 0 4px #0008;
     transition: transform 0.3s;
@@ -105,10 +105,11 @@ button {
 
 .sidebar-content {
     gap: 12px;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
     padding: 8px 6px 16px 8px;
+    background: inherit;
+    overflow-y: auto;
 }
 .sidebar-content > div {
     display: flex;
@@ -157,6 +158,7 @@ button {
     min-height: 0;
     display: flex;
     position: relative;
+    background: #011;
 }
 #list-group {
     gap: 4px;
@@ -168,6 +170,7 @@ button {
     flex-direction: column;
     padding: 5px 8px 10px;
     box-sizing: border-box;
+    background: inherit;
 }
 #list-group.show {
     transition: opacity 0.2s;
@@ -186,7 +189,7 @@ button {
     border: 1px solid transparent;
     padding: 6px 9px 6px 8px;
     pointer-events: none;
-	cursor: default;
+    cursor: default;
 
     @supports(text-box: trim-both) {
         padding-top: 7px;
@@ -196,13 +199,13 @@ button {
 #list-group > button > pre {
     flex: 1;
     font-size: 16px;
-	line-height: 18px;
-	text-align: left;
+    line-height: 18px;
+    text-align: left;
     margin: 0 12px 0 6px;
     white-space: pre-wrap;
     font-family: inherit;
-	text-box: trim-both cap alphabetic;
-	-webkit-user-select: text;
+    text-box: trim-both cap alphabetic;
+    -webkit-user-select: text;
     user-select: text;
 }
 #list-group > button > span {
@@ -302,8 +305,10 @@ button {
     }
     @supports (backdrop-filter: blur(4px)) {
         #sidebar {
-            backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(8px);
-            background: transparent;
+            background: none;
+            backdrop-filter: 
+                saturate(200%) invert(10%)
+                brightness(75%) blur(8px);
         }
     }
     .sidebar-toggle {

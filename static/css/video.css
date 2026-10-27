@@ -481,9 +481,11 @@ button img {
 }
 @supports (backdrop-filter: blur(4px)) {
     body[data-fx="yes"] #seek-bar::before,
-    body[data-fx="yes"] .glass{
-        backdrop-filter: saturate(200%) invert(10%) brightness(75%) blur(4px);
-        background: transparent;
+    body[data-fx="yes"] .glass {
+        background: none;
+        backdrop-filter: 
+            saturate(200%) invert(10%)
+            brightness(75%) blur(4px);
     }
 }
 
