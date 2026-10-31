@@ -78,16 +78,17 @@ pip install -r requirements.txt
 ### Configuration
 Configure via environment variables:
 
-| Variable      | Required | Default         | Description                |
-|---------------|----------|-----------------|----------------------------|
-| SERVE_PATH    | Yes      | —               | Directory to serve.        |
-| ERRLOG_FILE   | No       | data/error.log  | Server error log.          |
-| ACL_FILE      | No       | data/acl.json   | ACL rules file.            |
-| USERS_FILE    | No       | data/users.json | User accounts file.        |
-| SHOW_DIRSIZE  | No       | False           | Display directory sizes.   |
-| REDIS_PORT    | No       | 6379            | Redis port.                |
-| REDIS_ADDR    | No       | 127.0.0.1       | Redis host address.        |
-| SECRET_KEY    | No       | Auto-generated  | Secret key                 |
+| Variable        | Required | Default         | Description                |
+|-----------------|----------|-----------------|----------------------------|
+| SERVE_PATH      | Yes      | -               | Directory to serve.        |
+| ERRLOG_FILE     | No       | data/error.log  | Server error log.          |
+| ACL_FILE        | No       | data/acl.json   | ACL rules file.            |
+| USERS_FILE      | No       | data/users.json | User accounts file.        |
+| SHOW_DIRSIZE    | No       | False           | Display directory sizes.   |
+| REDIS_PORT      | No       | 6379            | Redis port.                |
+| REDIS_ADDR      | No       | 127.0.0.1       | Redis host address.        |
+| REDIS_UNIX_SOCK | No       | -               | Redis Unix Sock path       |
+| SECRET_KEY      | No       | Auto-generated  | Secret key                 |
 
 ### Running the Server
 **Development** (Flask builtin, `127.0.0.1:8000`):

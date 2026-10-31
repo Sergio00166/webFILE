@@ -1,22 +1,24 @@
 # Code by Sergio00166
 
-from redis import Redis, ConnectionPool
+from redis import Redis, ConnectionPool, UnixDomainSocketConnection
 from msgspec import msgpack, json
 from inspect import signature
 from functools import wraps
 from hashlib import sha256
 from os import getenv
 
-redis_port  = getenv("REDIS_PORT" ,6379)
-redis_addr  = getenv("REDIS_ADDR" ,"127.0.0.1")
+# Same thing as in init.py
+redis_port       = getenv("REDIS_PORT", 6379)
+redis_addr       = getenv("REDIS_ADDR", "127.0.0.1")
+redis_unix_sock  = getenv("REDIS_UNIX_SOCK")
 
 pack_dec = msgpack.Decoder()
 pack_enc = msgpack.Encoder()
 
 def setup_cache(db):
-    pool = ConnectionPool(host=redis_addr, port=redis_port, db=db)
-    redis_client = Redis(connection_pool=pool)
-    return SelectiveRedisCache(redis_client)
+    if not redis_unix_sock: pool = ConnectionPool(host=redis_addr, port=redis_port, db=db)
+    else: pool = ConnectionPool(connection_class=UnixDomainSocketConnection, path=redis_unix_sock, db=db)
+    return SelectiveRedisCache(Redis(connection_pool=pool))
 
 
 class SelectiveRedisCache:

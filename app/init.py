@@ -8,8 +8,8 @@ from sys import path as pypath
 from time import time
 
 from flask_session import Session
-from redis import ConnectionPool, Redis
 from flask import Flask, request, session
+from redis import ConnectionPool, Redis, UnixDomainSocketConnection
 
 from functions import load_userACL, printerr, safe_path, validate_acl
 from send_file import send_file
@@ -27,8 +27,9 @@ acl_file    = getenv("ACL_FILE",     None)
 folder_size = getenv("SHOW_DIRSIZE","FALSE").upper() == "TRUE"
 
 # Redis configuration, also defined in cache.py
-redis_port  = getenv("REDIS_PORT",   6379)
-redis_addr  = getenv("REDIS_ADDR",  "127.0.0.1")
+redis_port       = getenv("REDIS_PORT",  6379)
+redis_addr       = getenv("REDIS_ADDR", "127.0.0.1")
+redis_unix_sock  = getenv("REDIS_UNIX_SOCK")
 
 if root: root = abspath(root)
 else:
@@ -56,7 +57,10 @@ except Exception as e:
 # Initialize main flask app
 app = Flask("webFILE", static_folder=None, template_folder=join(parent_path, "templates"))
 app.secret_key = getenv("SECRET_KEY", urandom(24).hex())
-pool = ConnectionPool(host=redis_addr, port=redis_port, db=0)
+
+if not redis_unix_sock: pool = ConnectionPool(host=redis_addr, port=redis_port, db=0)
+else: pool = ConnectionPool(connection_class=UnixDomainSocketConnection, path=redis_unix_sock, db=0)
+
 redis_client = Redis(connection_pool=pool)
 
 # Invalidate default
