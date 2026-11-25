@@ -45,7 +45,7 @@ class SelectiveRedisCache:
                     "args": all_args,
                 }
                 redis = self.redis
-                digest = sha256(json_enc(key_data)).hexdigest()
+                digest = sha256(json_enc.encode(key_data)).hexdigest()
                 cache_key, inv_key = f"cache:{digest}", f"inv:{digest}"
 
                 if (inv_raw := redis.get(inv_key)):

@@ -101,6 +101,37 @@ def validate_acl(path, ACL, write=False, retBool=False):
     if retBool: return False
     raise PermissionError
 
+def validate_acl(path, ACL, write=False, retBool=False):
+    askd_perm = 2 if write else 1
+    user = session.get("user", "DEFAULT")
+    prop = False
+
+    path = normpath(path)
+    if path == ".": path = ""
+    path = path.replace(sep, "/")
+
+    if path.startswith("//"):    path = path[2:]
+    if not path.startswith("/"): path = f"/{path}"
+
+    while True:
+        # Check if there is a rule for it
+        if path in ACL and user in ACL[path]:
+            values = ACL[path][user]
+            if not values["inherit"] and prop: break
+
+            perm = values["access"]
+            if perm < askd_perm: break
+            else: return True if retBool else None
+
+        # Check if on top and break loop
+        if path == "/": break
+        # Goto parent directory
+        path = dirname(path)
+        prop = True  # Flag
+
+    if retBool: return False
+    raise PermissionError
+
 
 def printerr(e, log_path, override_msg=None):
     tb = e.__traceback__
