@@ -9,7 +9,6 @@ from shutil import disk_usage
 
 cache = setup_cache(2)
 
-
 def get_folder_content(folder_path, root, folder_size, ACL):
     data = list_folder(folder_path, root, folder_size, getmtime(folder_path))
     rel_path = relpath(folder_path, start=root).replace(sep, "/")

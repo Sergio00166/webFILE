@@ -14,6 +14,7 @@ redis_unix_sock  = getenv("REDIS_UNIX_SOCK")
 
 pack_dec = msgpack.Decoder()
 pack_enc = msgpack.Encoder()
+json_enc =    json.Encoder()
 
 def setup_cache(db):
     if not redis_unix_sock: pool = ConnectionPool(host=redis_addr, port=redis_port, db=db)
@@ -44,7 +45,7 @@ class SelectiveRedisCache:
                     "args": all_args,
                 }
                 redis = self.redis
-                digest = sha256(json.encode(key_data)).hexdigest()
+                digest = sha256(json_enc(key_data)).hexdigest()
                 cache_key, inv_key = f"cache:{digest}", f"inv:{digest}"
 
                 if (inv_raw := redis.get(inv_key)):

@@ -4,14 +4,14 @@ from os.path import abspath, commonpath, dirname
 from os.path import exists, normpath, isdir
 from os import R_OK, access, sep, scandir
 from datetime import datetime as dt
-from sys import path as pypath
 from flask import session
 from pathlib import Path
 from msgspec import json
 from sys import stderr
 
 # Load file type metadata only once at import time
-file_types = json.decode(open(f"{pypath[0]}{sep}file_types.json").read())
+file_types_path = abspath(f"{__file__}{sep}..{sep}file_types.json")
+file_types = json.decode(open(file_types_path).read())
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 autoload_webpage = "index" + file_types.get("webpage")[0]
 
@@ -22,16 +22,27 @@ boms = (
 )
 def is_binary(filepath):
     with open(filepath, "rb") as f:
-        head = f.read(4)
+        head = f.read(1024)
         if any(
             head.startswith(bom)
             for bom in boms
         ):  return False
 
-        while chunk := f.read(1024):
-            if b"\x00" in chunk: return True
+        if b"\0" in head: return True
+        size = f.seek(0, 2)
+
+        f.seek(size >> 2)
+        if b"\0" in f.read(1024): return True
+
+        f.seek(size >> 1)
+        return b"\0" in f.read(1024)
+
     return False
 
+
+def isAdmin(USERS):
+    user = USERS.get(session.get("user"))
+    return user and user.get("admin")
 
 def get_file_type(path):
     extension = path.rsplit(".", 1)[-1].lower()
@@ -41,57 +52,50 @@ def get_file_type(path):
     return "file" if is_binary(path) else "text"
 
 
-def isAdmin(USERS):
-    user = USERS.get(session.get("user"))
-    return user and user.get("admin")
-
-
 def safe_path(path, root, igntf=False):
     path = path.replace("/", sep)
     path = abspath(f"{root}{sep}{path}")
 
     # Check if is subdirectory from root
     if commonpath([root, path]) == root:
-        if igntf:                  return path
-        if not exists(path):       raise FileNotFoundError
-        if not access(path, R_OK): raise PermissionError
-        if isdir(path):            scandir(path).close()
-    else:                          raise PermissionError
+        if igntf:                           return path
+        if not exists(path):                raise FileNotFoundError
+        if not access(path, R_OK):          raise PermissionError
+        if sep == chr(92) and isdir(path):  scandir(path).close()
+    else:                                   raise PermissionError
     return path
 
 
 def load_userACL(USERS, ACL, users_file, acl_file):
-    USERS.clear(); ACL.clear() # Clear data
-    USERS.update(json.decode(open(users_file).read()))
-    ACL.update(json.decode(open(acl_file).read()))
+    users_fd = open(users_file, "r")
+    acl_fd   = open(acl_file,   "r")
+
+    users_data = json.decode(users_fd.read())
+    acl_data   = json.decode(  acl_fd.read())
+
+    USERS.clear(); USERS.update(users_data)
+    ACL.clear();     ACL.update(acl_data)
 
 
 def validate_acl(path, ACL, write=False, retBool=False):
-    askd_perm = 2 if write else 1
-    user = session.get("user", "DEFAULT")
-    prop = False
-
-    path = normpath(path)
-    if path == ".": path = ""
-    path = path.replace(sep, "/")
-
-    if path.startswith("//"):    path = path[2:]
     if not path.startswith("/"): path = f"/{path}"
+
+    user = session.get("user", "DEFAULT")
+    askd_perm = 2 if write else 1
+    prop = False
 
     while True:
         # Check if there is a rule for it
-        if path in ACL and user in ACL[path]:
-            values = ACL[path][user]
-            if not values["inherit"] and prop: break
+        if (acl_path := ACL.get(path)) and (values := acl_path.get(user)):
+            if not values["inherit"] and prop:  break
 
-            perm = values["access"]
-            if perm < askd_perm: break
+            if values["access"] < askd_perm: break
             else: return True if retBool else None
 
         # Check if on top and break loop
-        if path == "/": break
+        if path == "/":  break
         # Goto parent directory
-        path = dirname(path)
+        path = path[:path.rfind("/") or 1]
         prop = True  # Flag
 
     if retBool: return False

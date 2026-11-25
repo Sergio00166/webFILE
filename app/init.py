@@ -1,10 +1,9 @@
 # Code by Sergio00166
 
-if __name__=="__main__": exit(0)
+if __name__ == "__main__": exit(0)
 
 from os.path import abspath, isfile, join, getmtime
 from os import getenv, makedirs, urandom
-from sys import path as pypath
 from time import time
 
 from flask_session import Session
@@ -16,8 +15,8 @@ from send_file import send_file
 from endpoints import *
 
 # Base paths for templates/static content
-parent_path = abspath(join(pypath[0], ".."))
-sroot = join(parent_path,"static")
+app_root = abspath(f"{__file__}{sep}..{sep}..")
+sroot = join(app_root, "static")
 
 # Load environment configuration
 root        = getenv("SERVE_PATH",   None)
@@ -37,7 +36,7 @@ else:
     exit(1) # Dont continue
 
 if not all((error_file, users_file, acl_file)):
-    data_dir = join(parent_path,"data")
+    data_dir = join(app_root, "data")
     makedirs(data_dir, exist_ok=True)
 
 error_file  = error_file  or join(data_dir, "error.log")
@@ -55,7 +54,7 @@ except Exception as e:
 
 
 # Initialize main flask app
-app = Flask("webFILE", static_folder=None, template_folder=join(parent_path, "templates"))
+app = Flask("webFILE", static_folder=None, template_folder=join(app_root, "templates"))
 app.secret_key = getenv("SECRET_KEY", urandom(24).hex())
 
 if not redis_unix_sock: pool = ConnectionPool(host=redis_addr, port=redis_port, db=0)

@@ -11,6 +11,7 @@ from random import choice
 from msgspec import json
 from os import sep
 
+json_enc = json.Encoder()
 
 def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_start=False):
     path = relpath(file_path, start=root).replace(sep, "/")
@@ -40,7 +41,7 @@ def get_filepage_data(file_path, root, filetype, ACL, random=False, no_goto_star
 def directory(path, root, folder_size, ACL, useApi):
     if useApi:
         contents = get_folder_content(path, root, folder_size, ACL)
-        return Response(json.encode(contents), mimetype="application/json")
+        return Response(json_enc(contents), mimetype="application/json")
     else:
         return render_template("index.html", autoload_webpage=autoload_webpage)
 
@@ -81,8 +82,7 @@ def video(path, root, file_type, ACL):
                 "external": basename(subs) if subs != path else None,
             }
         }
-        return json.encode(data)
-
+        return json_enc(data)
     return render_template("video.html")
 
  
