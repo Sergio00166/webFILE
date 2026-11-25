@@ -6,13 +6,19 @@ from os.path import relpath, getmtime
 from os import scandir, sep, stat
 from cache import setup_cache
 from shutil import disk_usage
+from flask import session
 
 cache = setup_cache(2)
 
 def get_folder_content(folder_path, root, folder_size, ACL):
     data = list_folder(folder_path, root, folder_size, getmtime(folder_path))
+
     rel_path = relpath(folder_path, start=root).replace(sep, "/")
-    return [x for x in data if validate_acl(f'/{rel_path}/{x["name"]}', ACL, retBool=True)]
+    rel_path = "/" if rel_path == "." else f"/{rel_path}/"
+    user = session.get("user", "DEFAULT")
+
+    return [x for x in data if validate_acl(f'{rel_path}{x["name"]}', ACL, retBool=True, user=user, skip_norm=True)]
+
 
 
 @cache.cached("parent_mtime", TTL=120)

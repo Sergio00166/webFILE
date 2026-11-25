@@ -76,11 +76,13 @@ def load_userACL(USERS, ACL, users_file, acl_file):
     USERS.clear(); USERS.update(users_data)
     ACL.clear();     ACL.update(acl_data)
 
+# Pending to fix this mess, and avoid always the fucking slow-ass norm
+def validate_acl(path, ACL, write=False, retBool=False, user=None, skip_norm=False):
+    if not skip_norm:
+        path = normpath(path).replace(sep, "/")
+        path = "/" if rel_path == "." else f"/{rel_path}/"
 
-def validate_acl(path, ACL, write=False, retBool=False):
-    if not path.startswith("/"): path = f"/{path}"
-
-    user = session.get("user", "DEFAULT")
+    user = user or session.get("user", "DEFAULT")
     askd_perm = 2 if write else 1
     prop = False
 
@@ -96,37 +98,6 @@ def validate_acl(path, ACL, write=False, retBool=False):
         if path == "/":  break
         # Goto parent directory
         path = path[:path.rfind("/") or 1]
-        prop = True  # Flag
-
-    if retBool: return False
-    raise PermissionError
-
-def validate_acl(path, ACL, write=False, retBool=False):
-    askd_perm = 2 if write else 1
-    user = session.get("user", "DEFAULT")
-    prop = False
-
-    path = normpath(path)
-    if path == ".": path = ""
-    path = path.replace(sep, "/")
-
-    if path.startswith("//"):    path = path[2:]
-    if not path.startswith("/"): path = f"/{path}"
-
-    while True:
-        # Check if there is a rule for it
-        if path in ACL and user in ACL[path]:
-            values = ACL[path][user]
-            if not values["inherit"] and prop: break
-
-            perm = values["access"]
-            if perm < askd_perm: break
-            else: return True if retBool else None
-
-        # Check if on top and break loop
-        if path == "/": break
-        # Goto parent directory
-        path = dirname(path)
         prop = True  # Flag
 
     if retBool: return False
