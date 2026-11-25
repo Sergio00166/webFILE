@@ -80,7 +80,7 @@ def load_userACL(USERS, ACL, users_file, acl_file):
 def validate_acl(path, ACL, write=False, retBool=False, user=None, skip_norm=False):
     if not skip_norm:
         path = normpath(path).replace(sep, "/")
-        path = "/" if rel_path == "." else f"/{rel_path}/"
+        path = "/" if path == "." else f"/{path}"
 
     user = user or session.get("user", "DEFAULT")
     askd_perm = 2 if write else 1
