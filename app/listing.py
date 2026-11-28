@@ -1,24 +1,28 @@
 # Code by Sergio00166
 
-from functions import validate_acl, get_file_type
+from functions import validate_acl, get_file_type, _TO_POSIX
 from urllib.parse import quote as encurl
-from os.path import relpath, getmtime
 from os import scandir, sep, stat
+from os.path import getmtime
 from cache import setup_cache
 from shutil import disk_usage
 from flask import session
 
 cache = setup_cache(2)
 
-def get_folder_content(folder_path, root, folder_size, ACL):
+def get_folder_content(folder_path, ACL, root, user, folder_size):
     data = list_folder(folder_path, root, folder_size, getmtime(folder_path))
 
-    rel_path = relpath(folder_path, start=root).replace(sep, "/")
-    rel_path = "/" if rel_path == "." else f"/{rel_path}/"
-    user = session.get("user", "DEFAULT")
+    rel_path = folder_path[len(root):].translate(_TO_POSIX)
+    rel_path = f"/{rel_path}/" if rel_path else "/"
 
-    return [x for x in data if validate_acl(f'{rel_path}{x["name"]}', ACL, retBool=True, user=user, skip_norm=True)]
-
+    return [
+        x for x in data
+        if validate_acl(
+            f'{rel_path}{x["name"]}',
+            ACL, user, retBool=True
+        )
+    ]
 
 @cache.cached("parent_mtime", TTL=120)
 def list_folder(folder_path, root, folder_size, parent_mtime):

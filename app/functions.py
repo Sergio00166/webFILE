@@ -1,7 +1,7 @@
 # Code by Sergio00166
 
+from os.path import exists, normpath, isdir, relpath
 from os.path import abspath, commonpath, dirname
-from os.path import exists, normpath, isdir
 from os import R_OK, access, sep, scandir
 from datetime import datetime as dt
 from flask import session
@@ -9,11 +9,12 @@ from pathlib import Path
 from msgspec import json
 from sys import stderr
 
-# Load file type metadata only once at import time
 file_types_path = abspath(f"{__file__}{sep}..{sep}file_types.json")
 file_types = json.decode(open(file_types_path).read())
+
 file_type_map = {v: k for k, vals in file_types.items() for v in vals}
 autoload_webpage = "index" + file_types.get("webpage")[0]
+_TO_POSIX = str.maketrans(chr(92), "/")
 
 boms = (
     b"\xef\xbb\xbf",
@@ -36,7 +37,6 @@ def is_binary(filepath):
 
         f.seek(size >> 1)
         return b"\0" in f.read(1024)
-
     return False
 
 
@@ -47,14 +47,12 @@ def isAdmin(USERS):
 def get_file_type(path):
     extension = path.rsplit(".", 1)[-1].lower()
     file_type = file_type_map.get(f".{extension}")
-
     if file_type: return file_type
     return "file" if is_binary(path) else "text"
 
 
 def safe_path(path, root, igntf=False):
-    path = path.replace("/", sep)
-    path = abspath(f"{root}{sep}{path}")
+    path = abspath(f"{root}/{path}")
 
     # Check if is subdirectory from root
     if commonpath([root, path]) == root:
@@ -66,23 +64,7 @@ def safe_path(path, root, igntf=False):
     return path
 
 
-def load_userACL(USERS, ACL, users_file, acl_file):
-    users_fd = open(users_file, "r")
-    acl_fd   = open(acl_file,   "r")
-
-    users_data = json.decode(users_fd.read())
-    acl_data   = json.decode(  acl_fd.read())
-
-    USERS.clear(); USERS.update(users_data)
-    ACL.clear();     ACL.update(acl_data)
-
-# Pending to fix this mess, and avoid always the fucking slow-ass norm
-def validate_acl(path, ACL, write=False, retBool=False, user=None, skip_norm=False):
-    if not skip_norm:
-        path = normpath(path).replace(sep, "/")
-        path = "/" if path == "." else f"/{path}"
-
-    user = user or session.get("user", "DEFAULT")
+def validate_acl(path, ACL, user, write=False, retBool=False):
     askd_perm = 2 if write else 1
     prop = False
 
@@ -102,6 +84,17 @@ def validate_acl(path, ACL, write=False, retBool=False, user=None, skip_norm=Fal
 
     if retBool: return False
     raise PermissionError
+
+
+def load_userACL(USERS, ACL, users_file, acl_file):
+    users_fd = open(users_file, "r")
+    acl_fd   = open(acl_file,   "r")
+
+    users_data = json.decode(users_fd.read())
+    acl_data   = json.decode(  acl_fd.read())
+
+    USERS.clear(); USERS.update(users_data)
+    ACL.clear();     ACL.update(acl_data)
 
 
 def printerr(e, log_path, override_msg=None):

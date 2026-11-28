@@ -31,11 +31,13 @@ explorer_methods = list(method_map.keys()) + ["GET"]
 @app.route('/', defaults={'path': ''}, methods=["GET"])
 @app.route("/<path:path>", methods=explorer_methods)
 def explorer(path):
+    user = session.get("user", "DEFAULT")
+    path = f"/{path}" # Normalize
     try:
         if request.method in method_map:
-            return method_map[request.method](path, ACL, root, error_file)
+            return method_map[request.method](path, ACL, root, user, error_file)
 
-        return path_handler(path, ACL, root, folder_size)
+        return path_handler(path, ACL, root, user, folder_size)
 
     except Exception as e:
         return error(e, error_file)

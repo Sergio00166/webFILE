@@ -16,9 +16,9 @@ file_map = {
     "audio": audio,
     "photo": photo,
 }
-def path_handler(path, ACL, root, folder_size):
+def path_handler(path, ACL, root, user, folder_size):
 
-    if path: validate_acl(path, ACL)
+    if path: validate_acl(path, ACL, user)
     path = safe_path(path, root)
     get_mode = request.args.get("get", "")
 
@@ -40,14 +40,14 @@ def path_handler(path, ACL, root, folder_size):
                 headers["Content-Type"] = "text/plain; charset=utf8"
 
             elif file_type in file_map:
-                return file_map[file_type](path, root, file_type, ACL)
+                return file_map[file_type](path, ACL, root, user, file_type)
 
         if static: headers.update({"Cache-Control": "public, max-age=36000"})
         return send_file(path, headers=headers)
 
     else:
         if get_mode == "file":
-            return send_dir(path, root, ACL)
+            return send_dir(path, ACL, root, user)
 
         if not (json_mode := get_mode == "json"):
 
@@ -60,7 +60,7 @@ def path_handler(path, ACL, root, folder_size):
                 query = f"?{query}" if query else ""
                 return redirect(f"{request.path}/{query}")
 
-        return directory(path, root, folder_size, ACL, json_mode)
+        return directory(path, ACL, root, user, folder_size, json_mode)
 
 
 def login(USERS):

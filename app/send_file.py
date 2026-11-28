@@ -1,10 +1,10 @@
 # Code by Sergio00166
 
 from os.path import getsize, relpath, join, basename
+from functions import validate_acl, _TO_POSIX
 from flask import send_file as df_send_file
 from re import compile as re_compile
 from flask import Response, request
-from functions import validate_acl
 from os import sep, stat, walk
 import tarfile
 
@@ -58,9 +58,9 @@ def generate(file_path, ranges):
 
 """ STREAMING ON-THE-FLY TAR FILE GENERATOR """
 
-def send_dir(directory, root, ACL, name=None):
+def send_dir(directory, ACL, root, user, name=None):
     folder = name if name else basename(directory)
-    size = safe_calc_tar_size(directory, ACL, root)
+    size = safe_calc_tar_size(directory, ACL, root, user)
 
     headers={
         "Content-Disposition": f"attachment;filename={folder}.tar",
@@ -69,12 +69,14 @@ def send_dir(directory, root, ACL, name=None):
     return Response(generate_tar(directory), mimetype="application/x-tar", headers=headers)
 
 
-def safe_calc_tar_size(directory, ACL, root):
+def safe_calc_tar_size(directory, ACL, root, user):
     root_len = len(directory.rstrip(sep)) + 1
     size = 0
     for path, st in iter_files(directory):
-        rel_path = relpath(path, start=root).replace(sep, "/")
-        validate_acl(rel_path, ACL)
+        rel_path = path[len(root):].translate(_TO_POSIX)
+        rel_path = f"/{rel_path}/" if rel_path else "/"
+
+        validate_acl(rel_path, ACL, user)
 
         size += len(create_tar_header(path[root_len:], st))
         size += st.st_size + ((512 - (st.st_size % 512)) % 512)
